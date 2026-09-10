@@ -1,1 +1,5 @@
 /target
+
+# Tailwind standalone binary (too large for GitHub)
+tailwindcss
+tailwindcss-*

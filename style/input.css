@@ -1,0 +1,540 @@
+@import "tailwindcss";
+@source "../src/**/*.rs";
+@source "../index.html";
+
+@import url('https://fonts.googleapis.com/css2?family=Carter+One&display=swap');
+
+@font-face {
+  font-family: 'PStream Sans';
+  src: url('/fonts/netflix-sans.woff2') format('woff2');
+  font-weight: 400;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: 'PStream Sans';
+  src: url('/fonts/ns-md.woff2') format('woff2');
+  font-weight: 500;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: 'PStream Sans';
+  src: url('/fonts/ns-bd.woff2') format('woff2');
+  font-weight: 700 800;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: 'Harmonia Sans W01 Bold';
+  src: url('/fonts/Harmonia Sans W01 Bold.ttf') format('truetype');
+  font-weight: bold;
+  font-style: normal;
+  font-display: swap;
+}
+
+@supports (font-variation-settings: normal) {
+  @font-face {
+    font-family: 'PStream Sans';
+    src: url('/fonts/netflix-sans-core-variable-full.woff2') format('woff2');
+    font-weight: 100 900;
+    font-style: normal;
+    font-display: swap;
+  }
+}
+
+.font-netflix {
+  font-family: 'PStream Sans', sans-serif;
+}
+
+/* Fallback utilities for legacy class names to point to Netflix Sans */
+.font-harmonia,
+.font-harmonia-mono,
+.font-harmonia-condensed,
+.font-leaner {
+  font-family: 'PStream Sans', sans-serif;
+}
+
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+:root {
+  --app-x: 16px;
+}
+@media (min-width: 768px) {
+  :root { --app-x: 48px; }
+}
+@media (min-width: 1024px) {
+  :root { --app-x: 56px; }
+}
+
+html {
+  scroll-behavior: smooth;
+  scrollbar-width: auto;
+  scrollbar-color: #4e4e4e #141414;
+  -webkit-tap-highlight-color: transparent;
+  /* Fix blue highlight on mobile */
+  -webkit-text-size-adjust: 100%;
+  color-scheme: dark;
+}
+
+* {
+  -webkit-tap-highlight-color: transparent;
+  outline: none;
+}
+
+body {
+  font-family: 'PStream Sans', sans-serif;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  background-color: #000000;
+  color: white;
+  overflow-x: hidden;
+  user-select: none;
+  -webkit-user-select: none;
+  -webkit-touch-callout: none;
+  padding-bottom: env(safe-area-inset-bottom);
+}
+
+/* Disable pull-to-refresh on touch devices — this is a video app, never needed */
+@media (pointer: coarse) {
+  body {
+    overscroll-behavior-y: none;
+  }
+}
+
+@media (min-width: 768px) {
+  body {
+    background-color: #141414;
+  }
+}
+
+/* Allow selection in inputs */
+input,
+textarea {
+  user-select: text;
+  -webkit-user-select: text;
+}
+
+/* Momentum scrolling for touch devices */
+.overflow-x-auto,
+.overflow-y-auto {
+  -webkit-overflow-scrolling: touch;
+}
+
+/* Better touch targets for buttons */
+button,
+[role="button"] {
+  touch-action: manipulation;
+}
+
+/* Safe Area Helpers */
+.pt-safe {
+  padding-top: env(safe-area-inset-top);
+}
+
+.pb-safe {
+  padding-bottom: env(safe-area-inset-bottom);
+}
+
+.pl-safe {
+  padding-left: env(safe-area-inset-left);
+}
+
+.pr-safe {
+  padding-right: env(safe-area-inset-right);
+}
+
+.text-shadow-minimal {
+  text-shadow: 0 1px 2px rgba(0, 0, 0, 0.5);
+}
+
+.shadow-minimal {
+  box-shadow: 0 1px 4px rgba(0, 0, 0, 0.4);
+}
+
+/* Custom Scrollbar Design — sleek Netflix-style */
+::-webkit-scrollbar {
+  width: 8px;
+  height: 8px;
+}
+
+::-webkit-scrollbar-track {
+  background: #141414;
+}
+
+::-webkit-scrollbar-thumb {
+  background-color: #3a3a3a;
+  border-radius: 10px;
+  border: 2px solid #141414;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background-color: #888;
+}
+
+::-webkit-scrollbar-corner {
+  background: #141414;
+}
+
+/* Utilities */
+.scrollbar-hide::-webkit-scrollbar {
+  display: none;
+}
+
+.scrollbar-hide {
+  -ms-overflow-style: none;
+  scrollbar-width: none;
+}
+
+.text-shadow-hard {
+  text-shadow: 0 2px 4px rgba(0, 0, 0, 0.8);
+}
+
+.backdrop-pop {
+  filter: saturate(1.18) contrast(1.08) brightness(1.05);
+  transition: filter 0.5s ease;
+}
+
+.movie-card-glow {
+  box-shadow: 0 0 8px rgba(0, 0, 0, 0.25);
+  transition: box-shadow 0.4s ease;
+}
+
+@keyframes shimmer {
+  0% {
+    transform: translateX(-100%);
+  }
+
+  100% {
+    transform: translateX(100%);
+  }
+}
+
+@keyframes modalSpring {
+  0% {
+    opacity: 0;
+    transform: scale(0.6) translateY(40px);
+  }
+
+  100% {
+    opacity: 1;
+    transform: scale(1) translateY(0);
+  }
+}
+
+.animate-modal-spring {
+  animation: modalSpring 0.55s cubic-bezier(0.34, 1.56, 0.64, 1) forwards;
+}
+
+.cubic-bezier-spring {
+  transition-timing-function: cubic-bezier(0.34, 1.56, 0.64, 1);
+}
+
+/* Premium Netflix Red Glow */
+.netflix-red-glow {
+  box-shadow: 0 0 20px rgba(229, 9, 20, 0.4);
+}
+
+.netflix-gradient-red {
+  background: linear-gradient(180deg, #E50914 0%, #B81D24 100%);
+}
+
+.glass {
+  background: rgba(20, 20, 20, 0.7);
+  backdrop-filter: blur(12px) saturate(180%);
+  -webkit-backdrop-filter: blur(12px) saturate(180%);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.text-gradient-red {
+  background: linear-gradient(to right, #E50914, #ff5f6d);
+  -webkit-background-clip: text;
+  background-clip: text;
+  -webkit-text-fill-color: transparent;
+}
+
+@keyframes fadeIn {
+  0% {
+    opacity: 0;
+  }
+
+  100% {
+    opacity: 1;
+  }
+}
+
+@keyframes slideInUp {
+  0% {
+    opacity: 0;
+    transform: translateY(10px);
+  }
+
+  100% {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes scaleIn {
+  0% {
+    opacity: 0;
+    transform: scale(0.98);
+  }
+
+  100% {
+    opacity: 1;
+    transform: scale(1);
+  }
+}
+
+.animate-fadeIn {
+  animation: fadeIn 0.2s ease-out forwards;
+}
+
+.animate-slideIn {
+  animation: slideInUp 0.3s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+}
+
+.animate-scaleIn {
+  animation: scaleIn 0.2s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+}
+
+/* ─── Subtitle Overlay ─────────────────────────────────────────────────────── */
+.subtitle-overlay {
+  position: absolute;
+  left: 50%;
+  transform: translateX(-50%);
+  z-index: 35;
+  text-align: center;
+  pointer-events: none;
+  transition: bottom 0.35s cubic-bezier(0.16, 1, 0.3, 1);
+  max-width: min(90vw, 900px);
+}
+
+.subtitle-overlay .subtitle-line {
+  display: inline-block;
+  white-space: pre-wrap;
+  word-break: break-word;
+  line-height: 1.45;
+}
+
+/* ─── Row touch-action fix: outer wrapper allows vertical, inner strip horizontal ─ */
+.row-scroll-outer {
+  touch-action: pan-y;
+}
+
+.row-scroll-strip {
+  touch-action: pan-x;
+  overflow-clip-margin: content-box;
+}
+
+/* ─── Play/Pause Ripple ───────────────────────────────────────────────────────── */
+@keyframes pp-ripple {
+  0% {
+    opacity: 0;
+    transform: scale(0.8);
+  }
+
+  25% {
+    opacity: 1;
+    transform: scale(1);
+  }
+
+  60% {
+    opacity: 1;
+    transform: scale(1);
+  }
+
+  100% {
+    opacity: 0;
+    transform: scale(1.1);
+  }
+}
+
+/* ─── Seek Flash ─────────────────────────────────────────────────────────────── */
+@keyframes seek-flash {
+  0% {
+    opacity: 0.6;
+  }
+
+  60% {
+    opacity: 0.5;
+  }
+
+  100% {
+    opacity: 0;
+  }
+}
+
+@keyframes seek-circle-flash {
+  0% {
+    opacity: 0;
+    transform: translate(-50%, -50%) scale(0.8);
+  }
+
+  25% {
+    opacity: 1;
+    transform: translate(-50%, -50%) scale(1);
+  }
+
+  60% {
+    opacity: 1;
+    transform: translate(-50%, -50%) scale(1);
+  }
+
+  100% {
+    opacity: 0;
+    transform: translate(-50%, -50%) scale(1.1);
+  }
+}
+
+/* ─── Auto-Next Episode Popup Animation ──────────────────────────────────────── */
+@keyframes slide-in-right {
+  0% {
+    opacity: 0;
+    transform: translateX(32px) scale(0.96);
+  }
+
+  60% {
+    opacity: 1;
+    transform: translateX(-4px) scale(1.01);
+  }
+
+  100% {
+    opacity: 1;
+    transform: translateX(0) scale(1);
+  }
+}
+
+@keyframes slide-out-right {
+  0% {
+    opacity: 1;
+    transform: translateX(0);
+  }
+
+  100% {
+    opacity: 0;
+    transform: translateX(40px);
+  }
+}
+
+@keyframes progress-fill {
+  0% {
+    width: 0%;
+  }
+
+  100% {
+    width: 100%;
+  }
+}
+
+.animate-progress {
+  animation-name: progress-fill;
+}
+
+@keyframes rank-jiggle {
+  0% {
+    transform: rotate(0deg) translateX(0px);
+  }
+
+  15% {
+    transform: rotate(-1.5deg) translateX(-1px);
+  }
+
+  30% {
+    transform: rotate(1.2deg) translateX(1px);
+  }
+
+  45% {
+    transform: rotate(-0.8deg) translateX(-1px);
+  }
+
+  60% {
+    transform: rotate(0.6deg) translateX(0.5px);
+  }
+
+  75% {
+    transform: rotate(-0.3deg) translateX(0px);
+  }
+
+  100% {
+    transform: rotate(0deg) translateX(0px);
+  }
+}
+
+.animate-rank-jiggle {
+  animation: rank-jiggle 3.2s ease-in-out infinite;
+  animation-delay: var(--jiggle-delay, 0s);
+}
+
+/* ─── NEW: Autoplay Button Fill ────────────────────────────────────────────── */
+@keyframes buttonFillProgress {
+  from {
+    transform: scaleX(0);
+  }
+
+  to {
+    transform: scaleX(1);
+  }
+}
+
+/* ─── Seek Rotate Animations ────────────────────────────────────────────────── */
+@keyframes seek-rotate-left {
+  0% {
+    transform: rotate(0deg);
+  }
+  30% {
+    transform: rotate(-28deg);
+  }
+  65% {
+    transform: rotate(4deg);
+  }
+  100% {
+    transform: rotate(0deg);
+  }
+}
+
+@keyframes seek-rotate-right {
+  0% {
+    transform: rotate(0deg);
+  }
+  30% {
+    transform: rotate(28deg);
+  }
+  65% {
+    transform: rotate(-4deg);
+  }
+  100% {
+    transform: rotate(0deg);
+  }
+}
+
+.animate-seek-rotate-left {
+  animation: seek-rotate-left 0.45s ease-in-out;
+}
+
+.animate-seek-rotate-right {
+  animation: seek-rotate-right 0.45s ease-in-out;
+}
+/* ── Reduced motion ───────────────────────────────────────────────────────────
+   Honour the OS "reduce motion" setting for CSS animations and transitions.
+   Durations are collapsed to ~0 rather than set to `none` on purpose: any code
+   waiting on transitionend/animationend still fires, so nothing hangs — the
+   motion just becomes instant. framer-motion is handled separately via
+   <MotionConfig reducedMotion="user"> in index.tsx, since its animations are
+   JS-driven and unaffected by CSS. */
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
+}

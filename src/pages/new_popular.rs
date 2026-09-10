@@ -1,0 +1,101 @@
+use leptos::prelude::*;
+use crate::components::layout::Layout;
+use crate::components::media::row::Row;
+use crate::components::media::top_ten_row::TopTenRow;
+use crate::components::media::spotlight_card::SpotlightCard;
+use crate::components::layout::new_popular_sub_nav_mobile::{NewPopularSubNavMobile, NewPopularTab};
+use crate::services::tmdb::{fetch_trending, fetch_top_rated};
+
+#[component]
+pub fn NewPopularPage() -> impl IntoView {
+    let (active_tab, set_active_tab) = signal(NewPopularTab::Watching);
+
+    // Resource for mobile spotlight feed
+    let mobile_feed = LocalResource::new(move || {
+        let tab = active_tab.get();
+        async move {
+            match tab {
+                NewPopularTab::Watching => fetch_trending("all").await.unwrap_or_default(),
+                NewPopularTab::Top10Movies => fetch_top_rated("movie").await.unwrap_or_default(),
+                NewPopularTab::Top10Series => fetch_top_rated("tv").await.unwrap_or_default(),
+                NewPopularTab::JustLanded => fetch_trending("movie").await.unwrap_or_default(),
+                NewPopularTab::ComingSoon => fetch_trending("tv").await.unwrap_or_default(),
+            }
+        }
+    });
+
+    view! {
+        <Layout>
+            <div class="relative min-h-screen bg-black md:bg-[#141414]">
+                // Top spacing under fixed navbar
+                <div class="h-16 sm:h-20 md:h-28" />
+
+                // ── MOBILE TABBED FEED (< md) ───────────────────────────
+                <div class="block md:hidden">
+                    // Mobile sticky subnav
+                    <NewPopularSubNavMobile
+                        active_tab=active_tab
+                        on_tab_change=Callback::new(move |t| set_active_tab.set(t))
+                    />
+
+                    // Mobile vertical spotlight stream
+                    <div class="px-3 pt-2 pb-16 space-y-6">
+                        <Suspense fallback=move || view! {
+                            <div class="space-y-4 animate-pulse">
+                                {(0..3).map(|_| view! {
+                                    <div class="w-full aspect-video bg-[#1e1e1e] rounded-xl"></div>
+                                }).collect::<Vec<_>>()}
+                            </div>
+                        }>
+                            {move || mobile_feed.get().map(|items| {
+                                let tab = active_tab.get();
+                                let is_top10 = tab == NewPopularTab::Top10Movies || tab == NewPopularTab::Top10Series;
+                                let is_coming = tab == NewPopularTab::ComingSoon;
+                                view! {
+                                    <div class="space-y-6">
+                                        {items.into_iter().enumerate().take(10).map(|(idx, m)| {
+                                            let movie_id = m.id;
+                                            let is_tv = m.is_tv();
+                                            let title = m.display_title().to_string();
+                                            let backdrop = m.backdrop_url("w780").unwrap_or_default();
+                                            let overview = m.overview.clone();
+                                            let rank = if is_top10 { Some(idx + 1) } else { None };
+                                            view! {
+                                                <SpotlightCard
+                                                    movie_id=movie_id
+                                                    is_tv=is_tv
+                                                    title=title
+                                                    backdrop_path=backdrop
+                                                    overview=overview
+                                                    rank=rank
+                                                    is_coming_soon=is_coming
+                                                />
+                                            }
+                                        }).collect::<Vec<_>>()}
+                                    </div>
+                                }.into_any()
+                            })}
+                        </Suspense>
+                    </div>
+                </div>
+
+                // ── DESKTOP DYNAMIC ROWS (>= md) ──────────────────────────
+                <main class="hidden md:block relative z-10 pb-16 space-y-4 md:space-y-6">
+                    <TopTenRow title="Top 10 Films in the UK Today" kind="movie" />
+                    <TopTenRow title="Top 10 Series in the UK Today" kind="tv" />
+                    <Row title="Newly Added to the Collection" />
+                    <Row title="Worth the Wait" genre_id="1365" kind="movie" />
+                    <Row title="Rising Stars: Under the Radar" genre_id="8933" kind="movie" />
+                    <Row title="The Best of 2026 So Far" genre_id="5763" kind="movie" />
+                    <Row title="New Series Everyone Is Watching" genre_id="1191605" kind="tv" />
+                    <Row title="The Shows the Internet Can't Stop Talking About" genre_id="11714" kind="tv" />
+                    <Row title="The Films Everyone Is Discussing" genre_id="6548" kind="movie" />
+                    <Row title="Coming to the Collection Soon" genre_id="1492" kind="movie" />
+                    <Row title="New and Acclaimed" genre_id="5763" kind="movie" />
+                    <Row title="Series Picking Up Steam" genre_id="1372" kind="tv" />
+                    <Row title="International Discoveries" genre_id="52117" kind="tv" />
+                </main>
+            </div>
+        </Layout>
+    }
+}

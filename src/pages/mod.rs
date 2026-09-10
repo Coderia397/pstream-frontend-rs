@@ -1,0 +1,15 @@
+pub mod browse;
+pub mod player;
+pub mod search;
+pub mod my_list;
+pub mod category;
+pub mod language;
+pub mod new_popular;
+pub mod browse_grid;
+pub mod clips;
+pub mod reads;
+pub mod settings;
+pub mod login;
+pub mod legal;
+pub mod notifications;
+pub mod not_found;

@@ -1,0 +1,28 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>PStream</title>
+    <!-- Phosphor Icons -->
+    <script src="https://unpkg.com/@phosphor-icons/web"></script>
+    <!-- Trunk Rust binary target specification -->
+    <link data-trunk rel="rust" data-bin="pstream-frontend-rs" />
+    <!-- Trunk will automatically hash and include this CSS file -->
+    <link data-trunk rel="css" href="style/output.css" />
+    <link data-trunk rel="copy-file" href="interop.js" />
+    <link data-trunk rel="copy-dir" href="fonts" />
+    <link data-trunk rel="copy-dir" href="assets" />
+    <script>
+        if (window.location.pathname === "/" || window.location.pathname === "/index.html") {
+            window.location.replace("/browse");
+        }
+    </script>
+  </head>
+  <body class="bg-black text-white">
+    <!-- Third-party media engines loaded before WASM initialization -->
+    <script src="https://cdn.jsdelivr.net/npm/hls.js@latest/dist/hls.min.js"></script>
+    <script src="/interop.js"></script>
+  </body>
+</html>
+

@@ -1,0 +1,13 @@
+[build]
+target = "index.html"
+
+[watch]
+ignore = [
+    "style/output.css",
+    "interop.js",
+]
+
+[[hooks]]
+stage = "pre_build"
+command = "sh"
+command_arguments = ["-c", "./tailwindcss -i ./style/input.css -o ./style/output.css && ../pstream-frontend/node_modules/.bin/esbuild interop/interop.ts --bundle --outfile=interop.js --format=iife --minify"]

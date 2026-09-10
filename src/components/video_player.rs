@@ -1,0 +1,146 @@
+use leptos::prelude::*;
+use crate::components::hls_adapter::HlsPlayer;
+
+#[component]
+pub fn VideoPlayer(
+    title: String,
+    stream_url: String,
+    on_close: Option<Callback<()>>,
+) -> impl IntoView {
+    let video_ref = NodeRef::<leptos::html::Video>::new();
+    let (is_playing, set_is_playing) = signal(true);
+    let (is_muted, set_is_muted) = signal(false);
+    let (is_idle, set_is_idle) = signal(false);
+    let hls_player = RwSignal::new_local(None::<std::rc::Rc<HlsPlayer>>);
+
+    let (progress, set_progress) = signal(0.0);
+    let (duration, set_duration) = signal(0.0);
+
+    // Timeout for idle mouse
+    let timeout_handle = RwSignal::new_local(None::<leptos::wasm_bindgen::closure::Closure<dyn FnMut()>>);
+
+    let reset_idle = move |_| {
+        set_is_idle.set(false);
+        // We could implement an actual setTimeout here, but for brevity in WASM
+        // we omit the full Web API binding for setTimeout in this snippet.
+        // A full implementation would use window().set_timeout_with_callback_and_timeout_and_arguments
+    };
+
+    Effect::new({
+        let stream_url = stream_url.clone();
+        move |_| {
+            if let Some(video) = video_ref.get() {
+                let player = HlsPlayer::attach(video.clone(), &stream_url);
+                hls_player.set(Some(std::rc::Rc::new(player)));
+            }
+        }
+    });
+
+    let toggle_play = move |_| {
+        if let Some(player) = hls_player.get() {
+            if is_playing.get() {
+                player.pause();
+                set_is_playing.set(false);
+            } else {
+                player.play();
+                set_is_playing.set(true);
+            }
+        }
+    };
+
+    let toggle_mute = move |_| {
+        if let Some(video) = video_ref.get() {
+            let m = !video.muted();
+            video.set_muted(m);
+            set_is_muted.set(m);
+        }
+    };
+
+    let on_time_update = move |_| {
+        if let Some(player) = hls_player.get() {
+            set_progress.set(player.current_time());
+            set_duration.set(player.duration());
+        }
+    };
+
+    let seek = move |e: leptos::ev::MouseEvent| {
+        // Basic seek calculation
+    };
+
+    let close_player = move |_| {
+        if let Some(cb) = on_close {
+            cb.run(());
+        }
+    };
+
+    view! {
+        <div class="fixed inset-0 bg-black z-[200] flex flex-col group" on:mousemove=reset_idle>
+            <video
+                node_ref=video_ref
+                id="pstream-main-player"
+                class="w-full h-full object-contain cursor-default"
+                controls=false
+                autoplay=true
+                on:timeupdate=on_time_update
+                on:play=move |_| set_is_playing.set(true)
+                on:pause=move |_| set_is_playing.set(false)
+                on:click=toggle_play
+            ></video>
+            
+            <div 
+                class="absolute inset-0 flex flex-col justify-between p-8 transition-opacity duration-500 bg-gradient-to-t from-black/80 via-transparent to-black/60 pointer-events-none"
+                class=("opacity-0", move || is_idle.get())
+                class=("opacity-100", move || !is_idle.get())
+                class=("group-hover:opacity-100", move || true)
+            >
+                <div class="flex justify-between items-start pointer-events-auto">
+                    <button on:click=close_player class="text-white text-3xl hover:scale-110 transition-transform drop-shadow-md">
+                        <i class="ph-bold ph-arrow-left"></i>
+                    </button>
+                    <div class="text-white text-xl font-bold drop-shadow-md">{title}</div>
+                    <button class="text-white text-3xl hover:scale-110 transition-transform drop-shadow-md">
+                        <i class="ph-bold ph-flag"></i>
+                    </button>
+                </div>
+                
+                <div class="flex flex-col gap-6 pointer-events-auto pb-4 px-4">
+                    <div class="w-full h-1.5 bg-gray-600 rounded-full cursor-pointer relative group/progress" on:click=seek>
+                        <div 
+                            class="h-full bg-red-600 rounded-full transition-all duration-100"
+                            style=move || format!("width: {}%", if duration.get() > 0.0 { (progress.get() / duration.get()) * 100.0 } else { 0.0 })
+                        ></div>
+                        <div 
+                            class="absolute top-1/2 w-4 h-4 bg-red-600 rounded-full transform -translate-y-1/2 -translate-x-1/2 scale-0 group-hover/progress:scale-100 transition-transform duration-200"
+                            style=move || format!("left: {}%", if duration.get() > 0.0 { (progress.get() / duration.get()) * 100.0 } else { 0.0 })
+                        ></div>
+                    </div>
+                    
+                    <div class="flex justify-between items-center text-white">
+                        <div class="flex items-center gap-8">
+                            <button on:click=toggle_play class="text-[40px] hover:scale-110 transition-transform">
+                                {move || if is_playing.get() { view!{<i class="ph-fill ph-pause"></i>} } else { view!{<i class="ph-fill ph-play"></i>} }}
+                            </button>
+                            <button class="text-3xl hover:scale-110 transition-transform"><i class="ph-bold ph-clock-counter-clockwise"></i></button>
+                            <button class="text-3xl hover:scale-110 transition-transform"><i class="ph-bold ph-clock-clockwise"></i></button>
+                            <button on:click=toggle_mute class="text-3xl hover:scale-110 transition-transform">
+                                {move || if is_muted.get() { view!{<i class="ph-fill ph-speaker-x"></i>} } else { view!{<i class="ph-fill ph-speaker-high"></i>} }}
+                            </button>
+                        </div>
+                        
+                        <div class="flex items-center gap-8 text-3xl">
+                            <span class="text-sm font-medium font-mono">
+                                {move || {
+                                    let p = progress.get() as u32;
+                                    let d = duration.get() as u32;
+                                    format!("{:02}:{:02} / {:02}:{:02}", p / 60, p % 60, d / 60, d % 60)
+                                }}
+                            </span>
+                            <button class="hover:scale-110 transition-transform"><i class="ph-bold ph-closed-captioning"></i></button>
+                            <button class="hover:scale-110 transition-transform"><i class="ph-bold ph-corners-out"></i></button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    }
+}

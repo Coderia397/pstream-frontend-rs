@@ -98,7 +98,7 @@ pub fn Navbar(
                         view! {
                             <li
                                 class=move || if is_active() {
-                                    "cursor-pointer transition-all whitespace-nowrap text-white font-bold text-[13.5px] rounded-full bg-[#484848] h-[34px] px-4.5 shadow-md inline-flex items-center justify-center"
+                                    "cursor-pointer transition-all whitespace-nowrap text-white font-bold text-[13.5px] rounded-full bg-white/20 h-[34px] px-4.5 shadow-md inline-flex items-center justify-center backdrop-blur-sm"
                                 } else {
                                     "cursor-pointer transition-colors whitespace-nowrap text-[#b3b3b3] hover:text-[#e5e5e5] text-[13.5px] px-1 py-1 font-normal inline-flex items-center"
                                 }

@@ -2466,9 +2466,6 @@
   .object-top {
     object-position: top;
   }
-  .p-0\.5 {
-    padding: calc(var(--spacing) * 0.5);
-  }
   .p-1 {
     padding: calc(var(--spacing) * 1);
   }
@@ -3827,13 +3824,6 @@
     &:hover {
       @media (hover: hover) {
         color: color-mix(in oklab, var(--color-white) 60%, transparent);
-      }
-    }
-  }
-  .hover\:text-white\/70 {
-    &:hover {
-      @media (hover: hover) {
-        color: color-mix(in oklab, var(--color-white) 70%, transparent);
       }
     }
   }

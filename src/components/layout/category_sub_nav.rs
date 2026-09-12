@@ -16,8 +16,6 @@ pub fn CategorySubNav(
     genres: Vec<SubNavGenre>,
     selected_genre: ReadSignal<Option<SubNavGenre>>,
     on_genre_select: Callback<Option<SubNavGenre>>,
-    #[prop(optional)] view_mode: Option<ReadSignal<String>>,
-    #[prop(optional)] on_view_mode_change: Option<Callback<String>>,
     #[prop(optional, default = false)] hide_genres_on_desktop: bool,
     #[prop(optional)] dropdown_label: Option<String>,
 ) -> impl IntoView {
@@ -85,8 +83,6 @@ pub fn CategorySubNav(
                             genres=g.clone()
                             selected_genre=selected_genre
                             on_genre_select=on_genre_select
-                            view_mode=view_mode
-                            on_view_mode_change=on_view_mode_change
                             dropdown_label=dl.clone()
                         />
                     </Portal>
@@ -99,8 +95,6 @@ pub fn CategorySubNav(
                             genres=g
                             selected_genre=selected_genre
                             on_genre_select=on_genre_select
-                            view_mode=view_mode
-                            on_view_mode_change=on_view_mode_change
                             dropdown_label=dl
                         />
                     </div>
@@ -116,8 +110,6 @@ fn CategorySubNavDesktop(
     genres: Vec<SubNavGenre>,
     selected_genre: ReadSignal<Option<SubNavGenre>>,
     on_genre_select: Callback<Option<SubNavGenre>>,
-    view_mode: Option<ReadSignal<String>>,
-    on_view_mode_change: Option<Callback<String>>,
     dropdown_label: Option<String>,
 ) -> impl IntoView {
     let (genre_menu_open, set_genre_menu_open) = signal(false);
@@ -277,44 +269,6 @@ fn CategorySubNavDesktop(
                     }
                 }
             </div>
-
-            // View Mode Switcher: row vs grid (only if both view_mode and on_view_mode_change are provided)
-            {move || {
-                if let (Some(mode_sig), Some(on_mode_change)) = (view_mode, on_view_mode_change) {
-                    let on_row = move |_| on_mode_change.run("row".to_string());
-                    let on_grid = move |_| on_mode_change.run("grid".to_string());
-                    view! {
-                        <div class="flex items-center bg-[#1a1a1a] rounded-full border border-white/10 p-0.5">
-                            <button
-                                on:click=on_row
-                                class=move || if mode_sig.get() == "row" {
-                                    "p-1.5 rounded-full transition-all duration-200 cursor-pointer bg-white/10 text-white"
-                                } else {
-                                    "p-1.5 rounded-full transition-all duration-200 cursor-pointer text-white/40 hover:text-white/70"
-                                }
-                                title="Row view"
-                                aria-label="Row view"
-                            >
-                                <i class="ph-bold ph-rows text-[16px]"></i>
-                            </button>
-                            <button
-                                on:click=on_grid
-                                class=move || if mode_sig.get() == "grid" {
-                                    "p-1.5 rounded-full transition-all duration-200 cursor-pointer bg-white/10 text-white"
-                                } else {
-                                    "p-1.5 rounded-full transition-all duration-200 cursor-pointer text-white/40 hover:text-white/70"
-                                }
-                                title="Grid view"
-                                aria-label="Grid view"
-                            >
-                                <i class="ph-bold ph-squares-four text-[16px]"></i>
-                            </button>
-                        </div>
-                    }.into_any()
-                } else {
-                    view! { <div></div> }.into_any()
-                }
-            }}
         </div>
     }
 }

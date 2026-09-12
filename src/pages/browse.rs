@@ -7,15 +7,40 @@ use crate::components::media::hero::HeroSection;
 #[component]
 pub fn BrowseHome() -> impl IntoView {
     use crate::components::layout::Layout;
+    use crate::store::use_ui_store;
+
+    let ui_store = use_ui_store();
 
     // Hero: pull a single trending item for the background
     let hero = LocalResource::new(move || async move {
         fetch_trending("movie").await.unwrap_or_default()
     });
 
+    let ambient_bg_style = move || {
+        let (r, g, b) = ui_store.ambient_color.get();
+        format!(
+            "background: \
+             radial-gradient(ellipse 110% 55% at 50% 0%, rgba({r}, {g}, {b}, 0.52) 0%, rgba({r}, {g}, {b}, 0.28) 35%, rgba({r}, {g}, {b}, 0.10) 50%, transparent 68%), \
+             linear-gradient(to bottom, \
+                 rgba({r}, {g}, {b}, 0.40) 0%, \
+                 rgba({r}, {g}, {b}, 0.35) 30%, \
+                 rgba({r}, {g}, {b}, 0.24) 48%, \
+                 rgba({r}, {g}, {b}, 0.10) 65%, \
+                 rgba(20, 20, 20, 0.02) 80%, \
+                 rgba(20, 20, 20, 0) 95%);",
+            r = r, g = g, b = b
+        )
+    };
+
     view! {
         <Layout>
-            <div class="w-full pb-20 bg-black md:bg-[#141414] min-h-screen">
+            <div class="w-full pb-20 bg-black md:bg-[#141414] min-h-screen relative overflow-x-hidden">
+                // Ambient Atmospheric Glow behind navbar and hero billboard (fades after 50% of hero height)
+                <div
+                    class="absolute inset-x-0 top-0 h-[580px] md:h-[660px] lg:h-[720px] pointer-events-none -z-0 transition-all duration-700 ease-out"
+                    style=ambient_bg_style
+                />
+
                 // Hero Carousel driven by real TMDB data
                 <Suspense fallback=move || view! {
                     <crate::components::media::hero_skeleton::HeroSkeleton />

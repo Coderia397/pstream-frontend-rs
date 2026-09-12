@@ -8,14 +8,17 @@ pub struct UIStore {
     pub info_modal_movie_id: RwSignal<Option<u32>>,
     pub info_modal_is_tv: RwSignal<bool>,
     pub active_popup_id: RwSignal<Option<String>>,
+    pub ambient_color: RwSignal<(u8, u8, u8)>,
 }
 
 pub fn provide_ui_store() {
+    let initial_ambient = crate::utils::ambient::get_last_ambient_color().unwrap_or((29, 42, 50));
     provide_context(UIStore {
         info_modal_open: RwSignal::new(false),
         info_modal_movie_id: RwSignal::new(None),
         info_modal_is_tv: RwSignal::new(false),
         active_popup_id: RwSignal::new(None),
+        ambient_color: RwSignal::new(initial_ambient),
     });
 }
 

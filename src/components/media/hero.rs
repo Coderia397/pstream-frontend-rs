@@ -97,6 +97,28 @@ pub fn HeroSection(
     };
     let current_overview = move || current_item().overview;
 
+    // Ambient background color synchronization with 0ms cache & fast w92 extraction
+    Effect::new(move |_| {
+        let bp = current_backdrop();
+        if bp.is_empty() {
+            return;
+        }
+        // 1. Synchronous cache check (0ms)
+        if let Some(rgb) = crate::utils::ambient::get_cached_ambient_color(&bp) {
+            ui_store.ambient_color.set(rgb);
+            crate::utils::ambient::apply_ambient_color(rgb.0, rgb.1, rgb.2);
+            return;
+        }
+
+        // 2. Ultra-fast thumbnail canvas sampling (~15ms)
+        crate::utils::ambient::extract_ambient_color(&bp, move |maybe_rgb| {
+            if let Some(rgb) = maybe_rgb {
+                ui_store.ambient_color.set(rgb);
+                crate::utils::ambient::apply_ambient_color(rgb.0, rgb.1, rgb.2);
+            }
+        });
+    });
+
     // TMDB Logo resource
     let logo_resource = LocalResource::new(move || {
         let id = current_id();

@@ -3,7 +3,28 @@
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="theme-color" content="#1d2a32" />
     <title>PStream</title>
+    <!-- Instant ambient color hydration before first paint (0ms) -->
+    <script>
+      (function() {
+        try {
+          var raw = localStorage.getItem("pstream-ambient:last");
+          var r = 29, g = 42, b = 50;
+          if (raw) {
+            var parsed = JSON.parse(raw);
+            if (parsed && typeof parsed.r === 'number') {
+              r = parsed.r; g = parsed.g; b = parsed.b;
+            }
+          }
+          document.documentElement.style.setProperty('--ambient-r', r);
+          document.documentElement.style.setProperty('--ambient-g', g);
+          document.documentElement.style.setProperty('--ambient-b', b);
+          var meta = document.querySelector('meta[name="theme-color"]');
+          if (meta) meta.content = 'rgb(' + r + ',' + g + ',' + b + ')';
+        } catch(e) {}
+      })();
+    </script>
     <!-- Phosphor Icons -->
     <script src="https://unpkg.com/@phosphor-icons/web"></script>
     <!-- Trunk Rust binary target specification -->

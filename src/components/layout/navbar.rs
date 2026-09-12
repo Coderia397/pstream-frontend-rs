@@ -79,7 +79,7 @@ pub fn Navbar(
         <>
             // ── Desktop Primary Nav (Task 085 & 086) ──────────────────────────
             <nav
-                class="fixed inset-x-0 top-0 z-[80] h-16 hidden sm:flex items-center px-14 transition-colors duration-200 bg-gradient-to-b from-black/70 via-black/30 to-transparent"
+                class="fixed inset-x-0 top-0 z-[80] h-16 hidden sm:flex items-center px-14 transition-colors duration-200 bg-gradient-to-b from-black/20 via-transparent to-transparent"
                 style=scroll_style
             >
                 // Logo — exact pstream-logo.svg matching React source

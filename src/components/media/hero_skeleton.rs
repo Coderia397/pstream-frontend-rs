@@ -3,7 +3,7 @@ use leptos::prelude::*;
 #[component]
 pub fn HeroSkeleton() -> impl IntoView {
     view! {
-        <div class="w-full relative overflow-hidden bg-black select-none">
+        <div class="w-full relative overflow-hidden bg-transparent select-none">
             // 1. MOBILE SKELETON (< 640px)
             <div class="block sm:hidden relative w-full px-4 pt-[calc(122px+env(safe-area-inset-top))] pb-6 flex flex-col items-center justify-center animate-pulse">
                 <div class="absolute inset-x-0 top-0 h-[50vh] bg-gradient-to-b from-white/[0.04] to-transparent pointer-events-none -z-10" />

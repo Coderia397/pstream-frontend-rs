@@ -1,6 +1,6 @@
 use leptos::prelude::*;
 use crate::models::movie::Movie;
-use crate::store::{use_library_store, LibraryEntry};
+use crate::store::{use_library_store, use_ui_store, LibraryEntry};
 use crate::services::tmdb::{fetch_movie_logo, MediaItem};
 
 #[component]
@@ -10,6 +10,7 @@ pub fn MobileHero(
     #[prop(optional)] on_select: Option<Callback<Movie>>,
 ) -> impl IntoView {
     let library_store = use_library_store();
+    let ui_store = use_ui_store();
     let movie_id = movie.id_u32();
     let is_tv = movie.is_tv();
     let title = movie.display_title();
@@ -83,10 +84,26 @@ pub fn MobileHero(
         }
     };
 
+    let mobile_ambient_style = move || {
+        let (r, g, b) = ui_store.ambient_color.get();
+        format!(
+            "background: linear-gradient(to bottom, \
+                rgba({r},{g},{b},0.85) 0%, \
+                rgba({r},{g},{b},0.65) 25%, \
+                rgba({r},{g},{b},0.35) 48%, \
+                rgba({r},{g},{b},0.12) 65%, \
+                rgba(0,0,0,0) 85%);",
+            r = r, g = g, b = b
+        )
+    };
+
     view! {
         <div class="relative z-0 overflow-visible w-full px-4 pt-20 pb-5 flex flex-col items-center justify-center transition-all duration-700 ease-in-out md:hidden">
-            // Ambient gradient glow
-            <div class="absolute inset-x-0 top-0 h-[100vh] pointer-events-none -z-10 bg-gradient-to-b from-red-950/40 via-black/60 to-transparent" />
+            // Ambient gradient glow (fades after 50% of hero height)
+            <div
+                class="absolute inset-x-0 top-0 h-[520px] pointer-events-none -z-10 transition-all duration-700 ease-out"
+                style=mobile_ambient_style
+            />
 
             // Floating Centered Card
             <div

@@ -26,18 +26,20 @@ pub fn Navbar(
         }
     });
 
-    // Scroll opacity formula (Task 085: scroll_y <= 40 ? scroll_y / 80 : 0.5 + (scroll_y - 40) / 160)
-    let nav_bg_opacity = move || {
+    // Scroll opacity formula and transparent top-to-bottom gradient (Task 085)
+    let scroll_style = move || {
         let y = scroll_y_sig.get();
-        if y <= 40.0 {
+        let op = if y <= 40.0 {
             y / 80.0
         } else {
             (0.5 + (y - 40.0) / 160.0).min(1.0)
-        }
-    };
-
-    let scroll_style = move || {
-        format!("background-color: rgba(20,20,20,{:.3});", nav_bg_opacity())
+        };
+        let top_alpha = 0.70 * (1.0 - op);
+        let mid_alpha = 0.35 * (1.0 - op);
+        format!(
+            "background: linear-gradient(to bottom, rgba(0,0,0,{:.3}) 0%, rgba(0,0,0,{:.3}) 65%, rgba(0,0,0,0) 100%), rgba(20,20,20,{:.3});",
+            top_alpha, mid_alpha, op
+        )
     };
 
     let location = use_location();
@@ -79,7 +81,7 @@ pub fn Navbar(
         <>
             // ── Desktop Primary Nav (Task 085 & 086) ──────────────────────────
             <nav
-                class="fixed inset-x-0 top-0 z-[80] h-16 hidden sm:flex items-center px-14 transition-colors duration-200 bg-gradient-to-b from-black/20 via-transparent to-transparent"
+                class="fixed inset-x-0 top-0 z-[80] h-16 hidden sm:flex items-center px-14 transition-colors duration-200"
                 style=scroll_style
             >
                 // Logo — exact pstream-logo.svg matching React source

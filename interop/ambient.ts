@@ -89,20 +89,20 @@ export function extractAmbientColor(imageUrl: string): Promise<AmbientRGB | null
         ag = Math.round(ag * 0.65 + mean * 0.35);
         ab = Math.round(ab * 0.65 + mean * 0.35);
 
-        // Tone down intensity toward darker/blacker side
-        ar = Math.min(255, Math.max(10, Math.round(ar * 0.80)));
-        ag = Math.min(255, Math.max(10, Math.round(ag * 0.80)));
-        ab = Math.min(255, Math.max(10, Math.round(ab * 0.80)));
+        // Tone down intensity toward darker/blacker side (nudged one notch darker)
+        ar = Math.min(255, Math.max(8, Math.round(ar * 0.72)));
+        ag = Math.min(255, Math.max(8, Math.round(ag * 0.72)));
+        ab = Math.min(255, Math.max(8, Math.round(ab * 0.72)));
 
-        // Keep luminance in a muted, sleek dark range (between 22 and 60)
+        // Keep luminance in a deep, subtle dark range (between 18 and 48)
         const lum = (ar * 299 + ag * 587 + ab * 114) / 1000;
-        if (lum > 60) {
-          const scale = 60 / lum;
+        if (lum > 48) {
+          const scale = 48 / lum;
           ar = Math.round(ar * scale);
           ag = Math.round(ag * scale);
           ab = Math.round(ab * scale);
-        } else if (lum < 22) {
-          const scale = 22 / Math.max(lum, 1);
+        } else if (lum < 18) {
+          const scale = 18 / Math.max(lum, 1);
           ar = Math.round(ar * scale);
           ag = Math.round(ag * scale);
           ab = Math.round(ab * scale);

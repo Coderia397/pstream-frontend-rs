@@ -12,7 +12,7 @@ pub struct UIStore {
 }
 
 pub fn provide_ui_store() {
-    let initial_ambient = crate::utils::ambient::get_last_ambient_color().unwrap_or((20, 26, 30));
+    let initial_ambient = crate::utils::ambient::get_last_ambient_color().unwrap_or((16, 21, 25));
     provide_context(UIStore {
         info_modal_open: RwSignal::new(false),
         info_modal_movie_id: RwSignal::new(None),

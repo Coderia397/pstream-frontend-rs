@@ -32,14 +32,13 @@ pub fn CategoryPage(
         let (r, g, b) = ui_store.ambient_color.get();
         format!(
             "background: \
-             radial-gradient(ellipse 110% 55% at 50% 0%, rgba({r}, {g}, {b}, 0.32) 0%, rgba({r}, {g}, {b}, 0.16) 35%, rgba({r}, {g}, {b}, 0.05) 50%, transparent 68%), \
+             radial-gradient(ellipse 110% 55% at 50% 0%, rgba({r}, {g}, {b}, 0.24) 0%, rgba({r}, {g}, {b}, 0.12) 35%, rgba({r}, {g}, {b}, 0.03) 50%, transparent 68%), \
              linear-gradient(to bottom, \
-                 rgba({r}, {g}, {b}, 0.25) 0%, \
-                 rgba({r}, {g}, {b}, 0.20) 30%, \
-                 rgba({r}, {g}, {b}, 0.12) 48%, \
-                 rgba({r}, {g}, {b}, 0.04) 65%, \
-                 rgba(20, 20, 20, 0.01) 80%, \
-                 rgba(20, 20, 20, 0) 95%);",
+                 rgba({r}, {g}, {b}, 0.19) 0%, \
+                 rgba({r}, {g}, {b}, 0.14) 30%, \
+                 rgba({r}, {g}, {b}, 0.08) 48%, \
+                 rgba({r}, {g}, {b}, 0.02) 65%, \
+                 rgba(20, 20, 20, 0) 85%);",
             r = r, g = g, b = b
         )
     };

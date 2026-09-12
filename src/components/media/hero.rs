@@ -457,9 +457,9 @@ pub fn HeroSection(
         <div
             id="hero-container"
             node_ref=hero_container_ref
-            class="hidden md:block w-full px-6 md:px-14 pt-14 md:pt-16 pb-2"
+            class="hidden md:block w-full px-6 md:px-14 pt-16 md:pt-18 pb-2"
         >
-            <div class="relative w-full aspect-[16/9] md:aspect-[1.95/1] min-h-[500px] md:min-h-[510px] max-h-[74vh] rounded-xl md:rounded-2xl overflow-hidden bg-[#181818] border border-white/[0.14] ring-1 ring-white/[0.08] shadow-[0_20px_50px_rgba(0,0,0,0.85)] group">
+            <div class="relative w-full aspect-[16/9] md:aspect-[1.95/1] min-h-[500px] md:min-h-[510px] max-h-[74vh] rounded-xl md:rounded-2xl overflow-hidden bg-[#181818] border border-white/[0.08] shadow-[0_20px_50px_rgba(0,0,0,0.85)] group">
                 // ── Background Video Layer ──────────────────────────────────────
                 <div
                     id="hero-video-layer"

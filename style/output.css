@@ -842,6 +842,9 @@
   .h-\[26px\] {
     height: 26px;
   }
+  .h-\[34px\] {
+    height: 34px;
+  }
   .h-\[35px\] {
     height: 35px;
   }
@@ -2032,8 +2035,8 @@
   .bg-\[\#262626\] {
     background-color: #262626;
   }
-  .bg-\[\#383838\] {
-    background-color: #383838;
+  .bg-\[\#484848\] {
+    background-color: #484848;
   }
   .bg-\[\#E50914\] {
     background-color: #E50914;
@@ -2538,6 +2541,9 @@
   .px-4 {
     padding-inline: calc(var(--spacing) * 4);
   }
+  .px-4\.5 {
+    padding-inline: calc(var(--spacing) * 4.5);
+  }
   .px-5 {
     padding-inline: calc(var(--spacing) * 5);
   }
@@ -2798,6 +2804,9 @@
   }
   .text-\[12px\] {
     font-size: 12px;
+  }
+  .text-\[13\.5px\] {
+    font-size: 13.5px;
   }
   .text-\[13px\] {
     font-size: 13px;
@@ -3810,10 +3819,10 @@
       }
     }
   }
-  .hover\:text-\[\#b3b3b3\] {
+  .hover\:text-\[\#e5e5e5\] {
     &:hover {
       @media (hover: hover) {
-        color: #b3b3b3;
+        color: #e5e5e5;
       }
     }
   }

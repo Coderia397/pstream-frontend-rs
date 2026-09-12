@@ -56,15 +56,17 @@ pub fn Navbar(
             "list"
         } else if p.starts_with("/browse/language") {
             "language"
-        } else {
+        } else if p == "/browse" || p == "/" || p.is_empty() {
             "home"
+        } else {
+            ""
         }
     };
 
     let nav_items = vec![
         ("home", "Home", "/browse"),
-        ("tv", "Series", "/browse/shows"),
-        ("movies", "Films", "/browse/movies"),
+        ("tv", "Series", "/browse/series"),
+        ("movies", "Films", "/browse/films"),
         ("new", "New & Popular", "/latest"),
         ("list", "My List", "/browse/my-list"),
         ("language", "Browse by Language", "/browse/language"),
@@ -74,7 +76,7 @@ pub fn Navbar(
         <>
             // ── Desktop Primary Nav (Task 085 & 086) ──────────────────────────
             <nav
-                class="fixed inset-x-0 top-0 z-[80] h-16 hidden sm:flex items-center px-14 transition-colors duration-200"
+                class="fixed inset-x-0 top-0 z-[80] h-16 hidden sm:flex items-center px-14 transition-colors duration-200 bg-gradient-to-b from-black/70 via-black/30 to-transparent"
                 style=scroll_style
             >
                 // Logo — exact pstream-logo.svg matching React source
@@ -87,15 +89,15 @@ pub fn Navbar(
                 </a>
 
                 // Nav links — exact spacing and typography (Task 086)
-                <ul class="flex items-center gap-5 ml-8 text-[14px] tracking-[-0.2px] font-normal text-[#e5e5e5]">
+                <ul class="flex items-center gap-4 ml-8 text-[14px] tracking-[-0.2px] font-normal text-[#e5e5e5]">
                     {nav_items.into_iter().map(|(id, label, href)| {
                         let is_active = move || active_tab() == id;
                         view! {
                             <li
                                 class=move || if is_active() {
-                                    "cursor-pointer transition-colors whitespace-nowrap text-white font-bold"
+                                    "cursor-pointer transition-all whitespace-nowrap text-white font-bold text-sm rounded-full border border-white/60 bg-black/40 px-3.5 py-1 shadow-sm"
                                 } else {
-                                    "cursor-pointer transition-colors whitespace-nowrap hover:text-[#8c8c8c]"
+                                    "cursor-pointer transition-colors whitespace-nowrap text-[#e5e5e5] hover:text-[#b3b3b3] text-sm px-1 py-1 font-normal"
                                 }
                             >
                                 <a href=href class="no-underline text-inherit">{label}</a>
@@ -106,7 +108,7 @@ pub fn Navbar(
             </nav>
 
             // Subnav portal — sits flush below primary nav (z-[79])
-            <div id="category-subnav-portal" class="fixed inset-x-0 top-16 z-[79] hidden sm:block" style=scroll_style />
+            <div id="category-subnav-portal" class="fixed inset-x-0 top-16 z-[79] hidden sm:block pointer-events-none transition-colors duration-200" style=scroll_style />
 
             // ── Secondary nav: search + notifications + profile ─────────────
             <div class="fixed top-0 right-14 z-[85] h-16 hidden sm:flex items-center gap-4">

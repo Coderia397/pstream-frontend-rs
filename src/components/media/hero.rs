@@ -459,7 +459,7 @@ pub fn HeroSection(
             node_ref=hero_container_ref
             class="hidden md:block w-full px-6 md:px-14 pt-16 md:pt-18 pb-2"
         >
-            <div class="relative w-full aspect-[16/9] md:aspect-[1.95/1] min-h-[500px] md:min-h-[510px] max-h-[74vh] rounded-xl md:rounded-2xl overflow-hidden bg-[#181818] border border-white/[0.08] shadow-[0_20px_50px_rgba(0,0,0,0.85)] group">
+            <div class="relative w-full aspect-[16/9] md:aspect-[1.95/1] min-h-[500px] md:min-h-[510px] max-h-[74vh] rounded-xl md:rounded-2xl overflow-hidden bg-[#181818] border border-white/[0.05] backdrop-blur-sm shadow-[inset_0_1px_0_0_rgba(255,255,255,0.12)] group">
                 // ── Background Video Layer ──────────────────────────────────────
                 <div
                     id="hero-video-layer"
@@ -530,12 +530,12 @@ pub fn HeroSection(
                 <div class="absolute inset-x-0 bottom-0 z-20 p-6 md:p-10 lg:p-12 flex flex-col md:flex-row md:items-end md:justify-between gap-6 pointer-events-none">
 
                     // Left Column: Logo/Title, Meta, Synopsis, CTA Buttons
-                    <div class="max-w-xl flex flex-col items-start gap-2 md:gap-2.5 pointer-events-auto">
+                    <div class="max-w-2xl flex flex-col items-start gap-2 md:gap-2.5 pointer-events-auto">
 
                         // Logo / Title with scale transition
                         <div
                             class=move || if is_playing() {
-                                "relative flex items-end transition-transform duration-700 origin-bottom-left scale-[0.7] sm:scale-[0.75]"
+                                "relative flex items-end transition-transform duration-700 origin-bottom-left scale-[0.93] sm:scale-[0.96]"
                             } else {
                                 "relative flex items-end transition-transform duration-700 origin-bottom-left"
                             }
@@ -543,7 +543,7 @@ pub fn HeroSection(
                             <Suspense fallback=move || {
                                 let t = current_title();
                                 view! {
-                                    <h1 class="text-3xl sm:text-5xl md:text-6xl font-black drop-shadow-2xl leading-none text-white tracking-wide uppercase">
+                                    <h1 class="text-4xl sm:text-6xl md:text-7xl lg:text-8xl font-black drop-shadow-[0_4px_14px_rgba(0,0,0,0.95)] leading-none text-white tracking-tight uppercase mb-1.5">
                                         {t}
                                     </h1>
                                 }
@@ -555,12 +555,12 @@ pub fn HeroSection(
                                             <img
                                                 src=url
                                                 alt=t.clone()
-                                                class="object-contain object-bottom drop-shadow-2xl mb-1"
-                                                style="max-height: clamp(80px, 16vw, 150px); max-width: 100%;"
+                                                class="object-contain object-bottom drop-shadow-[0_4px_14px_rgba(0,0,0,0.95)] mb-1.5"
+                                                style="max-height: clamp(130px, 28vw, 260px); max-width: min(100%, 620px);"
                                             />
                                         }.into_any(),
                                         _ => view! {
-                                            <h1 class="text-3xl sm:text-5xl md:text-6xl font-black drop-shadow-2xl leading-none text-white tracking-wide uppercase mb-1">
+                                            <h1 class="text-4xl sm:text-6xl md:text-7xl lg:text-8xl font-black drop-shadow-[0_4px_14px_rgba(0,0,0,0.95)] leading-none text-white tracking-tight uppercase mb-1.5">
                                                 {t}
                                             </h1>
                                         }.into_any(),

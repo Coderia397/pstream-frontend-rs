@@ -13,3 +13,4 @@ pub mod login;
 pub mod legal;
 pub mod notifications;
 pub mod not_found;
+pub mod games;

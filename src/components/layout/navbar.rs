@@ -34,10 +34,10 @@ pub fn Navbar(
         } else {
             (0.5 + (y - 40.0) / 160.0).min(1.0)
         };
-        let top_alpha = 0.70 * (1.0 - op);
-        let mid_alpha = 0.35 * (1.0 - op);
+        let top_alpha = 0.30 * (1.0 - op);
+        let mid_alpha = 0.10 * (1.0 - op);
         format!(
-            "background: linear-gradient(to bottom, rgba(0,0,0,{:.3}) 0%, rgba(0,0,0,{:.3}) 65%, rgba(0,0,0,0) 100%), rgba(20,20,20,{:.3});",
+            "background: linear-gradient(to bottom, rgba(0,0,0,{:.3}) 0%, rgba(0,0,0,{:.3}) 60%, rgba(0,0,0,0) 100%), rgba(20,20,20,{:.3});",
             top_alpha, mid_alpha, op
         )
     };

@@ -20,13 +20,13 @@ pub fn BrowseHome() -> impl IntoView {
         let (r, g, b) = ui_store.ambient_color.get();
         format!(
             "background: \
-             radial-gradient(ellipse 110% 55% at 50% 0%, rgba({r}, {g}, {b}, 0.24) 0%, rgba({r}, {g}, {b}, 0.12) 35%, rgba({r}, {g}, {b}, 0.03) 50%, transparent 68%), \
+             radial-gradient(ellipse 110% 65% at 50% 20%, rgba({r}, {g}, {b}, 0.22) 0%, rgba({r}, {g}, {b}, 0.11) 36%, rgba({r}, {g}, {b}, 0.02) 52%, transparent 70%), \
              linear-gradient(to bottom, \
-                 rgba({r}, {g}, {b}, 0.19) 0%, \
-                 rgba({r}, {g}, {b}, 0.14) 30%, \
-                 rgba({r}, {g}, {b}, 0.08) 48%, \
-                 rgba({r}, {g}, {b}, 0.02) 65%, \
-                 rgba(20, 20, 20, 0) 85%);",
+                 rgba(6, 8, 10, 0.45) 0%, \
+                 rgba(6, 8, 10, 0.15) 12%, \
+                 transparent 22%, \
+                 rgba(20, 20, 20, 0.50) 55%, \
+                 rgba(20, 20, 20, 1.0) 82%);",
             r = r, g = g, b = b
         )
     };

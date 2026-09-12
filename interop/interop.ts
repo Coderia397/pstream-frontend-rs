@@ -48,7 +48,10 @@ import * as ambient from './ambient';
       meta.name = 'theme-color';
       document.head.appendChild(meta);
     }
-    meta.content = `rgb(${r}, ${g}, ${b})`;
+    const tr = Math.round(r * 0.45);
+    const tg = Math.round(g * 0.45);
+    const tb = Math.round(b * 0.45);
+    meta.content = `rgb(${tr}, ${tg}, ${tb})`;
   } catch {}
 };
 
@@ -60,7 +63,10 @@ import * as ambient from './ambient';
       meta.name = 'theme-color';
       document.head.appendChild(meta);
     }
-    meta.content = `rgb(${r}, ${g}, ${b})`;
+    const tr = Math.round(r * 0.45);
+    const tg = Math.round(g * 0.45);
+    const tb = Math.round(b * 0.45);
+    meta.content = `rgb(${tr}, ${tg}, ${tb})`;
   } catch {}
 };
 

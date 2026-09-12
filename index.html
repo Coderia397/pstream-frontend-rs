@@ -3,7 +3,7 @@
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
-    <meta name="theme-color" content="#101519" />
+    <meta name="theme-color" content="#080b0d" />
     <title>PStream</title>
     <!-- Instant ambient color hydration before first paint (0ms) -->
     <script>
@@ -21,7 +21,7 @@
           document.documentElement.style.setProperty('--ambient-g', g);
           document.documentElement.style.setProperty('--ambient-b', b);
           var meta = document.querySelector('meta[name="theme-color"]');
-          if (meta) meta.content = 'rgb(' + r + ',' + g + ',' + b + ')';
+          if (meta) meta.content = 'rgb(' + Math.round(r * 0.45) + ',' + Math.round(g * 0.45) + ',' + Math.round(b * 0.45) + ')';
         } catch(e) {}
       })();
     </script>

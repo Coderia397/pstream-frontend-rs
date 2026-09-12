@@ -56,7 +56,7 @@ pub fn BrowseGridPage() -> impl IntoView {
     view! {
         <Layout>
             <div class="bg-black md:bg-[#141414] min-h-screen pb-16 pt-[calc(4.5rem+env(safe-area-inset-top))] md:pt-24">
-                <div class="px-4 md:px-10 lg:px-14">
+                <div class="px-6 md:px-14">
                     // Header with back button
                     <div class="flex items-center gap-3.5 mb-8 md:mb-12">
                         <button
@@ -73,9 +73,9 @@ pub fn BrowseGridPage() -> impl IntoView {
 
                     // Content grid
                     <Suspense fallback=move || view! {
-                        <div class="grid grid-cols-2 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-x-2.5 gap-y-6 animate-pulse">
-                            {(0..15).map(|_| view! {
-                                <div class="aspect-video bg-[#1e1e1e] rounded-sm border border-white/[0.04]"></div>
+                        <div class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 xl:grid-cols-6 gap-x-1.5 md:gap-x-2 gap-y-10 md:gap-y-12 animate-pulse">
+                            {(0..18).map(|_| view! {
+                                <div class="aspect-video bg-[#1e1e1e] rounded-[4px] border border-white/[0.04]"></div>
                             }).collect::<Vec<_>>()}
                         </div>
                     }>
@@ -89,7 +89,7 @@ pub fn BrowseGridPage() -> impl IntoView {
                                 }.into_any()
                             } else {
                                 view! {
-                                    <div class="grid grid-cols-2 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-x-2.5 gap-y-6">
+                                    <div class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 xl:grid-cols-6 gap-x-1.5 md:gap-x-2 gap-y-10 md:gap-y-12">
                                         {items.into_iter().map(|item| {
                                             let movie_id = item.id;
                                             let is_tv = item.is_tv();
@@ -105,6 +105,7 @@ pub fn BrowseGridPage() -> impl IntoView {
                                                     backdrop_path=backdrop
                                                     poster_path=poster
                                                     vote_average=vote_avg
+                                                    is_grid=true
                                                 />
                                             }
                                         }).collect::<Vec<_>>()}

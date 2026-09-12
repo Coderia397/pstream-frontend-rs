@@ -1,4 +1,6 @@
 use leptos::prelude::*;
+use leptos::html::Div;
+use wasm_bindgen::JsCast;
 use crate::components::layout::Layout;
 use crate::components::media::movie_card::MovieCard;
 use crate::services::tmdb::fetch_by_language;
@@ -32,10 +34,51 @@ pub const BROWSE_LANGUAGES: &[LangItem] = &[
     LangItem { code: "id", label: "Indonesian" },
 ];
 
+pub const PREF_TYPES: &[&'static str] = &[
+    "Original Language",
+    "Dubbing",
+    "Subtitles",
+];
+
 #[component]
 pub fn BrowseLanguagePage() -> impl IntoView {
+    let (selected_pref_type, set_selected_pref_type) = signal("Original Language");
+    let (pref_dropdown_open, set_pref_dropdown_open) = signal(false);
+
     let (selected_lang, set_selected_lang) = signal("en");
-    let (dropdown_open, set_dropdown_open) = signal(false);
+    let (lang_dropdown_open, set_lang_dropdown_open) = signal(false);
+
+    let pref_container_ref = NodeRef::<Div>::new();
+    let lang_container_ref = NodeRef::<Div>::new();
+
+    // Close dropdowns on outside click
+    Effect::new(move |_| {
+        if pref_dropdown_open.get() || lang_dropdown_open.get() {
+            if let Some(win) = web_sys::window() {
+                if let Some(doc) = win.document() {
+                    let cb = wasm_bindgen::closure::Closure::<dyn Fn(web_sys::MouseEvent)>::wrap(Box::new(move |e: web_sys::MouseEvent| {
+                        let target = e.target();
+                        if let Some(target_node) = target.and_then(|t| t.dyn_into::<web_sys::Node>().ok()) {
+                            if let Some(pref_el) = pref_container_ref.get() {
+                                let pref_node: &web_sys::Node = pref_el.as_ref();
+                                if !pref_node.contains(Some(&target_node)) {
+                                    set_pref_dropdown_open.set(false);
+                                }
+                            }
+                            if let Some(lang_el) = lang_container_ref.get() {
+                                let lang_node: &web_sys::Node = lang_el.as_ref();
+                                if !lang_node.contains(Some(&target_node)) {
+                                    set_lang_dropdown_open.set(false);
+                                }
+                            }
+                        }
+                    }));
+                    let _ = doc.add_event_listener_with_callback("mousedown", cb.as_ref().unchecked_ref());
+                    cb.forget();
+                }
+            }
+        }
+    });
 
     let active_label = move || {
         let code = selected_lang.get();
@@ -49,44 +92,97 @@ pub fn BrowseLanguagePage() -> impl IntoView {
     let items_resource = LocalResource::new(move || {
         let lang = selected_lang.get();
         async move {
-            fetch_by_language(lang, 1).await.unwrap_or_default()
+            let mut all = fetch_by_language(lang, 1).await.unwrap_or_default();
+            if let Ok(mut more) = fetch_by_language(lang, 2).await {
+                all.append(&mut more);
+            }
+            all
         }
     });
 
-    let toggle_dropdown = move |e: leptos::ev::MouseEvent| {
+    let toggle_pref_dropdown = move |e: leptos::ev::MouseEvent| {
         e.stop_propagation();
-        set_dropdown_open.update(|o| *o = !*o);
+        set_lang_dropdown_open.set(false);
+        set_pref_dropdown_open.update(|o| *o = !*o);
+    };
+
+    let toggle_lang_dropdown = move |e: leptos::ev::MouseEvent| {
+        e.stop_propagation();
+        set_pref_dropdown_open.set(false);
+        set_lang_dropdown_open.update(|o| *o = !*o);
     };
 
     view! {
         <Layout>
             <div class="bg-black md:bg-[#141414] min-h-screen pb-20 pt-[calc(4rem+env(safe-area-inset-top))] md:pt-28">
-                <div class="px-4 md:px-10 lg:px-14 pt-0 md:pt-1">
-                    // Header with language dropdown
-                    <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-4 mb-8 md:mb-12">
-                        <h1 class="text-white font-normal text-[22px] md:text-[26px] tracking-tight leading-tight">
+                <div class="px-6 md:px-14 pt-2 md:pt-4">
+                    // Header with title and Netflix-matching preference dropdowns
+                    <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-4 mb-8">
+                        <h1 class="text-white font-bold text-[28px] md:text-[32px] tracking-tight leading-tight select-none">
                             "Browse by Language"
                         </h1>
 
-                        <div class="flex items-center gap-4">
-                            <span class="text-white/90 text-[15px] hidden md:block select-none">
+                        <div class="flex items-center gap-3">
+                            <span class="text-white/80 text-[14px] hidden md:block select-none whitespace-nowrap">
                                 "Select your preferences"
                             </span>
 
-                            <div class="relative">
+                            // Dropdown 1: Preference Type (Original Language / Dubbing / Subtitles)
+                            <div node_ref=pref_container_ref class="relative">
                                 <button
-                                    on:click=toggle_dropdown
-                                    class="flex items-center justify-between min-w-[180px] md:min-w-[210px] px-4 py-[7px] md:py-[8px] text-[13px] md:text-[14px] font-bold tracking-[-0.2px] text-white bg-black border border-white/80 hover:bg-white/5 transition-colors gap-x-3 cursor-pointer select-none"
+                                    on:click=toggle_pref_dropdown
+                                    class="flex items-center justify-between min-w-[160px] md:min-w-[170px] px-3.5 py-1.5 text-[13px] md:text-[14px] font-bold tracking-tight text-white bg-black border border-[#4d4d4d] hover:border-white transition-colors gap-x-2.5 cursor-pointer select-none rounded-[2px]"
                                 >
-                                    <span>{active_label}</span>
-                                    <i class="ph-fill ph-caret-down text-white text-xs"></i>
+                                    <span>{move || selected_pref_type.get()}</span>
+                                    <i class="ph-fill ph-caret-down text-white text-[10px] transition-transform duration-200"
+                                       class=("rotate-180", move || pref_dropdown_open.get())></i>
                                 </button>
 
-                                // Dropdown menu
                                 {move || {
-                                    if dropdown_open.get() {
+                                    if pref_dropdown_open.get() {
                                         view! {
-                                            <div class="absolute top-full left-0 mt-1 w-full max-h-64 overflow-y-auto bg-black/95 border border-[#333] shadow-2xl z-50 scrollbar-hide py-1">
+                                            <div class="absolute top-[calc(100%+4px)] left-0 w-full min-w-[170px] bg-black/95 border border-[#333] shadow-2xl z-50 py-1 scrollbar-hide rounded-[2px]">
+                                                {PREF_TYPES.iter().map(|&t| {
+                                                    let is_selected = selected_pref_type.get() == t;
+                                                    view! {
+                                                        <button
+                                                            on:click=move |_| {
+                                                                set_selected_pref_type.set(t);
+                                                                set_pref_dropdown_open.set(false);
+                                                            }
+                                                            class=if is_selected {
+                                                                "w-full text-left px-3.5 py-1.5 text-[13px] md:text-[14px] text-white font-bold bg-white/10 cursor-pointer"
+                                                            } else {
+                                                                "w-full text-left px-3.5 py-1.5 text-[13px] md:text-[14px] text-[#e5e5e5] hover:text-white hover:bg-white/5 transition-colors cursor-pointer"
+                                                            }
+                                                        >
+                                                            {t}
+                                                        </button>
+                                                    }
+                                                }).collect::<Vec<_>>()}
+                                            </div>
+                                        }.into_any()
+                                    } else {
+                                        view! { <div /> }.into_any()
+                                    }
+                                }}
+                            </div>
+
+                            // Dropdown 2: Language Selector
+                            <div node_ref=lang_container_ref class="relative">
+                                <button
+                                    on:click=toggle_lang_dropdown
+                                    class="flex items-center justify-between min-w-[130px] md:min-w-[150px] px-3.5 py-1.5 text-[13px] md:text-[14px] font-bold tracking-tight text-white bg-black border border-[#4d4d4d] hover:border-white transition-colors gap-x-2.5 cursor-pointer select-none rounded-[2px]"
+                                >
+                                    <span>{active_label}</span>
+                                    <i class="ph-fill ph-caret-down text-white text-[10px] transition-transform duration-200"
+                                       class=("rotate-180", move || lang_dropdown_open.get())></i>
+                                </button>
+
+                                {move || {
+                                    if lang_dropdown_open.get() {
+                                        view! {
+                                            <div class="absolute top-[calc(100%+4px)] left-0 w-full min-w-[150px] max-h-64 overflow-y-auto bg-black/95 border border-[#333] shadow-2xl z-50 py-1 scrollbar-hide rounded-[2px]">
                                                 {BROWSE_LANGUAGES.iter().map(|lang| {
                                                     let code = lang.code;
                                                     let label = lang.label;
@@ -95,12 +191,12 @@ pub fn BrowseLanguagePage() -> impl IntoView {
                                                         <button
                                                             on:click=move |_| {
                                                                 set_selected_lang.set(code);
-                                                                set_dropdown_open.set(false);
+                                                                set_lang_dropdown_open.set(false);
                                                             }
                                                             class=if is_selected {
-                                                                "w-full text-left px-4 py-2 text-sm text-white font-bold bg-white/10 cursor-pointer"
+                                                                "w-full text-left px-3.5 py-1.5 text-[13px] md:text-[14px] text-white font-bold bg-white/10 cursor-pointer"
                                                             } else {
-                                                                "w-full text-left px-4 py-2 text-sm text-[#e5e5e5] hover:text-white hover:bg-white/5 transition-colors cursor-pointer"
+                                                                "w-full text-left px-3.5 py-1.5 text-[13px] md:text-[14px] text-[#e5e5e5] hover:text-white hover:bg-white/5 transition-colors cursor-pointer"
                                                             }
                                                         >
                                                             {label}
@@ -117,11 +213,11 @@ pub fn BrowseLanguagePage() -> impl IntoView {
                         </div>
                     </div>
 
-                    // Content grid
+                    // Content grid — exact 6-column Netflix desktop grid with tight horizontal gap and full aspect-video cards
                     <Suspense fallback=move || view! {
-                        <div class="grid grid-cols-2 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-x-2.5 gap-y-6 animate-pulse">
-                            {(0..15).map(|_| view! {
-                                <div class="aspect-video bg-[#1e1e1e] rounded-sm border border-white/[0.04]"></div>
+                        <div class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 xl:grid-cols-6 gap-x-1.5 md:gap-x-2 gap-y-10 md:gap-y-12 animate-pulse">
+                            {(0..18).map(|_| view! {
+                                <div class="aspect-video bg-[#1e1e1e] rounded-[4px] border border-white/[0.04]"></div>
                             }).collect::<Vec<_>>()}
                         </div>
                     }>
@@ -135,7 +231,7 @@ pub fn BrowseLanguagePage() -> impl IntoView {
                                 }.into_any()
                             } else {
                                 view! {
-                                    <div class="grid grid-cols-2 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-x-2.5 gap-y-6">
+                                    <div class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 xl:grid-cols-6 gap-x-1.5 md:gap-x-2 gap-y-10 md:gap-y-12">
                                         {items.into_iter().map(|item| {
                                             let movie_id = item.id;
                                             let is_tv = item.is_tv();
@@ -151,6 +247,7 @@ pub fn BrowseLanguagePage() -> impl IntoView {
                                                     backdrop_path=backdrop
                                                     poster_path=poster
                                                     vote_average=vote_avg
+                                                    is_grid=true
                                                 />
                                             }
                                         }).collect::<Vec<_>>()}

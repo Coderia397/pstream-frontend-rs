@@ -42,6 +42,8 @@ pub fn App() -> impl IntoView {
                 <Route path=path!("/browse/films") view=|| view! { <crate::pages::category::CategoryPage kind="movie" /> } />
                 <Route path=path!("/browse/shows") view=|| view! { <crate::pages::category::CategoryPage kind="tv" /> } />
                 <Route path=path!("/browse/series") view=|| view! { <crate::pages::category::CategoryPage kind="tv" /> } />
+                <Route path=path!("/browse/games") view=|| view! { <leptos_router::components::Redirect path="/browse" /> } />
+                <Route path=path!("/games") view=|| view! { <leptos_router::components::Redirect path="/browse" /> } />
                 <Route path=path!("/tv") view=|| view! { <leptos_router::components::Redirect path="/browse/shows" /> } />
                 <Route path=path!("/movies") view=|| view! { <leptos_router::components::Redirect path="/browse/movies" /> } />
                 <Route path=path!("/new") view=|| view! { <leptos_router::components::Redirect path="/latest" /> } />

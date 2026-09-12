@@ -36,7 +36,10 @@ pub fn VideoPlayer(
         }
     });
 
-    let toggle_play = move |_| {
+    let container_ref = NodeRef::<leptos::html::Div>::new();
+    let progress_bar_ref = NodeRef::<leptos::html::Div>::new();
+
+    let do_toggle_play = move || {
         if let Some(player) = hls_player.get() {
             if is_playing.get() {
                 player.pause();
@@ -48,11 +51,37 @@ pub fn VideoPlayer(
         }
     };
 
-    let toggle_mute = move |_| {
+    let do_toggle_mute = move || {
         if let Some(video) = video_ref.get() {
             let m = !video.muted();
             video.set_muted(m);
             set_is_muted.set(m);
+        }
+    };
+
+    let do_skip_backward = move || {
+        if let Some(player) = hls_player.get() {
+            let target = (player.current_time() - 10.0).max(0.0);
+            player.seek(target);
+            set_progress.set(target);
+        }
+    };
+
+    let do_skip_forward = move || {
+        if let Some(player) = hls_player.get() {
+            let target = (player.current_time() + 10.0).min(player.duration());
+            player.seek(target);
+            set_progress.set(target);
+        }
+    };
+
+    let do_toggle_fullscreen = move || {
+        if let Some(doc) = web_sys::window().and_then(|w| w.document()) {
+            if doc.fullscreen_element().is_some() {
+                let _ = doc.exit_fullscreen();
+            } else if let Some(container) = container_ref.get() {
+                let _ = container.request_fullscreen();
+            }
         }
     };
 
@@ -64,7 +93,17 @@ pub fn VideoPlayer(
     };
 
     let seek = move |e: leptos::ev::MouseEvent| {
-        // Basic seek calculation
+        if let (Some(bar), Some(player)) = (progress_bar_ref.get(), hls_player.get()) {
+            let rect = bar.get_bounding_client_rect();
+            let click_x = (e.client_x() as f64 - rect.left()).max(0.0);
+            let width = rect.width();
+            if width > 0.0 {
+                let ratio = (click_x / width).clamp(0.0, 1.0);
+                let target = ratio * player.duration();
+                player.seek(target);
+                set_progress.set(target);
+            }
+        }
     };
 
     let close_player = move |_| {
@@ -73,8 +112,39 @@ pub fn VideoPlayer(
         }
     };
 
+    // Keyboard shortcuts
+    let _ = window_event_listener(leptos::ev::keydown, move |e: web_sys::KeyboardEvent| {
+        match e.key().as_str() {
+            " " | "k" | "K" => {
+                e.prevent_default();
+                do_toggle_play();
+            }
+            "j" | "J" | "ArrowLeft" => {
+                e.prevent_default();
+                do_skip_backward();
+            }
+            "l" | "L" | "ArrowRight" => {
+                e.prevent_default();
+                do_skip_forward();
+            }
+            "m" | "M" => {
+                e.prevent_default();
+                do_toggle_mute();
+            }
+            "f" | "F" => {
+                e.prevent_default();
+                do_toggle_fullscreen();
+            }
+            _ => {}
+        }
+    });
+
     view! {
-        <div class="fixed inset-0 bg-black z-[200] flex flex-col group" on:mousemove=reset_idle>
+        <div
+            node_ref=container_ref
+            class="fixed inset-0 bg-black z-[200] flex flex-col group"
+            on:mousemove=reset_idle
+        >
             <video
                 node_ref=video_ref
                 id="pstream-main-player"
@@ -84,7 +154,7 @@ pub fn VideoPlayer(
                 on:timeupdate=on_time_update
                 on:play=move |_| set_is_playing.set(true)
                 on:pause=move |_| set_is_playing.set(false)
-                on:click=toggle_play
+                on:click=move |_| do_toggle_play()
             ></video>
             
             <div 
@@ -104,7 +174,11 @@ pub fn VideoPlayer(
                 </div>
                 
                 <div class="flex flex-col gap-6 pointer-events-auto pb-4 px-4">
-                    <div class="w-full h-1.5 bg-gray-600 rounded-full cursor-pointer relative group/progress" on:click=seek>
+                    <div
+                        node_ref=progress_bar_ref
+                        class="w-full h-1.5 bg-gray-600 rounded-full cursor-pointer relative group/progress"
+                        on:click=seek
+                    >
                         <div 
                             class="h-full bg-red-600 rounded-full transition-all duration-100"
                             style=move || format!("width: {}%", if duration.get() > 0.0 { (progress.get() / duration.get()) * 100.0 } else { 0.0 })
@@ -117,12 +191,16 @@ pub fn VideoPlayer(
                     
                     <div class="flex justify-between items-center text-white">
                         <div class="flex items-center gap-8">
-                            <button on:click=toggle_play class="text-[40px] hover:scale-110 transition-transform">
+                            <button on:click=move |_| do_toggle_play() class="text-[40px] hover:scale-110 transition-transform">
                                 {move || if is_playing.get() { view!{<i class="ph-fill ph-pause"></i>} } else { view!{<i class="ph-fill ph-play"></i>} }}
                             </button>
-                            <button class="text-3xl hover:scale-110 transition-transform"><i class="ph-bold ph-clock-counter-clockwise"></i></button>
-                            <button class="text-3xl hover:scale-110 transition-transform"><i class="ph-bold ph-clock-clockwise"></i></button>
-                            <button on:click=toggle_mute class="text-3xl hover:scale-110 transition-transform">
+                            <button on:click=move |_| do_skip_backward() class="text-3xl hover:scale-110 transition-transform" title="Rewind 10s">
+                                <i class="ph-bold ph-clock-counter-clockwise"></i>
+                            </button>
+                            <button on:click=move |_| do_skip_forward() class="text-3xl hover:scale-110 transition-transform" title="Forward 10s">
+                                <i class="ph-bold ph-clock-clockwise"></i>
+                            </button>
+                            <button on:click=move |_| do_toggle_mute() class="text-3xl hover:scale-110 transition-transform">
                                 {move || if is_muted.get() { view!{<i class="ph-fill ph-speaker-x"></i>} } else { view!{<i class="ph-fill ph-speaker-high"></i>} }}
                             </button>
                         </div>
@@ -136,7 +214,9 @@ pub fn VideoPlayer(
                                 }}
                             </span>
                             <button class="hover:scale-110 transition-transform"><i class="ph-bold ph-closed-captioning"></i></button>
-                            <button class="hover:scale-110 transition-transform"><i class="ph-bold ph-corners-out"></i></button>
+                            <button on:click=move |_| do_toggle_fullscreen() class="hover:scale-110 transition-transform" title="Fullscreen">
+                                <i class="ph-bold ph-corners-out"></i>
+                            </button>
                         </div>
                     </div>
                 </div>

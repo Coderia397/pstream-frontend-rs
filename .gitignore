@@ -1,5 +1,9 @@
 /target
+dist/
+.DS_Store
+**/.DS_Store
 
 # Tailwind standalone binary (too large for GitHub)
 tailwindcss
 tailwindcss-*
+

@@ -64,7 +64,7 @@ fn LandingTopTenCard(movie: TopMovie, index: usize) -> impl IntoView {
 
     view! {
         <div class=format!(
-            "relative flex-none {} ml-6 sm:ml-8 md:ml-10 lg:ml-12 mr-4 md:mr-6 flex items-end select-none z-10 cursor-default",
+            "relative flex-none {} ml-6 sm:ml-8 md:ml-10 lg:ml-12 mr-4 md:mr-6 flex items-end select-none z-10 cursor-default transition-transform duration-200 hover:scale-105 hover:-translate-y-1",
             CARD_CLASS
         )>
             <RankNumber index=index />
@@ -89,8 +89,29 @@ fn LandingTopTenRow(title: &'static str) -> impl IntoView {
         crate::services::tmdb::fetch_trending("all").await.unwrap_or_default()
     });
 
-    let scroll_left = Signal::derive(|| false);
-    let scroll_right = Signal::derive(|| true);
+    let scroll_ref = NodeRef::<leptos::html::Div>::new();
+    let (scroll_left, set_scroll_left) = signal(false);
+    let (scroll_right, set_scroll_right) = signal(true);
+
+    let update_scroll_state = move || {
+        if let Some(el) = scroll_ref.get() {
+            let scroll_left_val = el.scroll_left();
+            let scroll_width = el.scroll_width();
+            let client_width = el.client_width();
+            set_scroll_left.set(scroll_left_val > 0);
+            set_scroll_right.set(scroll_left_val < scroll_width - client_width - 4);
+        }
+    };
+
+    let scroll = move |dir: &'static str| {
+        if let Some(el) = scroll_ref.get() {
+            let client_width = el.client_width() as f64;
+            let amount = client_width * 0.8;
+            let delta = if dir == "right" { amount } else { -amount };
+            el.scroll_by_with_x_and_y(delta, 0.0);
+            update_scroll_state();
+        }
+    };
 
     view! {
         <div class="relative group/row">
@@ -101,7 +122,10 @@ fn LandingTopTenRow(title: &'static str) -> impl IntoView {
                 // Left arrow — only when scrolled right
                 {move || if scroll_left.get() {
                     view! {
-                        <button class="absolute left-0 top-0 bottom-0 z-20 w-12 md:w-16 flex items-center justify-center bg-gradient-to-r from-black/90 to-transparent opacity-0 group-hover/row:opacity-100 transition-opacity">
+                        <button
+                            on:click=move |_| scroll("left")
+                            class="absolute left-0 top-0 bottom-0 z-20 w-12 md:w-16 flex items-center justify-center bg-gradient-to-r from-black/90 to-transparent opacity-0 group-hover/row:opacity-100 transition-opacity"
+                        >
                             <i class="ph-bold ph-caret-left text-4xl text-white drop-shadow-lg" />
                         </button>
                     }.into_any()
@@ -109,7 +133,10 @@ fn LandingTopTenRow(title: &'static str) -> impl IntoView {
                 // Right arrow
                 {move || if scroll_right.get() {
                     view! {
-                        <button class="absolute right-0 top-0 bottom-0 z-20 w-12 md:w-16 flex items-center justify-center bg-gradient-to-l from-black/90 to-transparent opacity-0 group-hover/row:opacity-100 transition-opacity">
+                        <button
+                            on:click=move |_| scroll("right")
+                            class="absolute right-0 top-0 bottom-0 z-20 w-12 md:w-16 flex items-center justify-center bg-gradient-to-l from-black/90 to-transparent opacity-0 group-hover/row:opacity-100 transition-opacity"
+                        >
                             <i class="ph-bold ph-caret-right text-4xl text-white drop-shadow-lg" />
                         </button>
                     }.into_any()
@@ -135,6 +162,8 @@ fn LandingTopTenRow(title: &'static str) -> impl IntoView {
                                 }).collect();
                             view! {
                                 <div
+                                    node_ref=scroll_ref
+                                    on:scroll=move |_| update_scroll_state()
                                     class="flex gap-0 overflow-x-auto overflow-y-hidden scroll-smooth py-4 -my-4"
                                     style="scrollbar-width:none;-ms-overflow-style:none"
                                 >

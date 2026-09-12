@@ -17,7 +17,7 @@ pub fn VideoPlayer(
     let (duration, set_duration) = signal(0.0);
 
     // Timeout for idle mouse
-    let timeout_handle = RwSignal::new_local(None::<leptos::wasm_bindgen::closure::Closure<dyn FnMut()>>);
+    let _timeout_handle = RwSignal::new_local(None::<leptos::wasm_bindgen::closure::Closure<dyn FnMut()>>);
 
     let reset_idle = move |_| {
         set_is_idle.set(false);

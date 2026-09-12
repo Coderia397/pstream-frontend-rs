@@ -85,9 +85,9 @@ pub fn HeroSection(
     let current_title = move || current_item().display_title().to_string();
     let current_backdrop = move || {
         let item = current_item();
-        if let Some(ref bp) = item.backdrop_path {
+        if let Some(bp) = item.backdrop_path.as_ref().or(item.poster_path.as_ref()) {
             if bp.starts_with("http") {
-                bp.clone()
+                bp.to_string()
             } else {
                 format!("https://image.tmdb.org/t/p/original{}", bp)
             }
@@ -102,7 +102,11 @@ pub fn HeroSection(
         let id = current_id();
         let tv = current_is_tv();
         async move {
-            fetch_movie_logo(id, tv).await.ok().flatten()
+            if id > 0 {
+                fetch_movie_logo(id, tv).await.ok().flatten()
+            } else {
+                None
+            }
         }
     });
 
@@ -111,7 +115,11 @@ pub fn HeroSection(
         let id = current_id();
         let tv = current_is_tv();
         async move {
-            fetch_videos(id, tv).await.unwrap_or_default()
+            if id > 0 {
+                fetch_videos(id, tv).await.unwrap_or_default()
+            } else {
+                vec![]
+            }
         }
     });
 
@@ -128,7 +136,11 @@ pub fn HeroSection(
         let id = current_id();
         let tv = current_is_tv();
         async move {
-            fetch_details(id, tv).await.ok()
+            if id > 0 {
+                fetch_details(id, tv).await.ok()
+            } else {
+                None
+            }
         }
     });
 
@@ -146,14 +158,14 @@ pub fn HeroSection(
         if let Some(Some(ref d)) = details_resource.get() {
             if let Some(ref date) = d.release_date.as_ref().or(d.first_air_date.as_ref()) {
                 if date.len() >= 4 {
-                    return date[0..4].to_string();
+                    return date.chars().take(4).collect::<String>();
                 }
             }
         }
         let item = current_item();
         if let Some(ref date) = item.release_date.as_ref().or(item.first_air_date.as_ref()) {
             if date.len() >= 4 {
-                return date[0..4].to_string();
+                return date.chars().take(4).collect::<String>();
             }
         }
         "2024".to_string()

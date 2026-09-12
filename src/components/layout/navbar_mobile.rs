@@ -6,8 +6,8 @@ use crate::store::use_profile_store;
 #[component]
 pub fn NavbarMobile(
     #[prop(optional, default = 0.0)] scroll_y: f64,
-    #[prop(optional)] search_query: Option<ReadSignal<String>>,
-    #[prop(optional)] set_search_query: Option<WriteSignal<String>>,
+    #[prop(optional)] _search_query: Option<ReadSignal<String>>,
+    #[prop(optional)] _set_search_query: Option<WriteSignal<String>>,
 ) -> impl IntoView {
     let profile_store = use_profile_store();
     let navigate = use_navigate();

@@ -92,15 +92,15 @@ pub fn Navbar(
                 </a>
 
                 // Nav links — exact spacing and typography (Task 086)
-                <ul class="flex items-center gap-7 ml-10 text-[14px] tracking-[-0.2px] font-normal text-[#e5e5e5]">
+                <ul class="flex items-center gap-2 ml-8 text-[14px] tracking-[-0.2px] font-normal text-[#e5e5e5]">
                     {nav_items.into_iter().map(|(id, label, href)| {
                         let is_active = move || active_tab() == id;
                         view! {
                             <li
                                 class=move || if is_active() {
-                                    "cursor-pointer transition-all whitespace-nowrap text-white font-bold text-[13.5px] rounded-full bg-white/20 h-[34px] px-4.5 shadow-md inline-flex items-center justify-center backdrop-blur-sm"
+                                    "cursor-pointer transition-all duration-200 whitespace-nowrap text-white font-bold text-[13.5px] rounded-full bg-white/20 h-[34px] px-4 shadow-md inline-flex items-center justify-center backdrop-blur-sm"
                                 } else {
-                                    "cursor-pointer transition-colors whitespace-nowrap text-[#b3b3b3] hover:text-[#e5e5e5] text-[13.5px] px-1 py-1 font-normal inline-flex items-center"
+                                    "cursor-pointer transition-all duration-200 whitespace-nowrap text-[#b3b3b3] hover:text-white text-[13.5px] rounded-full bg-transparent hover:bg-white/10 h-[34px] px-4 font-normal inline-flex items-center justify-center hover:backdrop-blur-sm"
                                 }
                             >
                                 <a href=href class="no-underline text-inherit">{label}</a>
@@ -153,7 +153,7 @@ pub fn Navbar(
                                         }
                                     }
                                 }
-                                class="flex items-center gap-2 text-white/90 hover:text-white transition-opacity select-none cursor-pointer group"
+                                class="flex items-center gap-2 text-white/90 hover:text-white transition-all select-none cursor-pointer group h-[34px] px-2.5 rounded-full hover:bg-white/10 hover:backdrop-blur-sm"
                                 title="Switch to Kids Profile"
                             >
                                 <div class="w-8 h-8 rounded-[4px] overflow-hidden flex items-center justify-center ring-1 ring-white/10 group-hover:ring-white/40 transition-all">

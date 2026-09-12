@@ -22,6 +22,66 @@ fn clear_timeout_id(id: Option<i32>) {
 }
 
 #[component]
+fn MegaphoneBadgeIcon() -> impl IntoView {
+    view! {
+        <svg
+            class="w-[15px] h-[15px] flex-shrink-0 drop-shadow-[0_1px_3px_rgba(255,0,100,0.5)]"
+            viewBox="0 0 20 20"
+            fill="none"
+            xmlns="http://www.w3.org/2000/svg"
+        >
+            <defs>
+                <linearGradient id="megaGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+                    <stop offset="0%" stop-color="#ff007f" />
+                    <stop offset="60%" stop-color="#ff1a40" />
+                    <stop offset="100%" stop-color="#ff6b00" />
+                </linearGradient>
+            </defs>
+            <path
+                d="M4 11.5V8.5C4 7.95 4.45 7.5 5 7.5H7L13.2 3.4C13.8 3.0 14.6 3.4 14.6 4.1V15.9C14.6 16.6 13.8 17.0 13.2 16.6L7 12.5H5C4.45 12.5 4 12.05 4 11.5Z"
+                fill="url(#megaGrad)"
+            />
+            <path
+                d="M6 12.5V15.5C6 16.05 6.45 16.5 7 16.5H7.5C8.05 16.5 8.5 16.05 8.5 15.5V12.5"
+                fill="url(#megaGrad)"
+            />
+            <path
+                d="M16 7.5C16.8 8.8 16.8 11.2 16 12.5"
+                stroke="url(#megaGrad)"
+                stroke-width="1.8"
+                stroke-linecap="round"
+            />
+        </svg>
+    }
+}
+
+#[component]
+fn ClapperboardBadgeIcon() -> impl IntoView {
+    view! {
+        <svg
+            class="w-[15px] h-[15px] flex-shrink-0 drop-shadow-[0_1px_3px_rgba(155,93,229,0.5)]"
+            viewBox="0 0 20 20"
+            fill="none"
+            xmlns="http://www.w3.org/2000/svg"
+        >
+            <defs>
+                <linearGradient id="clapGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+                    <stop offset="0%" stop-color="#ff007f" />
+                    <stop offset="50%" stop-color="#9b5de5" />
+                    <stop offset="100%" stop-color="#7209b7" />
+                </linearGradient>
+            </defs>
+            <rect x="2.5" y="4" width="15" height="3.5" rx="1" fill="url(#clapGrad)" />
+            <path d="M5.5 4L4 7.5M9.5 4L8 7.5M13.5 4L12 7.5" stroke="#ffffff" stroke-width="1.2" stroke-linecap="round" />
+            <rect x="2.5" y="8" width="15" height="8" rx="1.2" fill="url(#clapGrad)" />
+            <line x1="5" y1="11" x2="11" y2="11" stroke="#ffffff" stroke-opacity="0.8" stroke-width="1.2" stroke-linecap="round" />
+            <line x1="5" y1="13.5" x2="9" y2="13.5" stroke="#ffffff" stroke-opacity="0.5" stroke-width="1.2" stroke-linecap="round" />
+            <circle cx="14" cy="12.2" r="1.2" fill="#ffffff" fill-opacity="0.8" />
+        </svg>
+    }
+}
+
+#[component]
 pub fn HeroSection(
     #[prop(optional)] movies: Option<Vec<MediaItem>>,
     #[prop(optional, default = 0)] movie_id: u32,
@@ -228,6 +288,25 @@ pub fn HeroSection(
         })
     };
 
+    let primary_badge = move || {
+        let yr = year_label().parse::<u32>().unwrap_or(2024);
+        let vote = current_item().vote_average;
+        if yr >= 2024 {
+            Some(("megaphone", "Recently added".to_string()))
+        } else if vote >= 7.8 {
+            Some(("clapper", "Critically Acclaimed".to_string()))
+        } else if vote >= 7.0 {
+            Some(("megaphone", "Trending Now".to_string()))
+        } else {
+            let g = genre_label();
+            if !g.is_empty() && g != "Action" {
+                Some(("clapper", format!("Top Pick in {}", g)))
+            } else {
+                Some(("megaphone", "Top Pick".to_string()))
+            }
+        }
+    };
+
     // 2.5-second idle trailer playback trigger (Task 069)
     let start_trailer_timer = move || {
         clear_timeout_id(show_timer.get_value());
@@ -378,9 +457,9 @@ pub fn HeroSection(
         <div
             id="hero-container"
             node_ref=hero_container_ref
-            class="hidden md:block w-full px-6 md:px-14 pt-20 md:pt-22 pb-2"
+            class="hidden md:block w-full px-6 md:px-14 pt-14 md:pt-16 pb-2"
         >
-            <div class="relative w-full aspect-[16/9] md:aspect-[2.15/1] min-h-[480px] max-h-[72vh] rounded-2xl md:rounded-[24px] overflow-hidden bg-[#181818] border border-white/[0.06] shadow-2xl group">
+            <div class="relative w-full aspect-[16/9] md:aspect-[1.95/1] min-h-[500px] md:min-h-[510px] max-h-[74vh] rounded-xl md:rounded-2xl overflow-hidden bg-[#181818] border border-white/[0.14] ring-1 ring-white/[0.08] shadow-[0_20px_50px_rgba(0,0,0,0.85)] group">
                 // ── Background Video Layer ──────────────────────────────────────
                 <div
                     id="hero-video-layer"
@@ -505,14 +584,8 @@ pub fn HeroSection(
                         </div>
 
                         // Overview / Synopsis
-                        <div
-                            class=move || if is_playing() {
-                                "transition-[opacity,max-height] duration-500 ease-in-out overflow-hidden opacity-0 max-h-0"
-                            } else {
-                                "transition-[opacity,max-height] duration-500 ease-in-out overflow-hidden opacity-100 max-h-36"
-                            }
-                        >
-                            <p class="text-white/90 text-[13px] md:text-[14.5px] font-normal leading-relaxed max-w-xl line-clamp-2 md:line-clamp-3 mb-1 select-none drop-shadow-md">
+                        <div class="overflow-hidden transition-opacity duration-300">
+                            <p class="text-white/90 text-[13px] md:text-[14.5px] font-normal leading-relaxed max-w-xl line-clamp-2 md:line-clamp-3 mb-1 select-none drop-shadow-[0_2px_6px_rgba(0,0,0,0.9)]">
                                 {move || current_overview()}
                             </p>
                         </div>
@@ -540,17 +613,24 @@ pub fn HeroSection(
                         </div>
                     </div>
 
-                    // Right Column: Feature Badges (Recently added, Starring ...)
-                    <div class="hidden lg:flex items-center gap-4 pb-2 flex-shrink-0 pointer-events-auto select-none">
-                        <div class="flex items-center gap-2 text-[12.5px] font-semibold text-white/90 bg-black/40 backdrop-blur-md px-3.5 py-1.5 rounded-full border border-white/10">
-                            <i class="ph-fill ph-megaphone-simple text-[#e50914] text-[15px]"></i>
-                            <span>"Recently added"</span>
-                        </div>
+                    // Right Column: Feature Badges (Recently added / Trending, Starring ...)
+                    <div class="hidden lg:flex items-center gap-3 pb-2 flex-shrink-0 pointer-events-auto select-none">
+                        {move || {
+                            primary_badge().map(|(icon_type, text)| view! {
+                                <div class="flex items-center gap-2 text-[12px] font-medium text-white/95 bg-black/50 backdrop-blur-md px-3.5 py-1.5 rounded-full border border-white/15 shadow-sm">
+                                    {match icon_type {
+                                        "megaphone" => view! { <MegaphoneBadgeIcon /> }.into_any(),
+                                        _ => view! { <ClapperboardBadgeIcon /> }.into_any(),
+                                    }}
+                                    <span>{text}</span>
+                                </div>
+                            })
+                        }}
 
                         {move || {
                             lead_actor().map(|actor| view! {
-                                <div class="flex items-center gap-2 text-[12.5px] font-semibold text-white/90 bg-black/40 backdrop-blur-md px-3.5 py-1.5 rounded-full border border-white/10">
-                                    <i class="ph-fill ph-film-slate text-[#e50914] text-[15px]"></i>
+                                <div class="flex items-center gap-2 text-[12px] font-medium text-white/95 bg-black/50 backdrop-blur-md px-3.5 py-1.5 rounded-full border border-white/15 shadow-sm">
+                                    <ClapperboardBadgeIcon />
                                     <span>{format!("Starring {}", actor)}</span>
                                 </div>
                             })

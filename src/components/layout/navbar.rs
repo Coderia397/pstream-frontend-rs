@@ -103,7 +103,7 @@ pub fn Navbar(
                                     "cursor-pointer transition-all duration-200 whitespace-nowrap text-[#b3b3b3] hover:text-white text-[13.5px] rounded-full bg-transparent hover:bg-white/10 h-[34px] px-4 font-normal inline-flex items-center justify-center hover:backdrop-blur-sm"
                                 }
                             >
-                                <a href=href class="no-underline text-inherit">{label}</a>
+                                <a href=href class="no-underline text-inherit flex items-center justify-center w-full h-full">{label}</a>
                             </li>
                         }
                     }).collect::<Vec<_>>()}

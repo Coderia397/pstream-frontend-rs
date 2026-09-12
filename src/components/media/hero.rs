@@ -1,8 +1,7 @@
 use leptos::prelude::*;
 use wasm_bindgen::prelude::*;
-use crate::services::tmdb::{fetch_movie_logo, fetch_videos, MediaItem};
+use crate::services::tmdb::{fetch_movie_logo, fetch_videos, fetch_details, MediaItem};
 use crate::store::use_ui_store;
-use crate::components::media::movie_card_badges::MaturityBadge;
 use crate::components::media::mobile_hero::MobileHero;
 use crate::models::movie::Movie;
 
@@ -121,6 +120,77 @@ pub fn HeroSection(
             videos.into_iter()
                 .find(|v| v.site == "YouTube" && (v.r#type == "Trailer" || v.r#type == "Teaser"))
                 .map(|v| v.key)
+        })
+    };
+
+    // TMDB Details resource (genres, runtime/seasons, cast, release year)
+    let details_resource = LocalResource::new(move || {
+        let id = current_id();
+        let tv = current_is_tv();
+        async move {
+            fetch_details(id, tv).await.ok()
+        }
+    });
+
+    let media_type_label = move || {
+        if current_is_tv() { "Series" } else { "Film" }
+    };
+
+    let genre_label = move || {
+        details_resource.get().and_then(|d| {
+            d.and_then(|item| item.genres.and_then(|g| g.first().map(|x| x.name.clone())))
+        }).unwrap_or_else(|| "Action".to_string())
+    };
+
+    let year_label = move || {
+        if let Some(Some(ref d)) = details_resource.get() {
+            if let Some(ref date) = d.release_date.as_ref().or(d.first_air_date.as_ref()) {
+                if date.len() >= 4 {
+                    return date[0..4].to_string();
+                }
+            }
+        }
+        let item = current_item();
+        if let Some(ref date) = item.release_date.as_ref().or(item.first_air_date.as_ref()) {
+            if date.len() >= 4 {
+                return date[0..4].to_string();
+            }
+        }
+        "2024".to_string()
+    };
+
+    let duration_or_seasons_label = move || {
+        if current_is_tv() {
+            let seasons = details_resource.get()
+                .and_then(|d| d.and_then(|x| x.number_of_seasons))
+                .unwrap_or(1);
+            format!("{} Season{}", seasons, if seasons == 1 { "" } else { "s" })
+        } else {
+            let runtime = details_resource.get()
+                .and_then(|d| d.and_then(|x| x.runtime))
+                .unwrap_or(105);
+            if runtime >= 60 {
+                format!("{}h {}m", runtime / 60, runtime % 60)
+            } else {
+                format!("{}m", runtime)
+            }
+        }
+    };
+
+    let maturity_rating_label = move || {
+        let item = current_item();
+        if item.vote_average >= 8.0 {
+            "18"
+        } else if item.vote_average >= 6.0 {
+            "15"
+        } else {
+            "12"
+        }
+    };
+
+    let lead_actor = move || {
+        details_resource.get().and_then(|d| {
+            d.and_then(|item| item.credits.and_then(|c| c.cast.first().map(|a| a.name.clone())))
         })
     };
 
@@ -274,75 +344,85 @@ pub fn HeroSection(
         <div
             id="hero-container"
             node_ref=hero_container_ref
-            class="hidden md:block relative w-full aspect-video max-h-[85vh] min-h-[500px] overflow-hidden group bg-black"
+            class="hidden md:block w-full px-6 md:px-14 pt-20 md:pt-22 pb-2"
         >
-            // ── Background Video Layer ──────────────────────────────────────
-            <div
-                id="hero-video-layer"
-                class="absolute inset-0 z-0 transition-opacity duration-700 overflow-hidden"
-                class=("opacity-100", move || is_playing())
-                class=("opacity-0", move || !is_playing())
-            >
-                {move || {
-                    if show_video.get() && !is_out_of_view.get() {
-                        if let Some(key) = trailer_key() {
-                            let mute_val = if is_muted.get() { "1" } else { "0" };
-                            let embed_url = format!(
-                                "https://www.youtube-nocookie.com/embed/{}?autoplay=1&mute={}&controls=0&modestbranding=1&rel=0&playsinline=1&enablejsapi=1&playlist={}",
-                                key, mute_val, key
-                            );
-                            view! {
-                                <div class="w-full h-full pointer-events-none flex items-center justify-center overflow-hidden">
-                                    <iframe
-                                        class="pointer-events-none scale-[1.35] lg:scale-[1.15]"
-                                        style="width: 100vw; height: 56.25vw; min-height: 100%; min-width: 177.77vh; border: none;"
-                                        src=embed_url
-                                        allow="autoplay; encrypted-media"
-                                        tabindex="-1"
-                                    />
-                                </div>
-                            }.into_any()
+            <div class="relative w-full aspect-[16/9] md:aspect-[2.15/1] min-h-[480px] max-h-[72vh] rounded-2xl md:rounded-[24px] overflow-hidden bg-[#181818] border border-white/[0.06] shadow-2xl group">
+                // ── Background Video Layer ──────────────────────────────────────
+                <div
+                    id="hero-video-layer"
+                    class="absolute inset-0 z-0 transition-opacity duration-700 overflow-hidden pointer-events-none"
+                    class=("opacity-100", move || is_playing())
+                    class=("opacity-0", move || !is_playing())
+                >
+                    {move || {
+                        if show_video.get() && !is_out_of_view.get() {
+                            if let Some(key) = trailer_key() {
+                                let mute_val = if is_muted.get() { "1" } else { "0" };
+                                let embed_url = format!(
+                                    "https://www.youtube-nocookie.com/embed/{}?autoplay=1&mute={}&controls=0&modestbranding=1&rel=0&playsinline=1&enablejsapi=1&playlist={}",
+                                    key, mute_val, key
+                                );
+                                view! {
+                                    <div class="w-full h-full pointer-events-none flex items-center justify-center overflow-hidden">
+                                        <iframe
+                                            class="pointer-events-none w-[115%] h-[115%] object-cover scale-[1.2]"
+                                            style="border: none;"
+                                            src=embed_url
+                                            allow="autoplay; encrypted-media"
+                                            tabindex="-1"
+                                        />
+                                    </div>
+                                }.into_any()
+                            } else {
+                                view! { <div /> }.into_any()
+                            }
                         } else {
                             view! { <div /> }.into_any()
                         }
-                    } else {
-                        view! { <div /> }.into_any()
-                    }
-                }}
-            </div>
+                    }}
+                </div>
 
-            // ── Backdrop image with smooth cross-fade ────────────────────────
-            <img
-                src=move || current_backdrop()
-                fetchpriority="high"
-                loading="eager"
-                alt=move || current_title()
-                class="absolute inset-0 w-full h-full object-cover object-[50%_15%] transition-opacity duration-700 ease-in-out z-0"
-                class=("opacity-0", move || is_playing())
-                class=("opacity-100", move || !is_playing())
-            />
+                // ── Backdrop image with smooth cross-fade ────────────────────────
+                <img
+                    src=move || current_backdrop()
+                    fetchpriority="high"
+                    loading="eager"
+                    alt=move || current_title()
+                    class="absolute inset-0 w-full h-full object-cover object-[50%_20%] transition-opacity duration-700 ease-in-out z-0"
+                    class=("opacity-0", move || is_playing())
+                    class=("opacity-100", move || !is_playing())
+                />
 
-            // ── Vignettes (Netflix 77deg left gradient + bottom fade) ────────
-            <div
-                class="absolute inset-y-0 left-0 z-10 pointer-events-none"
-                style="right: 26%; background: linear-gradient(77deg, rgba(0,0,0,0.72) 0%, transparent 85%);"
-            />
-            <div
-                class="absolute inset-0 z-10 pointer-events-none"
-                style="background: linear-gradient(to top, #141414 0%, rgba(20,20,20,0.6) 14%, rgba(20,20,20,0.2) 26%, transparent 40%);"
-            />
+                // ── Vignettes ───────────────────────────────────────────────────
+                <div
+                    class="absolute inset-0 z-10 pointer-events-none bg-gradient-to-r from-black/85 via-black/40 to-transparent"
+                />
+                <div
+                    class="absolute inset-x-0 bottom-0 h-52 z-10 pointer-events-none bg-gradient-to-t from-black/95 via-black/40 to-transparent"
+                />
+                <div
+                    class="absolute inset-x-0 top-0 h-24 z-10 pointer-events-none bg-gradient-to-b from-black/50 to-transparent"
+                />
 
-            // ── Content layer ───────────────────────────────────────────────
-            <div class="absolute inset-0 z-20 pointer-events-none flex flex-col justify-end pb-[7%]">
-                <div class="flex items-end justify-between px-[var(--app-x,56px)]">
+                // ── Top-right reload/replay button ──────────────────────────────
+                <button
+                    on:click=on_mute_or_replay
+                    class="absolute top-5 right-5 z-20 w-9 h-9 md:w-10 md:h-10 rounded-full bg-black/40 hover:bg-black/60 border border-white/20 backdrop-blur-md flex items-center justify-center text-white/90 hover:text-white transition-all cursor-pointer select-none"
+                    aria-label="Replay or mute"
+                >
+                    <i class="ph ph-arrow-counter-clockwise text-lg"></i>
+                </button>
 
-                    // ── Left: Logo / Title, Synopsis, CTA Buttons ────────────
-                    <div class="max-w-[60%] md:max-w-[52%] lg:max-w-[620px] flex flex-col justify-end gap-3 md:gap-4 pointer-events-auto">
+                // ── Bottom Content Layer ─────────────────────────────────────────
+                <div class="absolute inset-x-0 bottom-0 z-20 p-6 md:p-10 lg:p-12 flex flex-col md:flex-row md:items-end md:justify-between gap-6 pointer-events-none">
 
-                        // Logo / Title with shrink transition
+                    // Left Column: Logo/Title, Meta, Synopsis, CTA Buttons
+                    <div class="max-w-xl flex flex-col items-start gap-2 md:gap-2.5 pointer-events-auto">
+
+                        // Logo / Title with scale transition
                         <div
                             class=move || if is_playing() {
-                                "relative flex items-end transition-transform duration-700 origin-bottom-left scale-[0.65] sm:scale-[0.7]"
+                                "relative flex items-end transition-transform duration-700 origin-bottom-left scale-[0.7] sm:scale-[0.75]"
                             } else {
                                 "relative flex items-end transition-transform duration-700 origin-bottom-left"
                             }
@@ -350,7 +430,7 @@ pub fn HeroSection(
                             <Suspense fallback=move || {
                                 let t = current_title();
                                 view! {
-                                    <h1 class="text-3xl sm:text-5xl md:text-6xl font-black drop-shadow-xl leading-none text-white tracking-wide uppercase">
+                                    <h1 class="text-3xl sm:text-5xl md:text-6xl font-black drop-shadow-2xl leading-none text-white tracking-wide uppercase">
                                         {t}
                                     </h1>
                                 }
@@ -362,12 +442,12 @@ pub fn HeroSection(
                                             <img
                                                 src=url
                                                 alt=t.clone()
-                                                class="object-contain object-bottom drop-shadow-xl"
-                                                style="max-height: clamp(85px, 20vw, 210px); max-width: 100%;"
+                                                class="object-contain object-bottom drop-shadow-2xl mb-1"
+                                                style="max-height: clamp(80px, 16vw, 150px); max-width: 100%;"
                                             />
                                         }.into_any(),
                                         _ => view! {
-                                            <h1 class="text-3xl sm:text-5xl md:text-6xl font-black drop-shadow-xl leading-none text-white tracking-wide uppercase">
+                                            <h1 class="text-3xl sm:text-5xl md:text-6xl font-black drop-shadow-2xl leading-none text-white tracking-wide uppercase mb-1">
                                                 {t}
                                             </h1>
                                         }.into_any(),
@@ -376,66 +456,71 @@ pub fn HeroSection(
                             </Suspense>
                         </div>
 
-                        // Description with collapse transition
+                        // Metadata line: Series • Action • 2017 • 5 Seasons [15]
+                        <div class="flex items-center flex-wrap gap-2 text-[13px] md:text-[14px] text-white/90 font-medium select-none">
+                            <span>{media_type_label}</span>
+                            <span class="text-white/40 text-xs">"•"</span>
+                            <span>{genre_label}</span>
+                            <span class="text-white/40 text-xs">"•"</span>
+                            <span>{year_label}</span>
+                            <span class="text-white/40 text-xs">"•"</span>
+                            <span>{duration_or_seasons_label}</span>
+                            <span class="w-5 h-5 rounded-full bg-[#E50914] text-white text-[10px] font-bold flex items-center justify-center leading-none ml-1">
+                                {maturity_rating_label}
+                            </span>
+                        </div>
+
+                        // Overview / Synopsis
                         <div
                             class=move || if is_playing() {
                                 "transition-[opacity,max-height] duration-500 ease-in-out overflow-hidden opacity-0 max-h-0"
                             } else {
-                                "transition-[opacity,max-height] duration-500 ease-in-out overflow-hidden opacity-100 max-h-40"
+                                "transition-[opacity,max-height] duration-500 ease-in-out overflow-hidden opacity-100 max-h-36"
                             }
                         >
-                            <p class="max-w-sm md:max-w-md text-[12px] sm:text-[13px] md:text-[15px] font-medium text-white/90 line-clamp-2 md:line-clamp-3 leading-relaxed">
+                            <p class="text-white/90 text-[13px] md:text-[14.5px] font-normal leading-relaxed max-w-xl line-clamp-2 md:line-clamp-3 mb-1 select-none drop-shadow-md">
                                 {move || current_overview()}
                             </p>
                         </div>
 
-                        // CTA buttons: Play and More Info (Task 066 frosted glass)
-                        <div class="flex items-center flex-wrap gap-2 md:gap-3 mt-1">
+                        // Action Buttons: Play (pill) & More Info (pill)
+                        <div class="flex items-center gap-3 mt-1.5 pointer-events-auto">
                             <a
-                                href=move || format!("/watch/{}", current_id())
-                                class="flex items-center justify-center bg-white text-black px-5 sm:px-8 h-[35px] md:h-[45px] rounded-[4px] font-bold hover:bg-white/80 transition-colors duration-150 active:scale-95 text-[15px] md:text-[18px] gap-2 pointer-events-auto"
+                                href=move || {
+                                    let id = current_id();
+                                    let kind = if current_is_tv() { "tv" } else { "movie" };
+                                    format!("/watch/{}/{}", kind, id)
+                                }
+                                class="flex items-center justify-center bg-white text-black px-7 py-2.5 rounded-full font-bold hover:bg-white/90 transition-all duration-150 active:scale-95 text-[15px] md:text-[16px] gap-2 shadow-lg select-none"
                             >
-                                <i class="ph-fill ph-play text-[18px] md:text-[24px]"></i>
-                                <span class="whitespace-nowrap">"Play"</span>
+                                <i class="ph-fill ph-play text-xl"></i>
+                                <span>"Play"</span>
                             </a>
 
                             <button
                                 on:click=move |_| trigger_open_modal()
-                                class="flex items-center justify-center bg-[#6d6d6e]/50 text-white px-5 sm:px-8 h-[35px] md:h-[45px] rounded-[4px] font-bold hover:bg-[#6d6d6e]/35 backdrop-blur-sm transition-colors duration-150 active:scale-95 text-[15px] md:text-[18px] gap-2 pointer-events-auto"
+                                class="flex items-center justify-center bg-white/20 hover:bg-white/30 backdrop-blur-md text-white px-7 py-2.5 rounded-full font-semibold transition-all duration-150 active:scale-95 text-[15px] md:text-[16px] shadow-lg select-none cursor-pointer"
                             >
-                                <i class="ph-bold ph-info text-[22px] md:text-[30px]"></i>
-                                <span class="whitespace-nowrap">"More Info"</span>
+                                <span>"More Info"</span>
                             </button>
                         </div>
                     </div>
 
-                    // ── Right: Replay / Mute, Maturity Badge ─
-                    <div class="flex items-center pointer-events-auto flex-shrink-0 gap-3">
-
-                        // Replay button / Mute toggle button (Task 071)
-                        <button
-                            on:click=on_mute_or_replay
-                            class="w-9 h-9 border-[1.8px] border-white/70 rounded-full flex items-center justify-center transition-colors duration-200 hover:bg-white/15"
-                            aria-label=move || if has_video_ended.get() { "Replay" } else if is_muted.get() { "Unmute" } else { "Mute" }
-                        >
-                            {move || {
-                                if has_video_ended.get() {
-                                    view! { <i class="ph-bold ph-arrow-counter-clockwise text-white text-lg"></i> }.into_any()
-                                } else if is_muted.get() {
-                                    view! { <i class="ph ph-speaker-slash text-white text-lg"></i> }.into_any()
-                                } else {
-                                    view! { <i class="ph ph-speaker-high text-white text-lg"></i> }.into_any()
-                                }
-                            }}
-                        </button>
-
-                        // Maturity badge
-                        <div class="flex items-center bg-[#2e2e2e]/40 h-10 pl-4 -mr-14 lg:-mr-16 pr-14 lg:pr-16 ml-2 border-l-[3px] border-white/40">
-                            <MaturityBadge
-                                certification="TV-MA".to_string()
-                                size="md".to_string()
-                            />
+                    // Right Column: Feature Badges (Recently added, Starring ...)
+                    <div class="hidden lg:flex items-center gap-4 pb-2 flex-shrink-0 pointer-events-auto select-none">
+                        <div class="flex items-center gap-2 text-[12.5px] font-semibold text-white/90 bg-black/40 backdrop-blur-md px-3.5 py-1.5 rounded-full border border-white/10">
+                            <i class="ph-fill ph-megaphone-simple text-[#e50914] text-[15px]"></i>
+                            <span>"Recently added"</span>
                         </div>
+
+                        {move || {
+                            lead_actor().map(|actor| view! {
+                                <div class="flex items-center gap-2 text-[12.5px] font-semibold text-white/90 bg-black/40 backdrop-blur-md px-3.5 py-1.5 rounded-full border border-white/10">
+                                    <i class="ph-fill ph-film-slate text-[#e50914] text-[15px]"></i>
+                                    <span>{format!("Starring {}", actor)}</span>
+                                </div>
+                            })
+                        }}
                     </div>
                 </div>
             </div>

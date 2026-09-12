@@ -28,7 +28,7 @@ pub fn CategoryPage(
 
     view! {
         <Layout>
-            <div class="w-full pb-20 -mt-16">
+            <div class="w-full pb-20 bg-black md:bg-[#141414] min-h-screen">
                 // Category Sub-Navigation bar (teleports to fixed header below navbar on desktop)
                 <CategorySubNav
                     title=title.to_string()
@@ -52,7 +52,7 @@ pub fn CategoryPage(
                     })}
                 </Suspense>
 
-                <div class="relative z-30 -mt-32 space-y-4 md:space-y-6">
+                <div class="relative z-30 space-y-6 md:space-y-10 mt-6 md:mt-8">
                     {move || {
                         if let Some(genre) = selected_genre.get() {
                             let gid = genre.id.to_string();

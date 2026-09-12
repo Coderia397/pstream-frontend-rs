@@ -15,7 +15,7 @@ pub fn BrowseHome() -> impl IntoView {
 
     view! {
         <Layout>
-            <div class="w-full pb-20 -mt-16">
+            <div class="w-full pb-20 bg-black md:bg-[#141414] min-h-screen">
                 // Hero Carousel driven by real TMDB data
                 <Suspense fallback=move || view! {
                     <crate::components::media::hero_skeleton::HeroSkeleton />
@@ -32,7 +32,7 @@ pub fn BrowseHome() -> impl IntoView {
                     })}
                 </Suspense>
 
-                <div class="relative z-30 -mt-32 space-y-2 sm:space-y-4 md:space-y-6">
+                <div class="relative z-30 space-y-6 md:space-y-10 mt-6 md:mt-8">
                     <TopTenRow title="Top 10 Movies Today" kind="movie" />
                     <TopTenRow title="Top 10 TV Shows Today" kind="tv" />
                     <Row title="Action & Adventure" genre_id="1365" />

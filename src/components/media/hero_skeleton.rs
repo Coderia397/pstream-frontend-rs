@@ -39,29 +39,26 @@ pub fn HeroSkeleton() -> impl IntoView {
             </div>
 
             // 3. DESKTOP SKELETON (>= 768px)
-            <div class="hidden md:flex relative h-[77vh] lg:h-[80vh] w-full bg-[#141414] flex-col justify-center pl-16 md:pl-20 animate-pulse">
-                <div class="absolute inset-0 bg-gradient-to-t from-black via-black/40 to-transparent pointer-events-none z-10" />
-                <div class="absolute inset-0 bg-white/[0.01] pointer-events-none" />
-
-                <div class="relative z-20 w-full max-w-[500px] flex flex-col justify-end h-[60%] gap-6">
-                    <div class="h-28 w-4/5 bg-white/10 rounded-lg shadow-2xl" />
-                    <div class="flex gap-2">
-                        <div class="h-4 w-16 bg-white/10 rounded" />
-                        <div class="h-4 w-12 bg-white/10 rounded" />
-                        <div class="h-4 w-20 bg-white/10 rounded" />
-                    </div>
-                    <div class="space-y-2.5">
-                        <div class="h-4 w-full bg-white/[0.07] rounded" />
-                        <div class="h-4 w-11/12 bg-white/[0.07] rounded" />
-                        <div class="h-4 w-4/5 bg-white/[0.07] rounded" />
-                    </div>
-                    <div class="flex gap-3 pt-2">
-                        <div class="h-[35px] md:h-[45px] w-36 bg-white/10 rounded-[4px]" />
-                        <div class="h-[35px] md:h-[45px] w-44 bg-white/[0.05] rounded-[4px]" />
+            <div class="hidden md:block w-full px-6 md:px-14 pt-20 md:pt-22 pb-2">
+                <div class="relative w-full aspect-[16/9] md:aspect-[2.15/1] min-h-[480px] max-h-[72vh] rounded-2xl md:rounded-[24px] overflow-hidden bg-[#181818] border border-white/[0.06] p-8 md:p-12 flex flex-col justify-end animate-pulse shadow-2xl">
+                    <div class="relative z-20 w-full max-w-xl flex flex-col items-start gap-3">
+                        <div class="h-16 w-3/5 bg-white/10 rounded-lg shadow-2xl" />
+                        <div class="flex gap-2">
+                            <div class="h-4 w-16 bg-white/10 rounded" />
+                            <div class="h-4 w-14 bg-white/10 rounded" />
+                            <div class="h-4 w-16 bg-white/10 rounded" />
+                            <div class="h-5 w-5 bg-white/20 rounded-full" />
+                        </div>
+                        <div class="space-y-2 w-full max-w-md">
+                            <div class="h-3.5 w-full bg-white/[0.07] rounded" />
+                            <div class="h-3.5 w-4/5 bg-white/[0.07] rounded" />
+                        </div>
+                        <div class="flex gap-3 pt-2">
+                            <div class="h-10 w-28 bg-white/15 rounded-full" />
+                            <div class="h-10 w-32 bg-white/10 rounded-full" />
+                        </div>
                     </div>
                 </div>
-
-                <div class="absolute right-0 bottom-[22%] w-24 h-8 bg-white/10 rounded-l border-l-4 border-white/20 z-20" />
             </div>
         </div>
     }

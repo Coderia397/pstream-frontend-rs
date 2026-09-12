@@ -92,13 +92,13 @@ pub fn Navbar(
                 </a>
 
                 // Nav links — exact spacing and typography (Task 086)
-                <ul class="flex items-center gap-5 ml-8 text-[14px] tracking-[-0.2px] font-normal text-[#e5e5e5]">
+                <ul class="flex items-center gap-7 ml-10 text-[14px] tracking-[-0.2px] font-normal text-[#e5e5e5]">
                     {nav_items.into_iter().map(|(id, label, href)| {
                         let is_active = move || active_tab() == id;
                         view! {
                             <li
                                 class=move || if is_active() {
-                                    "cursor-pointer transition-all whitespace-nowrap text-white font-bold text-sm rounded-full border border-white/50 bg-[#262626]/70 px-4 py-1 shadow-sm"
+                                    "cursor-pointer transition-all whitespace-nowrap text-white font-bold text-sm rounded-full bg-[#363636] px-4 py-1.5 shadow-sm"
                                 } else {
                                     "cursor-pointer transition-colors whitespace-nowrap text-[#e5e5e5] hover:text-[#b3b3b3] text-sm px-1 py-1 font-normal"
                                 }
@@ -114,7 +114,7 @@ pub fn Navbar(
             <div id="category-subnav-portal" class="fixed inset-x-0 top-16 z-[79] hidden sm:block pointer-events-none transition-colors duration-200" style=scroll_style />
 
             // ── Secondary nav: search + notifications + kids + profile ─────
-            <div class="fixed top-0 right-14 z-[85] h-16 hidden sm:flex items-center gap-5">
+            <div class="fixed top-0 right-14 z-[85] h-16 hidden sm:flex items-center gap-6">
                 // Expandable Search Bar (Task 089 & 090)
                 <SearchBar />
 
@@ -156,10 +156,10 @@ pub fn Navbar(
                                 class="flex items-center gap-2 text-white/90 hover:text-white transition-opacity select-none cursor-pointer group"
                                 title="Switch to Kids Profile"
                             >
-                                <div class="w-6 h-6 rounded-sm overflow-hidden flex items-center justify-center ring-1 ring-white/20 group-hover:ring-white/50 transition-all">
-                                    <crate::components::profiles::kids_avatar::KidsAvatar size=24.0 />
+                                <div class="w-8 h-8 rounded-[4px] overflow-hidden flex items-center justify-center ring-1 ring-white/10 group-hover:ring-white/40 transition-all">
+                                    <crate::components::profiles::kids_avatar::KidsAvatar size=32.0 />
                                 </div>
-                                <span class="text-sm font-medium text-white group-hover:text-white transition-colors">"Kids"</span>
+                                <span class="text-sm font-normal text-white group-hover:text-white transition-colors">"Kids"</span>
                             </button>
                         }.into_any()
                     }

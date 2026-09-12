@@ -166,7 +166,7 @@ pub fn SearchBar() -> impl IntoView {
                     class="focus:outline-none flex items-center justify-center z-10 shrink-0"
                     aria-label="Search"
                 >
-                    <i class="ph-bold ph-magnifying-glass text-[20px] cursor-pointer select-none transition-colors duration-300"
+                    <i class="ph ph-magnifying-glass text-[20px] cursor-pointer select-none transition-colors duration-300"
                        class=("text-white", effective_active)
                        class=("hover:text-gray-300", move || !effective_active())>
                     </i>

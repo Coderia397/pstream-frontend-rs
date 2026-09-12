@@ -683,8 +683,8 @@
   .ml-6 {
     margin-left: calc(var(--spacing) * 6);
   }
-  .ml-8 {
-    margin-left: calc(var(--spacing) * 8);
+  .ml-10 {
+    margin-left: calc(var(--spacing) * 10);
   }
   .line-clamp-1 {
     overflow: hidden;
@@ -1492,6 +1492,9 @@
   .gap-6 {
     gap: calc(var(--spacing) * 6);
   }
+  .gap-7 {
+    gap: calc(var(--spacing) * 7);
+  }
   .gap-8 {
     gap: calc(var(--spacing) * 8);
   }
@@ -2029,8 +2032,8 @@
   .bg-\[\#262626\] {
     background-color: #262626;
   }
-  .bg-\[\#262626\]\/70 {
-    background-color: color-mix(in oklab, #262626 70%, transparent);
+  .bg-\[\#363636\] {
+    background-color: #363636;
   }
   .bg-\[\#E50914\] {
     background-color: #E50914;
@@ -3443,10 +3446,10 @@
       }
     }
   }
-  .group-hover\:ring-white\/50 {
+  .group-hover\:ring-white\/40 {
     &:is(:where(.group):hover *) {
       @media (hover: hover) {
-        --tw-ring-color: color-mix(in oklab, var(--color-white) 50%, transparent);
+        --tw-ring-color: color-mix(in oklab, var(--color-white) 40%, transparent);
       }
     }
   }

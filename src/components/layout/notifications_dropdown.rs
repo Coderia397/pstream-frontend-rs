@@ -163,7 +163,7 @@ pub fn NotificationsDropdown() -> impl IntoView {
                 title="Notifications"
                 aria-label="Notifications"
             >
-                <i class="ph-bold ph-bell text-[20px]"></i>
+                <i class="ph ph-bell text-[20px]"></i>
                 <Show when=has_unread>
                     <span class="absolute -top-1 -right-1 min-w-[16px] h-[16px] px-1 rounded-full bg-[#E50914] text-white text-[10px] font-bold flex items-center justify-center leading-none">
                         {move || {

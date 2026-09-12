@@ -3,14 +3,14 @@
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
-    <meta name="theme-color" content="#1d2a32" />
+    <meta name="theme-color" content="#141a1e" />
     <title>PStream</title>
     <!-- Instant ambient color hydration before first paint (0ms) -->
     <script>
       (function() {
         try {
           var raw = localStorage.getItem("pstream-ambient:last");
-          var r = 29, g = 42, b = 50;
+          var r = 20, g = 26, b = 30;
           if (raw) {
             var parsed = JSON.parse(raw);
             if (parsed && typeof parsed.r === 'number') {

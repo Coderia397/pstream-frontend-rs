@@ -41,12 +41,12 @@ pub fn get_cached_ambient_color(url: &str) -> Option<(u8, u8, u8)> {
 pub fn get_last_ambient_color() -> Option<(u8, u8, u8)> {
     let res = js_get_last_ambient_color();
     if res.is_empty() {
-        Some((29, 42, 50))
+        Some((20, 26, 30))
     } else {
         serde_json::from_str::<AmbientRGB>(&res)
             .ok()
             .map(|c| (c.r, c.g, c.b))
-            .or(Some((29, 42, 50)))
+            .or(Some((20, 26, 30)))
     }
 }
 

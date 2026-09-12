@@ -78,24 +78,34 @@ export function extractAmbientColor(imageUrl: string): Promise<AmbientRGB | null
 
         if (count === 0) return resolve(null);
 
-        let ar = Math.min(255, Math.round((r / count) * 0.45 + vibR * 0.55));
-        let ag = Math.min(255, Math.round((g / count) * 0.45 + vibG * 0.55));
-        let ab = Math.min(255, Math.round((b / count) * 0.45 + vibB * 0.55));
+        // Weighted blend favoring balanced atmospheric average
+        let ar = Math.round((r / count) * 0.70 + vibR * 0.30);
+        let ag = Math.round((g / count) * 0.70 + vibG * 0.30);
+        let ab = Math.round((b / count) * 0.70 + vibB * 0.30);
 
-        // Saturation punch
-        const maxCh = Math.max(ar, ag, ab);
-        const boostFactor = maxCh > 60 ? 1.15 : 1.0;
-        ar = Math.min(255, Math.round(ar * (ar === maxCh ? boostFactor : 1)));
-        ag = Math.min(255, Math.round(ag * (ag === maxCh ? boostFactor : 1)));
-        ab = Math.min(255, Math.round(ab * (ab === maxCh ? boostFactor : 1)));
+        // Desaturate 35% toward neutral gray for an understated cinematic look
+        const mean = (ar + ag + ab) / 3;
+        ar = Math.round(ar * 0.65 + mean * 0.35);
+        ag = Math.round(ag * 0.65 + mean * 0.35);
+        ab = Math.round(ab * 0.65 + mean * 0.35);
 
-        // Luminance floor
+        // Tone down intensity toward darker/blacker side
+        ar = Math.min(255, Math.max(10, Math.round(ar * 0.80)));
+        ag = Math.min(255, Math.max(10, Math.round(ag * 0.80)));
+        ab = Math.min(255, Math.max(10, Math.round(ab * 0.80)));
+
+        // Keep luminance in a muted, sleek dark range (between 22 and 60)
         const lum = (ar * 299 + ag * 587 + ab * 114) / 1000;
-        if (lum < 55) {
-          const scale = 55 / Math.max(lum, 1);
-          ar = Math.min(255, Math.round(ar * scale));
-          ag = Math.min(255, Math.round(ag * scale));
-          ab = Math.min(255, Math.round(ab * scale));
+        if (lum > 60) {
+          const scale = 60 / lum;
+          ar = Math.round(ar * scale);
+          ag = Math.round(ag * scale);
+          ab = Math.round(ab * scale);
+        } else if (lum < 22) {
+          const scale = 22 / Math.max(lum, 1);
+          ar = Math.round(ar * scale);
+          ag = Math.round(ag * scale);
+          ab = Math.round(ab * scale);
         }
 
         const rgb = { r: ar, g: ag, b: ab };

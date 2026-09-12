@@ -88,10 +88,10 @@ pub fn MobileHero(
         let (r, g, b) = ui_store.ambient_color.get();
         format!(
             "background: linear-gradient(to bottom, \
-                rgba({r},{g},{b},0.85) 0%, \
-                rgba({r},{g},{b},0.65) 25%, \
-                rgba({r},{g},{b},0.35) 48%, \
-                rgba({r},{g},{b},0.12) 65%, \
+                rgba({r},{g},{b},0.55) 0%, \
+                rgba({r},{g},{b},0.36) 25%, \
+                rgba({r},{g},{b},0.18) 48%, \
+                rgba({r},{g},{b},0.05) 65%, \
                 rgba(0,0,0,0) 85%);",
             r = r, g = g, b = b
         )

@@ -98,9 +98,9 @@ pub fn Navbar(
                         view! {
                             <li
                                 class=move || if is_active() {
-                                    "cursor-pointer transition-all whitespace-nowrap text-white font-bold text-sm rounded-full bg-[#363636] px-4 py-1.5 shadow-sm"
+                                    "cursor-pointer transition-all whitespace-nowrap text-white font-bold text-[14px] rounded-full bg-[#383838] px-5 py-2 shadow-md inline-flex items-center justify-center"
                                 } else {
-                                    "cursor-pointer transition-colors whitespace-nowrap text-[#e5e5e5] hover:text-[#b3b3b3] text-sm px-1 py-1 font-normal"
+                                    "cursor-pointer transition-colors whitespace-nowrap text-[#e5e5e5] hover:text-[#b3b3b3] text-[14px] px-1 py-1 font-normal inline-flex items-center"
                                 }
                             >
                                 <a href=href class="no-underline text-inherit">{label}</a>

@@ -234,6 +234,7 @@ pub fn InfoModal() -> impl IntoView {
                                                 release_date: None,
                                                 first_air_date: None,
                                                 media_type: if is_tv_val { Some("tv".to_string()) } else { Some("movie".to_string()) },
+                                                ..Default::default()
                                             },
                                             added_at: js_sys::Date::now() as u64,
                                         });

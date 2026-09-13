@@ -61,6 +61,7 @@ pub fn MobileHero(
                     release_date: movie_c1.release_date.clone(),
                     first_air_date: movie_c1.first_air_date.clone(),
                     media_type: movie_c1.media_type.clone(),
+                    ..Default::default()
                 },
                 added_at: js_sys::Date::now() as u64,
             });

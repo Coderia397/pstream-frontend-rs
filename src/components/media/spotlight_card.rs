@@ -43,6 +43,7 @@ pub fn SpotlightCard(
                 release_date: rel_date_stored.clone(),
                 first_air_date: if is_tv { rel_date_stored.clone() } else { None },
                 media_type: Some(if is_tv { "tv".to_string() } else { "movie".to_string() }),
+                ..Default::default()
             };
             library.my_list.update(|m| {
                 m.insert(movie_id, LibraryEntry {

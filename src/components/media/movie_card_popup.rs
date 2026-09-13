@@ -248,6 +248,7 @@ pub fn MovieCardPopup(
                                                     release_date: m.release_date.clone(),
                                                     first_air_date: m.first_air_date.clone(),
                                                     media_type: m.media_type.clone(),
+                                                    ..Default::default()
                                                 },
                                                 added_at: js_sys::Date::now() as u64,
                                             };

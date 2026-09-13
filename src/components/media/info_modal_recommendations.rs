@@ -48,6 +48,7 @@ pub fn RecCard(
                         release_date: rec_clone.release_date.clone(),
                         first_air_date: rec_clone.first_air_date.clone(),
                         media_type: rec_clone.media_type.clone(),
+                        ..Default::default()
                     },
                     added_at: js_sys::Date::now() as u64,
                 });

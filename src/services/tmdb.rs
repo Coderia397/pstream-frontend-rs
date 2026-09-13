@@ -103,30 +103,17 @@ pub async fn fetch_british_tv() -> Result<Vec<MediaItem>, gloo_net::Error> {
 /// Primary entry point: given a Netflix-style genre ID from the URL,
 /// resolve the correct TMDB query and return its results.
 pub async fn fetch_for_genre_route(netflix_id: &str) -> Result<Vec<MediaItem>, gloo_net::Error> {
-    match map_netflix_id_to_tmdb(netflix_id) {
-        None => Ok(vec![]),
-        Some(ctx) => match ctx.tmdb_genre_id {
-            // Genre-specific query
-            Some(gid) => {
-                let kind = match ctx.kind {
-                    MediaKind::Movie => "movie",
-                    MediaKind::Tv => "tv",
-                };
-                fetch_by_genre(kind, gid).await
-            }
-            // Broad category with no genre filter — use trending
-            None => match ctx.kind {
-                MediaKind::Movie => fetch_trending("movie").await,
-                MediaKind::Tv => {
-                    if netflix_id == "52117" {
-                        fetch_british_tv().await
-                    } else {
-                        fetch_trending("tv").await
-                    }
-                }
-            },
-        },
-    }
+    let kind = if let Some(ctx) = map_netflix_id_to_tmdb(netflix_id) {
+        match ctx.kind {
+            MediaKind::Tv => "tv",
+            MediaKind::Movie => "movie",
+        }
+    } else if netflix_id == "british" || netflix_id == "binge" || netflix_id == "52117" || netflix_id == "1191605" {
+        "tv"
+    } else {
+        "movie"
+    };
+    fetch_row_content(kind, Some(netflix_id), None, None, None, 1).await
 }
 
 #[derive(Clone, Debug, Deserialize, Serialize)]
@@ -286,26 +273,145 @@ pub async fn fetch_season_details(series_id: u32, season_number: u32) -> Result<
 }
 
 pub async fn fetch_trending_page(kind: &str, page: u32) -> Result<Vec<MediaItem>, gloo_net::Error> {
-    let url = format!("{}/trending/{}/day?api_key={}&page={}", TMDB_BASE_URL, kind, TMDB_API_KEY, page);
+    let safe_kind = if kind == "tv" { "tv" } else { "movie" };
+    let url = format!("{}/trending/{}/day?api_key={}&page={}", TMDB_BASE_URL, safe_kind, TMDB_API_KEY, page);
     let resp = Request::get(&url).send().await?;
     let data: TmdbResponse<MediaItem> = resp.json().await?;
-    Ok(data.results)
+    let items = data.results.into_iter().map(|mut item| {
+        if item.media_type.is_none() {
+            item.media_type = Some(safe_kind.to_string());
+        }
+        item
+    }).collect();
+    Ok(items)
+}
+
+/// Robust TMDB Query Engine for Rows, Feeds, and Category Pages.
+/// Dispatches to distinct endpoints and queries with correct media_type separation and sorting.
+pub async fn fetch_row_content(
+    kind: &str,
+    genre_id: Option<&str>,
+    sort_by: Option<&str>,
+    extra_params: Option<&str>,
+    endpoint: Option<&str>,
+    page: u32,
+) -> Result<Vec<MediaItem>, gloo_net::Error> {
+    let safe_kind = if kind == "tv" { "tv" } else { "movie" };
+
+    // 1. Explicit Endpoint (e.g. "/movie/now_playing", "/movie/upcoming", "/trending/tv/week")
+    if let Some(ep) = endpoint {
+        let ep_clean = ep.trim_start_matches('/');
+        let sep = if ep_clean.contains('?') { "&" } else { "?" };
+        let mut url = format!("{}/{}{}api_key={}&page={}", TMDB_BASE_URL, ep_clean, sep, TMDB_API_KEY, page);
+        if let Some(extra) = extra_params {
+            if !extra.is_empty() {
+                let extra_clean = extra.trim_start_matches('&');
+                url.push_str(&format!("&{}", extra_clean));
+            }
+        }
+        if let Ok(resp) = Request::get(&url).send().await {
+            if let Ok(data) = resp.json::<TmdbResponse<MediaItem>>().await {
+                let items = data.results.into_iter().map(|mut item| {
+                    if item.media_type.is_none() {
+                        item.media_type = Some(safe_kind.to_string());
+                    }
+                    item
+                }).collect();
+                return Ok(items);
+            }
+        }
+        return fetch_trending_page(safe_kind, page).await;
+    }
+
+    // 2. Genre or Category ID
+    if let Some(gid) = genre_id {
+        let gid_lower = gid.to_lowercase();
+        let default_sort = sort_by.unwrap_or("popularity.desc");
+
+        let mut url = match gid_lower.as_str() {
+            // Binge-worthy / Boredom Busters
+            "binge" | "1191605" | "boredom" => {
+                if safe_kind == "tv" {
+                    format!("{}/discover/tv?api_key={}&with_genres=10759,80,10765&without_genres=16,10764&sort_by={}&page={}", TMDB_BASE_URL, TMDB_API_KEY, default_sort, page)
+                } else {
+                    format!("{}/discover/movie?api_key={}&with_genres=28,12,53,878&without_genres=16&sort_by={}&page={}", TMDB_BASE_URL, TMDB_API_KEY, default_sort, page)
+                }
+            }
+            // British origin
+            "british" | "52117" | "10005" => {
+                format!("{}/discover/{}?api_key={}&with_origin_country=GB&sort_by={}&page={}", TMDB_BASE_URL, safe_kind, TMDB_API_KEY, default_sort, page)
+            }
+            // US origin
+            "us" | "10008" => {
+                format!("{}/discover/{}?api_key={}&with_origin_country=US&sort_by={}&page={}", TMDB_BASE_URL, safe_kind, TMDB_API_KEY, default_sort, page)
+            }
+            // European origin
+            "european" | "10006" => {
+                format!("{}/discover/{}?api_key={}&with_origin_country=FR|DE|IT|ES|NL|DK|SE|NO|FI|PL&sort_by={}&page={}", TMDB_BASE_URL, safe_kind, TMDB_API_KEY, default_sort, page)
+            }
+            // International (non-English)
+            "international" | "10012" => {
+                format!("{}/discover/{}?api_key={}&without_original_language=en&sort_by={}&page={}", TMDB_BASE_URL, safe_kind, TMDB_API_KEY, default_sort, page)
+            }
+            // Anime
+            "anime" | "7424" | "16" => {
+                format!("{}/discover/{}?api_key={}&with_genres=16&with_original_language=ja&sort_by={}&page={}", TMDB_BASE_URL, safe_kind, TMDB_API_KEY, default_sort, page)
+            }
+            // Numeric IDs or Netflix codes
+            _ => {
+                let resolved_genre_id = match gid_lower.as_str() {
+                    "1365" => if safe_kind == "tv" { "10759" } else { "28" },
+                    "6548" | "10375" => "35",
+                    "1492" | "1372" => if safe_kind == "tv" { "10765" } else { "878" },
+                    "8933" => if safe_kind == "tv" { "9648" } else { "53" },
+                    "5763" | "11714" => "18",
+                    "8711" => if safe_kind == "tv" { "9648" } else { "27" },
+                    "8883" => "10749",
+                    "6839" => "99",
+                    "9875" | "26146" => "80",
+                    "783" => if safe_kind == "tv" { "10762" } else { "10751" },
+                    "10673" => "10759",
+                    // TMDB cross-media resolution
+                    "28" | "12" => if safe_kind == "tv" { "10759" } else { gid },
+                    "878" => if safe_kind == "tv" { "10765" } else { "878" },
+                    "10751" => if safe_kind == "tv" { "10762" } else { "10751" },
+                    "10759" => if safe_kind == "movie" { "28" } else { "10759" },
+                    "10765" => if safe_kind == "movie" { "878" } else { "10765" },
+                    "10762" => if safe_kind == "movie" { "10751" } else { "10762" },
+                    _ => gid,
+                };
+                format!("{}/discover/{}?api_key={}&with_genres={}&sort_by={}&page={}", TMDB_BASE_URL, safe_kind, TMDB_API_KEY, resolved_genre_id, default_sort, page)
+            }
+        };
+
+        if let Some(extra) = extra_params {
+            if !extra.is_empty() {
+                let extra_clean = extra.trim_start_matches('&');
+                url.push_str(&format!("&{}", extra_clean));
+            }
+        }
+
+        if let Ok(resp) = Request::get(&url).send().await {
+            if let Ok(data) = resp.json::<TmdbResponse<MediaItem>>().await {
+                let items: Vec<MediaItem> = data.results.into_iter().map(|mut item| {
+                    if item.media_type.is_none() {
+                        item.media_type = Some(safe_kind.to_string());
+                    }
+                    item
+                }).collect();
+                if !items.is_empty() {
+                    return Ok(items);
+                }
+            }
+        }
+    }
+
+    // 3. Fallback: ALWAYS respect safe_kind so TV series never show movies
+    fetch_trending_page(safe_kind, page).await
 }
 
 pub async fn fetch_for_genre_route_page(netflix_id: &str, page: u32) -> Result<Vec<MediaItem>, gloo_net::Error> {
-    if let Some(ctx) = map_netflix_id_to_tmdb(netflix_id) {
-        if let Some(tmdb_genre_id) = ctx.tmdb_genre_id {
-            let kind_str = match ctx.kind {
-                MediaKind::Tv => "tv",
-                MediaKind::Movie => "movie",
-            };
-            let url = format!("{}/discover/{}?api_key={}&with_genres={}&sort_by=popularity.desc&page={}", TMDB_BASE_URL, kind_str, TMDB_API_KEY, tmdb_genre_id, page);
-            let resp = Request::get(&url).send().await?;
-            let data: TmdbResponse<MediaItem> = resp.json().await?;
-            return Ok(data.results);
-        }
-    }
-    fetch_trending_page("movie", page).await
+    fetch_row_content("movie", Some(netflix_id), None, None, None, page).await
 }
 
 pub async fn fetch_by_language(lang: &str, page: u32) -> Result<Vec<MediaItem>, gloo_net::Error> {

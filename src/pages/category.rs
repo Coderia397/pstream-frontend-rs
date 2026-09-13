@@ -80,9 +80,9 @@ pub fn CategoryPage(
                             let gid = genre.id.to_string();
                             let gname = genre.name.clone();
                             view! {
-                                <Row title=format!("Popular in {}", gname) genre_id=gid.clone() kind=kind />
-                                <Row title=format!("Trending in {}", gname) genre_id=gid.clone() kind=kind />
-                                <Row title=format!("Critically Acclaimed {}", gname) genre_id=gid kind=kind />
+                                <Row title=format!("Popular in {}", gname) genre_id=gid.clone() kind=kind sort_by="popularity.desc" />
+                                <Row title=format!("Trending in {}", gname) genre_id=gid.clone() kind=kind sort_by="vote_count.desc" />
+                                <Row title=format!("Critically Acclaimed {}", gname) genre_id=gid kind=kind sort_by="vote_average.desc" extra_params="&vote_count.gte=200" />
                             }.into_any()
                         } else if kind == "movie" {
                             view! {
@@ -97,21 +97,21 @@ pub fn CategoryPage(
                                 <Row title="Documentaries" genre_id="6839" kind="movie" />
                                 <Row title="Crime Films" genre_id="9875" kind="movie" />
                                 <Row title="Children & Family Films" genre_id="783" kind="movie" />
-                                <Row title="Anime Films" genre_id="7424" kind="movie" />
+                                <Row title="Anime Films" genre_id="anime" kind="movie" />
                             }.into_any()
                         } else {
                             view! {
                                 <TopTenRow title="Top 10 Series in the UK Today" kind="tv" />
-                                <Row title="Binge-worthy TV Shows" genre_id="1191605" kind="tv" />
-                                <Row title="British TV" genre_id="52117" kind="tv" />
-                                <Row title="Sci-Fi & Fantasy TV" genre_id="1372" kind="tv" />
-                                <Row title="Crime TV Shows" genre_id="26146" kind="tv" />
-                                <Row title="TV Dramas" genre_id="11714" kind="tv" />
-                                <Row title="TV Comedies" genre_id="10375" kind="tv" />
-                                <Row title="Docuseries" genre_id="6839" kind="tv" />
-                                <Row title="Anime Series" genre_id="7424" kind="tv" />
-                                <Row title="Action & Adventure TV" genre_id="10673" kind="tv" />
-                                <Row title="Kids & Family TV" genre_id="783" kind="tv" />
+                                <Row title="Binge-worthy TV Shows" genre_id="binge" kind="tv" />
+                                <Row title="British TV" genre_id="british" kind="tv" />
+                                <Row title="Sci-Fi & Fantasy TV" genre_id="10765" kind="tv" />
+                                <Row title="Crime TV Shows" genre_id="80" kind="tv" />
+                                <Row title="TV Dramas" genre_id="18" kind="tv" />
+                                <Row title="TV Comedies" genre_id="35" kind="tv" />
+                                <Row title="Docuseries" genre_id="99" kind="tv" />
+                                <Row title="Anime Series" genre_id="anime" kind="tv" />
+                                <Row title="Action & Adventure TV" genre_id="10759" kind="tv" />
+                                <Row title="Kids & Family TV" genre_id="10762" kind="tv" />
                             }.into_any()
                         }
                     }}

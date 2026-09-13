@@ -6,6 +6,9 @@ pub fn Row(
     #[prop(into)] title: String,
     #[prop(into, optional)] genre_id: Option<String>,
     #[prop(into, optional, default = "movie".to_string())] kind: String,
+    #[prop(into, optional)] sort_by: Option<String>,
+    #[prop(into, optional)] extra_params: Option<String>,
+    #[prop(into, optional)] endpoint: Option<String>,
 ) -> impl IntoView {
     let (movies, set_movies) = signal::<Vec<crate::services::tmdb::MediaItem>>(Vec::new());
     let (page, set_page) = signal(1);
@@ -14,6 +17,9 @@ pub fn Row(
 
     let genre_id_stored = StoredValue::new(genre_id);
     let kind_stored = StoredValue::new(kind);
+    let sort_by_stored = StoredValue::new(sort_by);
+    let extra_params_stored = StoredValue::new(extra_params);
+    let endpoint_stored = StoredValue::new(endpoint);
 
     let load_more = move || {
         if is_fetching.get_untracked() || !has_more.get_untracked() {
@@ -23,12 +29,19 @@ pub fn Row(
         let current_page = page.get_untracked();
         let genre_id = genre_id_stored.get_value();
         let kind = kind_stored.get_value();
+        let sort_by = sort_by_stored.get_value();
+        let extra_params = extra_params_stored.get_value();
+        let endpoint = endpoint_stored.get_value();
         
         leptos::task::spawn_local(async move {
-            let res = match genre_id {
-                Some(ref id) => crate::services::tmdb::fetch_for_genre_route_page(id, current_page).await,
-                None => crate::services::tmdb::fetch_trending_page(&kind, current_page).await,
-            };
+            let res = crate::services::tmdb::fetch_row_content(
+                &kind,
+                genre_id.as_deref(),
+                sort_by.as_deref(),
+                extra_params.as_deref(),
+                endpoint.as_deref(),
+                current_page,
+            ).await;
             let new_movies = res.unwrap_or_default();
             if new_movies.is_empty() {
                 set_has_more.set(false);

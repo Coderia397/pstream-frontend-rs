@@ -2,7 +2,6 @@ use leptos::prelude::*;
 use leptos_router::hooks::{use_navigate, use_params_map, use_query_map};
 use crate::components::layout::Layout;
 use crate::components::media::movie_card::MovieCard;
-use crate::services::tmdb::fetch_for_genre_route;
 use crate::models::mapping::map_netflix_id_to_tmdb;
 
 #[component]
@@ -36,11 +35,12 @@ pub fn BrowseGridPage() -> impl IntoView {
 
     let items_resource = LocalResource::new(move || {
         let key = row_key();
+        let q_kind = query.read().get("kind").or_else(|| query.read().get("type")).unwrap_or_else(|| "movie".to_string());
         async move {
             if key.is_empty() {
                 vec![]
             } else {
-                fetch_for_genre_route(&key).await.unwrap_or_default()
+                crate::services::tmdb::fetch_row_content(&q_kind, Some(&key), None, None, None, 1).await.unwrap_or_default()
             }
         }
     });

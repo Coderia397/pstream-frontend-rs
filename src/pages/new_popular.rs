@@ -83,17 +83,17 @@ pub fn NewPopularPage() -> impl IntoView {
                 <main class="hidden md:block relative z-10 pb-16 space-y-4 md:space-y-6">
                     <TopTenRow title="Top 10 Films in the UK Today" kind="movie" />
                     <TopTenRow title="Top 10 Series in the UK Today" kind="tv" />
-                    <Row title="Newly Added to the Collection" />
-                    <Row title="Worth the Wait" genre_id="1365" kind="movie" />
-                    <Row title="Rising Stars: Under the Radar" genre_id="8933" kind="movie" />
-                    <Row title="The Best of 2026 So Far" genre_id="5763" kind="movie" />
-                    <Row title="New Series Everyone Is Watching" genre_id="1191605" kind="tv" />
-                    <Row title="The Shows the Internet Can't Stop Talking About" genre_id="11714" kind="tv" />
-                    <Row title="The Films Everyone Is Discussing" genre_id="6548" kind="movie" />
-                    <Row title="Coming to the Collection Soon" genre_id="1492" kind="movie" />
-                    <Row title="New and Acclaimed" genre_id="5763" kind="movie" />
-                    <Row title="Series Picking Up Steam" genre_id="1372" kind="tv" />
-                    <Row title="International Discoveries" genre_id="52117" kind="tv" />
+                    <Row title="Newly Added to the Collection" endpoint="/movie/now_playing" kind="movie" />
+                    <Row title="Worth the Wait" sort_by="vote_average.desc" extra_params="&vote_count.gte=1000" kind="movie" />
+                    <Row title="Rising Stars: Under the Radar" sort_by="popularity.desc" extra_params="&vote_count.lte=2500&vote_count.gte=150&vote_average.gte=7.0" kind="movie" />
+                    <Row title="The Best of 2026 So Far" sort_by="vote_average.desc" extra_params="&primary_release_date.gte=2025-01-01&vote_count.gte=80" kind="movie" />
+                    <Row title="New Series Everyone Is Watching" endpoint="/trending/tv/week" kind="tv" />
+                    <Row title="The Shows the Internet Can't Stop Talking About" genre_id="18" kind="tv" sort_by="popularity.desc" />
+                    <Row title="The Films Everyone Is Discussing" endpoint="/trending/movie/week" kind="movie" />
+                    <Row title="Coming to the Collection Soon" endpoint="/movie/upcoming" kind="movie" />
+                    <Row title="New and Acclaimed" sort_by="vote_average.desc" extra_params="&vote_count.gte=400&primary_release_date.gte=2024-01-01" kind="movie" />
+                    <Row title="Series Picking Up Steam" genre_id="10765" kind="tv" sort_by="popularity.desc" />
+                    <Row title="International Discoveries" genre_id="international" kind="tv" />
                 </main>
             </div>
         </Layout>

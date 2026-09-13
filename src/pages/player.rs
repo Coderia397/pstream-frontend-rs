@@ -1,26 +1,32 @@
 use leptos::prelude::*;
 use leptos_router::hooks::{use_navigate, use_params_map, use_query_map};
-use crate::components::video_player::VideoPlayer;
+use crate::components::player::NetflixVideoPlayer;
 use crate::services::tmdb::fetch_details;
+use crate::store::use_watch_store;
 
 #[component]
 pub fn PlayerPage() -> impl IntoView {
     let params = use_params_map();
     let query = use_query_map();
     let navigate = use_navigate();
+    let watch_store = use_watch_store();
 
     let id_str = move || params.read().get("id").unwrap_or_default();
-    let season_str = move || query.read().get("season").or_else(|| query.read().get("s"));
-    let episode_str = move || query.read().get("episode").or_else(|| query.read().get("e"));
+    let id_val = move || id_str().parse::<u32>().unwrap_or(0);
 
+    // Initial query params
+    let (active_season, set_active_season) = signal(1u32);
+    let (active_episode, set_active_episode) = signal(1u32);
+
+    // Fetch movie or TV details
     let media_resource = LocalResource::new(move || {
-        let id_val: u32 = id_str().parse().unwrap_or(0);
+        let id = id_val();
         async move {
-            if id_val > 0 {
-                if let Ok(d) = fetch_details(id_val, false).await {
-                    Some(d)
-                } else if let Ok(d) = fetch_details(id_val, true).await {
-                    Some(d)
+            if id > 0 {
+                if let Ok(d) = fetch_details(id, false).await {
+                    Some((d, false))
+                } else if let Ok(d) = fetch_details(id, true).await {
+                    Some((d, true))
                 } else {
                     None
                 }
@@ -30,28 +36,94 @@ pub fn PlayerPage() -> impl IntoView {
         }
     });
 
-    let display_title = move || {
-        let base_title = media_resource.get().flatten().map(|m| m.display_title().to_string()).unwrap_or_else(|| "Playback".to_string());
-        if let (Some(s), Some(e)) = (season_str(), episode_str()) {
-            format!("{} S{}E{}", base_title, s, e)
+    // Initialize season / episode from query params or watch_store
+    Effect::new(move |_| {
+        let q = query.read();
+        let q_s = q.get("season").or_else(|| q.get("s")).and_then(|v| v.parse::<u32>().ok());
+        let q_e = q.get("episode").or_else(|| q.get("e")).and_then(|v| v.parse::<u32>().ok());
+
+        if let (Some(s), Some(e)) = (q_s, q_e) {
+            set_active_season.set(s);
+            set_active_episode.set(e);
         } else {
-            base_title
+            // Check watch store
+            let id = id_val();
+            if let Some(record) = watch_store.get_record(id, true) {
+                if let (Some(s), Some(e)) = (record.season, record.episode) {
+                    set_active_season.set(s);
+                    set_active_episode.set(e);
+                }
+            }
         }
-    };
+    });
 
-    let stream_url = "https://test-streams.mux.dev/x36xhzz/x36xhzz.m3u8".to_string();
-
+    let nav_close = navigate.clone();
     let on_close = Callback::new(move |_| {
-        navigate("/browse", Default::default());
+        nav_close("/browse", Default::default());
+    });
+
+    let nav_ep = navigate.clone();
+    let on_episode_change = Callback::new(move |(s, e): (u32, u32)| {
+        set_active_season.set(s);
+        set_active_episode.set(e);
+        let id = id_val();
+        nav_ep(&format!("/watch/{}?season={}&episode={}", id, s, e), Default::default());
     });
 
     view! {
-        <div class="w-full h-screen bg-black overflow-hidden">
-            <VideoPlayer 
-                title=display_title() 
-                stream_url=stream_url 
-                on_close=Some(on_close) 
-            />
+        <div class="w-full h-screen bg-black overflow-hidden select-none">
+            <Suspense fallback=move || view! {
+                <div class="w-full h-full flex flex-col items-center justify-center bg-black">
+                    <div class="w-16 h-16 rounded-full border-4 border-[#e50914] border-t-transparent animate-spin mb-4 shadow-2xl"></div>
+                    <p class="text-white/80 text-sm font-semibold">"Loading title..."</p>
+                </div>
+            }>
+                {move || {
+                    let id = id_val();
+                    let s_num = active_season.get();
+                    let e_num = active_episode.get();
+
+                    media_resource.get().map(|res| match res {
+                        Some((item, is_tv)) => {
+                            let title = item.display_title().to_string();
+                            let year = item.release_date.as_ref().or(item.first_air_date.as_ref()).map(|d| {
+                                d.chars().take(4).collect::<String>()
+                            });
+                            let poster = item.poster_path.clone();
+                            let backdrop = item.backdrop_path.clone();
+
+                            view! {
+                                <NetflixVideoPlayer
+                                    media_id=id
+                                    title=title
+                                    is_tv=is_tv
+                                    season=if is_tv { Some(s_num) } else { None }
+                                    episode=if is_tv { Some(e_num) } else { None }
+                                    episode_title=None
+                                    year=year
+                                    poster_path=poster
+                                    backdrop_path=backdrop
+                                    on_close=on_close
+                                    on_episode_change=Some(on_episode_change)
+                                />
+                            }.into_any()
+                        }
+                        None => view! {
+                            <div class="w-full h-full flex flex-col items-center justify-center bg-black text-center px-4">
+                                <h2 class="text-xl font-bold text-white mb-2">"Media Not Found"</h2>
+                                <p class="text-white/60 text-sm mb-6">"Unable to locate title information."</p>
+                                <button
+                                    on:click=move |_| on_close.run(())
+                                    class="px-6 py-2.5 bg-[#e50914] hover:bg-[#b80710] text-white font-bold rounded-lg text-sm"
+                                >
+                                    "Back to Browse"
+                                </button>
+                            </div>
+                        }.into_any()
+                    })
+                }}
+            </Suspense>
         </div>
     }
 }
+

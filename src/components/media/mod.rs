@@ -14,3 +14,4 @@ pub mod share_sheet;
 pub mod continue_watching_options_sheet;
 pub mod mobile_hero;
 pub mod spotlight_card;
+pub mod continue_watching_row;

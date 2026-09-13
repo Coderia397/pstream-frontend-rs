@@ -21,6 +21,7 @@ pub fn App() -> impl IntoView {
     crate::store::provide_ui_store();
     crate::store::provide_profile_store();
     crate::store::provide_library_store();
+    crate::store::provide_watch_store();
 
     let profile_store = crate::store::use_profile_store();
     let has_no_profile = move || profile_store.active_profile_id.get().is_none();

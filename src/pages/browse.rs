@@ -3,6 +3,7 @@ use crate::services::tmdb::{fetch_trending};
 use crate::components::media::row::Row;
 use crate::components::media::top_ten_row::TopTenRow;
 use crate::components::media::hero::HeroSection;
+use crate::components::media::continue_watching_row::ContinueWatchingRow;
 
 #[component]
 pub fn BrowseHome() -> impl IntoView {
@@ -57,6 +58,7 @@ pub fn BrowseHome() -> impl IntoView {
                 </Suspense>
 
                 <div class="relative z-30 space-y-6 md:space-y-10 mt-6 md:mt-8">
+                    <ContinueWatchingRow />
                     <TopTenRow title="Top 10 Movies Today" kind="movie" />
                     <TopTenRow title="Top 10 TV Shows Today" kind="tv" />
                     <Row title="Action & Adventure" genre_id="1365" />

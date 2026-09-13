@@ -18,11 +18,24 @@ pub fn PlayerPage() -> impl IntoView {
     let (active_season, set_active_season) = signal(1u32);
     let (active_episode, set_active_episode) = signal(1u32);
 
+    let kind_param = move || params.read().get("kind");
+
     // Fetch movie or TV details
     let media_resource = LocalResource::new(move || {
         let id = id_val();
+        let k = kind_param();
         async move {
             if id > 0 {
+                if k.as_deref() == Some("tv") {
+                    if let Ok(d) = fetch_details(id, true).await {
+                        return Some((d, true));
+                    }
+                } else if k.as_deref() == Some("movie") {
+                    if let Ok(d) = fetch_details(id, false).await {
+                        return Some((d, false));
+                    }
+                }
+                // Fallback auto-detection
                 if let Ok(d) = fetch_details(id, false).await {
                     Some((d, false))
                 } else if let Ok(d) = fetch_details(id, true).await {

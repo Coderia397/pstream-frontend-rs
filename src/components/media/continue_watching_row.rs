@@ -63,10 +63,14 @@ pub fn ContinueWatchingRow() -> impl IntoView {
                                     let percentage = rec.percentage.clamp(0.0, 100.0);
                                     let backdrop = rec.backdrop_url("w780").or_else(|| rec.poster_url("w500")).unwrap_or_default();
 
-                                    let target_url = if is_tv && season.is_some() && episode.is_some() {
-                                        format!("/watch/{}?season={}&episode={}", id, season.unwrap(), episode.unwrap())
+                                    let target_url = if is_tv {
+                                        if let (Some(s), Some(e)) = (season, episode) {
+                                            format!("/watch/tv/{}?season={}&episode={}", id, s, e)
+                                        } else {
+                                            format!("/watch/tv/{}", id)
+                                        }
                                     } else {
-                                        format!("/watch/{}", id)
+                                        format!("/watch/movie/{}", id)
                                     };
 
                                     let target_url_for_play = target_url.clone();

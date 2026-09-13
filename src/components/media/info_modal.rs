@@ -242,8 +242,21 @@ pub fn InfoModal() -> impl IntoView {
                                 }
                             };
 
+                            let watch_store = crate::store::use_watch_store();
+                            let watch_record = watch_store.get_record(current_movie_id, is_tv_val);
+                            let has_progress = watch_record.as_ref().map(|r| r.percentage > 0.0).unwrap_or(false);
+                            let play_label = if has_progress { "Resume" } else { "Play" };
+
                             let watch_url = if is_tv_val {
-                                format!("/watch/tv/{}?season={}&episode=1", current_movie_id, selected_season.get())
+                                if let Some(ref rec) = watch_record {
+                                    if let (Some(s), Some(e)) = (rec.season, rec.episode) {
+                                        format!("/watch/tv/{}?season={}&episode={}", current_movie_id, s, e)
+                                    } else {
+                                        format!("/watch/tv/{}?season={}&episode=1", current_movie_id, selected_season.get())
+                                    }
+                                } else {
+                                    format!("/watch/tv/{}?season={}&episode=1", current_movie_id, selected_season.get())
+                                }
                             } else {
                                 format!("/watch/movie/{}", current_movie_id)
                             };
@@ -291,6 +304,22 @@ pub fn InfoModal() -> impl IntoView {
                                         // Cinematic Gradient Overlay (bottom 40% blend)
                                         <div class="absolute inset-x-0 bottom-0 h-2/5 bg-gradient-to-t from-[#181818] via-[#181818]/40 to-transparent z-10 pointer-events-none" />
 
+                                        // Watch Progress Bar along the bottom of the hero banner
+                                        {if has_progress {
+                                            if let Some(ref rec) = watch_record {
+                                                let pct = rec.percentage.clamp(0.0, 100.0);
+                                                view! {
+                                                    <div class="absolute bottom-0 inset-x-0 h-1.5 bg-white/20 z-30 pointer-events-none">
+                                                        <div class="h-full bg-[#e50914] transition-all duration-300" style=format!("width: {:.1}%;", pct) />
+                                                    </div>
+                                                }.into_any()
+                                            } else {
+                                                view! { <span /> }.into_any()
+                                            }
+                                        } else {
+                                            view! { <span /> }.into_any()
+                                        }}
+
                                         // Title / Logo & Action Buttons Overlay
                                         <div class="absolute bottom-6 sm:bottom-10 left-6 sm:left-10 w-[70%] z-20 pointer-events-auto">
                                             // Logo or Title
@@ -323,7 +352,7 @@ pub fn InfoModal() -> impl IntoView {
                                                     class="bg-white text-black px-6 sm:px-8 py-2 rounded-[4px] font-bold text-base sm:text-lg flex items-center justify-center gap-2 hover:bg-white/80 transition-colors cursor-pointer"
                                                 >
                                                     <i class="ph-fill ph-play text-xl"></i>
-                                                    "Play"
+                                                    {play_label}
                                                 </a>
 
                                                 // MyList Button

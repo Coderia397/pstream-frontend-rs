@@ -595,13 +595,30 @@ pub fn HeroSection(
                             <a
                                 href=move || {
                                     let id = current_id();
-                                    let kind = if current_is_tv() { "tv" } else { "movie" };
+                                    let is_tv = current_is_tv();
+                                    let kind = if is_tv { "tv" } else { "movie" };
+                                    let watch_store = crate::store::use_watch_store();
+                                    if let Some(rec) = watch_store.get_record(id, is_tv) {
+                                        if is_tv && rec.season.is_some() && rec.episode.is_some() {
+                                            return format!("/watch/tv/{}?season={}&episode={}", id, rec.season.unwrap(), rec.episode.unwrap());
+                                        }
+                                    }
                                     format!("/watch/{}/{}", kind, id)
                                 }
                                 class="flex items-center justify-center bg-white text-black px-7 py-2.5 rounded-full font-bold hover:bg-white/90 transition-all duration-150 active:scale-95 text-[15px] md:text-[16px] gap-2 shadow-lg select-none"
                             >
                                 <i class="ph-fill ph-play text-xl"></i>
-                                <span>"Play"</span>
+                                <span>{move || {
+                                    let id = current_id();
+                                    let is_tv = current_is_tv();
+                                    let watch_store = crate::store::use_watch_store();
+                                    if let Some(rec) = watch_store.get_record(id, is_tv) {
+                                        if rec.percentage > 0.0 {
+                                            return "Resume";
+                                        }
+                                    }
+                                    "Play"
+                                }}</span>
                             </a>
 
                             <button

@@ -36,6 +36,7 @@ pub fn App() -> impl IntoView {
                 <Route path=path!("/browse") view=BrowseHome />
                 <Route path=path!("/browse/genre/:id") view=crate::pages::browse_grid::BrowseGridPage />
                 <Route path=path!("/watch/:id") view=crate::pages::player::PlayerPage />
+                <Route path=path!("/watch/:kind/:id") view=crate::pages::player::PlayerPage />
                 <Route path=path!("") view=|| view! { <leptos_router::components::Redirect path="/browse" /> } />
                 <Route path=path!("/search") view=crate::pages::search::SearchPage />
                 <Route path=path!("/browse/my-list") view=crate::pages::my_list::MyListPage />

@@ -54,7 +54,7 @@ pub fn SearchPage() -> impl IntoView {
                                     let backdrop = item.backdrop_url("w780").unwrap_or_default();
                                     let poster = item.poster_url("w342").unwrap_or_default();
                                     view! { 
-                                        <MovieCard movie_id=movie_id is_tv=is_tv title=title backdrop_path=backdrop poster_path=poster vote_average=item.vote_average /> 
+                                        <MovieCard movie_id=movie_id is_tv=is_tv title=title backdrop_path=backdrop poster_path=poster vote_average=item.vote_average is_grid=true /> 
                                     }
                                 }).collect::<Vec<_>>()}
                             </div>

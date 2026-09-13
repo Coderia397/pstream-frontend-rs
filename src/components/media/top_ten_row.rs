@@ -215,6 +215,25 @@ fn TopTenCard(
                     loading="lazy"
                     draggable="false"
                 />
+
+                // Watch Progress Bar if user has watched this title
+                {move || {
+                    let watch_store = crate::store::use_watch_store();
+                    if let Some(rec) = watch_store.get_record(movie_id, is_tv) {
+                        if rec.percentage > 0.0 {
+                            let pct = rec.percentage.clamp(0.0, 100.0);
+                            view! {
+                                <div class="absolute bottom-0 inset-x-0 h-1 bg-white/20 z-10 pointer-events-none">
+                                    <div class="h-full bg-[#e50914]" style=format!("width: {:.1}%;", pct) />
+                                </div>
+                            }.into_any()
+                        } else {
+                            view! { <span /> }.into_any()
+                        }
+                    } else {
+                        view! { <span /> }.into_any()
+                    }
+                }}
             </div>
 
             {move || {
@@ -237,7 +256,21 @@ fn TopTenCard(
                         };
                         let on_play_cb = Callback::new(move |_| {
                             let navigate = leptos_router::hooks::use_navigate();
-                            navigate(&format!("/watch/{}", movie_id), Default::default());
+                            let watch_store = crate::store::use_watch_store();
+                            let target = if let Some(rec) = watch_store.get_record(movie_id, is_tv) {
+                                if is_tv && rec.season.is_some() && rec.episode.is_some() {
+                                    format!("/watch/tv/{}?season={}&episode={}", movie_id, rec.season.unwrap(), rec.episode.unwrap())
+                                } else if is_tv {
+                                    format!("/watch/tv/{}", movie_id)
+                                } else {
+                                    format!("/watch/movie/{}", movie_id)
+                                }
+                            } else if is_tv {
+                                format!("/watch/tv/{}", movie_id)
+                            } else {
+                                format!("/watch/movie/{}", movie_id)
+                            };
+                            navigate(&target, Default::default());
                         });
                         let on_modal_cb = Callback::new(move |_| {
                             ui_store.info_modal_movie_id.set(Some(movie_id));

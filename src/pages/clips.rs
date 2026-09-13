@@ -39,7 +39,21 @@ pub fn ClipCard(
 
     let on_play = move |e: leptos::ev::MouseEvent| {
         e.stop_propagation();
-        navigate(&format!("/watch/{}", movie_id), Default::default());
+        let watch_store = crate::store::use_watch_store();
+        let target = if let Some(rec) = watch_store.get_record(movie_id, is_tv) {
+            if is_tv && rec.season.is_some() && rec.episode.is_some() {
+                format!("/watch/tv/{}?season={}&episode={}", movie_id, rec.season.unwrap(), rec.episode.unwrap())
+            } else if is_tv {
+                format!("/watch/tv/{}", movie_id)
+            } else {
+                format!("/watch/movie/{}", movie_id)
+            }
+        } else if is_tv {
+            format!("/watch/tv/{}", movie_id)
+        } else {
+            format!("/watch/movie/{}", movie_id)
+        };
+        navigate(&target, Default::default());
     };
 
     let on_card_tap = move |_| {
@@ -134,7 +148,15 @@ pub fn ClipCard(
                     <div class="w-11 h-11 rounded-full bg-white text-black flex items-center justify-center group-active:scale-90 transition-transform shadow-xl">
                         <i class="ph-fill ph-play text-xl ml-0.5 text-black"></i>
                     </div>
-                    <span class="text-[11px] font-semibold drop-shadow">"Play"</span>
+                    <span class="text-[11px] font-semibold drop-shadow">{move || {
+                        let watch_store = crate::store::use_watch_store();
+                        if let Some(rec) = watch_store.get_record(movie_id, is_tv) {
+                            if rec.percentage > 0.0 {
+                                return "Resume";
+                            }
+                        }
+                        "Play"
+                    }}</span>
                 </button>
 
                 // Info Button

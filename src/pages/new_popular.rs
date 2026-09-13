@@ -4,7 +4,7 @@ use crate::components::media::row::Row;
 use crate::components::media::top_ten_row::TopTenRow;
 use crate::components::media::spotlight_card::SpotlightCard;
 use crate::components::layout::new_popular_sub_nav_mobile::{NewPopularSubNavMobile, NewPopularTab};
-use crate::services::tmdb::{fetch_trending, fetch_top_rated};
+use crate::services::tmdb::{fetch_trending, fetch_top_rated, fetch_row_content};
 
 #[component]
 pub fn NewPopularPage() -> impl IntoView {
@@ -18,8 +18,8 @@ pub fn NewPopularPage() -> impl IntoView {
                 NewPopularTab::Watching => fetch_trending("all").await.unwrap_or_default(),
                 NewPopularTab::Top10Movies => fetch_top_rated("movie").await.unwrap_or_default(),
                 NewPopularTab::Top10Series => fetch_top_rated("tv").await.unwrap_or_default(),
-                NewPopularTab::JustLanded => fetch_trending("movie").await.unwrap_or_default(),
-                NewPopularTab::ComingSoon => fetch_trending("tv").await.unwrap_or_default(),
+                NewPopularTab::JustLanded => fetch_row_content("movie", None, None, None, Some("/movie/now_playing"), 1).await.unwrap_or_default(),
+                NewPopularTab::ComingSoon => fetch_row_content("movie", None, None, None, Some("/movie/upcoming"), 1).await.unwrap_or_default(),
             }
         }
     });

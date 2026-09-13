@@ -55,7 +55,21 @@ pub fn SpotlightCard(
 
     let on_play_click = move |e: leptos::ev::MouseEvent| {
         e.stop_propagation();
-        navigate(&format!("/watch/{}", movie_id), Default::default());
+        let watch_store = crate::store::use_watch_store();
+        let target = if let Some(rec) = watch_store.get_record(movie_id, is_tv) {
+            if is_tv && rec.season.is_some() && rec.episode.is_some() {
+                format!("/watch/tv/{}?season={}&episode={}", movie_id, rec.season.unwrap(), rec.episode.unwrap())
+            } else if is_tv {
+                format!("/watch/tv/{}", movie_id)
+            } else {
+                format!("/watch/movie/{}", movie_id)
+            }
+        } else if is_tv {
+            format!("/watch/tv/{}", movie_id)
+        } else {
+            format!("/watch/movie/{}", movie_id)
+        };
+        navigate(&target, Default::default());
     };
 
     let on_card_click = move |_| {
@@ -195,7 +209,15 @@ pub fn SpotlightCard(
                                         class="flex-1 flex items-center justify-center h-[48px] rounded-[4px] bg-white hover:bg-neutral-200 text-black font-bold text-base gap-2 transition-all active:scale-95 cursor-pointer shadow"
                                     >
                                         <i class="ph-fill ph-play text-xl text-black"></i>
-                                        <span>"Play"</span>
+                                        <span>{move || {
+                                            let watch_store = crate::store::use_watch_store();
+                                            if let Some(rec) = watch_store.get_record(movie_id, is_tv) {
+                                                if rec.percentage > 0.0 {
+                                                    return "Resume";
+                                                }
+                                            }
+                                            "Play"
+                                        }}</span>
                                     </button>
                                     <button
                                         on:click=on_toggle_list

@@ -255,12 +255,16 @@ pub fn MovieCard(
                             let watch_store = crate::store::use_watch_store();
                             let target = if let Some(rec) = watch_store.get_record(movie_id, is_tv) {
                                 if is_tv && rec.season.is_some() && rec.episode.is_some() {
-                                    format!("/watch/{}?season={}&episode={}", movie_id, rec.season.unwrap(), rec.episode.unwrap())
+                                    format!("/watch/tv/{}?season={}&episode={}", movie_id, rec.season.unwrap(), rec.episode.unwrap())
+                                } else if is_tv {
+                                    format!("/watch/tv/{}", movie_id)
                                 } else {
-                                    format!("/watch/{}", movie_id)
+                                    format!("/watch/movie/{}", movie_id)
                                 }
+                            } else if is_tv {
+                                format!("/watch/tv/{}", movie_id)
                             } else {
-                                format!("/watch/{}", movie_id)
+                                format!("/watch/movie/{}", movie_id)
                             };
                             navigate(&target, Default::default());
                         });

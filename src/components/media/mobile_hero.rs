@@ -79,8 +79,21 @@ pub fn MobileHero(
         if let Some(cb) = on_play {
             cb.run(movie_c3.clone());
         } else if let Some(w) = web_sys::window() {
-            let kind = if is_tv { "tv" } else { "movie" };
-            let _ = w.location().set_href(&format!("/watch/{}/{}", kind, movie_id));
+            let watch_store = crate::store::use_watch_store();
+            let target = if let Some(rec) = watch_store.get_record(movie_id, is_tv) {
+                if is_tv && rec.season.is_some() && rec.episode.is_some() {
+                    format!("/watch/tv/{}?season={}&episode={}", movie_id, rec.season.unwrap(), rec.episode.unwrap())
+                } else if is_tv {
+                    format!("/watch/tv/{}", movie_id)
+                } else {
+                    format!("/watch/movie/{}", movie_id)
+                }
+            } else if is_tv {
+                format!("/watch/tv/{}", movie_id)
+            } else {
+                format!("/watch/movie/{}", movie_id)
+            };
+            let _ = w.location().set_href(&target);
         }
     };
 
@@ -167,7 +180,15 @@ pub fn MobileHero(
                             class="flex-1 flex items-center justify-center h-[46px] rounded-[4px] bg-white hover:bg-neutral-200 text-black font-bold text-lg gap-2 transition-all active:scale-95 shadow-md cursor-pointer"
                         >
                             <i class="ph-fill ph-play text-2xl"></i>
-                            <span>"Play"</span>
+                            <span>{move || {
+                                let watch_store = crate::store::use_watch_store();
+                                if let Some(rec) = watch_store.get_record(movie_id, is_tv) {
+                                    if rec.percentage > 0.0 {
+                                        return "Resume";
+                                    }
+                                }
+                                "Play"
+                            }}</span>
                         </button>
 
                         // My List button

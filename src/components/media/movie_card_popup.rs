@@ -185,6 +185,25 @@ pub fn MovieCardPopup(
                     }}
                 </div>
 
+                // Watch Progress Bar if watched
+                {move || {
+                    let watch_store = crate::store::use_watch_store();
+                    if let Some(rec) = watch_store.get_record(movie_id, is_tv) {
+                        if rec.percentage > 0.0 {
+                            let pct = rec.percentage.clamp(0.0, 100.0);
+                            view! {
+                                <div class="h-1 w-full bg-white/20 relative">
+                                    <div class="h-full bg-[#e50914]" style=format!("width: {:.1}%;", pct) />
+                                </div>
+                            }.into_any()
+                        } else {
+                            view! { <span /> }.into_any()
+                        }
+                    } else {
+                        view! { <span /> }.into_any()
+                    }
+                }}
+
                 // Metadata & Action Controls
                 <div class="p-4 space-y-3">
                     // Action Buttons Row
@@ -194,8 +213,16 @@ pub fn MovieCardPopup(
                             <button
                                 type="button"
                                 on:click=move |_| on_play.run(())
-                                class="w-9 h-9 rounded-full bg-white text-black flex items-center justify-center hover:bg-white/80 active:scale-95 transition-all shadow-md"
-                                title="Play"
+                                class="w-9 h-9 rounded-full bg-white text-black flex items-center justify-center hover:bg-white/80 active:scale-95 transition-all shadow-md cursor-pointer"
+                                title=move || {
+                                    let watch_store = crate::store::use_watch_store();
+                                    if let Some(rec) = watch_store.get_record(movie_id, is_tv) {
+                                        if rec.percentage > 0.0 {
+                                            return "Resume";
+                                        }
+                                    }
+                                    "Play"
+                                }
                             >
                                 <i class="ph-fill ph-play text-lg translate-x-0.5"></i>
                             </button>

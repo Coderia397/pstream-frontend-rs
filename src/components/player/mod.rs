@@ -1,3 +1,4 @@
+// Autoplay and resilient streaming subsystem
 pub mod timeline_scrubber;
 pub mod controls_overlay;
 pub mod episode_drawer;
@@ -55,6 +56,7 @@ pub fn NetflixVideoPlayer(
     year: Option<String>,
     poster_path: Option<String>,
     backdrop_path: Option<String>,
+    orig_lang: Option<String>,
     on_close: Callback<()>,
     on_episode_change: Option<Callback<(u32, u32)>>,
 ) -> impl IntoView {
@@ -72,6 +74,7 @@ pub fn NetflixVideoPlayer(
     let (buffered_fraction, set_buffered_fraction) = signal(0.0);
     let (playback_speed, set_playback_speed) = signal(1.0);
     let (is_idle, set_is_idle) = signal(false);
+    let (pending_resume_time, set_pending_resume_time) = signal(0.0);
 
     // Drawers
     let (is_episodes_open, set_is_episodes_open) = signal(false);
@@ -79,22 +82,24 @@ pub fn NetflixVideoPlayer(
     let (selected_sub_url, set_selected_sub_url) = signal(None::<String>);
     let (sub_delay, set_sub_delay) = signal(0.0);
 
+    // Internal HLS & timers
     let hls_player = RwSignal::new_local(None::<std::rc::Rc<HlsPlayer>>);
     let idle_timer = StoredValue::new(None::<i32>);
     let progress_timer = StoredValue::new(None::<i32>);
-
     let title_stored = StoredValue::new(title.clone());
 
     // Resolve Stream
     let do_resolve = Callback::new({
         let title_c = title.clone();
         let year_c = year.clone();
+        let orig_lang_c = orig_lang.clone();
         move |force: bool| {
             set_player_state.set(PlayerState::Resolving);
             let t = title_c.clone();
             let y = year_c.clone();
+            let ol = orig_lang_c.clone();
             leptos::task::spawn_local(async move {
-                match resolve_stream(media_id, is_tv, &t, y.as_deref(), season, episode, force).await {
+                match resolve_stream(media_id, is_tv, &t, y.as_deref(), season, episode, force, ol.as_deref()).await {
                     Ok(result) => {
                         set_player_state.set(PlayerState::Playing {
                             result,
@@ -131,28 +136,39 @@ pub fn NetflixVideoPlayer(
     // Attach stream when video element and player_state ready
     Effect::new(move |_| {
         if let PlayerState::Playing { ref result, active_source_idx } = player_state.get() {
-                if let Some(source) = result.sources.get(active_source_idx) {
-                    if source.kind != PlayableKind::Embed {
-                        if let Some(video) = video_ref.get() {
-                            let stream_url = &source.url;
-                            let player = HlsPlayer::attach(video.clone(), stream_url);
-                            hls_player.set(Some(std::rc::Rc::new(player)));
+            if let Some(source) = result.sources.get(active_source_idx) {
+                if source.kind != PlayableKind::Embed {
+                    if let Some(video) = video_ref.get() {
+                        let stream_url = &source.url;
+                        let player = HlsPlayer::attach(video.clone(), stream_url);
+                        hls_player.set(Some(std::rc::Rc::new(player)));
 
-                            // Restore resume time
-                            let resume_t = watch_store.get_resume_time(media_id, is_tv, season, episode);
-                            if resume_t > 0.0 {
-                                video.set_current_time(resume_t);
-                                set_current_time.set(resume_t);
-                            }
-
-                            let _ = video.play();
-                            set_is_playing.set(true);
+                        // Store resume time for when metadata/canplay is ready
+                        let resume_t = watch_store.get_resume_time(media_id, is_tv, season, episode);
+                        if resume_t > 0.0 {
+                            set_pending_resume_time.set(resume_t);
                         }
+
+                        // Autoplay attempt with resilient muted fallback if browser blocks unmuted audio
+                        if let Ok(play_promise) = video.play() {
+                            let v_clone = video.clone();
+                            let is_muted_sig = set_is_muted;
+                            let on_reject = Closure::wrap(Box::new(move |_err: JsValue| {
+                                leptos::logging::warn!("Unmuted autoplay blocked by browser policy, falling back to muted autoplay...");
+                                v_clone.set_muted(true);
+                                is_muted_sig.set(true);
+                                let _ = v_clone.play();
+                            }) as Box<dyn FnMut(JsValue)>);
+                            let _ = play_promise.catch(&on_reject);
+                            on_reject.forget();
+                        }
+
+                        set_is_playing.set(true);
                     }
                 }
             }
         }
-    );
+    });
 
     // Progress persistence loop
     {
@@ -283,15 +299,62 @@ pub fn NetflixVideoPlayer(
                 let frac = ((cur + 60.0) / dur).clamp(0.0, 1.0);
                 set_buffered_fraction.set(frac);
             }
+
+            // Video Freeze / Audio-Only Failover Protection:
+            // If audio has been playing for > 2.0s but videoWidth remains 0, the video codec
+            // is unsupported by this browser or corrupted in this source. Failover to next source!
+            if cur > 2.0 && !video.paused() && video.video_width() == 0 {
+                leptos::logging::warn!("Stream playing audio only with 0 video dimensions. Failing over to next source...");
+                if let PlayerState::Playing { ref result, active_source_idx } = player_state.get_untracked() {
+                    if active_source_idx + 1 < result.sources.len() {
+                        set_player_state.set(PlayerState::Playing {
+                            result: result.clone(),
+                            active_source_idx: active_source_idx + 1,
+                        });
+                    }
+                }
+            }
         }
     };
 
     let on_waiting = move |_| set_is_buffering.set(true);
+    let on_canplay = move |_| {
+        set_is_buffering.set(false);
+        let pending_t = pending_resume_time.get_untracked();
+        if pending_t > 0.0 {
+            if let Some(video) = video_ref.get() {
+                video.set_current_time(pending_t);
+                set_current_time.set(pending_t);
+                set_pending_resume_time.set(0.0);
+            }
+        }
+        if let Some(video) = video_ref.get() {
+            if !video.paused() {
+                set_is_playing.set(true);
+            }
+        }
+    };
     let on_playing = move |_| {
         set_is_buffering.set(false);
         set_is_playing.set(true);
     };
     let on_pause = move |_| set_is_playing.set(false);
+
+    let on_error = move |_| {
+        leptos::logging::warn!("Video playback error encountered on current stream source, attempting failover...");
+        if let PlayerState::Playing { ref result, active_source_idx } = player_state.get_untracked() {
+            if active_source_idx + 1 < result.sources.len() {
+                set_player_state.set(PlayerState::Playing {
+                    result: result.clone(),
+                    active_source_idx: active_source_idx + 1,
+                });
+            } else {
+                set_player_state.set(PlayerState::Error(
+                    "Unable to stream video. All source providers were unavailable or unsupported by your browser.".to_string(),
+                ));
+            }
+        }
+    };
 
     // Keyboard shortcuts
     Effect::new(move |_| {
@@ -439,8 +502,10 @@ pub fn NetflixVideoPlayer(
                                             id="pstream-video"
                                             on:timeupdate=on_time_update
                                             on:waiting=on_waiting
+                                            on:canplay=on_canplay
                                             on:playing=on_playing
                                             on:pause=on_pause
+                                            on:error=on_error
                                             on:click=move |_| do_toggle_play()
                                             class="w-full h-full object-contain cursor-pointer"
                                             playsinline=true

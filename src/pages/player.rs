@@ -80,7 +80,7 @@ pub fn PlayerPage() -> impl IntoView {
         set_active_season.set(s);
         set_active_episode.set(e);
         let id = id_val();
-        nav_ep(&format!("/watch/{}?season={}&episode={}", id, s, e), Default::default());
+        nav_ep(&format!("/watch/tv/{}?season={}&episode={}", id, s, e), Default::default());
     });
 
     view! {
@@ -104,6 +104,7 @@ pub fn PlayerPage() -> impl IntoView {
                             });
                             let poster = item.poster_path.clone();
                             let backdrop = item.backdrop_path.clone();
+                            let orig_lang = item.original_language.clone();
 
                             view! {
                                 <NetflixVideoPlayer
@@ -114,6 +115,7 @@ pub fn PlayerPage() -> impl IntoView {
                                     episode=if is_tv { Some(e_num) } else { None }
                                     episode_title=None
                                     year=year
+                                    orig_lang=orig_lang
                                     poster_path=poster
                                     backdrop_path=backdrop
                                     on_close=on_close

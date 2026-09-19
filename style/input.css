@@ -65,11 +65,39 @@
 :root {
   --app-x: 16px;
 }
-@media (min-width: 768px) {
+@media (min-width: 800px) {
   :root { --app-x: 48px; }
 }
-@media (min-width: 1024px) {
+@media (min-width: 1350px) {
   :root { --app-x: 56px; }
+}
+@media (min-width: 1750px) {
+  :root { --app-x: 60px; }
+}
+
+/* Netflix exact slider card width rules driven by container query */
+.netflix-card-width {
+  width: calc((100cqw - 2rem - 1 * 6px) / 2.15);
+}
+@container (min-width: 500px) {
+  .netflix-card-width {
+    width: calc((100cqw - 3rem - 2 * 6px) / 3.1);
+  }
+}
+@container (min-width: 800px) {
+  .netflix-card-width {
+    width: calc((100cqw - 2 * var(--app-x, 48px) - 3 * 6px) / 4);
+  }
+}
+@container (min-width: 1350px) {
+  .netflix-card-width {
+    width: calc((100cqw - 2 * var(--app-x, 56px) - 4 * 6px) / 5);
+  }
+}
+@container (min-width: 1750px) {
+  .netflix-card-width {
+    width: calc((100cqw - 2 * var(--app-x, 60px) - 5 * 6px) / 6);
+  }
 }
 
 html {

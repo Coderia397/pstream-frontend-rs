@@ -62,16 +62,28 @@ pub fn NotificationsDropdown() -> impl IntoView {
                 if count >= 8 { break; }
                 if let Some(backdrop) = m.backdrop_url("w300").or_else(|| m.poster_url("w300")) {
                     let rel = match idx {
-                        0 | 1 => "Today".to_string(),
-                        2 | 3 => "1 day ago".to_string(),
-                        4 | 5 => "2 days ago".to_string(),
-                        _ => format!("{} days ago", idx),
+                        0 => "New".to_string(),
+                        1 => "1 day ago".to_string(),
+                        2 => "3 days ago".to_string(),
+                        3 => "1 week ago".to_string(),
+                        4 => "2 weeks ago".to_string(),
+                        5 => "3 weeks ago".to_string(),
+                        _ => "1 month ago".to_string(),
                     };
                     list.push(AppNotification {
                         id: format!("notif-movie-{}", m.id),
                         movie_id: m.id,
                         is_tv: false,
-                        headline: "New Movie".to_string(),
+                        headline: match idx {
+                            0 => "Top pick for you".to_string(),
+                            1 => "Trending now".to_string(),
+                            2 => "Don't miss out".to_string(),
+                            3 => "New arrival".to_string(),
+                            4 => "A must-watch".to_string(),
+                            5 => "Top 10 in the UK".to_string(),
+                            6 => "Critics' choice".to_string(),
+                            _ => "New on PStream".to_string(),
+                        },
                         body: m.title.clone().unwrap_or_default(),
                         backdrop,
                         relative_time: rel,
@@ -84,15 +96,27 @@ pub fn NotificationsDropdown() -> impl IntoView {
                 if count >= 16 { break; }
                 if let Some(backdrop) = s.backdrop_url("w300").or_else(|| s.poster_url("w300")) {
                     let rel = match idx {
-                        0 => "Today".to_string(),
-                        1 | 2 => "3 days ago".to_string(),
-                        _ => format!("{} days ago", idx + 2),
+                        0 => "New".to_string(),
+                        1 => "2 days ago".to_string(),
+                        2 => "1 week ago".to_string(),
+                        3 => "2 weeks ago".to_string(),
+                        4 => "3 weeks ago".to_string(),
+                        _ => "1 month ago".to_string(),
                     };
                     list.push(AppNotification {
                         id: format!("notif-tv-{}", s.id),
                         movie_id: s.id,
                         is_tv: true,
-                        headline: "New Series".to_string(),
+                        headline: match idx {
+                            0 => "New season available".to_string(),
+                            1 => "Top series for you".to_string(),
+                            2 => "Everyone's watching".to_string(),
+                            3 => "A top comedy picked for you".to_string(),
+                            4 => "Binge-worthy".to_string(),
+                            5 => "Top 10 series in the UK".to_string(),
+                            6 => "New arrival".to_string(),
+                            _ => "New on PStream".to_string(),
+                        },
                         body: s.title.clone().unwrap_or_default(),
                         backdrop,
                         relative_time: rel,
@@ -147,6 +171,9 @@ pub fn NotificationsDropdown() -> impl IntoView {
             save_read_ids(set);
         });
         set_open.set(false);
+        ui_store.hero_paused_by_modal.set(false);
+        ui_store.modal_initial_time.set(0.0);
+        ui_store.modal_current_time.set(0.0);
         ui_store.info_modal_movie_id.set(Some(notif.movie_id));
         ui_store.info_modal_is_tv.set(notif.is_tv);
         ui_store.info_modal_open.set(true);
@@ -174,9 +201,13 @@ pub fn NotificationsDropdown() -> impl IntoView {
                 </Show>
             </button>
 
-            // Dropdown panel (Task 094)
+            // Dropdown panel
             <Show when=move || open.get()>
-                <div class="absolute right-0 top-[calc(100%+10px)] w-[360px] sm:w-[420px] max-h-[560px] overflow-y-auto bg-[#141414] border border-white/10 rounded-sm shadow-2xl z-50 divide-y divide-white/[0.06] scrollbar-hide">
+                <div class="absolute right-0 top-[calc(100%+8px)] w-[360px] sm:w-[420px] max-h-[560px] overflow-y-auto bg-[#2a2a2a] rounded-xl shadow-2xl z-50 scrollbar-hide">
+                    // Header
+                    <div class="px-4 py-3">
+                        <p class="text-white font-bold text-[15px]">"Notifications"</p>
+                    </div>
                     <Show
                         when=move || !is_loading.get()
                         fallback=move || view! {
@@ -196,27 +227,15 @@ pub fn NotificationsDropdown() -> impl IntoView {
                             <div class="flex flex-col">
                                 {move || items.get().into_iter().map(|n| {
                                     let notif = n.clone();
-                                    let id = n.id.clone();
-                                    let id_unread = id.clone();
-                                    let is_unread = move || !read_ids.get().contains(&id_unread);
-                                    let id_read = id.clone();
-                                    let is_read = move || read_ids.get().contains(&id_read);
                                     let on_click_notif = notif.clone();
 
                                     view! {
                                         <button
                                             on:click=move |_| on_select(on_click_notif.clone())
-                                            class="w-full flex items-start gap-3 px-4 py-3 text-left border-b border-white/[0.06] last:border-0 hover:bg-white/[0.06] transition-colors cursor-pointer group"
+                                            class="w-full flex items-start gap-3 px-3 py-3 text-left hover:bg-white/[0.08] rounded-lg mx-1 transition-colors cursor-pointer group"
                                         >
-                                            // Red unread indicator dot
-                                            <span
-                                                class="mt-1.5 w-[7px] h-[7px] rounded-full shrink-0 transition-colors"
-                                                class=("bg-[#E50914]", is_unread)
-                                                class=("bg-transparent", is_read)
-                                            ></span>
-
-                                            // Backdrop thumbnail
-                                            <div class="w-[90px] h-[60px] rounded overflow-hidden bg-zinc-900 shrink-0">
+                                            // Backdrop thumbnail (16:9)
+                                            <div class="w-[112px] h-[63px] rounded-md overflow-hidden bg-zinc-800 shrink-0">
                                                 <img
                                                     src=n.backdrop.clone()
                                                     alt=n.body.clone()
@@ -225,10 +244,10 @@ pub fn NotificationsDropdown() -> impl IntoView {
                                                 />
                                             </div>
 
-                                            // Text content
-                                            <div class="flex-1 min-w-0">
-                                                <p class="text-white text-[14px] font-bold leading-snug">{n.headline}</p>
-                                                <p class="text-white/80 text-[14px] leading-snug line-clamp-1">{n.body}</p>
+                                            // Text: headline big+bold, body smaller/muted, time tiny gray
+                                            <div class="flex-1 min-w-0 pt-0.5">
+                                                <p class="text-white text-[15px] font-bold leading-snug mb-0.5">{n.headline}</p>
+                                                <p class="text-white/60 text-[13px] leading-snug line-clamp-2">{n.body}</p>
                                                 <p class="text-white/40 text-[12px] mt-1">{n.relative_time}</p>
                                             </div>
                                         </button>

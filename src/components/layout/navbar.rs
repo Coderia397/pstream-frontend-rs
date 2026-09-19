@@ -112,9 +112,6 @@ pub fn Navbar(
                 </ul>
             </nav>
 
-            // Subnav portal — sits flush below primary nav (z-[79])
-            <div id="category-subnav-portal" class="fixed inset-x-0 top-16 z-[79] hidden sm:block pointer-events-none transition-colors duration-200" style=scroll_style />
-
             // ── Secondary nav: search + notifications + kids + profile ─────
             <div class="fixed top-0 right-14 z-[85] h-16 hidden sm:flex items-center gap-6">
                 // Expandable Search Bar (Task 089 & 090)

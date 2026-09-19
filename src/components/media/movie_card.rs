@@ -29,7 +29,12 @@ pub fn MovieCard(
     #[prop(optional)] poster_path: Option<String>,
     vote_average: f64,
     #[prop(optional, default = false)] is_grid: bool,
+    #[prop(optional, default = String::new())] overview: String,
+    #[prop(optional, default = Vec::new())] genre_ids: Vec<u32>,
+    #[prop(optional, default = Vec::new())] vibe_pills: Vec<String>,
+    #[prop(default = None)] match_percentage: Option<u32>,
 ) -> impl IntoView {
+    let _ = is_grid;
     let ui_store = use_ui_store();
     let my_card_id = format!("{}-{}", if is_tv { "tv" } else { "movie" }, movie_id);
 
@@ -43,6 +48,12 @@ pub fn MovieCard(
 
     let open_modal = move |e: leptos::ev::MouseEvent| {
         e.stop_propagation();
+        set_is_hovered.set(false);
+        set_rect.set(None);
+        ui_store.active_popup_id.set(None);
+        ui_store.hero_paused_by_modal.set(false);
+        ui_store.modal_initial_time.set(0.0);
+        ui_store.modal_current_time.set(0.0);
         ui_store.info_modal_movie_id.set(Some(movie_id));
         ui_store.info_modal_is_tv.set(is_tv);
         ui_store.info_modal_open.set(true);
@@ -56,6 +67,9 @@ pub fn MovieCard(
 
     let title_stored = StoredValue::new(title);
     let backdrop_stored = StoredValue::new(backdrop_path);
+    let overview_stored = StoredValue::new(overview);
+    let genre_ids_stored = StoredValue::new(genre_ids);
+    let vibe_pills_stored = StoredValue::new(vibe_pills);
     
     let logo_resource = LocalResource::new(move || async move {
         fetch_movie_logo(movie_id, is_tv).await.ok().flatten()
@@ -107,10 +121,13 @@ pub fn MovieCard(
                 let sx = win.scroll_x().unwrap_or(0.0);
                 let sy = win.scroll_y().unwrap_or(0.0);
 
-                let edge_buffer = 120.0;
-                let pos = if r.left() < edge_buffer {
+                let app_x = if win_w >= 1024.0 { 56.0 } else if win_w >= 768.0 { 48.0 } else { 16.0 };
+                let half_popup = crate::components::media::movie_card_popup::POPUP_W / 2.0;
+                let card_center = r.left() + r.width() / 2.0;
+
+                let pos = if card_center - half_popup < app_x {
                     "left"
-                } else if win_w - r.right() < edge_buffer {
+                } else if card_center + half_popup > win_w - app_x {
                     "right"
                 } else {
                     "center"
@@ -149,11 +166,7 @@ pub fn MovieCard(
         clear_timeout_id(close_timer.get_value());
     });
 
-    let card_class = if is_grid {
-        "relative group group/card select-none w-full aspect-video cursor-pointer"
-    } else {
-        "relative group group/card select-none flex-none h-[128px] aspect-video cursor-pointer"
-    };
+    let card_class = "relative group group/card select-none w-full h-full aspect-video cursor-pointer";
 
     view! {
         <div 
@@ -167,11 +180,11 @@ pub fn MovieCard(
             on:mouseleave=move |_| mouse_leave_cb.run(())
             on:click=open_modal
         >
-            <div class="w-full h-full relative rounded-sm overflow-hidden movie-card-glow">
+            <div class="w-full h-full relative rounded-[4px] md:rounded-[8px] overflow-hidden movie-card-glow">
                 <img
                     src=img_src
                     alt=title_stored.with_value(|t| t.clone())
-                    class="w-full h-full object-cover object-center rounded-sm backdrop-pop"
+                    class="w-full h-full object-cover object-center rounded-[4px] md:rounded-[8px] backdrop-pop"
                     loading="lazy"
                     decoding="async"
                     draggable="false"
@@ -248,6 +261,16 @@ pub fn MovieCard(
                             poster_path: poster_path.clone(),
                             vote_average,
                             media_type: Some(if is_tv { "tv".to_string() } else { "movie".to_string() }),
+                            overview: overview_stored.with_value(|ov| ov.clone()),
+                            genre_ids: {
+                                let g = genre_ids_stored.with_value(|g| g.clone());
+                                if g.is_empty() { None } else { Some(g.into_iter().map(|x| x as i64).collect()) }
+                            },
+                            vibe_pills: {
+                                let vp = vibe_pills_stored.with_value(|v| v.clone());
+                                if vp.is_empty() { None } else { Some(vp) }
+                            },
+                            match_percentage,
                             ..Default::default()
                         };
                         let on_play_cb = Callback::new(move |_| {
@@ -269,6 +292,9 @@ pub fn MovieCard(
                             navigate(&target, Default::default());
                         });
                         let on_modal_cb = Callback::new(move |_| {
+                            set_is_hovered.set(false);
+                            set_rect.set(None);
+                            ui_store.active_popup_id.set(None);
                             ui_store.info_modal_movie_id.set(Some(movie_id));
                             ui_store.info_modal_is_tv.set(is_tv);
                             ui_store.info_modal_open.set(true);

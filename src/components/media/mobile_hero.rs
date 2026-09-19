@@ -131,9 +131,9 @@ pub fn MobileHero(
                     loading="eager"
                 />
 
-                // Vignette overlays
-                <div class="absolute inset-0 bg-gradient-to-t from-black/95 via-black/60 to-transparent pointer-events-none" />
-                <div class="absolute inset-0 bg-gradient-to-r from-black/80 via-black/30 to-transparent pointer-events-none" />
+                // Vignette overlays (Tuned down for backdrop vibrancy)
+                <div class="absolute inset-0 bg-gradient-to-t from-black/80 via-black/45 to-transparent pointer-events-none" />
+                <div class="absolute inset-0 bg-gradient-to-r from-black/65 via-black/20 to-transparent pointer-events-none" />
 
                 // Details Container
                 <div class="absolute inset-x-0 bottom-0 px-4 pb-6 pt-12 flex flex-col items-center text-center z-10 w-full">
@@ -178,7 +178,7 @@ pub fn MobileHero(
                         <button
                             type="button"
                             on:click=handle_play
-                            class="flex-1 flex items-center justify-center h-[46px] rounded-[4px] bg-white hover:bg-neutral-200 text-black font-bold text-lg gap-2 transition-all active:scale-95 shadow-md cursor-pointer"
+                            class="flex-1 flex items-center justify-center h-[46px] rounded-[8px] bg-white hover:bg-neutral-200 text-black font-bold text-lg gap-2 transition-all active:scale-95 shadow-md cursor-pointer"
                         >
                             <i class="ph-fill ph-play text-2xl"></i>
                             <span>{move || {
@@ -196,7 +196,7 @@ pub fn MobileHero(
                         <button
                             type="button"
                             on:click=toggle_my_list
-                            class="flex-1 flex items-center justify-center h-[46px] rounded-[4px] bg-[#6d6d6e]/40 hover:bg-[#6d6d6e]/25 text-white font-bold text-lg gap-2 transition-all active:scale-95 shadow-md cursor-pointer"
+                            class="flex-1 flex items-center justify-center h-[46px] rounded-[8px] bg-[#6d6d6e]/40 hover:bg-[#6d6d6e]/25 text-white font-bold text-lg gap-2 transition-all active:scale-95 shadow-md cursor-pointer"
                         >
                             <i class=move || if is_added.get() { "ph-bold ph-check text-2xl" } else { "ph-bold ph-plus text-2xl" }></i>
                             <span>"My List"</span>

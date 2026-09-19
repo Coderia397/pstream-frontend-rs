@@ -1,7 +1,16 @@
 use leptos::prelude::*;
+use wasm_bindgen::prelude::*;
+use wasm_bindgen::JsCast;
 use leptos_router::hooks::use_navigate;
 use crate::store::use_watch_store;
 use crate::store::use_ui_store;
+
+fn set_timeout_ms<F: FnOnce() + 'static>(cb: F, ms: i32) {
+    if let Some(window) = web_sys::window() {
+        let closure = Closure::once_into_js(cb);
+        let _ = window.set_timeout_with_callback_and_timeout_and_arguments_0(closure.as_ref().unchecked_ref(), ms);
+    }
+}
 
 #[component]
 pub fn ContinueWatchingRow() -> impl IntoView {
@@ -9,20 +18,79 @@ pub fn ContinueWatchingRow() -> impl IntoView {
     let ui_store = use_ui_store();
     let navigate = use_navigate();
     let scroll_ref = NodeRef::<leptos::html::Div>::new();
+    let (can_scroll_left, set_can_scroll_left) = signal(false);
+    let (can_scroll_right, set_can_scroll_right) = signal(true);
 
-    let scroll = move |direction: &str| {
+    let update_scroll_state = Callback::new(move |_: ()| {
         if let Some(el) = scroll_ref.get() {
-            let client_width = el.client_width() as f64;
-            let current_scroll = el.scroll_left() as f64;
-            let step = client_width * 0.85;
-            let target = if direction == "left" {
-                current_scroll - step
-            } else {
-                current_scroll + step
-            };
-            el.scroll_to_with_x_and_y(target, 0.0);
+            let cur = el.scroll_left() as f64;
+            let client_w = el.client_width() as f64;
+            let scroll_w = el.scroll_width() as f64;
+
+            set_can_scroll_left.set(cur > 10.0);
+            set_can_scroll_right.set(scroll_w > client_w + 10.0 && scroll_w - (cur + client_w) > 10.0);
+        }
+    });
+
+    let on_scroll = {
+        let update = update_scroll_state.clone();
+        move |_| update.run(())
+    };
+
+    // Window resize listener
+    Effect::new({
+        let update = update_scroll_state.clone();
+        move |_| {
+            if let Some(win) = web_sys::window() {
+                let update_c = update.clone();
+                let cb = wasm_bindgen::closure::Closure::<dyn Fn()>::wrap(Box::new(move || {
+                    update_c.run(());
+                }));
+                let _ = win.add_event_listener_with_callback("resize", cb.as_ref().unchecked_ref());
+                cb.forget();
+            }
+        }
+    });
+
+    // Content change / initial render listener
+    Effect::new({
+        let update = update_scroll_state.clone();
+        move |_| {
+            let _ = watch_store.get_continue_watching_list();
+            let update_c = update.clone();
+            set_timeout_ms(move || {
+                update_c.run(());
+            }, 100);
+        }
+    });
+
+    let scroll = {
+        let update = update_scroll_state.clone();
+        move |direction: &str| {
+            if let Some(el) = scroll_ref.get() {
+                let client_width = el.client_width() as f64;
+                let current_scroll = el.scroll_left() as f64;
+                let scroll_width = el.scroll_width() as f64;
+                
+                let margin = if client_width >= 1750.0 { 60.0 } else if client_width >= 1350.0 { 56.0 } else if client_width >= 800.0 { 48.0 } else { 16.0 };
+                let step = (client_width - 2.0 * margin + 6.0).max(100.0);
+                
+                let target = if direction == "left" {
+                    (current_scroll - step).max(0.0)
+                } else {
+                    (current_scroll + step).min(scroll_width - client_width)
+                };
+                el.scroll_to_with_x_and_y(target, 0.0);
+
+                let update_c = update.clone();
+                set_timeout_ms(move || {
+                    update_c.run(());
+                }, 350);
+            }
         }
     };
+
+    let card_width_class = "netflix-card-width";
 
     view! {
         {move || {
@@ -44,10 +112,11 @@ pub fn ContinueWatchingRow() -> impl IntoView {
                             </h2>
                         </div>
 
-                        <div class="relative group/row row-scroll-outer">
+                        <div class="relative group/row row-scroll-outer" style="container-type: inline-size;">
                             <div
                                 node_ref=scroll_ref
-                                class="row-scroll-strip flex overflow-x-scroll scrollbar-hide w-full pointer-events-auto relative z-10 py-2 pb-4 gap-2 md:gap-3"
+                                on:scroll=on_scroll
+                                class="row-scroll-strip flex overflow-x-scroll scrollbar-hide w-full pointer-events-auto relative z-10 py-2 pb-4 gap-[6px]"
                                 style="scroll-behavior: smooth;"
                             >
                                 <div class="flex-none h-full pointer-events-none" style="width: var(--app-x, 56px);" />
@@ -81,6 +150,9 @@ pub fn ContinueWatchingRow() -> impl IntoView {
 
                                     let handle_open_info = move |e: leptos::ev::MouseEvent| {
                                         e.stop_propagation();
+                                        ui_store.hero_paused_by_modal.set(false);
+                                        ui_store.modal_initial_time.set(0.0);
+                                        ui_store.modal_current_time.set(0.0);
                                         ui_store.info_modal_movie_id.set(Some(id));
                                         ui_store.info_modal_is_tv.set(is_tv);
                                         ui_store.info_modal_open.set(true);
@@ -102,7 +174,7 @@ pub fn ContinueWatchingRow() -> impl IntoView {
 
                                     view! {
                                         <div
-                                            class="relative flex-none w-[220px] sm:w-[260px] md:w-[290px] lg:w-[320px] bg-[#181818] rounded-md overflow-hidden border border-white/10 hover:border-white/30 transition-all duration-300 shadow-lg hover:shadow-2xl group/card cursor-pointer"
+                                            class=format!("relative flex-none {} bg-[#181818] rounded-[4px] md:rounded-[8px] overflow-hidden border border-white/10 hover:border-white/30 transition-all duration-300 shadow-lg hover:shadow-2xl group/card cursor-pointer", card_width_class)
                                             on:click=handle_play
                                         >
                                             // Thumbnail image with play overlay
@@ -190,20 +262,34 @@ pub fn ContinueWatchingRow() -> impl IntoView {
                             </div>
 
                             // Left Chevron
-                            <div
-                                class="absolute top-0 bottom-4 left-0 z-30 w-6 md:w-14 lg:w-16 items-center justify-center cursor-pointer bg-transparent hover:bg-[#141414]/70 flex group/arrow-left transition-[opacity,background-color] duration-200 rounded-r-sm opacity-0 pointer-events-none group-hover/row:opacity-100 group-hover/row:pointer-events-auto"
+                            <button
+                                type="button"
+                                class=move || if can_scroll_left.get() {
+                                    "hidden md:flex absolute top-0 bottom-4 left-0 z-30 items-center justify-center cursor-pointer bg-transparent hover:bg-black/70 transition-all duration-200 opacity-0 group-hover/row:opacity-100 group-hover/row:pointer-events-auto select-none border-none outline-none"
+                                } else {
+                                    "hidden !pointer-events-none !opacity-0"
+                                }
+                                style="width: var(--app-x, 56px);"
                                 on:click=move |_| scroll_left("left")
+                                aria-label="Scroll Left"
                             >
                                 <i class="ph-bold ph-caret-left text-white text-3xl sm:text-4xl drop-shadow-lg transition-transform hover:scale-125"></i>
-                            </div>
+                            </button>
 
                             // Right Chevron
-                            <div
-                                class="absolute top-0 bottom-4 right-0 z-30 w-6 md:w-14 lg:w-16 items-center justify-center cursor-pointer bg-transparent hover:bg-[#141414]/70 flex group/arrow-right transition-[opacity,background-color] duration-200 pointer-events-none rounded-l-sm opacity-0 group-hover/row:opacity-100 group-hover/row:pointer-events-auto"
+                            <button
+                                type="button"
+                                class=move || if can_scroll_right.get() {
+                                    "hidden md:flex absolute top-0 bottom-4 right-0 z-30 items-center justify-center cursor-pointer bg-transparent hover:bg-black/70 transition-all duration-200 opacity-0 group-hover/row:opacity-100 group-hover/row:pointer-events-auto select-none border-none outline-none"
+                                } else {
+                                    "hidden !pointer-events-none !opacity-0"
+                                }
+                                style="width: var(--app-x, 56px);"
                                 on:click=move |_| scroll_right("right")
+                                aria-label="Scroll Right"
                             >
                                 <i class="ph-bold ph-caret-right text-white text-3xl sm:text-4xl drop-shadow-lg transition-transform hover:scale-125"></i>
-                            </div>
+                            </button>
                         </div>
                     </div>
                 }.into_any()

@@ -74,6 +74,9 @@ pub fn SpotlightCard(
     };
 
     let on_card_click = move |_| {
+        ui_store.hero_paused_by_modal.set(false);
+        ui_store.modal_initial_time.set(0.0);
+        ui_store.modal_current_time.set(0.0);
         ui_store.info_modal_movie_id.set(Some(movie_id));
         ui_store.info_modal_is_tv.set(is_tv);
         ui_store.info_modal_open.set(true);

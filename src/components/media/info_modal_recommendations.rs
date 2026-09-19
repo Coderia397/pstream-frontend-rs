@@ -2,6 +2,7 @@ use leptos::prelude::*;
 use crate::models::movie::Movie;
 use crate::services::tmdb::{fetch_recommendations, fetch_movie_logo};
 use crate::components::media::movie_card_badges::MaturityBadge;
+use crate::components::media::action_buttons::MyListButton;
 use crate::store::{use_library_store, LibraryEntry};
 
 const BATCH_REC: usize = 9;
@@ -16,6 +17,7 @@ pub fn RecCard(
     let rec_id = rec.id_u32();
     let is_tv = rec.is_tv();
     let title = rec.display_title();
+    let match_score = rec.match_score();
     let year = rec.release_date.as_ref().or(rec.first_air_date.as_ref())
         .map(|d| d.chars().take(4).collect::<String>()).unwrap_or_default();
     let overview = if rec.overview.is_empty() {
@@ -28,10 +30,9 @@ pub fn RecCard(
         library_store.my_list.get().contains_key(&rec_id)
     });
 
-    let toggle_my_list = {
+    let toggle_my_list_cb = {
         let rec_clone = rec.clone();
-        move |e: leptos::ev::MouseEvent| {
-            e.stop_propagation();
+        Callback::new(move |_| {
             let mut list = library_store.my_list.get();
             if list.contains_key(&rec_id) {
                 list.remove(&rec_id);
@@ -54,7 +55,7 @@ pub fn RecCard(
                 });
             }
             library_store.my_list.set(list);
-        }
+        })
     };
 
     let logo_resource = LocalResource::new(move || {
@@ -160,6 +161,9 @@ pub fn RecCard(
             >
                 <div class="flex items-center justify-between gap-2 mb-2.5">
                     <div class="flex items-center gap-2 flex-wrap">
+                        <span class="text-[#46d369] font-bold text-xs">
+                            {format!("{}% Match", match_score)}
+                        </span>
                         <MaturityBadge
                             adult=rec.adult.unwrap_or(false)
                             certification=rec.certification.clone().unwrap_or_default()
@@ -175,21 +179,11 @@ pub fn RecCard(
                     </div>
 
                     // Add/remove from list button
-                    <button
-                        type="button"
-                        on:click=toggle_my_list
-                        title=move || if is_added.get() { "Remove from My List" } else { "Add to My List" }
-                        class="shrink-0 w-8 h-8 rounded-full border-2 flex items-center justify-center transition-all duration-150 hover:scale-110 active:scale-95 cursor-pointer"
-                        class=("border-white", move || is_added.get())
-                        class=("bg-white/10", move || is_added.get())
-                        class=("text-white", move || is_added.get())
-                        class=("border-gray-500", move || !is_added.get())
-                        class=("text-gray-400", move || !is_added.get())
-                        class=("hover:border-white", move || !is_added.get())
-                        class=("hover:text-white", move || !is_added.get())
-                    >
-                        <i class=move || if is_added.get() { "ph-bold ph-check text-xs" } else { "ph-bold ph-plus text-xs" }></i>
-                    </button>
+                    <MyListButton
+                        is_in_list=is_added
+                        on_toggle=toggle_my_list_cb
+                        size="sm".to_string()
+                    />
                 </div>
 
                 <p class="text-white/80 text-[12px] leading-relaxed line-clamp-5 min-h-[72px]">
@@ -214,6 +208,13 @@ pub fn InfoModalRecommendations(
         let tv = is_tv;
         async move {
             if mid > 0 {
+                // First try local vector similarity recommendations
+                if let Some(ai_items) = crate::services::ai_engine::fetch_ai_recommendations(mid).await {
+                    if !ai_items.is_empty() {
+                        let items: Vec<crate::services::tmdb::MediaItem> = ai_items.into_iter().map(|item| item.to_media_item()).collect();
+                        return Some(items);
+                    }
+                }
                 fetch_recommendations(mid, tv).await.ok()
             } else {
                 None

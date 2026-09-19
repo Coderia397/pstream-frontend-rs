@@ -3,6 +3,9 @@ use wasm_bindgen::prelude::*;
 use crate::services::tmdb::{fetch_movie_logo, fetch_videos, fetch_details, MediaItem};
 use crate::store::use_ui_store;
 use crate::components::media::mobile_hero::MobileHero;
+use crate::components::media::movie_card_badges::MaturityBadge;
+use crate::components::media::action_buttons::{PlayPillButton, MoreInfoPillButton, MuteReplayButton};
+use crate::components::trailer_player::TrailerPlayer;
 use crate::models::movie::Movie;
 
 fn set_timeout_ms<F: FnOnce() + 'static>(cb: F, ms: i32) -> Option<i32> {
@@ -122,7 +125,6 @@ pub fn HeroSection(
     let items_stored = StoredValue::new(initial_items);
     let active_index = RwSignal::new(0usize);
 
-    let (is_muted, set_is_muted) = signal(true);
     let (show_video, set_show_video) = signal(false);
     let (is_video_ready, set_is_video_ready) = signal(false);
     let (has_video_ended, set_has_video_ended) = signal(false);
@@ -130,7 +132,8 @@ pub fn HeroSection(
     let (is_out_of_view, set_is_out_of_view) = signal(false);
 
     let show_timer = StoredValue::new(None::<i32>);
-    let visibility_timer = StoredValue::new(None::<i32>);
+    let scroll_inactivity_timer = StoredValue::new(None::<i32>);
+    let (is_unmounted_by_scroll, set_is_unmounted_by_scroll) = signal(false);
 
     // Get current item
     let current_item = move || {
@@ -205,12 +208,18 @@ pub fn HeroSection(
         }
     });
 
-    let trailer_key = move || {
+    let best_trailer = move || {
         videos_resource.get().and_then(|videos| {
-            videos.into_iter()
-                .find(|v| v.site == "YouTube" && (v.r#type == "Trailer" || v.r#type == "Teaser"))
-                .map(|v| v.key)
+            crate::services::tmdb::select_best_tmdb_trailer(&videos)
         })
+    };
+
+    let trailer_key = move || {
+        best_trailer().map(|(k, _)| k)
+    };
+
+    let is_teaser = move || {
+        best_trailer().map(|(_, t)| t).unwrap_or(false)
     };
 
     // TMDB Details resource (genres, runtime/seasons, cast, release year)
@@ -273,37 +282,103 @@ pub fn HeroSection(
 
     let maturity_rating_label = move || {
         let item = current_item();
-        if item.vote_average >= 8.0 {
-            "18"
-        } else if item.vote_average >= 6.0 {
-            "15"
+        let details_opt = details_resource.get().flatten();
+        let genres_list = details_opt.as_ref().and_then(|d| d.genres.clone()).unwrap_or_default();
+        let is_family_or_anim = genres_list.iter().any(|g| {
+            let n = g.name.to_lowercase();
+            n.contains("anim") || n.contains("family") || n.contains("child")
+        }) || {
+            let g = genre_label().to_lowercase();
+            g.contains("anim") || g.contains("family") || g.contains("child")
+        };
+        let is_horror = genres_list.iter().any(|g| g.name.to_lowercase().contains("horror"))
+            || genre_label().to_lowercase().contains("horror");
+
+        if is_family_or_anim {
+            if item.vote_average < 7.0 {
+                "U".to_string()
+            } else {
+                "PG".to_string()
+            }
+        } else if is_horror {
+            "18".to_string()
+        } else if genres_list.iter().any(|g| {
+            let n = g.name.to_lowercase();
+            n.contains("crime") || n.contains("thriller")
+        }) || genre_label().to_lowercase().contains("crime") || genre_label().to_lowercase().contains("thriller") {
+            if item.vote_average >= 7.8 {
+                "18".to_string()
+            } else {
+                "15".to_string()
+            }
+        } else if item.vote_average >= 8.0 {
+            "18".to_string()
+        } else if item.vote_average >= 6.5 {
+            "15".to_string()
         } else {
-            "12"
+            "12".to_string()
         }
     };
 
-    let lead_actor = move || {
-        details_resource.get().and_then(|d| {
-            d.and_then(|item| item.credits.and_then(|c| c.cast.first().map(|a| a.name.clone())))
-        })
+    // Intelligent Hero Highlights from local recommendation engine & creator vectors
+    let highlight_resource = LocalResource::new(move || {
+        let item = current_item();
+        let id = item.id;
+        let title = item.display_title().to_string();
+        async move {
+            crate::services::ai_engine::fetch_hero_highlight(id, Some(&title)).await
+        }
+    });
+
+    // Right Badge: Creator Hook (e.g. "Directed by Denis Villeneuve", "From Creator Kane Parsons") or Marquee Stars
+    let badge_right = move || {
+        if let Some(opt_highlight) = highlight_resource.get() {
+            if let Some(highlight) = opt_highlight {
+                if let Some(hook) = highlight.primary_hook {
+                    let icon = highlight.primary_icon.unwrap_or_else(|| "clapper".to_string());
+                    return Some((icon, hook));
+                }
+                // Evaluated by AI engine with no notable creator/star hook
+                return None;
+            }
+        }
+
+        // Offline fallback only: check TMDb credits crew for Director/Creator
+        if let Some(Some(details)) = details_resource.get() {
+            if let Some(credits) = details.credits {
+                if let Some(director) = credits.crew.iter().find(|c| c.job.as_deref() == Some("Director") || c.job.as_deref() == Some("Creator")) {
+                    let prefix = if is_tv { "Created by" } else { "Directed by" };
+                    return Some(("clapper".to_string(), format!("{} {}", prefix, director.name)));
+                }
+            }
+        }
+        None
     };
 
-    let primary_badge = move || {
+    // Left Badge: Distinction / Cinematic Hook (e.g. "Visual Masterpiece", "Viral Sci-Fi Phenomenon")
+    let badge_left = move || {
+        if let Some(opt_highlight) = highlight_resource.get() {
+            if let Some(highlight) = opt_highlight {
+                if let Some(hook) = highlight.secondary_hook {
+                    let icon = highlight.secondary_icon.unwrap_or_else(|| "clapper".to_string());
+                    return Some((icon, hook));
+                }
+                // Evaluated by AI engine with no notable distinction hook
+                return None;
+            }
+        }
+
+        // Offline fallback only: high critical acclaim or genuine recent release
         let yr = year_label().parse::<u32>().unwrap_or(2024);
         let vote = current_item().vote_average;
-        if yr >= 2024 {
-            Some(("megaphone", "Recently added".to_string()))
+        if vote >= 8.2 {
+            Some(("clapper".to_string(), "Critically Acclaimed Masterpiece".to_string()))
         } else if vote >= 7.8 {
-            Some(("clapper", "Critically Acclaimed".to_string()))
-        } else if vote >= 7.0 {
-            Some(("megaphone", "Trending Now".to_string()))
+            Some(("clapper".to_string(), "Critically Acclaimed".to_string()))
+        } else if yr >= 2024 && vote >= 7.2 {
+            Some(("megaphone".to_string(), "Trending Now".to_string()))
         } else {
-            let g = genre_label();
-            if !g.is_empty() && g != "Action" {
-                Some(("clapper", format!("Top Pick in {}", g)))
-            } else {
-                Some(("megaphone", "Top Pick".to_string()))
-            }
+            None
         }
     };
 
@@ -316,11 +391,6 @@ pub fn HeroSection(
 
         let t = set_timeout_ms(move || {
             set_show_video.set(true);
-            // Brief buffer before fading in video over backdrop
-            let ready_t = set_timeout_ms(move || {
-                set_is_video_ready.set(true);
-            }, 600);
-            let _ = ready_t;
         }, 2500);
         show_timer.set_value(t);
     };
@@ -332,52 +402,7 @@ pub fn HeroSection(
         start_trailer_timer();
     });
 
-    // 15-second tab visibility inactivity timer to conserve RAM (Task 070)
-    Effect::new(move |_| {
-        let on_vis_change = Closure::wrap(Box::new(move || {
-            if let Some(win) = web_sys::window() {
-                if let Some(doc) = win.document() {
-                    let is_visible = js_sys::Reflect::get(&doc, &JsValue::from_str("visibilityState"))
-                        .ok()
-                        .and_then(|v| v.as_string())
-                        .map(|s| s == "visible")
-                        .unwrap_or(true);
-
-                    if !is_visible {
-                        // Tab hidden: pause/unmount video after 15 seconds to free system memory
-                        let t = set_timeout_ms(move || {
-                            set_show_video.set(false);
-                            set_is_video_ready.set(false);
-                        }, 15_000);
-                        visibility_timer.set_value(t);
-                    } else {
-                        // Tab visible again: cancel timer and resume trailer
-                        clear_timeout_id(visibility_timer.get_value());
-                        visibility_timer.set_value(None);
-                        if !show_video.get_untracked() {
-                            let resume_t = set_timeout_ms(move || {
-                                set_show_video.set(true);
-                                set_is_video_ready.set(true);
-                            }, 500);
-                            let _ = resume_t;
-                        }
-                    }
-                }
-            }
-        }) as Box<dyn FnMut()>);
-
-        if let Some(win) = web_sys::window() {
-            if let Some(doc) = win.document() {
-                let _ = doc.add_event_listener_with_callback(
-                    "visibilitychange",
-                    on_vis_change.as_ref().unchecked_ref(),
-                );
-            }
-        }
-        on_vis_change.forget();
-    });
-
-    // Scroll observer to pause when scrolled out of view (conserve RAM)
+    // Scroll observer: immediate pause when scrolled out of view + 15-second RAM unmount
     let hero_container_ref = NodeRef::<leptos::html::Div>::new();
     Effect::new(move |_| {
         let on_scroll = Closure::wrap(Box::new(move || {
@@ -388,10 +413,39 @@ pub fn HeroSection(
                     let visible_px = rect.bottom().min(height) - rect.top().max(0.0);
                     let visible_fraction = (visible_px / height).max(0.0);
                     let out = visible_fraction < 0.45;
-                    set_is_out_of_view.set(out);
-                    if out {
-                        set_show_video.set(false);
-                        set_is_video_ready.set(false);
+                    let was_out = is_out_of_view.get_untracked();
+
+                    if out != was_out {
+                        set_is_out_of_view.set(out);
+
+                        if out {
+                            // Scrolled past hero: immediate pause
+                            send_yt_command("hero-trailer-iframe", "pauseVideo");
+
+                            // Start 15-second timer to unmount iframe & free system RAM / GPU
+                            clear_timeout_id(scroll_inactivity_timer.get_value());
+                            let t = set_timeout_ms(move || {
+                                set_is_unmounted_by_scroll.set(true);
+                                set_show_video.set(false);
+                                set_is_video_ready.set(false);
+                            }, 15_000);
+                            scroll_inactivity_timer.set_value(t);
+                        } else {
+                            // Scrolled back into view
+                            clear_timeout_id(scroll_inactivity_timer.get_value());
+                            scroll_inactivity_timer.set_value(None);
+
+                            if is_unmounted_by_scroll.get_untracked() {
+                                // Was away > 15s: re-mount player cleanly
+                                set_is_unmounted_by_scroll.set(false);
+                                set_show_video.set(true);
+                            } else {
+                                // Was away < 15s: iframe was kept warm in DOM, resume immediately!
+                                if show_video.get_untracked() && !has_video_ended.get_untracked() && !ui_store.info_modal_open.get_untracked() && ui_store.active_popup_id.get_untracked().is_none() {
+                                    send_yt_command("hero-trailer-iframe", "playVideo");
+                                }
+                            }
+                        }
                     }
                 }
             }
@@ -408,31 +462,105 @@ pub fn HeroSection(
 
     on_cleanup(move || {
         clear_timeout_id(show_timer.get_value());
-        clear_timeout_id(visibility_timer.get_value());
+        clear_timeout_id(scroll_inactivity_timer.get_value());
     });
 
-    // Replay / Mute toggle handler (Task 071)
-    let on_mute_or_replay = move |_| {
-        if has_video_ended.get() {
-            set_has_video_ended.set(false);
-            set_replay_count.update(|c| *c += 1);
-        } else {
-            set_is_muted.update(|m| *m = !*m);
+    fn send_yt_command(iframe_id: &str, func: &str) {
+        if let Some(win) = web_sys::window() {
+            if let Some(doc) = win.document() {
+                if let Some(el) = doc.get_element_by_id(iframe_id) {
+                    if let Ok(iframe) = el.dyn_into::<web_sys::HtmlIFrameElement>() {
+                        if let Some(cw) = iframe.content_window() {
+                            let cmd = format!(r#"{{"event":"command","func":"{}","args":[]}}"#, func);
+                            let _ = cw.post_message(&wasm_bindgen::JsValue::from_str(&cmd), "*");
+                        }
+                    }
+                }
+            }
         }
-    };
+    }
 
-    // Open modal handler
+
+    let (hero_trailer_time, set_hero_trailer_time) = signal(0.0);
+
+    // When video is verified playing, apply user mute preference if they had unmuted
+    Effect::new(move |_| {
+        if is_video_ready.get() && !ui_store.preview_muted.get() && !ui_store.info_modal_open.get() {
+            send_yt_command("hero-trailer-iframe", "unMute");
+        }
+    });
+
+    // Seamless Video Hand-Off: Pause on modal open, resume & sync timestamp on modal close
+    Effect::new(move |_| {
+        let modal_open = ui_store.info_modal_open.get();
+        let paused_by_modal = ui_store.hero_paused_by_modal.get_untracked();
+
+        if modal_open {
+            // Modal just opened → immediately pause hero iframe
+            send_yt_command("hero-trailer-iframe", "pauseVideo");
+        } else if paused_by_modal {
+            // Modal just closed → resume hero from exact timestamp
+            ui_store.hero_paused_by_modal.set(false);
+            let my_id = current_id();
+
+            let mut resume_t: Option<f64> = None;
+
+            // Use the timestamp the modal recorded when it closed
+            if let Some((closed_id, final_t)) = ui_store.modal_closing_time.get_untracked() {
+                ui_store.modal_closing_time.set(None);
+                if closed_id == my_id && final_t > 0.0 {
+                    set_hero_trailer_time.set(final_t);
+                    set_has_video_ended.set(false);
+                    set_show_video.set(true);
+                    resume_t = Some(final_t);
+                }
+            }
+
+            // Tell TrailerPlayer to seek to exact timestamp (updates internal anchor too)
+            if let Some(t) = resume_t {
+                ui_store.hero_resume_seek.set(Some(t));
+            }
+
+            // Resume playback smoothly in hero
+            if show_video.get_untracked() && !has_video_ended.get_untracked() && !is_out_of_view.get_untracked() {
+                send_yt_command("hero-trailer-iframe", "playVideo");
+                let _ = set_timeout_ms(move || {
+                    send_yt_command("hero-trailer-iframe", "playVideo");
+                }, 80);
+            }
+        }
+    });
+
+    // Open modal handler with instant timestamp hand-off
     let trigger_open_modal = move || {
         let id = current_id();
         let tv = current_is_tv();
+        let cur_t = hero_trailer_time.get();
+
+        // Pause hero video while modal is active
+        send_yt_command("hero-trailer-iframe", "pauseVideo");
+        ui_store.hero_paused_by_modal.set(true);
+
+        ui_store.modal_video_key.set(trailer_key());
+        ui_store.modal_is_teaser.set(is_teaser());
+        ui_store.modal_initial_time.set(cur_t);
+        ui_store.modal_current_time.set(cur_t);
         ui_store.info_modal_movie_id.set(Some(id));
         ui_store.info_modal_is_tv.set(tv);
         ui_store.info_modal_open.set(true);
     };
 
-    let is_playing = move || {
-        show_video.get() && is_video_ready.get() && trailer_key().is_some() && !has_video_ended.get() && !is_out_of_view.get()
+    let should_play = move || {
+        show_video.get()
+            && trailer_key().is_some()
+            && !has_video_ended.get()
+            && !is_out_of_view.get()
+            && !is_unmounted_by_scroll.get()
+            && !ui_store.info_modal_open.get()
+            && ui_store.active_popup_id.get().is_none()
     };
+
+    let is_video_visible = move || should_play() && is_video_ready.get();
 
     view! {
         <>
@@ -461,39 +589,33 @@ pub fn HeroSection(
         >
             <div class="relative w-full aspect-[16/9] md:aspect-[1.95/1] min-h-[500px] md:min-h-[510px] max-h-[74vh] rounded-xl md:rounded-2xl overflow-hidden bg-[#181818] border border-white/[0.05] backdrop-blur-sm shadow-[inset_0_1px_0_0_rgba(255,255,255,0.12)] group">
                 // ── Background Video Layer ──────────────────────────────────────
-                <div
-                    id="hero-video-layer"
-                    class="absolute inset-0 z-0 transition-opacity duration-700 overflow-hidden pointer-events-none"
-                    class=("opacity-100", move || is_playing())
-                    class=("opacity-0", move || !is_playing())
-                >
-                    {move || {
-                        if show_video.get() && !is_out_of_view.get() {
-                            if let Some(key) = trailer_key() {
-                                let mute_val = if is_muted.get() { "1" } else { "0" };
-                                let embed_url = format!(
-                                    "https://www.youtube-nocookie.com/embed/{}?autoplay=1&mute={}&controls=0&modestbranding=1&rel=0&playsinline=1&enablejsapi=1&playlist={}",
-                                    key, mute_val, key
-                                );
-                                view! {
-                                    <div class="w-full h-full pointer-events-none flex items-center justify-center overflow-hidden">
-                                        <iframe
-                                            class="pointer-events-none w-[115%] h-[115%] object-cover scale-[1.2]"
-                                            style="border: none;"
-                                            src=embed_url
-                                            allow="autoplay; encrypted-media"
-                                            tabindex="-1"
-                                        />
-                                    </div>
-                                }.into_any()
-                            } else {
-                                view! { <div /> }.into_any()
-                            }
-                        } else {
-                            view! { <div /> }.into_any()
+                <TrailerPlayer
+                    video_key=Signal::derive(move || trailer_key())
+                    is_teaser=Signal::derive(move || is_teaser())
+                    is_playing=Signal::derive(move || should_play())
+                    is_muted=ui_store.preview_muted
+                    // NOTE: initial_seek_time is read ONCE at playback start (get_untracked inside TrailerPlayer).
+                    // We pass hero_trailer_time as a frozen snapshot — TrailerPlayer only reads it untracked
+                    // at the moment playback first starts, so this does NOT create a reactive loop.
+                    // The `seek_time` prop handles all subsequent seeks (modal close hand-off).
+                    initial_seek_time=Signal::derive(move || hero_trailer_time.get_untracked())
+                    seek_time=Signal::derive(move || ui_store.hero_resume_seek.get())
+                    variant="hero".to_string()
+                    iframe_id="hero-trailer-iframe".to_string()
+                    on_ready=Callback::new(move |_| {
+                        set_is_video_ready.set(true);
+                    })
+                    on_ended=Callback::new(move |_| {
+                        set_has_video_ended.set(true);
+                    })
+                    on_time_update=Callback::new(move |t| {
+                        set_hero_trailer_time.set(t);
+                        // Consume the one-shot seek signal once we confirm playback is updating
+                        if ui_store.hero_resume_seek.get_untracked().is_some() {
+                            ui_store.hero_resume_seek.set(None);
                         }
-                    }}
-                </div>
+                    })
+                />
 
                 // ── Backdrop image with smooth cross-fade ────────────────────────
                 <img
@@ -502,29 +624,44 @@ pub fn HeroSection(
                     loading="eager"
                     alt=move || current_title()
                     class="absolute inset-0 w-full h-full object-cover object-[50%_20%] transition-opacity duration-700 ease-in-out z-0"
-                    class=("opacity-0", move || is_playing())
-                    class=("opacity-100", move || !is_playing())
+                    class=("opacity-0", move || is_video_visible())
+                    class=("opacity-100", move || !is_video_visible())
                 />
 
-                // ── Vignettes ───────────────────────────────────────────────────
+                // ── Vignettes (Tuned down so backdrop image is clear & vibrant) ──
                 <div
-                    class="absolute inset-0 z-10 pointer-events-none bg-gradient-to-r from-black/85 via-black/40 to-transparent"
+                    class="absolute inset-0 z-10 pointer-events-none bg-gradient-to-r from-black/70 via-black/25 to-transparent"
                 />
                 <div
-                    class="absolute inset-x-0 bottom-0 h-52 z-10 pointer-events-none bg-gradient-to-t from-black/95 via-black/40 to-transparent"
+                    class="absolute inset-x-0 bottom-0 h-44 z-10 pointer-events-none bg-gradient-to-t from-black/80 via-black/25 to-transparent"
                 />
                 <div
-                    class="absolute inset-x-0 top-0 h-24 z-10 pointer-events-none bg-gradient-to-b from-black/50 to-transparent"
+                    class="absolute inset-x-0 top-0 h-20 z-10 pointer-events-none bg-gradient-to-b from-black/35 to-transparent"
                 />
 
                 // ── Top-right reload/replay button ──────────────────────────────
-                <button
-                    on:click=on_mute_or_replay
-                    class="absolute top-5 right-5 z-20 w-9 h-9 md:w-10 md:h-10 rounded-full bg-black/40 hover:bg-black/60 border border-white/20 backdrop-blur-md flex items-center justify-center text-white/90 hover:text-white transition-all cursor-pointer select-none"
-                    aria-label="Replay or mute"
-                >
-                    <i class="ph ph-arrow-counter-clockwise text-lg"></i>
-                </button>
+                <MuteReplayButton
+                    is_muted=ui_store.preview_muted
+                    is_ended=Signal::derive(move || has_video_ended.get())
+                    on_toggle=Callback::new(move |_| {
+                        if has_video_ended.get() {
+                            set_has_video_ended.set(false);
+                            set_replay_count.update(|c| *c += 1);
+                        } else {
+                            let new_muted = !ui_store.preview_muted.get_untracked();
+                            ui_store.set_preview_muted(new_muted);
+                            send_yt_command("hero-trailer-iframe", if new_muted { "mute" } else { "unMute" });
+                        }
+                    })
+                    on_force_replay=Callback::new(move |_| {
+                        set_has_video_ended.set(false);
+                        set_replay_count.update(|c| *c += 1);
+                        send_yt_command("hero-trailer-iframe", "seekTo");
+                        send_yt_command("hero-trailer-iframe", "playVideo");
+                    })
+                    size="md".to_string()
+                    class="absolute top-5 right-5 z-30 pointer-events-auto".to_string()
+                />
 
                 // ── Bottom Content Layer ─────────────────────────────────────────
                 <div class="absolute inset-x-0 bottom-0 z-20 p-6 md:p-10 lg:p-12 flex flex-col md:flex-row md:items-end md:justify-between gap-6 pointer-events-none">
@@ -534,7 +671,7 @@ pub fn HeroSection(
 
                         // Logo / Title with scale transition
                         <div
-                            class=move || if is_playing() {
+                            class=move || if is_video_visible() {
                                 "relative flex items-end transition-transform duration-700 origin-bottom-left scale-[0.93] sm:scale-[0.96]"
                             } else {
                                 "relative flex items-end transition-transform duration-700 origin-bottom-left"
@@ -569,7 +706,7 @@ pub fn HeroSection(
                             </Suspense>
                         </div>
 
-                        // Metadata line: Series • Action • 2017 • 5 Seasons [15]
+                        // Metadata line: Series • Action • 2017 • 5 Seasons • [15]
                         <div class="flex items-center flex-wrap gap-2 text-[13px] md:text-[14px] text-white/90 font-medium select-none">
                             <span>{media_type_label}</span>
                             <span class="text-white/40 text-xs">"•"</span>
@@ -578,9 +715,18 @@ pub fn HeroSection(
                             <span>{year_label}</span>
                             <span class="text-white/40 text-xs">"•"</span>
                             <span>{duration_or_seasons_label}</span>
-                            <span class="w-5 h-5 rounded-full bg-[#E50914] text-white text-[10px] font-bold flex items-center justify-center leading-none ml-1">
-                                {maturity_rating_label}
-                            </span>
+                            <span class="text-white/40 text-xs">"•"</span>
+                            <div class="inline-flex items-center">
+                                {move || {
+                                    let cert = maturity_rating_label();
+                                    view! {
+                                        <MaturityBadge
+                                            certification=cert
+                                            size="xs".to_string()
+                                        />
+                                    }
+                                }}
+                            </div>
                         </div>
 
                         // Overview / Synopsis
@@ -592,8 +738,8 @@ pub fn HeroSection(
 
                         // Action Buttons: Play (pill) & More Info (pill)
                         <div class="flex items-center gap-3 mt-1.5 pointer-events-auto">
-                            <a
-                                href=move || {
+                            <PlayPillButton
+                                href=Signal::derive(move || {
                                     let id = current_id();
                                     let is_tv = current_is_tv();
                                     let kind = if is_tv { "tv" } else { "movie" };
@@ -604,38 +750,34 @@ pub fn HeroSection(
                                         }
                                     }
                                     format!("/watch/{}/{}", kind, id)
-                                }
-                                class="flex items-center justify-center bg-white text-black px-7 py-2.5 rounded-full font-bold hover:bg-white/90 transition-all duration-150 active:scale-95 text-[15px] md:text-[16px] gap-2 shadow-lg select-none"
-                            >
-                                <i class="ph-fill ph-play text-xl"></i>
-                                <span>{move || {
+                                })
+                                is_resume=Signal::derive(move || {
                                     let id = current_id();
                                     let is_tv = current_is_tv();
                                     let watch_store = crate::store::use_watch_store();
                                     if let Some(rec) = watch_store.get_record(id, is_tv) {
                                         if rec.percentage > 0.0 {
-                                            return "Resume";
+                                            return true;
                                         }
                                     }
-                                    "Play"
-                                }}</span>
-                            </a>
+                                    false
+                                })
+                                size="lg".to_string()
+                            />
 
-                            <button
-                                on:click=move |_| trigger_open_modal()
-                                class="flex items-center justify-center bg-white/20 hover:bg-white/30 backdrop-blur-md text-white px-7 py-2.5 rounded-full font-semibold transition-all duration-150 active:scale-95 text-[15px] md:text-[16px] shadow-lg select-none cursor-pointer"
-                            >
-                                <span>"More Info"</span>
-                            </button>
+                            <MoreInfoPillButton
+                                on_click=Callback::new(move |_| trigger_open_modal())
+                                size="lg".to_string()
+                            />
                         </div>
                     </div>
 
-                    // Right Column: Feature Badges (Recently added / Trending, Starring ...)
+                    // Right Column: Feature Badges (Intelligent creator & distinction hooks)
                     <div class="hidden lg:flex items-center gap-3 pb-2 flex-shrink-0 pointer-events-auto select-none">
                         {move || {
-                            primary_badge().map(|(icon_type, text)| view! {
+                            badge_left().map(|(icon_type, text)| view! {
                                 <div class="flex items-center gap-2 text-[12px] font-medium text-white/95 bg-black/50 backdrop-blur-md px-3.5 py-1.5 rounded-full border border-white/15 shadow-sm">
-                                    {match icon_type {
+                                    {match icon_type.as_str() {
                                         "megaphone" => view! { <MegaphoneBadgeIcon /> }.into_any(),
                                         _ => view! { <ClapperboardBadgeIcon /> }.into_any(),
                                     }}
@@ -645,10 +787,13 @@ pub fn HeroSection(
                         }}
 
                         {move || {
-                            lead_actor().map(|actor| view! {
+                            badge_right().map(|(icon_type, text)| view! {
                                 <div class="flex items-center gap-2 text-[12px] font-medium text-white/95 bg-black/50 backdrop-blur-md px-3.5 py-1.5 rounded-full border border-white/15 shadow-sm">
-                                    <ClapperboardBadgeIcon />
-                                    <span>{format!("Starring {}", actor)}</span>
+                                    {match icon_type.as_str() {
+                                        "megaphone" => view! { <MegaphoneBadgeIcon /> }.into_any(),
+                                        _ => view! { <ClapperboardBadgeIcon /> }.into_any(),
+                                    }}
+                                    <span>{text}</span>
                                 </div>
                             })
                         }}

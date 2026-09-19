@@ -1,5 +1,6 @@
 use leptos::prelude::*;
 use wasm_bindgen::prelude::*;
+use wasm_bindgen::JsCast;
 use crate::services::tmdb::{fetch_trending, MediaItem};
 use crate::models::movie::Movie;
 use crate::store::use_ui_store;
@@ -27,14 +28,14 @@ fn RankNumber(index: usize) -> impl IntoView {
     let is_one = index == 0;
 
     let w_class = if is_ten {
-        "w-[130px] sm:w-[140px] md:w-[150px] lg:w-[160px]"
+        "w-[130px] sm:w-[140px] md:w-[150px] lg:w-[185px]"
     } else if is_one {
-        "w-[105px] sm:w-[115px] md:w-[125px] lg:w-[135px]"
+        "w-[105px] sm:w-[115px] md:w-[125px] lg:w-[155px]"
     } else {
-        "w-[95px] sm:w-[105px] md:w-[115px] lg:w-[125px]"
+        "w-[95px] sm:w-[105px] md:w-[115px] lg:w-[145px]"
     };
 
-    let text_class = "font-black text-[150px] sm:text-[170px] md:text-[190px] lg:text-[210px]";
+    let text_class = "font-black text-[150px] sm:text-[170px] md:text-[190px] lg:text-[245px]";
     let letter_spacing = if is_ten { "-15px" } else { "-5px" };
     let stroke_style = format!(
         "line-height: 0.75; letter-spacing: {}; -webkit-text-stroke: 8px #595959; font-family: 'PStream Sans', sans-serif;",
@@ -90,9 +91,9 @@ fn TopTenCard(
 
     let is_ten = index == 9;
     let pl_class = if is_ten {
-        "pl-[110px] sm:pl-[120px] md:pl-[130px] lg:pl-[140px]"
+        "pl-[110px] sm:pl-[120px] md:pl-[130px] lg:pl-[165px]"
     } else {
-        "pl-[75px] sm:pl-[85px] md:pl-[95px] lg:pl-[105px]"
+        "pl-[75px] sm:pl-[85px] md:pl-[95px] lg:pl-[125px]"
     };
 
     let title_stored = StoredValue::new(item.display_title().to_string());
@@ -100,6 +101,9 @@ fn TopTenCard(
     let backdrop_url_stored = StoredValue::new(item.backdrop_url("w780").unwrap_or_default());
     let overview_stored = StoredValue::new(item.overview.clone());
     let vote_avg = item.vote_average;
+    let match_percentage = item.match_percentage;
+    let vibe_pills = item.vibe_pills.clone();
+    let genre_ids = item.genre_ids.clone();
 
     let cancel_close_cb = Callback::new(move |_| {
         clear_timeout_id(close_timer.get_value());
@@ -145,10 +149,22 @@ fn TopTenCard(
                 let sx = win.scroll_x().unwrap_or(0.0);
                 let sy = win.scroll_y().unwrap_or(0.0);
 
-                let edge_buffer = 120.0;
-                let pos = if r.left() < edge_buffer {
+                let app_x = if win_w >= 1024.0 { 56.0 } else if win_w >= 768.0 { 48.0 } else { 16.0 };
+                let half_popup = crate::components::media::movie_card_popup::POPUP_W / 2.0;
+                let card_center = r.left() + r.width() / 2.0;
+
+                let number_pl = if win_w >= 1024.0 {
+                    if is_ten { 165.0 } else { 125.0 }
+                } else if win_w >= 768.0 {
+                    if is_ten { 130.0 } else { 95.0 }
+                } else {
+                    if is_ten { 110.0 } else { 75.0 }
+                };
+                let item_left = r.left() - number_pl;
+
+                let pos = if item_left <= app_x + 30.0 || card_center - half_popup < app_x {
                     "left"
-                } else if win_w - r.right() < edge_buffer {
+                } else if card_center + half_popup > win_w - app_x - 15.0 {
                     "right"
                 } else {
                     "center"
@@ -187,6 +203,12 @@ fn TopTenCard(
     });
 
     let open_modal = move |_| {
+        set_is_hovered.set(false);
+        set_rect.set(None);
+        ui_store.active_popup_id.set(None);
+        ui_store.hero_paused_by_modal.set(false);
+        ui_store.modal_initial_time.set(0.0);
+        ui_store.modal_current_time.set(0.0);
         ui_store.info_modal_movie_id.set(Some(movie_id));
         ui_store.info_modal_is_tv.set(is_tv);
         ui_store.info_modal_open.set(true);
@@ -197,7 +219,6 @@ fn TopTenCard(
 
     view! {
         <div
-            node_ref=card_ref
             data-card="true"
             data-card-id=my_card_id
             class=format!("relative flex-none flex items-end {} pr-1 md:pr-1.5 lg:pr-2 cursor-pointer", pl_class)
@@ -207,16 +228,20 @@ fn TopTenCard(
         >
             <RankNumber index=index />
 
-            <div class="relative flex-none h-[128px] w-[89px] sm:h-[138px] sm:w-[96px] md:h-[148px] md:w-[103px] lg:h-[163px] lg:w-[114px] z-10 rounded-sm overflow-hidden mb-1 sm:mb-1.5 md:mb-2 shadow-[0_0_15px_rgba(0,0,0,0.5)]">
+            // Poster card — card_ref is HERE so popup positions relative to the poster,
+            // not the outer div (which includes the wide number padding-left).
+            <div
+                node_ref=card_ref
+                class="relative flex-none h-[128px] w-[89px] sm:h-[138px] sm:w-[96px] md:h-[148px] md:w-[103px] lg:h-[195px] lg:w-[135px] z-10 rounded-[4px] md:rounded-[8px] overflow-hidden mb-1 sm:mb-1.5 md:mb-2 shadow-[0_0_15px_rgba(0,0,0,0.5)] movie-card-glow">
                 <img
                     src=poster_src
-                    alt=title_for_img
-                    class="w-full h-full object-cover object-top"
+                    alt=title_for_img.clone()
+                    class="w-full h-full object-cover object-top rounded-[4px] md:rounded-[8px]"
                     loading="lazy"
                     draggable="false"
                 />
 
-                // Watch Progress Bar if user has watched this title
+                // Watch Progress Bar
                 {move || {
                     let watch_store = crate::store::use_watch_store();
                     if let Some(rec) = watch_store.get_record(movie_id, is_tv) {
@@ -252,6 +277,9 @@ fn TopTenCard(
                             overview: ov,
                             vote_average: vote_avg,
                             media_type: Some(if is_tv { "tv".to_string() } else { "movie".to_string() }),
+                            match_percentage,
+                            genre_ids: if genre_ids.is_empty() { None } else { Some(genre_ids.iter().map(|&g| g as i64).collect()) },
+                            vibe_pills: if vibe_pills.is_empty() { None } else { Some(vibe_pills.clone()) },
                             ..Default::default()
                         };
                         let on_play_cb = Callback::new(move |_| {
@@ -273,6 +301,9 @@ fn TopTenCard(
                             navigate(&target, Default::default());
                         });
                         let on_modal_cb = Callback::new(move |_| {
+                            set_is_hovered.set(false);
+                            set_rect.set(None);
+                            ui_store.active_popup_id.set(None);
                             ui_store.info_modal_movie_id.set(Some(movie_id));
                             ui_store.info_modal_is_tv.set(is_tv);
                             ui_store.info_modal_open.set(true);
@@ -302,72 +333,114 @@ fn TopTenCard(
 
 #[component]
 pub fn TopTenRow(
-    title: &'static str,
-    #[prop(optional, default = "movie")] kind: &'static str,
+    #[prop(into, optional, default = "Top 10 in the UK Today".to_string())] title: String,
+    #[prop(into, optional, default = "movie".to_string())] kind: String,
+    #[prop(default = None)] items: Option<Vec<MediaItem>>,
 ) -> impl IntoView {
     let is_tv = kind == "tv";
-    let items = LocalResource::new(move || async move {
-        let results = fetch_trending(kind).await.unwrap_or_default();
-        results.into_iter().take(10).collect::<Vec<_>>()
+    let items_prop = items.clone();
+    let kind_c = kind.clone();
+    let items_res = LocalResource::new(move || {
+        let items_opt = items_prop.clone();
+        let kind_str = kind_c.clone();
+        async move {
+            if let Some(it) = items_opt {
+                if !it.is_empty() {
+                    return it.into_iter().take(10).collect::<Vec<_>>();
+                }
+            }
+            let results = fetch_trending(&kind_str).await.unwrap_or_default();
+            results.into_iter().take(10).collect::<Vec<_>>()
+        }
     });
 
     let scroll_ref = NodeRef::<leptos::html::Div>::new();
+    let (can_scroll_left, set_can_scroll_left) = signal(false);
+    let (can_scroll_right, set_can_scroll_right) = signal(true);
 
-    let scroll = move |direction: &str| {
+    let update_scroll_state = Callback::new(move |_: ()| {
         if let Some(el) = scroll_ref.get() {
-            let client_width = el.client_width() as f64;
-            let current_scroll = el.scroll_left() as f64;
-            let step = client_width * 0.9;
-            let target = if direction == "left" { current_scroll - step } else { current_scroll + step };
-            el.scroll_to_with_x_and_y(target, 0.0);
+            let cur = el.scroll_left() as f64;
+            let client_w = el.client_width() as f64;
+            let scroll_w = el.scroll_width() as f64;
+            set_can_scroll_left.set(cur > 10.0);
+            set_can_scroll_right.set(scroll_w > client_w + 10.0 && scroll_w - (cur + client_w) > 10.0);
         }
+    });
+
+    // Window resize listener
+    Effect::new({
+        let update = update_scroll_state.clone();
+        move |_| {
+            if let Some(win) = web_sys::window() {
+                let update_c = update.clone();
+                let cb = wasm_bindgen::closure::Closure::<dyn Fn()>::wrap(Box::new(move || {
+                    update_c.run(());
+                }));
+                let _ = win.add_event_listener_with_callback("resize", cb.as_ref().unchecked_ref());
+                cb.forget();
+            }
+        }
+    });
+
+    let on_scroll = {
+        let update = update_scroll_state.clone();
+        move |_| update.run(())
     };
 
-    let btn_base = "absolute top-1/2 -translate-y-1/2 mb-0.5 sm:mb-[3px] md:mb-1 z-50 h-[128px] sm:h-[138px] md:h-[148px] lg:h-[163px] w-12 md:w-16 lg:w-20 bg-black/50 hover:bg-black/70 cursor-pointer flex items-center justify-center transition-[opacity,background-color] duration-200 opacity-0 pointer-events-none";
+    let scroll = {
+        let update = update_scroll_state.clone();
+        move |direction: &str| {
+            if let Some(el) = scroll_ref.get() {
+                let client_width = el.client_width() as f64;
+                let current_scroll = el.scroll_left() as f64;
+                let step = client_width * 0.9;
+                let target = if direction == "left" {
+                    (current_scroll - step).max(0.0)
+                } else {
+                    current_scroll + step
+                };
+                el.scroll_to_with_x_and_y(target, 0.0);
+
+                let update_c = update.clone();
+                let _ = set_timeout_ms(move || {
+                    update_c.run(());
+                }, 600);
+            }
+        }
+    };
 
     view! {
         <div class="group relative my-4 md:my-6 space-y-2 z-10">
             <h2 class="px-[var(--app-x,56px)] text-sm sm:text-base md:text-lg font-bold text-[#e5e5e5] hover:text-white transition cursor-pointer flex items-center group/title w-fit">
                 {title}
                 <span class="text-xs text-cyan-500 ml-2 opacity-0 group-hover/title:opacity-100 transition-opacity duration-300 flex items-center font-semibold">
-                    "Explore All"
-                    <span class="ml-1 text-sm">"›"</span>
+                    "Explore All ›"
                 </span>
             </h2>
 
-            <div class="relative group/row">
-                {
-                    let scroll_left = scroll.clone();
-                    view! {
-                        <button
-                            class=format!("{} left-0 rounded-r-md group-hover/row:opacity-100 group-hover/row:pointer-events-auto", btn_base)
-                            on:click=move |_| scroll_left("left")
-                            aria-label="Scroll Left"
-                        >
-                            <span class="text-white text-3xl font-bold">"‹"</span>
-                        </button>
-                    }
-                }
-
+            <div class="relative group/row" style="container-type: inline-size;">
                 <div
                     node_ref=scroll_ref
-                    class="flex overflow-x-scroll [scrollbar-width:none] [-ms-overflow-style:none] [&::-webkit-scrollbar]:hidden py-10 -my-10 w-full items-center pointer-events-auto relative z-10"
+                    on:scroll=on_scroll
+                    class="flex overflow-x-scroll [scrollbar-width:none] [-ms-overflow-style:none] [&::-webkit-scrollbar]:hidden pt-2 pb-10 -mb-10 w-full items-end pointer-events-auto relative z-10"
+                    style="scroll-behavior: smooth;"
                 >
                     <div class="flex-none h-full pointer-events-none" style="width: var(--app-x, 56px);" />
 
                     <Suspense fallback=move || view! {
                         { (0..6).map(|_| view! {
-                            <div class="relative flex-none flex items-end pl-[75px] sm:pl-[85px] md:pl-[95px] lg:pl-[105px] pr-1 md:pr-1.5 lg:pr-2">
-                                <div class="absolute left-0 top-0 bottom-0 h-full w-[95px] sm:w-[105px] md:w-[115px] lg:w-[125px] flex justify-end items-center pointer-events-none z-0">
+                            <div class="relative flex-none flex items-end pl-[75px] sm:pl-[85px] md:pl-[95px] lg:pl-[125px] pr-1 md:pr-1.5 lg:pr-2">
+                                <div class="absolute left-0 top-0 bottom-0 h-full w-[95px] sm:w-[105px] md:w-[115px] lg:w-[145px] flex justify-end items-center pointer-events-none z-0">
                                     <div class="h-[85%] w-[80%] bg-[#222] rounded-sm opacity-40 skew-x-[-6deg]" />
                                 </div>
-                                <div class="relative flex-none h-[128px] w-[89px] sm:h-[138px] sm:w-[96px] md:h-[148px] md:w-[103px] lg:h-[163px] lg:w-[114px] z-10 bg-[#222] rounded-sm border border-white/5 overflow-hidden mb-1 sm:mb-1.5 md:mb-2">
+                                <div class="relative flex-none h-[128px] w-[89px] sm:h-[138px] sm:w-[96px] md:h-[148px] md:w-[103px] lg:h-[195px] lg:w-[135px] z-10 bg-[#222] rounded-[4px] md:rounded-[8px] border border-white/5 overflow-hidden mb-1 sm:mb-1.5 md:mb-2">
                                     <div class="absolute inset-0 bg-gradient-to-r from-transparent via-white/5 to-transparent -translate-x-full animate-[shimmer_1.5s_infinite]" />
                                 </div>
                             </div>
                         }).collect::<Vec<_>>() }
                     }>
-                        {move || items.get().map(|media| {
+                        {move || items_res.get().map(|media| {
                             media.into_iter().enumerate().map(|(idx, item)| {
                                 view! {
                                     <TopTenCard item=item index=idx is_tv=is_tv />
@@ -379,20 +452,42 @@ pub fn TopTenRow(
                     <div class="flex-none pointer-events-none" style="width: var(--app-x, 56px);" />
                 </div>
 
-                {
-                    let scroll_right = scroll.clone();
-                    view! {
-                        <button
-                            class=format!("{} right-0 rounded-l-md group-hover/row:opacity-100 group-hover/row:pointer-events-auto", btn_base)
-                            on:click=move |_| scroll_right("right")
-                            aria-label="Scroll Right"
-                        >
-                            <span class="text-white text-3xl font-bold">"›"</span>
-                        </button>
+                // Left arrow — hidden at position 0, same style as normal Row
+                <button
+                    type="button"
+                    class=move || if can_scroll_left.get() {
+                        "hidden md:flex absolute top-2 bottom-0 left-0 z-30 items-center justify-center cursor-pointer bg-transparent hover:bg-black/70 transition-all duration-200 opacity-0 group-hover/row:opacity-100 group-hover/row:pointer-events-auto select-none border-none outline-none"
+                    } else {
+                        "hidden !pointer-events-none !opacity-0"
                     }
-                }
+                    style="width: var(--app-x, 56px);"
+                    on:click={
+                        let scroll_left = scroll.clone();
+                        move |_| scroll_left("left")
+                    }
+                    aria-label="Scroll Left"
+                >
+                    <i class="ph-bold ph-caret-left text-white text-3xl sm:text-4xl drop-shadow-lg transition-transform hover:scale-125"></i>
+                </button>
+
+                // Right arrow — hidden when at end
+                <button
+                    type="button"
+                    class=move || if can_scroll_right.get() {
+                        "hidden md:flex absolute top-2 bottom-0 right-0 z-30 items-center justify-center cursor-pointer bg-transparent hover:bg-black/70 transition-all duration-200 opacity-0 group-hover/row:opacity-100 group-hover/row:pointer-events-auto select-none border-none outline-none"
+                    } else {
+                        "hidden !pointer-events-none !opacity-0"
+                    }
+                    style="width: var(--app-x, 56px);"
+                    on:click={
+                        let scroll_right = scroll.clone();
+                        move |_| scroll_right("right")
+                    }
+                    aria-label="Scroll Right"
+                >
+                    <i class="ph-bold ph-caret-right text-white text-3xl sm:text-4xl drop-shadow-lg transition-transform hover:scale-125"></i>
+                </button>
             </div>
         </div>
     }
 }
-

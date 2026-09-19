@@ -1,5 +1,14 @@
 use leptos::prelude::*;
+use wasm_bindgen::prelude::*;
+use wasm_bindgen::JsCast;
 use super::movie_card::MovieCard;
+
+fn set_timeout_ms<F: FnOnce() + 'static>(cb: F, ms: i32) {
+    if let Some(window) = web_sys::window() {
+        let closure = Closure::once_into_js(cb);
+        let _ = window.set_timeout_with_callback_and_timeout_and_arguments_0(closure.as_ref().unchecked_ref(), ms);
+    }
+}
 
 #[component]
 pub fn Row(
@@ -70,51 +79,140 @@ pub fn Row(
     });
 
     let scroll_ref = NodeRef::<leptos::html::Div>::new();
+    let (can_scroll_left, set_can_scroll_left) = signal(false);
+    let (can_scroll_right, set_can_scroll_right) = signal(true);
+    let (page_index, set_page_index) = signal(0usize);
 
-    let scroll = move |direction: &str| {
+    let update_scroll_state = Callback::new(move |_: ()| {
         if let Some(el) = scroll_ref.get() {
-            let client_width = el.client_width() as f64;
-            let current_scroll = el.scroll_left() as f64;
-            let scroll_width = el.scroll_width() as f64;
-            
-            let step = client_width * 0.9;
-            
-            let target = if direction == "left" {
-                current_scroll - step
-            } else {
-                current_scroll + step
-            };
+            let cur = el.scroll_left() as f64;
+            let client_w = el.client_width() as f64;
+            let scroll_w = el.scroll_width() as f64;
 
-            el.scroll_to_with_x_and_y(target, 0.0);
+            set_can_scroll_left.set(cur > 10.0);
+            set_can_scroll_right.set(scroll_w > client_w + 10.0 && scroll_w - (cur + client_w) > 10.0);
 
-            // Proactively load next page if we're getting close to the end
-            if direction == "right" && (current_scroll + client_width * 2.0) >= scroll_width {
-                load_more();
+            let margin = if client_w >= 1750.0 { 60.0 } else if client_w >= 1350.0 { 56.0 } else if client_w >= 800.0 { 48.0 } else { 16.0 };
+            let page_w = (client_w - 2.0 * margin + 6.0).max(100.0);
+            let idx = ((cur + page_w * 0.3) / page_w).floor() as usize;
+            set_page_index.set(idx);
+        }
+    });
+
+    let on_scroll = {
+        let update = update_scroll_state.clone();
+        move |_| update.run(())
+    };
+
+    // Window resize listener
+    Effect::new({
+        let update = update_scroll_state.clone();
+        move |_| {
+            if let Some(win) = web_sys::window() {
+                let update_c = update.clone();
+                let cb = wasm_bindgen::closure::Closure::<dyn Fn()>::wrap(Box::new(move || {
+                    update_c.run(());
+                }));
+                let _ = win.add_event_listener_with_callback("resize", cb.as_ref().unchecked_ref());
+                cb.forget();
+            }
+        }
+    });
+
+    // Content change / initial render listener
+    Effect::new({
+        let update = update_scroll_state.clone();
+        move |_| {
+            let _ = movies.get();
+            let update_c = update.clone();
+            set_timeout_ms(move || {
+                update_c.run(());
+            }, 100);
+        }
+    });
+
+    let scroll = {
+        let update = update_scroll_state.clone();
+        move |direction: &str| {
+            if let Some(el) = scroll_ref.get() {
+                let client_width = el.client_width() as f64;
+                let current_scroll = el.scroll_left() as f64;
+                let scroll_width = el.scroll_width() as f64;
+                
+                let margin = if client_width >= 1750.0 { 60.0 } else if client_width >= 1350.0 { 56.0 } else if client_width >= 800.0 { 48.0 } else { 16.0 };
+                let step = (client_width - 2.0 * margin + 6.0).max(100.0);
+                
+                let target = if direction == "left" {
+                    (current_scroll - step).max(0.0)
+                } else {
+                    (current_scroll + step).min(scroll_width - client_width)
+                };
+
+                el.scroll_to_with_x_and_y(target, 0.0);
+
+                // Proactively load next page if we're getting close to the end
+                if direction == "right" && (current_scroll + client_width * 2.0) >= scroll_width {
+                    load_more();
+                }
+
+                let update_c = update.clone();
+                set_timeout_ms(move || {
+                    update_c.run(());
+                }, 600);
             }
         }
     };
 
+    let card_width_class = "netflix-card-width";
+
     view! {
-        <div class="group relative my-3 md:my-4 space-y-1 z-10">
-            <div class="flex items-center justify-between px-[var(--app-x,56px)]">
+        <div class="group relative my-3 md:my-4 space-y-1.5 z-10">
+            <div class="flex items-center justify-between px-[var(--app-x,56px)] mb-1">
                 <h2 class="text-sm sm:text-base md:text-lg font-bold text-[#e5e5e5] hover:text-white transition cursor-pointer flex items-center group/title w-fit tracking-wide">
                     {title}
                     <span class="text-xs text-cyan-500 ml-2 opacity-0 group-hover/title:opacity-100 transition-opacity duration-300 flex items-center font-semibold">
                         "Explore All ›"
                     </span>
                 </h2>
+
+                // Netflix Pagination indicators (dashes) on hover
+                {move || {
+                    let count = movies.get().len();
+                    if count > 4 {
+                        let pages = (count / 4).clamp(2, 6);
+                        let current = page_index.get();
+                        view! {
+                            <div class="hidden md:flex items-center gap-[3px] opacity-0 group-hover:opacity-100 transition-opacity duration-300">
+                                {(0..pages).map(|i| {
+                                    let is_active = i == current;
+                                    view! {
+                                        <div
+                                            class=if is_active {
+                                                "h-[2px] w-3 rounded-full bg-white transition-colors duration-200"
+                                            } else {
+                                                "h-[2px] w-3 rounded-full bg-white/20 transition-colors duration-200"
+                                            }
+                                        />
+                                    }
+                                }).collect::<Vec<_>>()}
+                            </div>
+                        }.into_any()
+                    } else {
+                        view! { <span /> }.into_any()
+                    }
+                }}
             </div>
 
-            <div class="relative group/row row-scroll-outer">
+            <div class="relative group/row row-scroll-outer" style="container-type: inline-size;">
                 {move || {
                     let m = movies.get();
                     if m.is_empty() && is_fetching.get() {
                         view! {
-                            <div class="flex overflow-x-scroll scrollbar-hide w-full pointer-events-auto relative z-10 py-2 pb-6">
+                            <div class="flex overflow-x-scroll scrollbar-hide w-full pointer-events-auto relative z-10 py-2 pb-6 gap-[6px]">
                                 <div class="flex-none h-full pointer-events-none" style="width: var(--app-x, 56px);" />
                                 {(0..6).map(|_| view! {
                                     <div
-                                        class="movie-card-container relative flex-none w-[calc((100vw-3rem)/2.3)] sm:w-[calc((100vw-3rem)/3.3)] md:w-[calc((100vw-3.5rem)/4.3)] lg:w-[calc((100vw-4rem)/6.6)] aspect-[7/4.20] bg-[#1e1e1e] rounded-sm overflow-hidden border border-white/[0.04] pointer-events-auto mr-0.5 md:mr-1 lg:mr-1.5"
+                                        class=format!("movie-card-container relative flex-none {} aspect-video bg-[#1e1e1e] rounded-[4px] md:rounded-[8px] overflow-hidden border border-white/[0.04] pointer-events-auto", card_width_class)
                                     >
                                         <div class="absolute inset-0 -translate-x-full animate-[shimmer_1.8s_ease-in-out_infinite] bg-gradient-to-r from-transparent via-white/[0.05] to-transparent" />
                                         <div class="absolute inset-0 bg-gradient-to-b from-[#252525] via-[#1e1e1e] to-[#181818]" />
@@ -137,7 +235,8 @@ pub fn Row(
                             <>
                                 <div
                                     node_ref=scroll_ref
-                                    class="row-scroll-strip flex overflow-x-scroll scrollbar-hide w-full pointer-events-auto relative z-10 py-2 pb-6"
+                                    on:scroll=on_scroll
+                                    class="row-scroll-strip flex overflow-x-scroll scrollbar-hide w-full pointer-events-auto relative z-10 py-2 pb-6 gap-[6px]"
                                     style="scroll-behavior: smooth;"
                                 >
                                     <div class="flex-none h-full pointer-events-none" style="width: var(--app-x, 56px);" />
@@ -151,7 +250,7 @@ pub fn Row(
                                         
                                         view! {
                                             <div 
-                                                class="movie-card-container relative pointer-events-auto mr-0.5 md:mr-1 lg:mr-1.5 overflow-visible"
+                                                class=format!("movie-card-container relative flex-none pointer-events-auto overflow-visible rounded-[4px] md:rounded-[8px] {} aspect-video", card_width_class)
                                                 style="z-index: auto;"
                                             >
                                                 <MovieCard
@@ -161,6 +260,9 @@ pub fn Row(
                                                     backdrop_path=backdrop
                                                     poster_path=poster
                                                     vote_average=item.vote_average
+                                                    overview=item.overview.clone()
+                                                    genre_ids=item.genre_ids.clone()
+                                                    vibe_pills=item.vibe_pills.clone()
                                                 />
                                             </div>
                                         }
@@ -168,7 +270,7 @@ pub fn Row(
                                     
                                     {move || if is_fetching.get() {
                                         view! {
-                                            <div class="movie-card-container relative flex-none h-[128px] aspect-video flex items-center justify-center mr-0.5 md:mr-1 lg:mr-1.5">
+                                            <div class=format!("movie-card-container relative flex-none {} aspect-video flex items-center justify-center", card_width_class)>
                                                 <div class="w-8 h-8 rounded-full border-2 border-transparent border-t-white/60 animate-spin" />
                                             </div>
                                         }.into_any()
@@ -179,21 +281,35 @@ pub fn Row(
                                     <div class="flex-none h-full pointer-events-none" style="width: var(--app-x, 56px);" />
                                 </div>
 
-                                // Left Chevron
-                                <div
-                                    class="absolute top-0 bottom-6 left-0 z-30 w-6 md:w-14 lg:w-16 items-center justify-center cursor-pointer bg-transparent hover:bg-[#141414]/70 flex group/arrow-left transition-[opacity,background-color] duration-200 rounded-r-sm opacity-0 pointer-events-none group-hover/row:opacity-100 group-hover/row:pointer-events-auto"
+                                // Left Chevron Handle: sits inside left margin gutter, exactly var(--app-x) wide
+                                <button
+                                    type="button"
+                                    class=move || if can_scroll_left.get() {
+                                        "hidden md:flex absolute top-2 bottom-6 left-0 z-30 items-center justify-center cursor-pointer bg-transparent hover:bg-black/70 transition-all duration-200 opacity-0 group-hover/row:opacity-100 group-hover/row:pointer-events-auto select-none border-none outline-none"
+                                    } else {
+                                        "hidden !pointer-events-none !opacity-0"
+                                    }
+                                    style="width: var(--app-x, 56px);"
                                     on:click=move |_| scroll_left("left")
+                                    aria-label="Scroll Left"
                                 >
                                     <i class="ph-bold ph-caret-left text-white text-3xl sm:text-4xl drop-shadow-lg transition-transform hover:scale-125"></i>
-                                </div>
+                                </button>
 
-                                // Right Chevron
-                                <div
-                                    class="absolute top-0 bottom-6 right-0 z-30 w-6 md:w-14 lg:w-16 items-center justify-center cursor-pointer bg-transparent hover:bg-[#141414]/70 flex group/arrow-right transition-[opacity,background-color] duration-200 pointer-events-none rounded-l-sm opacity-0 group-hover/row:opacity-100 group-hover/row:pointer-events-auto"
+                                // Right Chevron Handle: sits inside right margin gutter, exactly var(--app-x) wide
+                                <button
+                                    type="button"
+                                    class=move || if can_scroll_right.get() {
+                                        "hidden md:flex absolute top-2 bottom-6 right-0 z-30 items-center justify-center cursor-pointer bg-transparent hover:bg-black/70 transition-all duration-200 opacity-0 group-hover/row:opacity-100 group-hover/row:pointer-events-auto select-none border-none outline-none"
+                                    } else {
+                                        "hidden !pointer-events-none !opacity-0"
+                                    }
+                                    style="width: var(--app-x, 56px);"
                                     on:click=move |_| scroll_right("right")
+                                    aria-label="Scroll Right"
                                 >
                                     <i class="ph-bold ph-caret-right text-white text-3xl sm:text-4xl drop-shadow-lg transition-transform hover:scale-125"></i>
-                                </div>
+                                </button>
                             </>
                         }.into_any()
                     }

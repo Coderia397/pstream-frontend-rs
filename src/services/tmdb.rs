@@ -18,14 +18,32 @@ pub struct TmdbResponse<T> {
     pub total_results: u32,
 }
 
+fn deserialize_null_string<'de, D>(deserializer: D) -> Result<String, D::Error>
+where
+    D: serde::Deserializer<'de>,
+{
+    let opt = Option::<String>::deserialize(deserializer)?;
+    Ok(opt.unwrap_or_default())
+}
+
+fn deserialize_null_f64<'de, D>(deserializer: D) -> Result<f64, D::Error>
+where
+    D: serde::Deserializer<'de>,
+{
+    let opt = Option::<f64>::deserialize(deserializer)?;
+    Ok(opt.unwrap_or(0.0))
+}
+
 #[derive(Clone, Debug, Default, Deserialize, Serialize)]
 pub struct MediaItem {
     pub id: u32,
     pub title: Option<String>,
     pub name: Option<String>,
+    #[serde(default, deserialize_with = "deserialize_null_string")]
     pub overview: String,
     pub poster_path: Option<String>,
     pub backdrop_path: Option<String>,
+    #[serde(default, deserialize_with = "deserialize_null_f64")]
     pub vote_average: f64,
     #[serde(default)]
     pub vote_count: Option<u32>,
@@ -34,6 +52,12 @@ pub struct MediaItem {
     pub release_date: Option<String>,
     pub first_air_date: Option<String>,
     pub media_type: Option<String>,
+    #[serde(default)]
+    pub match_percentage: Option<u32>,
+    #[serde(default)]
+    pub genre_ids: Vec<u32>,
+    #[serde(default)]
+    pub vibe_pills: Vec<String>,
 }
 
 impl MediaItem {
@@ -180,6 +204,8 @@ pub struct DetailedMediaItem {
     pub number_of_seasons: Option<u32>,
     pub credits: Option<Credits>,
     pub genres: Option<Vec<Genre>>,
+    #[serde(default)]
+    pub original_language: Option<String>,
 }
 
 impl DetailedMediaItem {
@@ -188,14 +214,24 @@ impl DetailedMediaItem {
     }
 }
 
-#[derive(Clone, Debug, serde::Deserialize, serde::Serialize)]
+#[derive(Clone, Debug, Default, serde::Deserialize, serde::Serialize)]
 pub struct Credits {
+    #[serde(default)]
     pub cast: Vec<CastMember>,
+    #[serde(default)]
+    pub crew: Vec<CrewMember>,
 }
 
-#[derive(Clone, Debug, serde::Deserialize, serde::Serialize)]
+#[derive(Clone, Debug, Default, serde::Deserialize, serde::Serialize)]
 pub struct CastMember {
     pub name: String,
+}
+
+#[derive(Clone, Debug, Default, serde::Deserialize, serde::Serialize)]
+pub struct CrewMember {
+    pub name: String,
+    pub job: Option<String>,
+    pub department: Option<String>,
 }
 
 pub async fn fetch_details(id: u32, is_tv: bool) -> Result<DetailedMediaItem, gloo_net::Error> {
@@ -215,12 +251,16 @@ pub struct Genre {
 
 /// Search across TV and Movies
 pub async fn search_media(query: &str) -> Result<Vec<MediaItem>, gloo_net::Error> {
-    if query.trim().is_empty() {
+    let clean = query.trim();
+    if clean.is_empty() {
         return Ok(vec![]);
     }
+    let encoded_query: String = js_sys::encode_uri_component(clean)
+        .as_string()
+        .unwrap_or_else(|| clean.to_string());
     let url = format!(
         "{}/search/multi?api_key={}&language=en-US&query={}&page=1&include_adult=false",
-        TMDB_BASE_URL, TMDB_API_KEY, query
+        TMDB_BASE_URL, TMDB_API_KEY, encoded_query
     );
     let resp: TmdbResponse<MediaItem> = Request::get(&url).send().await?.json().await?;
     // Filter out people, nsfw content, and items without artwork
@@ -251,6 +291,90 @@ pub struct VideoResult {
     pub key: String,
     pub site: String,
     pub r#type: String, // "Trailer", "Clip", etc
+    #[serde(default)]
+    pub official: Option<bool>,
+    #[serde(default)]
+    pub name: Option<String>,
+}
+
+/// Smart scored selector for TMDB videos:
+/// Evaluates official verification, trailer vs teaser classification,
+/// resolution signals (4K/UHD), and eliminates junk (interviews, featurettes, B-roll).
+/// Returns (video_key, is_teaser).
+pub fn select_best_tmdb_trailer(videos: &[VideoResult]) -> Option<(String, bool)> {
+    let yt_videos: Vec<&VideoResult> = videos
+        .iter()
+        .filter(|v| v.site.eq_ignore_ascii_case("youtube") && !v.key.trim().is_empty())
+        .collect();
+
+    if yt_videos.is_empty() {
+        return None;
+    }
+
+    let mut scored: Vec<(&VideoResult, i32, bool)> = yt_videos
+        .into_iter()
+        .map(|v| {
+            let mut score = 0i32;
+            let mut is_teaser = false;
+            let type_lower = v.r#type.to_lowercase();
+            let name_lower = v.name.as_deref().unwrap_or("").to_lowercase();
+
+            // 1. Type scoring
+            if type_lower == "trailer" {
+                score += 100;
+            } else if type_lower == "teaser" {
+                score += 80;
+                is_teaser = true;
+            } else if type_lower == "clip" {
+                score += 30;
+                is_teaser = true;
+            } else {
+                score -= 80; // Featurette, Behind the Scenes, etc.
+            }
+
+            // 2. Official badge bonus
+            if v.official == Some(true) {
+                score += 50;
+            }
+
+            // 3. Name intelligence
+            if name_lower.contains("teaser") {
+                is_teaser = true;
+                score += 15;
+            }
+            if name_lower.contains("official") {
+                score += 25;
+            }
+            if name_lower.contains("main") || name_lower.contains("final") {
+                score += 35;
+            }
+            if name_lower.contains("4k") || name_lower.contains("uhd") {
+                score += 25;
+            }
+            if name_lower.contains("imax") {
+                score += 15;
+            }
+
+            // 4. Anti-junk filters
+            let junk = [
+                "behind the scenes", "interview", "b-roll", "featurette",
+                "making of", "cast", "red carpet", "blooper", "soundtrack",
+                "theme song", "clip: ", "scene: ", "deleted scene"
+            ];
+            for j in junk {
+                if name_lower.contains(j) {
+                    score -= 200;
+                    break;
+                }
+            }
+
+            (v, score, is_teaser)
+        })
+        .collect();
+
+    scored.sort_by(|a, b| b.1.cmp(&a.1));
+
+    scored.first().map(|(v, _, is_teaser)| (v.key.clone(), *is_teaser))
 }
 
 #[derive(Clone, Debug, Deserialize, Serialize)]
@@ -375,6 +499,170 @@ pub async fn fetch_row_content(
         let has_custom_votes = extra_params.map(|e| e.contains("vote_count.gte")).unwrap_or(false);
 
         let mut url = match gid_lower.as_str() {
+            // LGBTQ / Pride
+            "10001" | "lgbtq" | "pride" => {
+                let vote_filter = if has_custom_votes { "" } else { "&vote_count.gte=15" };
+                format!("{}/discover/{}?api_key={}&with_keywords=158718%7C380747%7C250606%7C363345%7C264386%7C290527%7C329968%7C300642%7C195624{}&include_adult=false&sort_by={}&page={}", TMDB_BASE_URL, safe_kind, TMDB_API_KEY, vote_filter, default_sort, page)
+            }
+            // Black Stories
+            "10003" | "black stories" | "black" => {
+                let vote_filter = if has_custom_votes { "" } else { "&vote_count.gte=15" };
+                format!("{}/discover/{}?api_key={}&with_keywords=256015%7C358563%7C190675%7C251436%7C288242%7C195624%7C339021{}&include_adult=false&sort_by={}&page={}", TMDB_BASE_URL, safe_kind, TMDB_API_KEY, vote_filter, default_sort, page)
+            }
+            // British origin
+            "british" | "52117" | "10005" => {
+                let vote_filter = if has_custom_votes { "" } else { "&vote_count.gte=25" };
+                format!("{}/discover/{}?api_key={}&with_origin_country=GB{}&include_adult=false&sort_by={}&page={}", TMDB_BASE_URL, safe_kind, TMDB_API_KEY, vote_filter, default_sort, page)
+            }
+            // Classics (pre-1985 for movies, pre-1998 for TV)
+            "10009" | "classics" => {
+                if safe_kind == "tv" {
+                    let vote_filter = if has_custom_votes { "" } else { "&vote_count.gte=40" };
+                    format!("{}/discover/tv?api_key={}&first_air_date.lte=1998-12-31{}&include_adult=false&sort_by={}&page={}", TMDB_BASE_URL, TMDB_API_KEY, vote_filter, default_sort, page)
+                } else {
+                    let vote_filter = if has_custom_votes { "" } else { "&vote_count.gte=80" };
+                    format!("{}/discover/movie?api_key={}&primary_release_date.lte=1985-12-31{}&include_adult=false&sort_by={}&page={}", TMDB_BASE_URL, TMDB_API_KEY, vote_filter, default_sort, page)
+                }
+            }
+            // Cult Classics & Cult TV
+            "10010" | "cult" => {
+                let vote_filter = if has_custom_votes { "" } else { "&vote_count.gte=25" };
+                format!("{}/discover/{}?api_key={}&with_keywords=374649%7C367333%7C9840{}&include_adult=false&sort_by={}&page={}", TMDB_BASE_URL, safe_kind, TMDB_API_KEY, vote_filter, default_sort, page)
+            }
+            // European origin
+            "european" | "10006" => {
+                let vote_filter = if has_custom_votes { "" } else { "&vote_count.gte=25" };
+                format!("{}/discover/{}?api_key={}&with_origin_country=FR%7CDE%7CIT%7CES%7CNL%7CDK%7CSE%7CNO%7CFI%7CPL{}&include_adult=false&sort_by={}&page={}", TMDB_BASE_URL, safe_kind, TMDB_API_KEY, vote_filter, default_sort, page)
+            }
+            // US / Hollywood origin
+            "us" | "10008" | "hollywood" => {
+                let vote_filter = if has_custom_votes { "" } else { "&vote_count.gte=40" };
+                format!("{}/discover/{}?api_key={}&with_origin_country=US{}&include_adult=false&sort_by={}&page={}", TMDB_BASE_URL, safe_kind, TMDB_API_KEY, vote_filter, default_sort, page)
+            }
+            // Halloween (Spooky & Supernatural)
+            "10016" | "halloween" => {
+                if safe_kind == "tv" {
+                    let vote_filter = if has_custom_votes { "" } else { "&vote_count.gte=20" };
+                    format!("{}/discover/tv?api_key={}&with_keywords=3335%7C3358%7C616%7C162846%7C3133%7C12339%7C1299%7C6152{}&include_adult=false&sort_by={}&page={}", TMDB_BASE_URL, TMDB_API_KEY, vote_filter, default_sort, page)
+                } else {
+                    let vote_filter = if has_custom_votes { "" } else { "&vote_count.gte=30" };
+                    format!("{}/discover/movie?api_key={}&with_genres=27&with_keywords=3335%7C3358%7C616%7C162846%7C3133%7C12339%7C1299%7C6152{}&include_adult=false&sort_by={}&page={}", TMDB_BASE_URL, TMDB_API_KEY, vote_filter, default_sort, page)
+                }
+            }
+            // Independent / Indie Cinema
+            "10011" | "independent" | "indie" => {
+                let vote_filter = if has_custom_votes { "" } else { "&vote_count.gte=20" };
+                format!("{}/discover/{}?api_key={}&with_keywords=281237%7C10183{}&include_adult=false&sort_by={}&page={}", TMDB_BASE_URL, safe_kind, TMDB_API_KEY, vote_filter, default_sort, page)
+            }
+            // International (non-English)
+            "international" | "10012" => {
+                let vote_filter = if has_custom_votes { "" } else { "&vote_count.gte=30" };
+                format!("{}/discover/{}?api_key={}&without_original_language=en{}&include_adult=false&sort_by={}&page={}", TMDB_BASE_URL, safe_kind, TMDB_API_KEY, vote_filter, default_sort, page)
+            }
+            // Shorts (under 45 minutes)
+            "10013" | "shorts" => {
+                let vote_filter = if has_custom_votes { "" } else { "&vote_count.gte=10" };
+                format!("{}/discover/movie?api_key={}&with_runtime.lte=40&with_runtime.gte=2{}&include_adult=false&sort_by={}&page={}", TMDB_BASE_URL, TMDB_API_KEY, vote_filter, default_sort, page)
+            }
+            // Sports
+            "10014" | "sport" | "sports" => {
+                let vote_filter = if has_custom_votes { "" } else { "&vote_count.gte=20" };
+                format!("{}/discover/{}?api_key={}&with_keywords=333328%7C13042%7C6496%7C1480%7C209476%7C315138{}&include_adult=false&sort_by={}&page={}", TMDB_BASE_URL, safe_kind, TMDB_API_KEY, vote_filter, default_sort, page)
+            }
+            // Stand-up Comedy (Movies/Specials)
+            "10017" | "stand-up comedy" | "stand-up" => {
+                let vote_filter = if has_custom_votes { "" } else { "&vote_count.gte=15" };
+                format!("{}/discover/movie?api_key={}&with_genres=35&with_keywords=9716%7C356038{}&include_adult=false&sort_by={}&page={}", TMDB_BASE_URL, TMDB_API_KEY, vote_filter, default_sort, page)
+            }
+            // Stand-up & Chat Shows (TV)
+            "10020" | "chat shows" | "stand-up & chat shows" => {
+                let vote_filter = if has_custom_votes { "" } else { "&vote_count.gte=10" };
+                format!("{}/discover/tv?api_key={}&with_genres=10767&with_keywords=9716%7C356038{}&include_adult=false&sort_by={}&page={}", TMDB_BASE_URL, TMDB_API_KEY, vote_filter, default_sort, page)
+            }
+            // Emmy or Emmys (Award-winning prestige television)
+            "10018" | "emmy" | "emmys" | "emmy or emmys" => {
+                let vote_filter = if has_custom_votes { "" } else { "&vote_count.gte=80" };
+                format!("{}/discover/tv?api_key={}&with_genres=18,35&vote_average.gte=7.8{}&include_adult=false&sort_by={}&page={}", TMDB_BASE_URL, TMDB_API_KEY, vote_filter, default_sort, page)
+            }
+            // Science & Nature
+            "10019" | "science & nature" | "nature" => {
+                let vote_filter = if has_custom_votes { "" } else { "&vote_count.gte=15" };
+                if safe_kind == "tv" {
+                    format!("{}/discover/tv?api_key={}&with_genres=99&with_keywords=221355%7C9902%7C270%7C33577%7C305903{}&include_adult=false&sort_by={}&page={}", TMDB_BASE_URL, TMDB_API_KEY, vote_filter, default_sort, page)
+                } else {
+                    format!("{}/discover/movie?api_key={}&with_genres=99&with_keywords=221355%7C9902%7C270%7C33577%7C305903{}&include_adult=false&sort_by={}&page={}", TMDB_BASE_URL, TMDB_API_KEY, vote_filter, default_sort, page)
+                }
+            }
+            // Teen
+            "10015" | "teen" => {
+                let vote_filter = if has_custom_votes { "" } else { "&vote_count.gte=25" };
+                format!("{}/discover/{}?api_key={}&with_genres=18,35&with_keywords=10683%7C6270%7C193400%7C206720{}&include_adult=false&sort_by={}&page={}", TMDB_BASE_URL, safe_kind, TMDB_API_KEY, vote_filter, default_sort, page)
+            }
+            // Anime (Strict vote floor + Japanese language + exclude adult tags)
+            "anime" | "7424" | "16" => {
+                let vote_filter = if has_custom_votes { "" } else { "&vote_count.gte=40" };
+                format!("{}/discover/{}?api_key={}&with_genres=16&with_original_language=ja{}&without_keywords=190370,222243,267498&include_adult=false&sort_by={}&page={}", TMDB_BASE_URL, safe_kind, TMDB_API_KEY, vote_filter, default_sort, page)
+            }
+            // Horror (Cross-media: TV uses Mystery/Sci-Fi + Horror keywords)
+            "27" | "8711" | "horror" => {
+                if safe_kind == "tv" {
+                    let vote_filter = if has_custom_votes { "" } else { "&vote_count.gte=25" };
+                    format!("{}/discover/tv?api_key={}&with_keywords=6152%7C3358%7C12377%7C162846%7C295907%7C3335{}&include_adult=false&sort_by={}&page={}", TMDB_BASE_URL, TMDB_API_KEY, vote_filter, default_sort, page)
+                } else {
+                    let vote_filter = if has_custom_votes { "" } else { "&vote_count.gte=35" };
+                    format!("{}/discover/movie?api_key={}&with_genres=27{}&include_adult=false&sort_by={}&page={}", TMDB_BASE_URL, TMDB_API_KEY, vote_filter, default_sort, page)
+                }
+            }
+            // Romance (Cross-media: TV uses Drama + Romance keywords)
+            "10749" | "8883" | "romance" => {
+                if safe_kind == "tv" {
+                    let vote_filter = if has_custom_votes { "" } else { "&vote_count.gte=25" };
+                    format!("{}/discover/tv?api_key={}&with_genres=18&with_keywords=304976%7C128%7C3691%7C13072{}&include_adult=false&sort_by={}&page={}", TMDB_BASE_URL, TMDB_API_KEY, vote_filter, default_sort, page)
+                } else {
+                    let vote_filter = if has_custom_votes { "" } else { "&vote_count.gte=35" };
+                    format!("{}/discover/movie?api_key={}&with_genres=10749{}&include_adult=false&sort_by={}&page={}", TMDB_BASE_URL, TMDB_API_KEY, vote_filter, default_sort, page)
+                }
+            }
+            // Thriller (Cross-media: TV uses Mystery & Crime)
+            "53" | "8933" | "thriller" => {
+                if safe_kind == "tv" {
+                    let vote_filter = if has_custom_votes { "" } else { "&vote_count.gte=30" };
+                    format!("{}/discover/tv?api_key={}&with_genres=9648,80{}&include_adult=false&sort_by={}&page={}", TMDB_BASE_URL, TMDB_API_KEY, vote_filter, default_sort, page)
+                } else {
+                    let vote_filter = if has_custom_votes { "" } else { "&vote_count.gte=35" };
+                    format!("{}/discover/movie?api_key={}&with_genres=53{}&include_adult=false&sort_by={}&page={}", TMDB_BASE_URL, TMDB_API_KEY, vote_filter, default_sort, page)
+                }
+            }
+            // Fantasy (Cross-media: TV uses 10765)
+            "14" | "fantasy" => {
+                if safe_kind == "tv" {
+                    let vote_filter = if has_custom_votes { "" } else { "&vote_count.gte=25" };
+                    format!("{}/discover/tv?api_key={}&with_genres=10765&without_genres=16{}&include_adult=false&sort_by={}&page={}", TMDB_BASE_URL, TMDB_API_KEY, vote_filter, default_sort, page)
+                } else {
+                    let vote_filter = if has_custom_votes { "" } else { "&vote_count.gte=35" };
+                    format!("{}/discover/movie?api_key={}&with_genres=14{}&include_adult=false&sort_by={}&page={}", TMDB_BASE_URL, TMDB_API_KEY, vote_filter, default_sort, page)
+                }
+            }
+            // Sci-Fi (Cross-media: TV uses 10765)
+            "878" | "1492" | "1372" | "sci-fi" => {
+                if safe_kind == "tv" {
+                    let vote_filter = if has_custom_votes { "" } else { "&vote_count.gte=30" };
+                    format!("{}/discover/tv?api_key={}&with_genres=10765&without_genres=16{}&include_adult=false&sort_by={}&page={}", TMDB_BASE_URL, TMDB_API_KEY, vote_filter, default_sort, page)
+                } else {
+                    let vote_filter = if has_custom_votes { "" } else { "&vote_count.gte=35" };
+                    format!("{}/discover/movie?api_key={}&with_genres=878{}&include_adult=false&sort_by={}&page={}", TMDB_BASE_URL, TMDB_API_KEY, vote_filter, default_sort, page)
+                }
+            }
+            // Music & Musicals
+            "10402" | "music & musicals" => {
+                if safe_kind == "tv" {
+                    let vote_filter = if has_custom_votes { "" } else { "&vote_count.gte=15" };
+                    format!("{}/discover/tv?api_key={}&with_keywords=4344%7C246377%7C6029%7C18001{}&include_adult=false&sort_by={}&page={}", TMDB_BASE_URL, TMDB_API_KEY, vote_filter, default_sort, page)
+                } else {
+                    let vote_filter = if has_custom_votes { "" } else { "&vote_count.gte=25" };
+                    format!("{}/discover/movie?api_key={}&with_genres=10402{}&include_adult=false&sort_by={}&page={}", TMDB_BASE_URL, TMDB_API_KEY, vote_filter, default_sort, page)
+                }
+            }
             // Binge-worthy / Boredom Busters
             "binge" | "1191605" | "boredom" => {
                 let vote_filter = if has_custom_votes { "" } else { "&vote_count.gte=40" };
@@ -384,48 +672,18 @@ pub async fn fetch_row_content(
                     format!("{}/discover/movie?api_key={}&with_genres=28,12,53,878&without_genres=16{}&include_adult=false&sort_by={}&page={}", TMDB_BASE_URL, TMDB_API_KEY, vote_filter, default_sort, page)
                 }
             }
-            // British origin
-            "british" | "52117" | "10005" => {
-                let vote_filter = if has_custom_votes { "" } else { "&vote_count.gte=30" };
-                format!("{}/discover/{}?api_key={}&with_origin_country=GB{}&include_adult=false&sort_by={}&page={}", TMDB_BASE_URL, safe_kind, TMDB_API_KEY, vote_filter, default_sort, page)
-            }
-            // US origin
-            "us" | "10008" => {
-                let vote_filter = if has_custom_votes { "" } else { "&vote_count.gte=40" };
-                format!("{}/discover/{}?api_key={}&with_origin_country=US{}&include_adult=false&sort_by={}&page={}", TMDB_BASE_URL, safe_kind, TMDB_API_KEY, vote_filter, default_sort, page)
-            }
-            // European origin
-            "european" | "10006" => {
-                let vote_filter = if has_custom_votes { "" } else { "&vote_count.gte=25" };
-                format!("{}/discover/{}?api_key={}&with_origin_country=FR|DE|IT|ES|NL|DK|SE|NO|FI|PL{}&include_adult=false&sort_by={}&page={}", TMDB_BASE_URL, safe_kind, TMDB_API_KEY, vote_filter, default_sort, page)
-            }
-            // International (non-English)
-            "international" | "10012" => {
-                let vote_filter = if has_custom_votes { "" } else { "&vote_count.gte=30" };
-                format!("{}/discover/{}?api_key={}&without_original_language=en{}&include_adult=false&sort_by={}&page={}", TMDB_BASE_URL, safe_kind, TMDB_API_KEY, vote_filter, default_sort, page)
-            }
-            // Anime (Strict vote floor + adult keyword exclusion wipes out all low-vote hentai/ecchi shorts)
-            "anime" | "7424" => {
-                let vote_filter = if has_custom_votes { "" } else { "&vote_count.gte=60" };
-                format!("{}/discover/{}?api_key={}&with_genres=16&with_original_language=ja{}&without_keywords=190370,222243,267498&include_adult=false&sort_by={}&page={}", TMDB_BASE_URL, safe_kind, TMDB_API_KEY, vote_filter, default_sort, page)
-            }
             // Numeric IDs or Netflix codes
             _ => {
                 let resolved_genre_id = match gid_lower.as_str() {
                     "1365" => if safe_kind == "tv" { "10759" } else { "28" },
                     "6548" | "10375" => "35",
-                    "1492" | "1372" => if safe_kind == "tv" { "10765" } else { "878" },
-                    "8933" => if safe_kind == "tv" { "9648" } else { "53" },
                     "5763" | "11714" => "18",
-                    "8711" => if safe_kind == "tv" { "9648" } else { "27" },
-                    "8883" => "10749",
                     "6839" => "99",
                     "9875" | "26146" => "80",
                     "783" => if safe_kind == "tv" { "10762" } else { "10751" },
                     "10673" => "10759",
                     // TMDB cross-media resolution
                     "28" | "12" => if safe_kind == "tv" { "10759" } else { gid },
-                    "878" => if safe_kind == "tv" { "10765" } else { "878" },
                     "10751" => if safe_kind == "tv" { "10762" } else { "10751" },
                     "10759" => if safe_kind == "movie" { "28" } else { "10759" },
                     "10765" => if safe_kind == "movie" { "878" } else { "10765" },
@@ -445,7 +703,7 @@ pub async fn fetch_row_content(
                             let vote_filter = if has_custom_votes { "" } else { "&vote_count.gte=35" };
                             format!("{}/discover/tv?api_key={}&with_genres=10759&without_genres=16,10762{}&include_adult=false&sort_by={}&page={}", TMDB_BASE_URL, TMDB_API_KEY, vote_filter, default_sort, page)
                         }
-                        // Kids & Family TV: modern era threshold to avoid 1960s relics like Capitão Furacão
+                        // Kids & Family TV: modern era threshold to avoid 1960s relics
                         "10762" => {
                             let vote_filter = if has_custom_votes { "" } else { "&vote_count.gte=20" };
                             format!("{}/discover/tv?api_key={}&with_genres=10762&first_air_date.gte=1990-01-01{}&include_adult=false&sort_by={}&page={}", TMDB_BASE_URL, TMDB_API_KEY, vote_filter, default_sort, page)
@@ -499,6 +757,37 @@ pub async fn fetch_row_content(
                 }).collect();
                 if !items.is_empty() {
                     return Ok(items);
+                }
+            }
+        }
+
+        // If extra_params caused 0 results, retry without the restrictive extra_params
+        if extra_params.is_some() {
+            // Strip extra_params from url and retry
+            let base_url = if url.contains('&') {
+                if let Some(extra) = extra_params {
+                    url.replace(extra, "")
+                } else {
+                    url.clone()
+                }
+            } else {
+                url.clone()
+            };
+            if let Ok(resp) = Request::get(&base_url).send().await {
+                if let Ok(data) = resp.json::<TmdbResponse<MediaItem>>().await {
+                    let items: Vec<MediaItem> = data.results.into_iter().filter_map(|mut item| {
+                        if item.is_nsfw() || (item.backdrop_path.is_none() && item.poster_path.is_none()) {
+                            None
+                        } else {
+                            if item.media_type.is_none() {
+                                item.media_type = Some(safe_kind.to_string());
+                            }
+                            Some(item)
+                        }
+                    }).collect();
+                    if !items.is_empty() {
+                        return Ok(items);
+                    }
                 }
             }
         }

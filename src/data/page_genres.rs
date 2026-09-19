@@ -8,13 +8,11 @@ use super::genres::{Genre, MediaType};
 /// Type alias aligning PageGenre with the core Genre definition.
 pub type PageGenre = Genre;
 
-/// TMDB Movie Genres following the Netflix naming convention (27 entries).
+/// TMDB Movie Genres following the Netflix naming convention (26 entries).
 pub static MOVIE_GENRES: &[PageGenre] = &[
     PageGenre { id: 28, name: "Action" },
     PageGenre { id: 16, name: "Anime" },
-    PageGenre { id: 10002, name: "Astrology" },
     PageGenre { id: 10003, name: "Black Stories" },
-    PageGenre { id: 10004, name: "Book Adaptations" },
     PageGenre { id: 10005, name: "British" },
     PageGenre { id: 10009, name: "Classics" },
     PageGenre { id: 35, name: "Comedies" },
@@ -24,45 +22,45 @@ pub static MOVIE_GENRES: &[PageGenre] = &[
     PageGenre { id: 18, name: "Dramas" },
     PageGenre { id: 10006, name: "European" },
     PageGenre { id: 14, name: "Fantasy" },
+    PageGenre { id: 10016, name: "Halloween" },
     PageGenre { id: 10008, name: "Hollywood" },
     PageGenre { id: 27, name: "Horror" },
     PageGenre { id: 10011, name: "Independent" },
     PageGenre { id: 10012, name: "International" },
     PageGenre { id: 10751, name: "Kids & Family" },
-    PageGenre { id: 10007, name: "Moods" },
+    PageGenre { id: 10001, name: "LGBTQ" },
     PageGenre { id: 10402, name: "Music & Musicals" },
-    PageGenre { id: 10001, name: "Pride" },
     PageGenre { id: 10749, name: "Romance" },
     PageGenre { id: 878, name: "Sci-Fi" },
     PageGenre { id: 10013, name: "Shorts" },
-    PageGenre { id: 10014, name: "Sport" },
+    PageGenre { id: 10014, name: "Sports" },
+    PageGenre { id: 10017, name: "Stand-up Comedy" },
     PageGenre { id: 53, name: "Thriller" },
 ];
 
-/// TMDB TV Genres following the Netflix naming convention (25 entries).
+/// TMDB TV Genres following the Netflix naming convention (24 entries).
 pub static TV_GENRES: &[PageGenre] = &[
     PageGenre { id: 10759, name: "Action" },
     PageGenre { id: 16, name: "Anime" },
-    PageGenre { id: 10002, name: "Astrology" },
     PageGenre { id: 10003, name: "Black Stories" },
-    PageGenre { id: 10004, name: "Book Adaptations" },
     PageGenre { id: 10005, name: "British" },
     PageGenre { id: 35, name: "Comedies" },
     PageGenre { id: 80, name: "Crime" },
-    PageGenre { id: 99, name: "Documentary Series" },
+    PageGenre { id: 99, name: "Documentary" },
     PageGenre { id: 18, name: "Dramas" },
+    PageGenre { id: 10018, name: "Emmys" },
     PageGenre { id: 10006, name: "European" },
+    PageGenre { id: 10016, name: "Halloween" },
     PageGenre { id: 27, name: "Horror" },
     PageGenre { id: 10012, name: "International" },
     PageGenre { id: 10762, name: "Kids" },
-    PageGenre { id: 10007, name: "Moods" },
-    PageGenre { id: 9648, name: "Mysteries" },
-    PageGenre { id: 10001, name: "Pride" },
+    PageGenre { id: 9648, name: "Mystery" },
     PageGenre { id: 10764, name: "Reality" },
     PageGenre { id: 10749, name: "Romance" },
     PageGenre { id: 10765, name: "Sci-Fi & Fantasy" },
-    PageGenre { id: 99, name: "Science & Nature" },
+    PageGenre { id: 10019, name: "Science & Nature" },
     PageGenre { id: 10014, name: "Sport" },
+    PageGenre { id: 10020, name: "Stand-up & Chat Shows" },
     PageGenre { id: 10015, name: "Teen" },
     PageGenre { id: 53, name: "Thriller" },
     PageGenre { id: 10008, name: "US" },
@@ -273,8 +271,8 @@ mod tests {
 
     #[test]
     fn test_counts() {
-        assert_eq!(MOVIE_GENRES.len(), 27);
-        assert_eq!(TV_GENRES.len(), 25);
+        assert_eq!(MOVIE_GENRES.len(), 26);
+        assert_eq!(TV_GENRES.len(), 24);
         assert_eq!(HOME_GENRE_ID_MAP.len(), 10);
         assert_eq!(HOME_MOBILE_GENRES.len(), 35);
         assert_eq!(UNIVERSAL_GENRES.len(), 18);

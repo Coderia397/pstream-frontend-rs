@@ -26,6 +26,14 @@ pub struct RawSource {
     #[serde(rename = "providerId")]
     pub provider_id: Option<String>,
     pub referer: Option<String>,
+    #[serde(default)]
+    pub audio: Option<String>,
+    #[serde(default, rename = "audioLanguages")]
+    pub audio_languages: Vec<String>,
+    #[serde(default, rename = "isOriginal")]
+    pub is_original: Option<bool>,
+    #[serde(default, rename = "isMultiAudio")]
+    pub is_multi_audio: Option<bool>,
 }
 
 #[derive(Clone, Debug, Deserialize, Serialize)]
@@ -49,6 +57,10 @@ pub struct PlayableSource {
     pub provider: String,
     pub kind: PlayableKind,
     pub referer: Option<String>,
+    pub audio: Option<String>,
+    pub audio_languages: Vec<String>,
+    pub is_original: Option<bool>,
+    pub is_multi_audio: Option<bool>,
 }
 
 impl PlayableSource {
@@ -63,11 +75,25 @@ impl PlayableSource {
             _ => 25,
         };
 
-        match self.kind {
-            PlayableKind::Hls => 100 + quality_score,
-            PlayableKind::Mp4 => 80 + quality_score,
-            PlayableKind::Embed => 10 + (quality_score / 2),
-        }
+        let audio_bonus = if self.is_multi_audio.unwrap_or(false)
+            || self.audio.as_deref() == Some("multi")
+            || self.is_original == Some(true)
+            || self.audio.as_deref() == Some("en")
+        {
+            60
+        } else if self.audio.is_none() {
+            20
+        } else {
+            -40 // foreign-only dub
+        };
+
+        let kind_score = match self.kind {
+            PlayableKind::Hls => 100,
+            PlayableKind::Mp4 => 80,
+            PlayableKind::Embed => 10,
+        };
+
+        kind_score + quality_score + audio_bonus
     }
 }
 
@@ -99,6 +125,7 @@ pub async fn resolve_stream(
     season: Option<u32>,
     episode: Option<u32>,
     force: bool,
+    orig_lang: Option<&str>,
 ) -> Result<StreamResolveResult, String> {
     if tmdb_id == 0 {
         return Err("Invalid media ID".to_string());
@@ -116,6 +143,12 @@ pub async fn resolve_stream(
     if let Some(y) = year {
         if !y.is_empty() {
             url.push_str(&format!("&year={}", js_sys::encode_uri_component(y)));
+        }
+    }
+
+    if let Some(ol) = orig_lang {
+        if !ol.is_empty() {
+            url.push_str(&format!("&orig_lang={}", js_sys::encode_uri_component(ol)));
         }
     }
 
@@ -182,6 +215,10 @@ pub async fn resolve_stream(
                     provider,
                     kind,
                     referer: s.referer,
+                    audio: s.audio,
+                    audio_languages: s.audio_languages,
+                    is_original: s.is_original,
+                    is_multi_audio: s.is_multi_audio,
                 });
             }
         }

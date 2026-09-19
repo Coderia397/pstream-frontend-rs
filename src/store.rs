@@ -9,16 +9,75 @@ pub struct UIStore {
     pub info_modal_is_tv: RwSignal<bool>,
     pub active_popup_id: RwSignal<Option<String>>,
     pub ambient_color: RwSignal<(u8, u8, u8)>,
+    pub preview_muted: RwSignal<bool>,
+    pub modal_initial_time: RwSignal<f64>,
+    pub modal_current_time: RwSignal<f64>,
+    pub modal_closing_time: RwSignal<Option<(u32, f64)>>,
+    pub hero_paused_by_modal: RwSignal<bool>,
+    pub modal_video_key: RwSignal<Option<String>>,
+    pub modal_is_teaser: RwSignal<bool>,
+    /// One-shot seek signal: set when modal closes so hero TrailerPlayer jumps to exact timestamp.
+    /// Cleared immediately after being consumed by the seek Effect.
+    pub hero_resume_seek: RwSignal<Option<f64>>,
+}
+
+pub fn get_session_preview_muted(profile_id: Option<&str>, is_kids: bool) -> bool {
+    if is_kids {
+        return true;
+    }
+    let storage = web_sys::window().and_then(|w| w.session_storage().ok().flatten());
+    if let Some(ref s) = storage {
+        if let Some(pid) = profile_id {
+            if let Ok(Some(val)) = s.get_item(&format!("pstream_preview_muted_{}", pid)) {
+                return val == "1" || val == "true";
+            }
+        }
+        if let Ok(Some(val)) = s.get_item("pstream_preview_muted") {
+            return val == "1" || val == "true";
+        }
+    }
+    true // default to muted on fresh session
+}
+
+pub fn save_session_preview_muted(muted: bool, profile_id: Option<&str>) {
+    if let Some(storage) = web_sys::window().and_then(|w| w.session_storage().ok().flatten()) {
+        let val = if muted { "1" } else { "0" };
+        let _ = storage.set_item("pstream_preview_muted", val);
+        if let Some(pid) = profile_id {
+            let _ = storage.set_item(&format!("pstream_preview_muted_{}", pid), val);
+        }
+    }
+}
+
+impl UIStore {
+    pub fn set_preview_muted(&self, muted: bool) {
+        self.preview_muted.set(muted);
+        save_session_preview_muted(muted, None);
+    }
+
+    pub fn set_preview_muted_with_profile(&self, muted: bool, profile_id: Option<&str>) {
+        self.preview_muted.set(muted);
+        save_session_preview_muted(muted, profile_id);
+    }
 }
 
 pub fn provide_ui_store() {
     let initial_ambient = crate::utils::ambient::get_last_ambient_color().unwrap_or((16, 21, 25));
+    let initial_muted = get_session_preview_muted(None, false);
     provide_context(UIStore {
         info_modal_open: RwSignal::new(false),
         info_modal_movie_id: RwSignal::new(None),
         info_modal_is_tv: RwSignal::new(false),
         active_popup_id: RwSignal::new(None),
         ambient_color: RwSignal::new(initial_ambient),
+        preview_muted: RwSignal::new(initial_muted),
+        modal_initial_time: RwSignal::new(0.0),
+        modal_current_time: RwSignal::new(0.0),
+        modal_closing_time: RwSignal::new(None),
+        hero_paused_by_modal: RwSignal::new(false),
+        modal_video_key: RwSignal::new(None),
+        modal_is_teaser: RwSignal::new(false),
+        hero_resume_seek: RwSignal::new(None),
     });
 }
 

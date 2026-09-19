@@ -45,6 +45,10 @@ pub struct Movie {
     pub popularity: Option<f64>,
     #[serde(default)]
     pub certification: Option<String>,
+    #[serde(default)]
+    pub match_percentage: Option<u32>,
+    #[serde(default)]
+    pub vibe_pills: Option<Vec<String>>,
 }
 
 impl Movie {
@@ -72,6 +76,17 @@ impl Movie {
             0
         }
     }
+
+    pub fn match_score(&self) -> u32 {
+        if let Some(pct) = self.match_percentage {
+            pct
+        } else if self.vote_average > 0.0 {
+            let norm = ((self.vote_average - 5.5) / 3.3).clamp(0.0, 1.0);
+            (75.0 + norm * 23.0).round() as u32
+        } else {
+            85
+        }
+    }
 }
 
 impl From<crate::services::tmdb::MediaItem> for Movie {
@@ -87,6 +102,9 @@ impl From<crate::services::tmdb::MediaItem> for Movie {
             release_date: m.release_date,
             first_air_date: m.first_air_date,
             media_type: m.media_type,
+            match_percentage: m.match_percentage,
+            genre_ids: if m.genre_ids.is_empty() { None } else { Some(m.genre_ids.iter().map(|&g| g as i64).collect()) },
+            vibe_pills: if m.vibe_pills.is_empty() { None } else { Some(m.vibe_pills) },
             ..Default::default()
         }
     }

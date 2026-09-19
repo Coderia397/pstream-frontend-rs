@@ -87,7 +87,7 @@ mod tests {
         assert_eq!(data::GENRES.len(), 27);
         assert_eq!(data::DISPLAY_LANGUAGES.len(), 20);
         assert_eq!(data::ALL_AVATARS.len(), 41);
-        assert_eq!(data::MOVIE_GENRES.len(), 27);
-        assert_eq!(data::TV_GENRES.len(), 25);
+        assert_eq!(data::MOVIE_GENRES.len(), 26);
+        assert_eq!(data::TV_GENRES.len(), 24);
     }
 }

@@ -12,9 +12,14 @@ pub fn BrowseHome() -> impl IntoView {
 
     let ui_store = use_ui_store();
 
-    // Hero: pull a single trending item for the background
+    // Hero: pull AI-curated home feed with trending fallback
     let hero = LocalResource::new(move || async move {
-        fetch_trending("movie").await.unwrap_or_default()
+        if let Some(items) = crate::services::ai_engine::fetch_hero_feed("home").await {
+            if !items.is_empty() {
+                return items;
+            }
+        }
+        fetch_trending("all").await.unwrap_or_default()
     });
 
     let ambient_bg_style = move || {
@@ -32,6 +37,11 @@ pub fn BrowseHome() -> impl IntoView {
         )
     };
 
+    // Dynamic Feed: AI-curated polymorphic rows from sovereign intelligence engine
+    let feed = LocalResource::new(move || async move {
+        crate::services::ai_engine::fetch_dynamic_feed("home", None, Some(24)).await.unwrap_or_default()
+    });
+
     view! {
         <Layout>
             <div class="w-full pb-20 bg-black md:bg-[#141414] min-h-screen relative overflow-x-hidden">
@@ -41,7 +51,7 @@ pub fn BrowseHome() -> impl IntoView {
                     style=ambient_bg_style
                 />
 
-                // Hero Carousel driven by real TMDB data
+                // Hero Carousel driven by real TMDB / AI feed
                 <Suspense fallback=move || view! {
                     <crate::components::media::hero_skeleton::HeroSkeleton />
                 }>
@@ -59,22 +69,47 @@ pub fn BrowseHome() -> impl IntoView {
 
                 <div class="relative z-30 space-y-6 md:space-y-10 mt-6 md:mt-8">
                     <ContinueWatchingRow />
-                    <TopTenRow title="Top 10 Movies Today" kind="movie" />
-                    <TopTenRow title="Top 10 TV Shows Today" kind="tv" />
-                    <Row title="Action & Adventure" genre_id="1365" kind="movie" />
-                    <Row title="Comedies" genre_id="6548" kind="movie" />
-                    <Row title="Sci-Fi & Fantasy" genre_id="1492" kind="movie" />
-                    <Row title="British TV Shows" genre_id="british" kind="tv" />
-                    <Row title="Thrillers" genre_id="8933" kind="movie" />
-                    <Row title="TV Dramas" genre_id="18" kind="tv" />
-                    <Row title="Horror Films" genre_id="8711" kind="movie" />
-                    <Row title="Documentaries" genre_id="6839" kind="movie" />
-                    <Row title="Crime TV Shows" genre_id="80" kind="tv" />
-                    <Row title="Romantic Films" genre_id="8883" kind="movie" />
-                    <Row title="TV Sci-Fi & Fantasy" genre_id="10765" kind="tv" />
-                    <Row title="Children & Family" genre_id="783" kind="movie" />
-                    <Row title="Anime & Animation" genre_id="anime" kind="movie" />
-                    <Row title="Crime Films" genre_id="9875" kind="movie" />
+
+                    <Suspense fallback=move || view! {
+                        <div class="space-y-6">
+                            <div class="h-40 bg-white/[0.02] rounded-lg animate-pulse mx-[var(--app-x,56px)]" />
+                            <div class="h-40 bg-white/[0.02] rounded-lg animate-pulse mx-[var(--app-x,56px)]" />
+                        </div>
+                    }>
+                        {move || feed.get().map(|rows| {
+                            if rows.is_empty() {
+                                view! {
+                                    <TopTenRow title="Top 10 in the UK Today" kind="all" />
+                                    <Row title="Action & Adventure" genre_id="1365" kind="movie" />
+                                    <Row title="Comedies" genre_id="6548" kind="movie" />
+                                    <Row title="Sci-Fi & Fantasy" genre_id="1492" kind="movie" />
+                                }.into_any()
+                            } else {
+                                rows.into_iter().map(|r| {
+                                    let rtype = r.row_type.clone();
+                                    let title = r.title.clone();
+                                    let tagline = r.tagline.clone();
+                                    let mood_pills = r.mood_pills.clone();
+                                    let media_items = r.to_media_items();
+
+                                    if rtype == "top_ten" {
+                                        view! {
+                                            <TopTenRow title=title kind="all" items=Some(media_items) />
+                                        }.into_any()
+                                    } else {
+                                        view! {
+                                            <crate::components::media::vibe_row::VibeRow
+                                                title=title
+                                                tagline=tagline
+                                                mood_pills=mood_pills
+                                                items=media_items
+                                            />
+                                        }.into_any()
+                                    }
+                                }).collect::<Vec<_>>().into_any()
+                            }
+                        })}
+                    </Suspense>
                 </div>
             </div>
         </Layout>

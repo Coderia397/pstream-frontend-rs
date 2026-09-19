@@ -247,6 +247,9 @@ pub fn BrowseLanguagePage() -> impl IntoView {
                                                     backdrop_path=backdrop
                                                     poster_path=poster
                                                     vote_average=vote_avg
+                                                    overview=item.overview.clone()
+                                                    genre_ids=item.genre_ids.clone()
+                                                    vibe_pills=item.vibe_pills.clone()
                                                     is_grid=true
                                                 />
                                             }

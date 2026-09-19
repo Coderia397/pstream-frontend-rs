@@ -11,21 +11,91 @@ use crate::data::{MOVIE_GENRES, TV_GENRES};
 pub fn CategoryPage(
     kind: &'static str, // "movie" or "tv"
 ) -> impl IntoView {
-    let (selected_genre, set_selected_genre) = signal(None::<SubNavGenre>);
-
     let genres: Vec<SubNavGenre> = if kind == "tv" {
         TV_GENRES.iter().map(|g| SubNavGenre { id: g.id as u32, name: g.name.to_string() }).collect()
     } else {
         MOVIE_GENRES.iter().map(|g| SubNavGenre { id: g.id as u32, name: g.name.to_string() }).collect()
     };
 
+    let query_map = leptos_router::hooks::use_query_map();
+    let genres_clone = genres.clone();
+    let initial_genre = query_map.with_untracked(|q| {
+        if let Some(gid_str) = q.get("genre") {
+            if let Ok(gid) = gid_str.parse::<u32>() {
+                genres_clone.iter().find(|g| g.id == gid).cloned()
+            } else {
+                let lower = gid_str.to_lowercase();
+                genres_clone.iter().find(|g| g.name.to_lowercase() == lower).cloned()
+            }
+        } else {
+            None
+        }
+    });
+
+    let (selected_genre, set_selected_genre) = signal(initial_genre);
+
+    let genres_for_effect = genres.clone();
+    Effect::new(move |_| {
+        let q = query_map.get();
+        if let Some(gid_str) = q.get("genre") {
+            let matched = if let Ok(gid) = gid_str.parse::<u32>() {
+                genres_for_effect.iter().find(|g| g.id == gid).cloned()
+            } else {
+                let lower = gid_str.to_lowercase();
+                genres_for_effect.iter().find(|g| g.name.to_lowercase() == lower).cloned()
+            };
+            if matched != selected_genre.get_untracked() {
+                set_selected_genre.set(matched);
+            }
+        }
+    });
+
+    let on_genre_select_cb = Callback::new(move |opt_g: Option<SubNavGenre>| {
+        set_selected_genre.set(opt_g.clone());
+        if let Some(win) = web_sys::window() {
+            if let Ok(history) = win.history() {
+                let pathname = win.location().pathname().unwrap_or_default();
+                let new_url = match opt_g {
+                    Some(g) => format!("{}?genre={}", pathname, g.id),
+                    None => pathname,
+                };
+                let _ = history.push_state_with_url(&wasm_bindgen::JsValue::NULL, "", Some(&new_url));
+            }
+        }
+    });
+
     let title = if kind == "tv" { "Series" } else { "Films" };
 
     let ui_store = crate::store::use_ui_store();
 
-    // Hero: pull trending item for background
-    let hero = LocalResource::new(move || async move {
-        fetch_trending(kind).await.unwrap_or_default()
+    // Hero: pull featured item for selected genre or surface-specific AI hero feed
+    let hero = LocalResource::new(move || {
+        let sel = selected_genre.get();
+        let k = kind;
+        async move {
+            if let Some(genre) = sel {
+                let gid = genre.id.to_string();
+                let items = crate::services::tmdb::fetch_row_content(
+                    k,
+                    Some(&gid),
+                    Some("popularity.desc"),
+                    None,
+                    None,
+                    1,
+                ).await.unwrap_or_default();
+                if !items.is_empty() {
+                    return items;
+                }
+            } else {
+                let surface = if k == "tv" { "series" } else { "films" };
+                if let Some(items) = crate::services::ai_engine::fetch_hero_feed(surface).await {
+                    if !items.is_empty() {
+                        return items;
+                    }
+                }
+            }
+            fetch_trending(k).await.unwrap_or_default()
+        }
     });
 
     let ambient_bg_style = move || {
@@ -43,6 +113,15 @@ pub fn CategoryPage(
         )
     };
 
+    // Dynamic Category Feed: AI-curated sub-vibe rows & category Top 10
+    let feed = LocalResource::new(move || {
+        let k = kind.to_string();
+        let g_opt = selected_genre.get().map(|g| g.name);
+        async move {
+            crate::services::ai_engine::fetch_dynamic_feed(&k, g_opt.as_deref(), Some(12)).await.unwrap_or_default()
+        }
+    });
+
     view! {
         <Layout>
             <div class="w-full pb-20 bg-black md:bg-[#141414] min-h-screen relative overflow-x-hidden">
@@ -56,7 +135,7 @@ pub fn CategoryPage(
                     title=title.to_string()
                     genres=genres
                     selected_genre=selected_genre
-                    on_genre_select=Callback::new(move |g| set_selected_genre.set(g))
+                    on_genre_select=on_genre_select_cb
                 />
 
                 <Suspense fallback=move || view! {
@@ -75,46 +154,47 @@ pub fn CategoryPage(
                 </Suspense>
 
                 <div class="relative z-30 space-y-6 md:space-y-10 mt-6 md:mt-8">
-                    {move || {
-                        if let Some(genre) = selected_genre.get() {
-                            let gid = genre.id.to_string();
-                            let gname = genre.name.clone();
-                            view! {
-                                <Row title=format!("Popular in {}", gname) genre_id=gid.clone() kind=kind sort_by="popularity.desc" />
-                                <Row title=format!("Trending in {}", gname) genre_id=gid.clone() kind=kind sort_by="vote_count.desc" />
-                                <Row title=format!("Critically Acclaimed {}", gname) genre_id=gid kind=kind sort_by="vote_average.desc" extra_params="&vote_count.gte=200" />
-                            }.into_any()
-                        } else if kind == "movie" {
-                            view! {
-                                <TopTenRow title="Top 10 Films in the UK Today" kind="movie" />
-                                <Row title="Action & Adventure" genre_id="1365" kind="movie" />
-                                <Row title="Comedies" genre_id="6548" kind="movie" />
-                                <Row title="Sci-Fi Films" genre_id="1492" kind="movie" />
-                                <Row title="Thrillers" genre_id="8933" kind="movie" />
-                                <Row title="Dramas" genre_id="5763" kind="movie" />
-                                <Row title="Horror Films" genre_id="8711" kind="movie" />
-                                <Row title="Romantic Films" genre_id="8883" kind="movie" />
-                                <Row title="Documentaries" genre_id="6839" kind="movie" />
-                                <Row title="Crime Films" genre_id="9875" kind="movie" />
-                                <Row title="Children & Family Films" genre_id="783" kind="movie" />
-                                <Row title="Anime Films" genre_id="anime" kind="movie" />
-                            }.into_any()
-                        } else {
-                            view! {
-                                <TopTenRow title="Top 10 Series in the UK Today" kind="tv" />
-                                <Row title="Binge-worthy TV Shows" genre_id="binge" kind="tv" />
-                                <Row title="British TV" genre_id="british" kind="tv" />
-                                <Row title="Sci-Fi & Fantasy TV" genre_id="10765" kind="tv" />
-                                <Row title="Crime TV Shows" genre_id="80" kind="tv" />
-                                <Row title="TV Dramas" genre_id="18" kind="tv" />
-                                <Row title="TV Comedies" genre_id="35" kind="tv" />
-                                <Row title="Docuseries" genre_id="99" kind="tv" />
-                                <Row title="Anime Series" genre_id="anime" kind="tv" />
-                                <Row title="Action & Adventure TV" genre_id="10759" kind="tv" />
-                                <Row title="Kids & Family TV" genre_id="10762" kind="tv" />
-                            }.into_any()
-                        }
-                    }}
+                    <Suspense fallback=move || view! {
+                        <div class="space-y-6">
+                            <div class="h-40 bg-white/[0.02] rounded-lg animate-pulse mx-[var(--app-x,56px)]" />
+                            <div class="h-40 bg-white/[0.02] rounded-lg animate-pulse mx-[var(--app-x,56px)]" />
+                        </div>
+                    }>
+                        {move || feed.get().map(|rows| {
+                            if rows.is_empty() {
+                                let default_top10_title = if kind == "movie" { "Top 10 Movies Today" } else { "Top 10 TV Shows Today" };
+                                view! {
+                                    <TopTenRow title=default_top10_title.to_string() kind=kind.to_string() />
+                                    <Row title="Action & Adventure" genre_id="1365" kind=kind.to_string() />
+                                    <Row title="Comedies" genre_id="6548" kind=kind.to_string() />
+                                    <Row title="Sci-Fi & Fantasy" genre_id="1492" kind=kind.to_string() />
+                                }.into_any()
+                            } else {
+                                rows.into_iter().map(|r| {
+                                    let rtype = r.row_type.clone();
+                                    let row_title = r.title.clone();
+                                    let tagline = r.tagline.clone();
+                                    let mood_pills = r.mood_pills.clone();
+                                    let media_items = r.to_media_items();
+
+                                    if rtype == "top_ten" {
+                                        view! {
+                                            <TopTenRow title=row_title kind=kind.to_string() items=Some(media_items) />
+                                        }.into_any()
+                                    } else {
+                                        view! {
+                                            <crate::components::media::vibe_row::VibeRow
+                                                title=row_title
+                                                tagline=tagline
+                                                mood_pills=mood_pills
+                                                items=media_items
+                                            />
+                                        }.into_any()
+                                    }
+                                }).collect::<Vec<_>>().into_any()
+                            }
+                        })}
+                    </Suspense>
                 </div>
             </div>
         </Layout>

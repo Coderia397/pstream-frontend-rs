@@ -73,25 +73,11 @@ pub fn CategoryPage(
         let sel = selected_genre.get();
         let k = kind;
         async move {
-            if let Some(genre) = sel {
-                let gid = genre.id.to_string();
-                let items = crate::services::tmdb::fetch_row_content(
-                    k,
-                    Some(&gid),
-                    Some("popularity.desc"),
-                    None,
-                    None,
-                    1,
-                ).await.unwrap_or_default();
+            let surface = if k == "tv" { "tv" } else { "movies" };
+            let gid_opt = sel.map(|g| g.id.to_string());
+            if let Some(items) = crate::services::ai_engine::fetch_hero_feed(surface, gid_opt.as_deref()).await {
                 if !items.is_empty() {
                     return items;
-                }
-            } else {
-                let surface = if k == "tv" { "series" } else { "films" };
-                if let Some(items) = crate::services::ai_engine::fetch_hero_feed(surface).await {
-                    if !items.is_empty() {
-                        return items;
-                    }
                 }
             }
             fetch_trending(k).await.unwrap_or_default()

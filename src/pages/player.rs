@@ -49,6 +49,16 @@ pub fn PlayerPage() -> impl IntoView {
         }
     });
 
+    // Tell the recommendation engine this title was started
+    Effect::new(move |_| {
+        let id = id_val();
+        if id > 0 {
+            leptos::task::spawn_local(async move {
+                crate::services::ai_engine::send_feedback(id, "start").await;
+            });
+        }
+    });
+
     // Initialize season / episode from query params or watch_store
     Effect::new(move |_| {
         let q = query.read();

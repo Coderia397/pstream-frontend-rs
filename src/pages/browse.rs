@@ -14,7 +14,7 @@ pub fn BrowseHome() -> impl IntoView {
 
     // Hero: pull AI-curated home feed with trending fallback
     let hero = LocalResource::new(move || async move {
-        if let Some(items) = crate::services::ai_engine::fetch_hero_feed("home").await {
+        if let Some(items) = crate::services::ai_engine::fetch_hero_feed("home", None).await {
             if !items.is_empty() {
                 return items;
             }

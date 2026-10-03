@@ -232,8 +232,16 @@ pub struct HeroFeedResponse {
 }
 
 /// Fetches dynamic surface-differentiated hero feed from local recommendation engine
-pub async fn fetch_hero_feed(surface: &str) -> Option<Vec<MediaItem>> {
-    let url = format!("{}/api/hero-feed?surface={}", AI_API_BASE_URL, surface);
+pub async fn fetch_hero_feed(surface: &str, genre: Option<&str>) -> Option<Vec<MediaItem>> {
+    let session_id = get_or_create_session_id();
+    let mut url = format!("{}/api/hero-feed?surface={}&session_id={}", AI_API_BASE_URL, surface, session_id);
+    if let Some(g) = genre {
+        if !g.is_empty() {
+            let encoded = js_sys::encode_uri_component(g);
+            let encoded_str: String = encoded.into();
+            url.push_str(&format!("&genre={}", encoded_str));
+        }
+    }
     let resp = Request::get(&url).send().await.ok()?;
     if !resp.ok() {
         return None;
@@ -265,4 +273,22 @@ pub async fn fetch_ai_recommendations(id: u32) -> Option<Vec<VibeItem>> {
         return None;
     }
     Some(data.recommendations)
+}
+
+#[derive(Serialize)]
+struct FeedbackBody<'a> {
+    session_id: &'a str,
+    item_id: u32,
+    event: &'a str,
+}
+
+/// Reports an implicit signal (click, start, complete, like, skip) so the engine
+/// can adapt the session's feed and hero. Fire and forget: failures are ignored.
+pub async fn send_feedback(item_id: u32, event: &str) {
+    let session_id = get_or_create_session_id();
+    let body = FeedbackBody { session_id: &session_id, item_id, event };
+    let url = format!("{}/api/feedback", AI_API_BASE_URL);
+    if let Ok(req) = Request::post(&url).json(&body) {
+        let _ = req.send().await;
+    }
 }

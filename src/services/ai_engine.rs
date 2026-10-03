@@ -262,8 +262,9 @@ pub struct RecommendationsResponse {
 }
 
 /// Fetches latent vector cosine recommendations with Netflix match percentage and vibe tags
-pub async fn fetch_ai_recommendations(id: u32) -> Option<Vec<VibeItem>> {
-    let url = format!("{}/api/recommendations?id={}", AI_API_BASE_URL, id);
+pub async fn fetch_ai_recommendations(id: u32, is_tv: bool) -> Option<Vec<VibeItem>> {
+    // TMDB ids repeat across movies and series, so the media type is part of the identity
+    let url = format!("{}/api/recommendations?id={}&media_type={}", AI_API_BASE_URL, id, if is_tv { "tv" } else { "movie" });
     let resp = Request::get(&url).send().await.ok()?;
     if !resp.ok() {
         return None;
@@ -279,14 +280,16 @@ pub async fn fetch_ai_recommendations(id: u32) -> Option<Vec<VibeItem>> {
 struct FeedbackBody<'a> {
     session_id: &'a str,
     item_id: u32,
+    #[serde(skip_serializing_if = "Option::is_none")]
+    media_type: Option<&'a str>,
     event: &'a str,
 }
 
 /// Reports an implicit signal (click, start, complete, like, skip) so the engine
 /// can adapt the session's feed and hero. Fire and forget: failures are ignored.
-pub async fn send_feedback(item_id: u32, event: &str) {
+pub async fn send_feedback(item_id: u32, media_type: Option<&str>, event: &str) {
     let session_id = get_or_create_session_id();
-    let body = FeedbackBody { session_id: &session_id, item_id, event };
+    let body = FeedbackBody { session_id: &session_id, item_id, media_type, event };
     let url = format!("{}/api/feedback", AI_API_BASE_URL);
     if let Ok(req) = Request::post(&url).json(&body) {
         let _ = req.send().await;

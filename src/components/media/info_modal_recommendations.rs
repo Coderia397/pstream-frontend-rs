@@ -209,7 +209,7 @@ pub fn InfoModalRecommendations(
         async move {
             if mid > 0 {
                 // First try local vector similarity recommendations
-                if let Some(ai_items) = crate::services::ai_engine::fetch_ai_recommendations(mid).await {
+                if let Some(ai_items) = crate::services::ai_engine::fetch_ai_recommendations(mid, tv).await {
                     if !ai_items.is_empty() {
                         let items: Vec<crate::services::tmdb::MediaItem> = ai_items.into_iter().map(|item| item.to_media_item()).collect();
                         return Some(items);

@@ -52,9 +52,10 @@ pub fn PlayerPage() -> impl IntoView {
     // Tell the recommendation engine this title was started
     Effect::new(move |_| {
         let id = id_val();
+        let kind = kind_param();
         if id > 0 {
             leptos::task::spawn_local(async move {
-                crate::services::ai_engine::send_feedback(id, "start").await;
+                crate::services::ai_engine::send_feedback(id, kind.as_deref(), "start").await;
             });
         }
     });

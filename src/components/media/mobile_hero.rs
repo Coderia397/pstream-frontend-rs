@@ -178,7 +178,7 @@ pub fn MobileHero(
                         <button
                             type="button"
                             on:click=handle_play
-                            class="flex-1 flex items-center justify-center h-12 rounded-[4px] bg-white hover:bg-neutral-200 text-black font-bold text-lg gap-2 transition-all active:scale-95 cursor-pointer"
+                            class="flex-1 flex items-center justify-center h-12 rounded-full bg-white hover:bg-neutral-200 text-black font-bold text-lg gap-2 transition-all active:scale-95 cursor-pointer"
                         >
                             <i class="ph-fill ph-play text-2xl"></i>
                             <span>{move || {
@@ -196,7 +196,7 @@ pub fn MobileHero(
                         <button
                             type="button"
                             on:click=toggle_my_list
-                            class="flex-1 flex items-center justify-center h-12 rounded-[4px] bg-[#6d6d6e]/40 hover:bg-[#6d6d6e]/25 text-white font-bold text-lg gap-2 transition-all active:scale-95 cursor-pointer"
+                            class="flex-1 flex items-center justify-center h-12 rounded-full bg-[#6d6d6e]/40 hover:bg-[#6d6d6e]/25 text-white font-bold text-lg gap-2 transition-all active:scale-95 cursor-pointer"
                         >
                             <i class=move || if is_added.get() { "ph-bold ph-check text-2xl" } else { "ph-bold ph-plus text-2xl" }></i>
                             <span>"My List"</span>

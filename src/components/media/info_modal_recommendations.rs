@@ -99,7 +99,7 @@ pub fn RecCard(
     };
 
     view! {
-        <div class="bg-[#2f2f2f] rounded-sm overflow-hidden shadow-lg group">
+        <div class="bg-[#2f2f2f] rounded-[4px] overflow-hidden group">
             // Image area - click to play
             <div
                 class="relative aspect-video bg-[#1a1a1a] overflow-hidden cursor-pointer"
@@ -156,7 +156,7 @@ pub fn RecCard(
 
             // Card body - click opens InfoModal
             <div
-                class="p-3 cursor-pointer hover:bg-[#3a3a3a] transition-colors duration-150"
+                class="p-4 cursor-pointer hover:bg-[#3a3a3a] transition-colors duration-150"
                 on:click=on_body_click
             >
                 <div class="flex items-center justify-between gap-2 mb-2.5">
@@ -186,7 +186,7 @@ pub fn RecCard(
                     />
                 </div>
 
-                <p class="text-white/80 text-[12px] leading-relaxed line-clamp-5 min-h-[72px]">
+                <p class="text-[#d2d2d2] text-[14px] leading-5 line-clamp-5 min-h-[100px]">
                     {overview}
                 </p>
             </div>
@@ -224,9 +224,9 @@ pub fn InfoModalRecommendations(
 
     view! {
         <Suspense fallback=move || view! {
-            <div class="mt-10">
-                <h3 class="text-xl md:text-2xl font-bold text-white mb-5">"More Like This"</h3>
-                <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3 md:gap-4">
+            <div class="mt-12">
+                <h3 class="text-2xl font-medium text-white mb-5">"More Like This"</h3>
+                <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
                     {(0..6).map(|_| view! {
                         <div class="bg-[#2f2f2f] rounded-sm aspect-[4/5] animate-pulse" />
                     }).collect_view()}
@@ -241,9 +241,9 @@ pub fn InfoModalRecommendations(
                     let has_more = count < total;
 
                     view! {
-                        <div class="mt-10">
-                            <h3 class="text-xl md:text-2xl font-bold text-white mb-5">"More Like This"</h3>
-                            <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3 md:gap-4">
+                        <div class="mt-12">
+                            <h3 class="text-2xl font-medium text-white mb-5">"More Like This"</h3>
+                            <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
                                 {visible_items.into_iter().map(|item| {
                                     let movie = Movie::from(item);
                                     let on_rec_click = on_recommendation_click;

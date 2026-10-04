@@ -345,7 +345,7 @@ pub fn InfoModal() -> impl IntoView {
         >
             // Modal Container
             <div
-                class="relative w-full max-w-[850px] bg-[#181818] rounded-xl shadow-2xl mt-6 md:mt-8 mb-8 overflow-hidden h-fit mx-4 ring-1 ring-white/10 transition-transform duration-300 origin-center"
+                class="relative w-full max-w-[850px] bg-[#181818] rounded-[6px] mt-6 md:mt-8 mb-8 overflow-hidden h-fit mx-4 transition-transform duration-300 origin-center"
                 class=("scale-100", move || is_open.get())
                 class=("scale-95", move || !is_open.get())
                 on:click=|e| e.stop_propagation()
@@ -468,7 +468,7 @@ pub fn InfoModal() -> impl IntoView {
                                     // Hero Banner Container
                                     <div
                                         node_ref=modal_trailer_banner_ref
-                                        class="relative aspect-[16/8] max-sm:aspect-video w-full bg-black group overflow-hidden"
+                                        class="relative aspect-video w-full bg-black group overflow-hidden"
                                     >
                                         // Static Backdrop Image
                                         <img
@@ -502,7 +502,7 @@ pub fn InfoModal() -> impl IntoView {
                                         />
 
                                         // Cinematic Gradient Overlay (bottom 40% blend)
-                                        <div class="absolute inset-x-0 bottom-0 h-2/5 bg-gradient-to-t from-[#181818] via-[#181818]/40 to-transparent z-10 pointer-events-none" />
+                                        <div class="absolute inset-x-0 bottom-0 h-1/2 bg-gradient-to-t from-[#181818] to-transparent z-10 pointer-events-none" />
 
                                         // Watch Progress Bar along the bottom of the hero banner
                                         {if has_progress {
@@ -521,9 +521,9 @@ pub fn InfoModal() -> impl IntoView {
                                         }}
 
                                         // Title / Logo & Action Buttons Overlay
-                                        <div class="absolute bottom-6 sm:bottom-10 left-6 sm:left-10 w-[70%] z-20 pointer-events-auto">
+                                        <div class="absolute bottom-6 left-6 md:left-12 w-[340px] max-w-[70%] z-20 pointer-events-auto">
                                             // Logo or Title
-                                            <div class="relative flex items-end mb-4">
+                                            <div class="relative flex items-end mb-6">
                                                 <Suspense fallback=move || view! { <h2 class="text-white text-3xl sm:text-4xl font-bold mb-4">{fallback_title.clone()}</h2> }>
                                                     {
                                                         let tc = title.clone();
@@ -535,7 +535,7 @@ pub fn InfoModal() -> impl IntoView {
                                                                         src=url.clone()
                                                                         alt=t.clone()
                                                                         class="object-contain object-bottom drop-shadow-xl"
-                                                                        style="max-height: clamp(65px, 15vw, 120px); max-width: 100%;"
+                                                                        style="max-height: 136px; max-width: 340px;"
                                                                     />
                                                                 }.into_any(),
                                                                 _ => view! { <h2 class="text-white text-3xl sm:text-4xl md:text-5xl font-black font-leaner drop-shadow-xl leading-none tracking-wide">{t.clone()}</h2> }.into_any()
@@ -550,7 +550,7 @@ pub fn InfoModal() -> impl IntoView {
                                                 <PlayPillButton
                                                     href=watch_url
                                                     is_resume=has_progress
-                                                    size="md".to_string()
+                                                    size="lg".to_string()
                                                     shape="pill".to_string()
                                                 />
 
@@ -597,22 +597,22 @@ pub fn InfoModal() -> impl IntoView {
                                     </div>
 
                                     // Content Details Section
-                                    <div class="px-6 md:px-12 pb-12 bg-[#181818]">
-                                        <div class="grid grid-cols-1 md:grid-cols-[3fr_1fr] gap-x-10 gap-y-5 pt-4">
+                                    <div class="px-6 md:px-12 pb-8 bg-[#181818]">
+                                        <div class="grid grid-cols-1 md:grid-cols-[2fr_1fr] gap-x-8 gap-y-5 pt-3">
                                             // Left Column: Match, Year, HD, Duration, Maturity, Overview
                                             <div class="space-y-4">
-                                                <div class="flex flex-wrap items-center gap-x-3 gap-y-2 text-white font-bold text-sm md:text-base font-netflix">
+                                                <div class="flex flex-wrap items-center gap-x-3 gap-y-2 text-white font-normal text-base font-netflix">
                                                     <span class="text-[#46d369] font-extrabold tracking-wide">{match_score}</span>
-                                                    <span class="text-gray-300 tracking-wide">{release_year}</span>
+                                                    <span class="text-[#bcbcbc]">{release_year}</span>
                                                     <MaturityBadge
                                                         certification=certification_str
                                                         size="xs".to_string()
                                                     />
-                                                    <span class="border border-gray-500/70 px-1.5 text-gray-300 text-xs flex items-center rounded-sm">"HD"</span>
-                                                    <span class="text-gray-300 tracking-wide">{duration}</span>
+                                                    <span class="border border-white/40 px-[5.6px] text-white/90 text-[11.2px] flex items-center rounded-[3px]">"HD"</span>
+                                                    <span class="text-[#bcbcbc]">{duration}</span>
                                                 </div>
 
-                                                <p class="text-white font-normal text-[14px] md:text-[15px] leading-[1.65] pt-1">
+                                                <p class="text-white font-normal text-[14px] leading-6 pt-1">
                                                     {overview}
                                                 </p>
                                             </div>
@@ -626,7 +626,7 @@ pub fn InfoModal() -> impl IntoView {
                                                             view! {
                                                                 <a
                                                                     href=format!("/search?q={}", query_str)
-                                                                    class="text-white font-semibold hover:underline cursor-pointer"
+                                                                    class="text-white font-normal hover:underline cursor-pointer"
                                                                 >
                                                                     {a}
                                                                 </a>
@@ -635,7 +635,7 @@ pub fn InfoModal() -> impl IntoView {
 
                                                     view! {
                                                         <div class="flex flex-wrap gap-x-1">
-                                                            <span class="text-[#777] font-semibold mr-1">"Cast: "</span>
+                                                            <span class="text-[#777] font-normal mr-1">"Cast: "</span>
                                                             {cast_rendered}
                                                         </div>
                                                     }.into_any()
@@ -650,7 +650,7 @@ pub fn InfoModal() -> impl IntoView {
                                                         view! {
                                                             <a
                                                                 href=target_route
-                                                                class="text-white font-semibold hover:underline cursor-pointer"
+                                                                class="text-white font-normal hover:underline cursor-pointer"
                                                             >
                                                                 {gn}
                                                             </a>
@@ -659,7 +659,7 @@ pub fn InfoModal() -> impl IntoView {
 
                                                     view! {
                                                         <div class="flex flex-wrap gap-x-1">
-                                                            <span class="text-[#777] font-semibold mr-1">"Genres: "</span>
+                                                            <span class="text-[#777] font-normal mr-1">"Genres: "</span>
                                                             {genres_rendered}
                                                         </div>
                                                     }.into_any()
@@ -671,8 +671,8 @@ pub fn InfoModal() -> impl IntoView {
                                                     let vibe_label = if is_tv_val { "This show is: " } else { "This movie is: " };
                                                     view! {
                                                         <div class="flex flex-wrap gap-x-1">
-                                                            <span class="text-[#777] font-semibold mr-1">{vibe_label}</span>
-                                                            <span class="text-white font-semibold">{vibe_text.clone()}</span>
+                                                            <span class="text-[#777] font-normal mr-1">{vibe_label}</span>
+                                                            <span class="text-white font-normal">{vibe_text.clone()}</span>
                                                         </div>
                                                     }
                                                 }
@@ -682,7 +682,7 @@ pub fn InfoModal() -> impl IntoView {
                                         // TV Shows: Episodes Selector & Episode List
                                         {if is_tv_val && seasons_count > 0 {
                                             view! {
-                                                <div class="mt-8 border-t border-white/10 pt-6">
+                                                <div class="mt-4">
                                                     <InfoModalEpisodes
                                                         series_id=current_movie_id
                                                         total_seasons=seasons_count
@@ -695,7 +695,7 @@ pub fn InfoModal() -> impl IntoView {
                                         }}
 
                                         // Recommendations: More Like This Grid
-                                        <div class="mt-8 border-t border-white/10 pt-6">
+                                        <div>
                                             <InfoModalRecommendations
                                                 movie_id=current_movie_id
                                                 is_tv=is_tv_val

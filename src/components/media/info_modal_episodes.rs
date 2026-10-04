@@ -39,8 +39,8 @@ pub fn InfoModalEpisodes(
     view! {
         <div class="mt-8">
             // Header: "Episodes" title and Season dropdown
-            <div class="flex items-center justify-between mb-5">
-                <h3 class="text-xl md:text-2xl font-bold text-white tracking-tight">"Episodes"</h3>
+            <div class="flex items-center justify-between mb-4">
+                <h3 class="text-2xl font-medium text-white">"Episodes"</h3>
 
                 {if total_seasons > 0 {
                     view! {
@@ -141,15 +141,15 @@ pub fn InfoModalEpisodes(
                                         view! {
                                             <div
                                                 on:click=on_click_ep
-                                                class="flex items-center group cursor-pointer px-4 py-8 rounded-sm hover:bg-[#2a2a2a] transition border-b border-white/5 last:border-0"
+                                                class="flex items-center group cursor-pointer p-4 rounded-[4px] hover:bg-[#333] transition"
                                             >
                                                 // Episode number
-                                                <div class="text-white/50 text-lg font-semibold w-8 text-center shrink-0 mr-4 mt-1">
+                                                <div class="text-[#d2d2d2] text-2xl font-normal w-[51px] text-center shrink-0">
                                                     {ep_num}
                                                 </div>
 
                                                 // Thumbnail + play icon overlay
-                                                <div class="relative w-28 h-16 md:w-36 md:h-20 bg-gray-800 shrink-0 rounded-sm overflow-hidden mr-4">
+                                                <div class="relative w-[130px] h-[73px] bg-gray-800 shrink-0 rounded-[4px] overflow-hidden mr-4">
                                                     {if let Some(url) = still_url {
                                                         view! {
                                                             <img
@@ -176,10 +176,10 @@ pub fn InfoModalEpisodes(
                                                 // Episode info
                                                 <div class="flex-1 min-w-0 py-0.5">
                                                     <div class="flex items-center justify-between mb-1">
-                                                        <h4 class="text-white font-semibold text-sm md:text-base truncate pr-4">{ep_name}</h4>
-                                                        <span class="text-white/40 text-xs whitespace-nowrap shrink-0">{runtime_str}</span>
+                                                        <h4 class="text-white font-medium text-[16px] truncate pr-4">{ep_name}</h4>
+                                                        <span class="text-white text-[16px] whitespace-nowrap shrink-0">{runtime_str}</span>
                                                     </div>
-                                                    <p class="text-white/60 text-xs md:text-sm line-clamp-2 leading-relaxed">
+                                                    <p class="text-[#d2d2d2] text-[14px] leading-5 line-clamp-3">
                                                         {ep_overview}
                                                     </p>
                                                 </div>

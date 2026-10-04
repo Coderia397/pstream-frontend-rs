@@ -4,6 +4,8 @@ use crate::components::media::row::Row;
 use crate::components::media::top_ten_row::TopTenRow;
 use crate::components::media::hero::HeroSection;
 use crate::components::media::continue_watching_row::ContinueWatchingRow;
+use crate::components::layout::category_sub_nav::{CategorySubNav, SubNavGenre};
+use crate::data::HOME_MOBILE_GENRES;
 
 #[component]
 pub fn BrowseHome() -> impl IntoView {
@@ -12,14 +14,49 @@ pub fn BrowseHome() -> impl IntoView {
 
     let ui_store = use_ui_store();
 
-    // Hero: pull AI-curated home feed with trending fallback
-    let hero = LocalResource::new(move || async move {
-        if let Some(items) = crate::services::ai_engine::fetch_hero_feed("home", None).await {
-            if !items.is_empty() {
-                return items;
+    // Mobile genre picker: Home has genres on mobile only. The genre travels as its name (several pickers share an
+    // id, for example the three documentary entries) and the engine resolves it for movies and series together.
+    let genres: Vec<SubNavGenre> = HOME_MOBILE_GENRES
+        .iter()
+        .map(|g| SubNavGenre { id: g.id as u32, name: g.name.to_string() })
+        .collect();
+    let query_map = leptos_router::hooks::use_query_map();
+    let genres_for_init = genres.clone();
+    let initial_genre = query_map.with_untracked(|q| {
+        q.get("genre").and_then(|n| {
+            let lower = n.to_lowercase();
+            genres_for_init.iter().find(|g| g.name.to_lowercase() == lower).cloned()
+        })
+    });
+    let (selected_genre, set_selected_genre) = signal(initial_genre);
+    let on_genre_select_cb = Callback::new(move |opt_g: Option<SubNavGenre>| {
+        set_selected_genre.set(opt_g.clone());
+        if let Some(win) = web_sys::window() {
+            if let Ok(history) = win.history() {
+                let pathname = win.location().pathname().unwrap_or_default();
+                let new_url = match opt_g {
+                    Some(g) => {
+                        let encoded: String = js_sys::encode_uri_component(&g.name).into();
+                        format!("{}?genre={}", pathname, encoded)
+                    }
+                    None => pathname,
+                };
+                let _ = history.push_state_with_url(&wasm_bindgen::JsValue::NULL, "", Some(&new_url));
             }
         }
-        fetch_trending("all").await.unwrap_or_default()
+    });
+
+    // Hero: pull AI-curated home feed with trending fallback
+    let hero = LocalResource::new(move || {
+        let g = selected_genre.get().map(|g| g.name);
+        async move {
+            if let Some(items) = crate::services::ai_engine::fetch_hero_feed("home", g.as_deref()).await {
+                if !items.is_empty() {
+                    return items;
+                }
+            }
+            fetch_trending("all").await.unwrap_or_default()
+        }
     });
 
     let ambient_bg_style = move || {
@@ -38,8 +75,11 @@ pub fn BrowseHome() -> impl IntoView {
     };
 
     // Dynamic Feed: AI-curated polymorphic rows from sovereign intelligence engine
-    let feed = LocalResource::new(move || async move {
-        crate::services::ai_engine::fetch_dynamic_feed("home", None, Some(24)).await.unwrap_or_default()
+    let feed = LocalResource::new(move || {
+        let g = selected_genre.get().map(|g| g.name);
+        async move {
+            crate::services::ai_engine::fetch_dynamic_feed("home", g.as_deref(), Some(24)).await.unwrap_or_default()
+        }
     });
 
     view! {
@@ -50,6 +90,16 @@ pub fn BrowseHome() -> impl IntoView {
                     class="absolute inset-x-0 top-0 h-[580px] md:h-[660px] lg:h-[720px] pointer-events-none -z-0 transition-all duration-700 ease-out"
                     style=ambient_bg_style
                 />
+
+                // Genre picker, mobile only
+                <div class="sm:hidden">
+                    <CategorySubNav
+                        title="Home".to_string()
+                        genres=genres
+                        selected_genre=selected_genre
+                        on_genre_select=on_genre_select_cb
+                    />
+                </div>
 
                 // Hero Carousel driven by real TMDB / AI feed
                 <Suspense fallback=move || view! {

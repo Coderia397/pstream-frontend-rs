@@ -34,11 +34,11 @@ pub fn Navbar(
         } else {
             (0.5 + (y - 40.0) / 160.0).min(1.0)
         };
-        let top_alpha = 0.30 * (1.0 - op);
-        let mid_alpha = 0.10 * (1.0 - op);
+        // Netflix at the top of the page: black 80% to transparent over the full 80px height.
+        let top_alpha = 0.80 * (1.0 - op);
         format!(
-            "background: linear-gradient(to bottom, rgba(0,0,0,{:.3}) 0%, rgba(0,0,0,{:.3}) 60%, rgba(0,0,0,0) 100%), rgba(20,20,20,{:.3});",
-            top_alpha, mid_alpha, op
+            "background: linear-gradient(to bottom, rgba(0,0,0,{:.3}) 0%, rgba(0,0,0,0) 100%), rgba(20,20,20,{:.3});",
+            top_alpha, op
         )
     };
 
@@ -81,7 +81,7 @@ pub fn Navbar(
         <>
             // ── Desktop Primary Nav (Task 085 & 086) ──────────────────────────
             <nav
-                class="fixed inset-x-0 top-0 z-[80] h-16 hidden sm:flex items-center px-14 transition-colors duration-200"
+                class="fixed inset-x-0 top-0 z-[80] h-[80px] hidden sm:flex items-center px-[var(--app-x)] transition-colors duration-200"
                 style=scroll_style
             >
                 // Logo — exact pstream-logo.svg matching React source
@@ -89,20 +89,20 @@ pub fn Navbar(
                     <img
                         src="/assets/logos/pstream-logo.svg"
                         alt="Pstream"
-                        class="h-[26px] cursor-pointer flex-shrink-0"
+                        class="h-[20px] cursor-pointer flex-shrink-0"
                     />
                 </a>
 
                 // Nav links — exact spacing and typography (Task 086)
-                <ul class="flex items-center gap-2 ml-8 text-[14px] tracking-[-0.2px] font-normal text-[#e5e5e5]">
+                <ul class="flex items-center gap-[6px] ml-6 text-[16px] font-normal text-white">
                     {nav_items.into_iter().map(|(id, label, href)| {
                         let is_active = move || active_tab() == id;
                         view! {
                             <li
                                 class=move || if is_active() {
-                                    "cursor-pointer transition-all duration-200 whitespace-nowrap text-white font-bold text-[13.5px] rounded-full bg-white/20 h-[34px] px-4 shadow-md inline-flex items-center justify-center backdrop-blur-sm"
+                                    "cursor-pointer transition-all duration-200 whitespace-nowrap text-white font-medium text-[16px] rounded-full bg-white/20 h-[40px] px-4 inline-flex items-center justify-center"
                                 } else {
-                                    "cursor-pointer transition-all duration-200 whitespace-nowrap text-[#b3b3b3] hover:text-white text-[13.5px] rounded-full bg-transparent hover:bg-white/10 h-[34px] px-4 font-normal inline-flex items-center justify-center hover:backdrop-blur-sm"
+                                    "cursor-pointer transition-all duration-200 whitespace-nowrap text-white/70 hover:text-white text-[16px] rounded-full bg-transparent hover:bg-[#808080]/40 h-[40px] px-4 font-normal inline-flex items-center justify-center"
                                 }
                             >
                                 <a href=href class="no-underline text-inherit flex items-center justify-center w-full h-full">{label}</a>
@@ -113,7 +113,7 @@ pub fn Navbar(
             </nav>
 
             // ── Secondary nav: search + notifications + kids + profile ─────
-            <div class="fixed top-0 right-14 z-[85] h-16 hidden sm:flex items-center gap-6">
+            <div class="fixed top-0 right-[var(--app-x)] z-[85] h-[80px] hidden sm:flex items-center gap-3">
                 // Expandable Search Bar (Task 089 & 090)
                 <SearchBar />
 
@@ -152,13 +152,13 @@ pub fn Navbar(
                                         }
                                     }
                                 }
-                                class="flex items-center gap-2 text-white/90 hover:text-white transition-all select-none cursor-pointer group h-[34px] px-2.5 rounded-full hover:bg-white/10 hover:backdrop-blur-sm"
+                                class="flex items-center gap-2 text-white hover:text-white transition-all select-none cursor-pointer group h-9 pl-0.5 pr-2 ml-1.5 rounded-md hover:bg-[#808080]/40"
                                 title="Switch to Kids Profile"
                             >
-                                <div class="w-8 h-8 rounded-[4px] overflow-hidden flex items-center justify-center ring-1 ring-white/10 group-hover:ring-white/40 transition-all">
+                                <div class="w-8 h-8 rounded-[4px] overflow-hidden flex items-center justify-center">
                                     <crate::components::profiles::kids_avatar::KidsAvatar size=32.0 />
                                 </div>
-                                <span class="text-sm font-normal text-white group-hover:text-white transition-colors">"Kids"</span>
+                                <span class="text-[13px] leading-[13px] font-normal text-white">"Kids"</span>
                             </button>
                         }.into_any()
                     }

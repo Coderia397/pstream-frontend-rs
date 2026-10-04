@@ -24,31 +24,25 @@ fn clear_timeout_id(id: Option<i32>) {
 
 #[component]
 fn RankNumber(index: usize) -> impl IntoView {
+    // Netflix ranked card: the numeral fills the left half of the slot (145 x 207 at 290 wide), the poster the right half.
+    // Sizes use container query units of `.topten-card`, so the numeral scales with the slot. "10" is squeezed
+    // horizontally to fit the half slot, like the SVG numerals do.
     let is_ten = index == 9;
-    let is_one = index == 0;
-
-    let w_class = if is_ten {
-        "w-[130px] sm:w-[140px] md:w-[150px] lg:w-[185px]"
-    } else if is_one {
-        "w-[105px] sm:w-[115px] md:w-[125px] lg:w-[155px]"
-    } else {
-        "w-[95px] sm:w-[105px] md:w-[115px] lg:w-[145px]"
-    };
-
-    let text_class = "font-black text-[150px] sm:text-[170px] md:text-[190px] lg:text-[245px]";
-    let letter_spacing = if is_ten { "-15px" } else { "-5px" };
+    let text_class = "font-black text-[83cqw]";
+    let letter_spacing = "-1.7cqw";
+    let squeeze = if is_ten { "transform: scaleX(0.56); transform-origin: right center;" } else { "" };
     let stroke_style = format!(
-        "line-height: 0.75; letter-spacing: {}; -webkit-text-stroke: 8px #595959; font-family: 'PStream Sans', sans-serif;",
-        letter_spacing
+        "line-height: 0.75; letter-spacing: {}; -webkit-text-stroke: 3.3cqw #595959; font-family: 'PStream Sans', sans-serif; {}",
+        letter_spacing, squeeze
     );
     let fill_style = format!(
-        "line-height: 0.75; letter-spacing: {}; font-family: 'PStream Sans', sans-serif;",
-        letter_spacing
+        "line-height: 0.75; letter-spacing: {}; font-family: 'PStream Sans', sans-serif; {}",
+        letter_spacing, squeeze
     );
     let num_str = (index + 1).to_string();
 
     view! {
-        <div class=format!("absolute left-0 top-0 bottom-0 h-full {} flex justify-end items-center pointer-events-none z-0", w_class)>
+        <div class="absolute left-0 top-0 bottom-0 w-1/2 flex justify-end items-center pointer-events-none z-0">
             <div class="relative flex items-center justify-center">
                 // Background thick stroke
                 <span
@@ -88,13 +82,6 @@ fn TopTenCard(
     let close_timer = StoredValue::new(None::<i32>);
 
     let card_ref = NodeRef::<leptos::html::Div>::new();
-
-    let is_ten = index == 9;
-    let pl_class = if is_ten {
-        "pl-[110px] sm:pl-[120px] md:pl-[130px] lg:pl-[165px]"
-    } else {
-        "pl-[75px] sm:pl-[85px] md:pl-[95px] lg:pl-[125px]"
-    };
 
     let title_stored = StoredValue::new(item.display_title().to_string());
     let poster_url_stored = StoredValue::new(item.poster_url("w342").unwrap_or_default());
@@ -149,17 +136,11 @@ fn TopTenCard(
                 let sx = win.scroll_x().unwrap_or(0.0);
                 let sy = win.scroll_y().unwrap_or(0.0);
 
-                let app_x = if win_w >= 1024.0 { 56.0 } else if win_w >= 768.0 { 48.0 } else { 16.0 };
-                let half_popup = crate::components::media::movie_card_popup::POPUP_W / 2.0;
+                let app_x = crate::utils::layout::app_x();
+                let half_popup = crate::components::media::movie_card_popup::popup_w(r.width()) / 2.0;
                 let card_center = r.left() + r.width() / 2.0;
 
-                let number_pl = if win_w >= 1024.0 {
-                    if is_ten { 165.0 } else { 125.0 }
-                } else if win_w >= 768.0 {
-                    if is_ten { 130.0 } else { 95.0 }
-                } else {
-                    if is_ten { 110.0 } else { 75.0 }
-                };
+                let number_pl = r.width();
                 let item_left = r.left() - number_pl;
 
                 let pos = if item_left <= app_x + 30.0 || card_center - half_popup < app_x {
@@ -221,7 +202,7 @@ fn TopTenCard(
         <div
             data-card="true"
             data-card-id=my_card_id
-            class=format!("relative flex-none flex items-end {} pr-1 md:pr-1.5 lg:pr-2 cursor-pointer", pl_class)
+            class="relative flex-none flex items-end netflix-card-width topten-card cursor-pointer"
             on:mouseenter=move |_| mouse_enter_cb.run(())
             on:mouseleave=move |_| mouse_leave_cb.run(())
             on:click=open_modal
@@ -232,11 +213,11 @@ fn TopTenCard(
             // not the outer div (which includes the wide number padding-left).
             <div
                 node_ref=card_ref
-                class="relative flex-none h-[128px] w-[89px] sm:h-[138px] sm:w-[96px] md:h-[148px] md:w-[103px] lg:h-[195px] lg:w-[135px] z-10 rounded-[4px] md:rounded-[8px] overflow-hidden mb-1 sm:mb-1.5 md:mb-2 shadow-[0_0_15px_rgba(0,0,0,0.5)] movie-card-glow">
+                class="relative flex-none ml-auto w-1/2 aspect-[145/207] z-10 rounded-[4px] overflow-hidden">
                 <img
                     src=poster_src
                     alt=title_for_img.clone()
-                    class="w-full h-full object-cover object-top rounded-[4px] md:rounded-[8px]"
+                    class="w-full h-full object-cover object-top rounded-[4px]"
                     loading="lazy"
                     draggable="false"
                 />
@@ -411,8 +392,8 @@ pub fn TopTenRow(
     };
 
     view! {
-        <div class="group relative my-4 md:my-6 space-y-2 z-10">
-            <h2 class="px-[var(--app-x,56px)] text-sm sm:text-base md:text-lg font-bold text-[#e5e5e5] hover:text-white transition cursor-pointer flex items-center group/title w-fit">
+        <div class="group relative row-block z-10">
+            <h2 class="px-[var(--app-x,56px)] row-title cursor-pointer flex items-center group/title w-fit">
                 {title}
                 <span class="text-xs text-cyan-500 ml-2 opacity-0 group-hover/title:opacity-100 transition-opacity duration-300 flex items-center font-semibold">
                     "Explore All ›"
@@ -434,7 +415,7 @@ pub fn TopTenRow(
                                 <div class="absolute left-0 top-0 bottom-0 h-full w-[95px] sm:w-[105px] md:w-[115px] lg:w-[145px] flex justify-end items-center pointer-events-none z-0">
                                     <div class="h-[85%] w-[80%] bg-[#222] rounded-sm opacity-40 skew-x-[-6deg]" />
                                 </div>
-                                <div class="relative flex-none h-[128px] w-[89px] sm:h-[138px] sm:w-[96px] md:h-[148px] md:w-[103px] lg:h-[195px] lg:w-[135px] z-10 bg-[#222] rounded-[4px] md:rounded-[8px] border border-white/5 overflow-hidden mb-1 sm:mb-1.5 md:mb-2">
+                                <div class="relative flex-none h-[128px] w-[89px] sm:h-[138px] sm:w-[96px] md:h-[148px] md:w-[103px] lg:h-[195px] lg:w-[135px] z-10 bg-[#222] rounded-[var(--tile-radius)] border border-white/5 overflow-hidden mb-1 sm:mb-1.5 md:mb-2">
                                     <div class="absolute inset-0 bg-gradient-to-r from-transparent via-white/5 to-transparent -translate-x-full animate-[shimmer_1.5s_infinite]" />
                                 </div>
                             </div>

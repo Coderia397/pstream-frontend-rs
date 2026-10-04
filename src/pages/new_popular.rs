@@ -80,7 +80,7 @@ pub fn NewPopularPage() -> impl IntoView {
                 </div>
 
                 // ── DESKTOP DYNAMIC ROWS (>= md) ──────────────────────────
-                <main class="hidden md:block relative z-10 pb-16 space-y-4 md:space-y-6">
+                <main class="hidden md:block relative z-10 pb-16 rows-stack">
                     <TopTenRow title="Top 10 Films in the UK Today" kind="movie" />
                     <TopTenRow title="Top 10 Series in the UK Today" kind="tv" />
                     <Row title="Newly Added to the Collection" endpoint="/movie/now_playing" kind="movie" />

@@ -62,42 +62,127 @@
 @tailwind components;
 @tailwind utilities;
 
+/* Layout tokens measured on Netflix (notes/netflix-reference/00-design-tokens.md).
+   Breakpoints 600, 960, 1280, 1600, 1920, 2560. Under 600 the values come from the Android app,
+   because Netflix has no phone web layout. Rust code reads --app-x through utils::layout::app_x(). */
 :root {
-  --app-x: 16px;
+  --app-x: 12px;
+  --tile-gap: 6px;
+  --tile-radius: 6px;
 }
-@media (min-width: 800px) {
-  :root { --app-x: 48px; }
+@media (min-width: 600px) {
+  :root { --app-x: 36px; --tile-gap: 8px; --tile-radius: 8px; }
 }
-@media (min-width: 1350px) {
-  :root { --app-x: 56px; }
+@media (min-width: 1280px) {
+  :root { --app-x: 48px; --tile-radius: 12px; }
 }
-@media (min-width: 1750px) {
+@media (min-width: 1600px) {
   :root { --app-x: 60px; }
 }
+@media (min-width: 2560px) {
+  :root { --app-x: 72px; }
+}
 
-/* Netflix exact slider card width rules driven by container query */
+/* Tile width: whole tiles per row, 2 / 3 / 4 / 5 / 6 / 7 / 8 on the web (slot formula from Netflix:
+   (row width - 2 margins - gaps) / tiles). Phones show 3.29 portrait tiles like the app. */
 .netflix-card-width {
-  width: calc((100cqw - 2rem - 1 * 6px) / 2.15);
+  width: 28.23cqw;
 }
-@container (min-width: 500px) {
-  .netflix-card-width {
-    width: calc((100cqw - 3rem - 2 * 6px) / 3.1);
-  }
+@media (min-width: 600px) {
+  .netflix-card-width { width: calc((100cqw - 2 * var(--app-x) - 2 * var(--tile-gap)) / 3); }
 }
-@container (min-width: 800px) {
-  .netflix-card-width {
-    width: calc((100cqw - 2 * var(--app-x, 48px) - 3 * 6px) / 4);
-  }
+@media (min-width: 960px) {
+  .netflix-card-width { width: calc((100cqw - 2 * var(--app-x) - 3 * var(--tile-gap)) / 4); }
 }
-@container (min-width: 1350px) {
-  .netflix-card-width {
-    width: calc((100cqw - 2 * var(--app-x, 56px) - 4 * 6px) / 5);
-  }
+@media (min-width: 1280px) {
+  .netflix-card-width { width: calc((100cqw - 2 * var(--app-x) - 4 * var(--tile-gap)) / 5); }
 }
-@container (min-width: 1750px) {
-  .netflix-card-width {
-    width: calc((100cqw - 2 * var(--app-x, 60px) - 5 * 6px) / 6);
-  }
+@media (min-width: 1600px) {
+  .netflix-card-width { width: calc((100cqw - 2 * var(--app-x) - 5 * var(--tile-gap)) / 6); }
+}
+@media (min-width: 1920px) {
+  .netflix-card-width { width: calc((100cqw - 2 * var(--app-x) - 6 * var(--tile-gap)) / 7); }
+}
+@media (min-width: 2560px) {
+  .netflix-card-width { width: calc((100cqw - 2 * var(--app-x) - 7 * var(--tile-gap)) / 8); }
+}
+
+/* Ranked (Top 10) card: one slot wide, numeral left half, poster right half. Phones use 47% of the row (about 2 cards). */
+.topten-card { container-type: inline-size; }
+@media (max-width: 599.98px) {
+  .netflix-card-width.topten-card { width: 47cqw; }
+}
+
+/* Landscape rows on phones (continue watching) keep 2.15 tiles of 16:9. */
+@media (max-width: 599.98px) {
+  .netflix-card-width.netflix-card-landscape { width: calc((100cqw - var(--app-x) - 2 * var(--tile-gap)) / 2.15); }
+}
+
+/* Tile shape: 5:7 posters on phones, 1.78125:1 backdrops from 600 up. */
+.movie-card-container { aspect-ratio: 5 / 7; }
+@media (min-width: 600px) {
+  .movie-card-container { aspect-ratio: 1.78125 / 1; }
+}
+
+/* Billboard (inset card): margin top / bottom per breakpoint, synopsis size and width. The nav is 80 high, the
+   card starts below it plus the top margin. Netflix: 4/16 under 960, 6/26, 8/36, 8/32, 12/32, 12/36 from 2560. */
+.billboard-margin {
+  padding: calc(80px + 4px) var(--app-x) 16px;
+}
+@media (min-width: 960px) {
+  .billboard-margin { padding-top: calc(80px + 6px); padding-bottom: 26px; }
+}
+@media (min-width: 1280px) {
+  .billboard-margin { padding-top: calc(80px + 8px); padding-bottom: 36px; }
+}
+@media (min-width: 1600px) {
+  .billboard-margin { padding-bottom: 32px; }
+}
+@media (min-width: 1920px) {
+  .billboard-margin { padding-top: calc(80px + 12px); }
+}
+@media (min-width: 2560px) {
+  .billboard-margin { padding-bottom: 36px; }
+}
+.billboard-synopsis {
+  font-size: 18px;
+  line-height: 24px;
+  max-width: 100%;
+}
+@media (min-width: 960px) {
+  .billboard-synopsis { line-height: 27px; max-width: 629px; }
+}
+@media (min-width: 1280px) {
+  .billboard-synopsis { font-size: 20px; line-height: 28px; max-width: 568px; }
+}
+@media (min-width: 1920px) {
+  .billboard-synopsis { font-size: 24px; }
+}
+
+/* Row block and row title (Netflix: title to tiles gap 10, 32 between rows; 16 / 18 / 24 weight 500). */
+.rows-stack > * + * { margin-top: 12px; }
+@media (min-width: 600px) {
+  .rows-stack > * + * { margin-top: 32px; }
+}
+.row-block {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+@media (min-width: 600px) {
+  .row-block { gap: 10px; }
+}
+.row-title {
+  font-size: 22px;
+  line-height: 30px;
+  font-weight: 700;
+  color: #fff;
+}
+@media (min-width: 600px) {
+  .row-title { font-size: 18px; line-height: 1.27; font-weight: 500; }
+}
+@media (min-width: 1280px) {
+  .row-title { font-size: 24px; }
 }
 
 html {

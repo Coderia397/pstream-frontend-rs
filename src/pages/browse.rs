@@ -92,7 +92,7 @@ pub fn BrowseHome() -> impl IntoView {
                 />
 
                 // Genre picker, mobile only
-                <div class="sm:hidden">
+                <div class="sm:hidden pt-[calc(52px+env(safe-area-inset-top))]">
                     <CategorySubNav
                         title="Home".to_string()
                         genres=genres
@@ -117,7 +117,7 @@ pub fn BrowseHome() -> impl IntoView {
                     })}
                 </Suspense>
 
-                <div class="relative z-30 space-y-6 md:space-y-10 mt-6 md:mt-8">
+                <div class="relative z-30 rows-stack">
                     <ContinueWatchingRow />
 
                     <Suspense fallback=move || view! {

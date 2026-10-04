@@ -186,13 +186,13 @@ pub fn NotificationsDropdown() -> impl IntoView {
             // Bell trigger button
             <button
                 on:click=toggle_open
-                class="relative p-1 flex items-center justify-center rounded-full text-white hover:text-white/80 active:scale-95 transition-colors cursor-pointer"
+                class="relative w-10 h-10 flex items-center justify-center rounded-full text-white hover:bg-[#808080]/40 active:scale-95 transition-colors cursor-pointer"
                 title="Notifications"
                 aria-label="Notifications"
             >
-                <i class="ph ph-bell text-[20px]"></i>
+                <i class="ph ph-bell text-[24px]"></i>
                 <Show when=has_unread>
-                    <span class="absolute -top-1 -right-1 min-w-[16px] h-[16px] px-1 rounded-full bg-[#E50914] text-white text-[10px] font-bold flex items-center justify-center leading-none">
+                    <span class="absolute top-[2px] right-[2px] min-w-[16px] h-[16px] px-1 rounded-full bg-[#E50914] text-white text-[10px] font-medium flex items-center justify-center leading-none">
                         {move || {
                             let c = unread_count();
                             if c > 99 { "99+".to_string() } else { c.to_string() }

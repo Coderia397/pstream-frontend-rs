@@ -150,23 +150,27 @@ pub fn SearchBar() -> impl IntoView {
     view! {
         <div node_ref=container_ref class="relative flex items-center">
             <div 
-                class="relative flex items-center transition-all duration-300 ease-out p-1 overflow-hidden"
-                class=("bg-black/80", effective_active)
+                // Netflix: closed = 40x40 icon button, open = 400x56 field, radius 28, #161616, 1px grey 70% border
+                class="relative flex items-center transition-all duration-300 ease-out overflow-hidden rounded-full"
+                class=("bg-[#161616]", effective_active)
                 class=("border", effective_active)
-                class=("border-white", effective_active)
-                class=("w-[180px]", effective_active)
-                class=("sm:w-[220px]", effective_active)
-                class=("md:w-[280px]", effective_active)
+                class=("border-[#808080]/70", effective_active)
+                class=("w-[220px]", effective_active)
+                class=("min-[960px]:w-[400px]", effective_active)
+                class=("h-14", effective_active)
+                class=("px-4", effective_active)
                 class=("bg-transparent", move || !effective_active())
                 class=("border-transparent", move || !effective_active())
-                class=("w-8", move || !effective_active())
+                class=("w-10", move || !effective_active())
+                class=("h-10", move || !effective_active())
+                class=("justify-center", move || !effective_active())
             >
                 <button
                     on:click=toggle_search
-                    class="focus:outline-none flex items-center justify-center z-10 shrink-0"
+                    class="focus:outline-none flex items-center justify-center z-10 shrink-0 w-6 h-6"
                     aria-label="Search"
                 >
-                    <i class="ph ph-magnifying-glass text-[20px] cursor-pointer select-none transition-colors duration-300"
+                    <i class="ph ph-magnifying-glass text-[24px] cursor-pointer select-none transition-colors duration-300"
                        class=("text-white", effective_active)
                        class=("hover:text-gray-300", move || !effective_active())>
                     </i>
@@ -176,7 +180,7 @@ pub fn SearchBar() -> impl IntoView {
                     node_ref=input_ref
                     type="text"
                     placeholder="Titles, people, genres"
-                    class="bg-transparent border-none outline-none text-white text-xs md:text-sm ml-2 transition-all duration-300 font-sans"
+                    class="bg-transparent border-none outline-none text-white text-[16px] ml-3 transition-all duration-300 font-sans"
                     class=("w-full", effective_active)
                     class=("opacity-100", effective_active)
                     class=("w-0", move || !effective_active())

@@ -1,5 +1,5 @@
 use leptos::prelude::*;
-use leptos_router::hooks::use_navigate;
+use leptos_router::hooks::{use_location, use_navigate};
 use crate::components::layout::bottom_nav_mobile::{BottomNavMobile, BottomNavItem};
 use crate::store::use_profile_store;
 
@@ -27,6 +27,19 @@ pub fn NavbarMobile(
         top_alpha, mid_alpha, nav_bg_opacity
     );
 
+    // Page title next to the logo, like the app header ("Home", "Series", ...).
+    let location = use_location();
+    let page_title = move || {
+        let p = location.pathname.get();
+        if p.starts_with("/browse/my-list") { "My List" }
+        else if p.starts_with("/browse/series") || p.starts_with("/browse/shows") { "Series" }
+        else if p.starts_with("/browse/films") || p.starts_with("/browse/movies") { "Films" }
+        else if p.starts_with("/browse/games") || p.starts_with("/games") { "Games" }
+        else if p.starts_with("/latest") { "New & Hot" }
+        else if p == "/browse" || p == "/" || p.is_empty() { "Home" }
+        else { "" }
+    };
+
     let nav_to_browse = navigate.clone();
     let nav_to_latest = navigate.clone();
     let nav_to_search = navigate.clone();
@@ -35,7 +48,7 @@ pub fn NavbarMobile(
     let bottom_nav_items = vec![
         BottomNavItem {
             id: "home",
-            icon: view! { <i class="ph-bold ph-house text-[22px]"></i> }.into_any(),
+            icon: view! { <i class="ph-bold ph-house text-[24px]"></i> }.into_any(),
             label: "Home",
             on_click: Callback::new(move |_| {
                 set_active_bottom_nav.set("home");
@@ -44,7 +57,7 @@ pub fn NavbarMobile(
         },
         BottomNavItem {
             id: "clips",
-            icon: view! { <i class="ph-bold ph-play-circle text-[22px]"></i> }.into_any(),
+            icon: view! { <i class="ph-bold ph-play-circle text-[24px]"></i> }.into_any(),
             label: "Clips",
             on_click: Callback::new(move |_| {
                 set_active_bottom_nav.set("clips");
@@ -53,7 +66,7 @@ pub fn NavbarMobile(
         },
         BottomNavItem {
             id: "search",
-            icon: view! { <i class="ph-bold ph-magnifying-glass text-[22px]"></i> }.into_any(),
+            icon: view! { <i class="ph-bold ph-magnifying-glass text-[24px]"></i> }.into_any(),
             label: "Search",
             on_click: Callback::new(move |_| {
                 set_active_bottom_nav.set("search");
@@ -63,7 +76,7 @@ pub fn NavbarMobile(
         BottomNavItem {
             id: "settings",
             icon: view! { 
-                <div class="w-[22px] h-[22px] rounded overflow-hidden flex items-center justify-center bg-[#E50914] text-white font-bold text-[10px] ring-[1.5px] transition-all duration-300 ring-transparent">
+                <div class="w-6 h-6 rounded overflow-hidden flex items-center justify-center bg-[#E50914] text-white font-bold text-[10px] ring-[1.5px] transition-all duration-300 ring-transparent">
                     <img src="https://wallpapers.com/images/hd/netflix-profile-pictures-1000-x-1000-88wkdmjrorckekha.jpg" alt="Profile" class="w-full h-full object-cover" />
                 </div>
             }.into_any(),
@@ -85,23 +98,26 @@ pub fn NavbarMobile(
         <div class="sm:hidden select-none">
             // ── Top Brand Header ───────────────────────────────────────────────
             <header
-                class="fixed top-0 left-0 right-0 z-[80] px-4 pt-[calc(0.75rem+env(safe-area-inset-top))] pb-3 flex items-center justify-between pointer-events-auto transition-colors duration-200"
+                class="fixed top-0 left-0 right-0 z-[80] pl-1 pr-1 pt-[env(safe-area-inset-top)] h-[calc(52px+env(safe-area-inset-top))] box-content flex items-center justify-between pointer-events-auto transition-colors duration-200"
                 style=scroll_style
             >
-                // PSTREAM Emblem Logo matching React source
-                <a href="/browse" class="flex-shrink-0 flex items-center gap-2">
-                    <img
-                        src="/assets/logos/p-pstream-logo.svg"
-                        alt="Pstream Emblem Logo"
-                        class="h-[38px] w-auto cursor-pointer select-none transition-transform active:scale-95"
-                    />
-                </a>
+                // Logo mark (48 x 44 box) and page title, as in the app header
+                <div class="flex items-center min-w-0">
+                    <a href="/browse" class="flex-shrink-0 flex items-center justify-center w-12 h-11">
+                        <img
+                            src="/assets/logos/p-pstream-logo.svg"
+                            alt="Pstream Emblem Logo"
+                            class="h-[34px] w-auto cursor-pointer select-none transition-transform active:scale-95"
+                        />
+                    </a>
+                    <span class="text-[26px] leading-none font-bold text-white truncate">{page_title}</span>
+                </div>
 
                 // Action buttons: Cast & Profile Avatar
-                <div class="flex items-center gap-4">
+                <div class="flex items-center">
                     // Screencast icon (Task 087)
                     <button
-                        class="text-white hover:text-gray-300 transition-colors p-1 cursor-pointer"
+                        class="w-11 h-11 flex items-center justify-center text-white hover:text-gray-300 transition-colors cursor-pointer"
                         aria-label="Cast to TV"
                         title="Cast"
                     >
@@ -111,13 +127,13 @@ pub fn NavbarMobile(
                     // Profile avatar button (Task 087)
                     <button
                         on:click=move |_| set_profile_sheet_open.update(|o| *o = !*o)
-                        class="w-8 h-8 rounded overflow-hidden ring-1 ring-white/20 active:scale-95 transition-transform cursor-pointer"
+                        class="w-11 h-11 flex items-center justify-center active:scale-95 transition-transform cursor-pointer"
                         aria-label="Profile menu"
                     >
                         <img
                             src=current_avatar
                             alt="Avatar"
-                            class="w-full h-full object-cover"
+                            class="w-8 h-8 rounded object-cover"
                         />
                     </button>
                 </div>

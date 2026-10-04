@@ -43,12 +43,12 @@ pub fn NavbarProfileMenu() -> impl IntoView {
 
     view! {
         <div 
-            class="relative flex items-center group/menu cursor-pointer select-none"
+            class="relative flex items-center group/menu cursor-pointer select-none p-0.5 rounded-md hover:bg-[#808080]/40"
             on:mouseenter=move |_| set_is_open.set(true)
             on:mouseleave=move |_| set_is_open.set(false)
         >
-            <div class="flex items-center gap-2">
-                <div class="w-8 h-8 rounded-sm overflow-hidden ring-1 ring-white/20">
+            <div class="flex items-center">
+                <div class="w-8 h-8 rounded-[4px] overflow-hidden">
                     {move || {
                         let p = active_profile();
                         if p.as_ref().map(|p| p.is_kids && p.avatar_url.is_none()).unwrap_or(false) {
@@ -59,7 +59,7 @@ pub fn NavbarProfileMenu() -> impl IntoView {
                         }
                     }}
                 </div>
-                <i class="ph-fill ph-caret-down text-white text-xs transition-transform duration-200"
+                <i class="ph-fill ph-caret-down text-white text-base mx-2 transition-transform duration-200"
                    class=("rotate-180", move || is_open.get())></i>
             </div>
 

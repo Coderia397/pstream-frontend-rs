@@ -139,7 +139,7 @@ pub fn CategoryPage(
                     })}
                 </Suspense>
 
-                <div class="relative z-30 space-y-6 md:space-y-10 mt-6 md:mt-8">
+                <div class="relative z-30 rows-stack">
                     <Suspense fallback=move || view! {
                         <div class="space-y-6">
                             <div class="h-40 bg-white/[0.02] rounded-lg animate-pulse mx-[var(--app-x,56px)]" />

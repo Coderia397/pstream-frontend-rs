@@ -112,7 +112,7 @@ pub fn MobileHero(
     };
 
     view! {
-        <div class="relative z-0 overflow-visible w-full px-4 pt-20 pb-5 flex flex-col items-center justify-center transition-all duration-700 ease-in-out md:hidden">
+        <div class="relative z-0 overflow-visible w-full px-5 pt-0 pb-5 flex flex-col items-center justify-center transition-all duration-700 ease-in-out md:hidden">
             // Ambient gradient glow (fades after 50% of hero height)
             <div
                 class="absolute inset-x-0 top-0 h-[520px] pointer-events-none -z-10 transition-all duration-700 ease-out"
@@ -122,7 +122,7 @@ pub fn MobileHero(
             // Floating Centered Card
             <div
                 on:click=handle_card_click
-                class="w-[94%] max-w-[400px] aspect-[2/3] relative rounded-2xl overflow-hidden border border-white/[0.15] shadow-[0_20px_60px_rgba(0,0,0,0.95)] cursor-pointer active:scale-[0.98] transition-all duration-200"
+                class="w-full max-w-[560px] aspect-[5/7] relative rounded-[18px] overflow-hidden border border-white/20 cursor-pointer active:scale-[0.98] transition-all duration-200"
             >
                 <img
                     src=poster_url
@@ -136,9 +136,9 @@ pub fn MobileHero(
                 <div class="absolute inset-0 bg-gradient-to-r from-black/65 via-black/20 to-transparent pointer-events-none" />
 
                 // Details Container
-                <div class="absolute inset-x-0 bottom-0 px-4 pb-6 pt-12 flex flex-col items-center text-center z-10 w-full">
+                <div class="absolute inset-x-0 bottom-0 px-4 pb-3.5 pt-12 flex flex-col items-center text-center z-10 w-full">
                     // Logo or Title
-                    <div class="relative inline-flex items-end mb-4 max-w-[80%] max-h-[75px] w-full justify-center">
+                    <div class="relative inline-flex items-end mb-4 max-w-[71%] max-h-[108px] w-full justify-center">
                         <Suspense fallback=move || view! { <div class="h-10 w-32 bg-white/10 animate-pulse rounded" /> }>
                             {
                                 let tc = title.clone();
@@ -149,7 +149,7 @@ pub fn MobileHero(
                                             <img
                                                 src=url
                                                 alt=t.clone()
-                                                class="object-contain object-bottom max-h-[70px] w-auto drop-shadow-xl"
+                                                class="object-contain object-bottom max-h-[108px] w-auto drop-shadow-xl"
                                             />
                                         }.into_any(),
                                         _ => view! {
@@ -164,7 +164,7 @@ pub fn MobileHero(
                     </div>
 
                     // Genre / category chips
-                    <div class="flex items-center justify-center flex-wrap gap-x-2 gap-y-1 mb-4 text-[11px] font-semibold text-white/80 tracking-wide select-none">
+                    <div class="flex items-center justify-center flex-wrap gap-x-2 gap-y-1 mb-3.5 text-[14px] font-medium text-[#d4d4d1] select-none">
                         <span>"Trending"</span>
                         <span class="text-white/30">"•"</span>
                         <span>"Popular"</span>
@@ -173,12 +173,12 @@ pub fn MobileHero(
                     </div>
 
                     // Buttons Row
-                    <div class="flex items-center justify-center w-full max-w-[340px] gap-3 mt-1">
+                    <div class="flex items-center justify-center w-full gap-4">
                         // Play button
                         <button
                             type="button"
                             on:click=handle_play
-                            class="flex-1 flex items-center justify-center h-[46px] rounded-[8px] bg-white hover:bg-neutral-200 text-black font-bold text-lg gap-2 transition-all active:scale-95 shadow-md cursor-pointer"
+                            class="flex-1 flex items-center justify-center h-12 rounded-[4px] bg-white hover:bg-neutral-200 text-black font-bold text-lg gap-2 transition-all active:scale-95 cursor-pointer"
                         >
                             <i class="ph-fill ph-play text-2xl"></i>
                             <span>{move || {
@@ -196,7 +196,7 @@ pub fn MobileHero(
                         <button
                             type="button"
                             on:click=toggle_my_list
-                            class="flex-1 flex items-center justify-center h-[46px] rounded-[8px] bg-[#6d6d6e]/40 hover:bg-[#6d6d6e]/25 text-white font-bold text-lg gap-2 transition-all active:scale-95 shadow-md cursor-pointer"
+                            class="flex-1 flex items-center justify-center h-12 rounded-[4px] bg-[#6d6d6e]/40 hover:bg-[#6d6d6e]/25 text-white font-bold text-lg gap-2 transition-all active:scale-95 cursor-pointer"
                         >
                             <i class=move || if is_added.get() { "ph-bold ph-check text-2xl" } else { "ph-bold ph-plus text-2xl" }></i>
                             <span>"My List"</span>

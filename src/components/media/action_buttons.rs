@@ -15,7 +15,7 @@ pub fn PlayPillButton(
 ) -> impl IntoView {
     let (pad_classes, text_classes, icon_classes) = match size.as_str() {
         "sm" => ("px-3.5 py-1", "text-xs", "text-sm"),
-        "lg" => ("px-6 sm:px-7 py-2 sm:py-2.5", "text-[15px] md:text-[17px]", "text-xl sm:text-[22px]"),
+        "lg" => ("px-5 h-12", "text-[18px] leading-[18px]", "text-[24px]"),
         _ => ("px-4 sm:px-5 py-1.5 sm:py-2", "text-[13px] sm:text-sm", "text-base sm:text-lg"),
     };
 
@@ -31,7 +31,7 @@ pub fn PlayPillButton(
     let extra_class = class.unwrap_or_default();
     let is_link = href.is_some();
     let base_classes = format!(
-        "bg-white text-black font-bold flex items-center justify-center gap-2.5 hover:bg-white/80 active:scale-95 transition-all shadow-md cursor-pointer select-none {} {} {} {} {}",
+        "bg-white text-black font-medium flex items-center justify-center gap-2 hover:bg-white/70 active:scale-95 transition-all cursor-pointer select-none {} {} {} {} {}",
         pad_classes, text_classes, radius_classes, extra_class,
         if is_link { "no-underline" } else { "" }
     );
@@ -77,7 +77,7 @@ pub fn MoreInfoPillButton(
 ) -> impl IntoView {
     let (pad_classes, text_classes, icon_classes) = match size.as_str() {
         "sm" => ("px-3.5 py-1", "text-xs", "text-sm"),
-        "lg" => ("px-6 sm:px-7 py-2 sm:py-2.5", "text-[15px] md:text-[17px]", "text-xl sm:text-[22px]"),
+        "lg" => ("px-5 h-12", "text-[18px] leading-[18px]", "text-[24px]"),
         _ => ("px-4 sm:px-5 py-1.5 sm:py-2", "text-[13px] sm:text-sm", "text-base sm:text-lg"),
     };
 
@@ -91,7 +91,7 @@ pub fn MoreInfoPillButton(
             },
         ),
         _ => (
-            "bg-[#6d6d6e]/70 hover:bg-[#6d6d6e]/40 backdrop-blur-sm",
+            "bg-[#808080]/40 hover:bg-[#808080]/30",
             "rounded-full",
         ),
     };
@@ -99,7 +99,7 @@ pub fn MoreInfoPillButton(
     let extra_class = class.unwrap_or_default();
     let label_title = label.clone();
     let base_classes = format!(
-        "{} text-white font-bold flex items-center justify-center gap-2.5 active:scale-95 transition-all shadow-md cursor-pointer select-none {} {} {} {} {}",
+        "{} text-white font-medium flex items-center justify-center gap-2 active:scale-95 transition-all cursor-pointer select-none {} {} {} {} {}",
         bg_classes, pad_classes, text_classes, radius_classes, extra_class, ""
     );
 

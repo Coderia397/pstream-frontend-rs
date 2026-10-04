@@ -585,9 +585,9 @@ pub fn HeroSection(
         <div
             id="hero-container"
             node_ref=hero_container_ref
-            class="hidden md:block w-full px-6 md:px-14 pt-16 md:pt-18 pb-2"
+            class="hidden md:block w-full billboard-margin"
         >
-            <div class="relative w-full aspect-[16/9] md:aspect-[1.95/1] min-h-[500px] md:min-h-[510px] max-h-[74vh] rounded-xl md:rounded-2xl overflow-hidden bg-[#181818] border border-white/[0.05] backdrop-blur-sm shadow-[inset_0_1px_0_0_rgba(255,255,255,0.12)] group">
+            <div class="relative w-full aspect-[2.18/1] rounded-[24px] overflow-hidden bg-[#181818] border border-white/[0.04] group">
                 // ── Background Video Layer ──────────────────────────────────────
                 <TrailerPlayer
                     video_key=Signal::derive(move || trailer_key())
@@ -664,10 +664,10 @@ pub fn HeroSection(
                 />
 
                 // ── Bottom Content Layer ─────────────────────────────────────────
-                <div class="absolute inset-x-0 bottom-0 z-20 p-6 md:p-10 lg:p-12 flex flex-col md:flex-row md:items-end md:justify-between gap-6 pointer-events-none">
+                <div class="absolute inset-x-0 bottom-0 z-20 p-9 flex flex-col md:flex-row md:items-end md:justify-between gap-6 pointer-events-none">
 
                     // Left Column: Logo/Title, Meta, Synopsis, CTA Buttons
-                    <div class="max-w-2xl flex flex-col items-start gap-2 md:gap-2.5 pointer-events-auto">
+                    <div class="flex flex-col items-start pointer-events-auto">
 
                         // Logo / Title with scale transition
                         <div
@@ -693,7 +693,7 @@ pub fn HeroSection(
                                                 src=url
                                                 alt=t.clone()
                                                 class="object-contain object-bottom drop-shadow-[0_4px_14px_rgba(0,0,0,0.95)] mb-1.5"
-                                                style="max-height: clamp(130px, 28vw, 260px); max-width: min(100%, 620px);"
+                                                style="max-height: calc((100vw - 2 * var(--app-x)) * 0.12); max-width: calc((100vw - 2 * var(--app-x)) * 0.33);"
                                             />
                                         }.into_any(),
                                         _ => view! {
@@ -707,15 +707,15 @@ pub fn HeroSection(
                         </div>
 
                         // Metadata line: Series • Action • 2017 • 5 Seasons • [15]
-                        <div class="flex items-center flex-wrap gap-2 text-[13px] md:text-[14px] text-white/90 font-medium select-none">
+                        <div class="flex items-center flex-wrap gap-2 mt-4 text-[16px] text-white font-medium select-none">
                             <span>{media_type_label}</span>
-                            <span class="text-white/40 text-xs">"•"</span>
+                            <span class="text-white/40 text-[16px]">"•"</span>
                             <span>{genre_label}</span>
-                            <span class="text-white/40 text-xs">"•"</span>
+                            <span class="text-white/40 text-[16px]">"•"</span>
                             <span>{year_label}</span>
-                            <span class="text-white/40 text-xs">"•"</span>
+                            <span class="text-white/40 text-[16px]">"•"</span>
                             <span>{duration_or_seasons_label}</span>
-                            <span class="text-white/40 text-xs">"•"</span>
+                            <span class="text-white/40 text-[16px]">"•"</span>
                             <div class="inline-flex items-center">
                                 {move || {
                                     let cert = maturity_rating_label();
@@ -730,14 +730,14 @@ pub fn HeroSection(
                         </div>
 
                         // Overview / Synopsis
-                        <div class="overflow-hidden transition-opacity duration-300">
-                            <p class="text-white/90 text-[13px] md:text-[14.5px] font-normal leading-relaxed max-w-xl line-clamp-2 md:line-clamp-3 mb-1 select-none drop-shadow-[0_2px_6px_rgba(0,0,0,0.9)]">
+                        <div class="overflow-hidden transition-opacity duration-300 mt-2">
+                            <p class="billboard-synopsis text-white font-normal line-clamp-3 select-none">
                                 {move || current_overview()}
                             </p>
                         </div>
 
                         // Action Buttons: Play (pill) & More Info (pill)
-                        <div class="flex items-center gap-3 mt-1.5 pointer-events-auto">
+                        <div class="flex items-center gap-3 mt-8 pointer-events-auto">
                             <PlayPillButton
                                 href=Signal::derive(move || {
                                     let id = current_id();
@@ -773,10 +773,10 @@ pub fn HeroSection(
                     </div>
 
                     // Right Column: Feature Badges (Intelligent creator & distinction hooks)
-                    <div class="hidden lg:flex items-center gap-3 pb-2 flex-shrink-0 pointer-events-auto select-none">
+                    <div class="hidden lg:flex items-center gap-2 flex-shrink-0 pointer-events-auto select-none">
                         {move || {
                             badge_left().map(|(icon_type, text)| view! {
-                                <div class="flex items-center gap-2 text-[12px] font-medium text-white/95 bg-black/50 backdrop-blur-md px-3.5 py-1.5 rounded-full border border-white/15 shadow-sm">
+                                <div class="flex items-center gap-1.5 text-[13px] font-medium text-white bg-black/50 p-2 rounded-lg">
                                     {match icon_type.as_str() {
                                         "megaphone" => view! { <MegaphoneBadgeIcon /> }.into_any(),
                                         _ => view! { <ClapperboardBadgeIcon /> }.into_any(),
@@ -788,7 +788,7 @@ pub fn HeroSection(
 
                         {move || {
                             badge_right().map(|(icon_type, text)| view! {
-                                <div class="flex items-center gap-2 text-[12px] font-medium text-white/95 bg-black/50 backdrop-blur-md px-3.5 py-1.5 rounded-full border border-white/15 shadow-sm">
+                                <div class="flex items-center gap-1.5 text-[13px] font-medium text-white bg-black/50 p-2 rounded-lg">
                                     {match icon_type.as_str() {
                                         "megaphone" => view! { <MegaphoneBadgeIcon /> }.into_any(),
                                         _ => view! { <ClapperboardBadgeIcon /> }.into_any(),

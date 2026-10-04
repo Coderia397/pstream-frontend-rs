@@ -9,8 +9,15 @@ use crate::components::media::action_buttons::{
 };
 use crate::components::trailer_player::TrailerPlayer;
 
-pub const POPUP_W: f64 = 341.0;
-pub const TOP_OFFSET: f64 = -88.0;
+/// Netflix preview card width is 1.5 x the tile width (435 for a 290 wide tile). Narrow ranked posters keep 341.
+pub fn popup_w(tile_w: f64) -> f64 {
+    (tile_w * 1.5).round().max(341.0)
+}
+
+/// Card height used for placement: 16:9 media plus the 167px info panel (413 for a 435 wide card).
+fn popup_h(w: f64) -> f64 {
+    w * 9.0 / 16.0 + 167.0
+}
 
 pub fn calc_popup_position(
     rect: &web_sys::DomRect,
@@ -19,23 +26,23 @@ pub fn calc_popup_position(
     window_w: f64,
     _window_h: f64,
 ) -> (f64, f64) {
-    let app_x = if window_w >= 1024.0 { 56.0 } else if window_w >= 768.0 { 48.0 } else { 16.0 };
+    let app_x = crate::utils::layout::app_x();
+    let popup_width = popup_w(rect.width());
 
     let mut left = if pos == "left" {
         app_x
     } else if pos == "right" {
-        window_w - app_x - POPUP_W
+        window_w - app_x - popup_width
     } else {
-        rect.left() + rect.width() / 2.0 - POPUP_W / 2.0
+        rect.left() + rect.width() / 2.0 - popup_width / 2.0
     };
 
-    left = left.max(app_x).min(window_w - POPUP_W - app_x);
+    left = left.max(app_x).min(window_w - popup_width - app_x);
 
     let (scroll_x, scroll_y) = initial_scroll;
-    // For taller cards (e.g. Top 10 portrait posters which are ~195px tall),
-    // adjust top offset so the popup vertically centers naturally over the card
-    let top_offset = if rect.height() > 160.0 { -60.0 } else { TOP_OFFSET };
-    let page_top = (scroll_y + rect.top() + top_offset).max(scroll_y + 68.0);
+    // Netflix centres the card vertically on the tile (card centre y equals tile centre y, measured at 1578 wide).
+    let centre = rect.top() + rect.height() / 2.0;
+    let page_top = (scroll_y + centre - popup_h(popup_width) / 2.0).max(scroll_y + 80.0);
     let page_left = scroll_x + left;
 
     (page_top, page_left)
@@ -260,10 +267,10 @@ pub fn MovieCardPopup(
         <Portal>
             <div
                 data-popup="true"
-                class="absolute z-[9999] pointer-events-auto rounded-[12px] overflow-hidden bg-[#181818] text-white shadow-[0_4px_30px_rgba(0,0,0,0.9)] animate-in fade-in zoom-in-95 duration-200"
+                class="absolute z-[9999] pointer-events-auto rounded-[6px] overflow-hidden bg-[#181818] text-white shadow-[0_3px_10px_rgba(0,0,0,0.75)] animate-in fade-in zoom-in-95 duration-200"
                 style=format!(
                     "width: {}px; top: {}px; left: {}px; transform-origin: {};",
-                    POPUP_W, top, left, transform_origin
+                    popup_w(hovered_rect.width()), top, left, transform_origin
                 )
                 on:mouseenter=move |_| on_mouse_enter.run(())
                 on:mouseleave=move |_| on_mouse_leave.run(())
@@ -357,9 +364,9 @@ pub fn MovieCardPopup(
                 }}
 
                 // Metadata & Action Controls
-                <div class="p-4 space-y-3">
+                <div class="p-4">
                     // Action Buttons Row
-                    <div class="flex items-center justify-between">
+                    <div class="flex items-center justify-between min-h-[46px] mb-2">
                         <div class="flex items-center gap-2">
                             // Play button
                             <PlayCircleButton
@@ -442,7 +449,7 @@ pub fn MovieCardPopup(
                     </div>
 
                     // Badges & Details Row
-                    <div class="flex items-center gap-2 text-xs font-semibold text-white/80 flex-wrap">
+                    <div class="flex items-center gap-2 my-[12.8px] min-h-[32px] text-[16px] font-normal text-[#bcbcbc] flex-wrap">
                         <span class="text-[#46d369] font-bold">
                             {format!("{}% Match", movie_stored.get_value().match_score())}
                         </span>
@@ -452,10 +459,10 @@ pub fn MovieCardPopup(
                             vote_average=vote_avg
                             size="xs".to_string()
                         />
-                        <span class="text-white/60">
-                            {if is_tv { "TV Series" } else { "Movie" }}
+                        <span>
+                            {if is_tv { "Series" } else { "Film" }}
                         </span>
-                        <span class="border border-white/40 rounded px-1 text-[10px] text-white/70">
+                        <span class="border border-white/40 rounded-[3px] px-[5.6px] text-[11.2px] leading-[16px] text-white/90">
                             "HD"
                         </span>
                     </div>
@@ -469,11 +476,11 @@ pub fn MovieCardPopup(
                             &overview_stored.get_value(),
                         );
                         view! {
-                            <div class="flex items-center gap-1.5 text-[11px] font-medium text-white/80 flex-wrap pt-0.5">
+                            <div class="flex items-center text-[16px] leading-[20.8px] font-normal text-white flex-wrap mb-2 min-h-[24px]">
                                 {vibe_tags.into_iter().enumerate().map(|(idx, tag)| {
                                     view! {
                                         {if idx > 0 {
-                                            view! { <span class="text-white/40 text-[9px]">"•"</span> }.into_any()
+                                            view! { <span class="text-white/40 text-[16px] px-[3px]">"•"</span> }.into_any()
                                         } else {
                                             view! { <span /> }.into_any()
                                         }}

@@ -59,6 +59,7 @@ pub fn MovieCard(
         ui_store.info_modal_open.set(true);
     };
 
+    let phone_poster = poster_path.clone().filter(|p| !p.is_empty());
     let img_src = if !backdrop_path.is_empty() {
         backdrop_path.clone()
     } else {
@@ -121,8 +122,8 @@ pub fn MovieCard(
                 let sx = win.scroll_x().unwrap_or(0.0);
                 let sy = win.scroll_y().unwrap_or(0.0);
 
-                let app_x = if win_w >= 1024.0 { 56.0 } else if win_w >= 768.0 { 48.0 } else { 16.0 };
-                let half_popup = crate::components::media::movie_card_popup::POPUP_W / 2.0;
+                let app_x = crate::utils::layout::app_x();
+                let half_popup = crate::components::media::movie_card_popup::popup_w(r.width()) / 2.0;
                 let card_center = r.left() + r.width() / 2.0;
 
                 let pos = if card_center - half_popup < app_x {
@@ -180,15 +181,19 @@ pub fn MovieCard(
             on:mouseleave=move |_| mouse_leave_cb.run(())
             on:click=open_modal
         >
-            <div class="w-full h-full relative rounded-[4px] md:rounded-[8px] overflow-hidden movie-card-glow">
-                <img
-                    src=img_src
-                    alt=title_stored.with_value(|t| t.clone())
-                    class="w-full h-full object-cover object-center rounded-[4px] md:rounded-[8px] backdrop-pop"
-                    loading="lazy"
-                    decoding="async"
-                    draggable="false"
-                />
+            <div class="w-full h-full relative rounded-[var(--tile-radius)] overflow-hidden movie-card-glow">
+                // Phones show 5:7 posters like the Netflix app, wider screens show the backdrop.
+                <picture class="block w-full h-full">
+                    {phone_poster.clone().map(|ps| view! { <source media="(max-width: 599px)" srcset=ps /> })}
+                    <img
+                        src=img_src
+                        alt=title_stored.with_value(|t| t.clone())
+                        class="w-full h-full object-cover object-center rounded-[var(--tile-radius)] backdrop-pop"
+                        loading="lazy"
+                        decoding="async"
+                        draggable="false"
+                    />
+                </picture>
 
                 // Watch Progress Bar if user has watched this title
                 {move || {

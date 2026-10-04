@@ -59,15 +59,15 @@ pub fn CategorySubNavMobile(
     view! {
         <div class="relative w-full overflow-hidden select-none">
             // Horizontal scrolling pills container (Task 092)
-            <div class="pt-2 pb-2 px-4 flex items-center justify-start overflow-x-auto scrollbar-hide max-w-full">
-                <div class="flex items-center gap-1 shrink-0">
+            <div class="pt-2 pb-4 px-4 flex items-center justify-start overflow-x-auto scrollbar-hide max-w-full">
+                <div class="flex items-center gap-[6px] shrink-0">
                     // Series pill
                     <button
                         on:click=on_series
                         class=move || if is_tv_active() {
-                            "flex items-center justify-center h-[38px] px-4 rounded-l-[20px] rounded-r-[10px] text-[14px] font-semibold whitespace-nowrap active:scale-95 transition-all leading-none shrink-0 cursor-pointer bg-white/[0.18] backdrop-blur-md text-white border-[1.6px] border-white/40"
+                            "flex items-center justify-center h-12 px-4 rounded-[12px] text-[17px] font-medium whitespace-nowrap active:scale-95 transition-all leading-none shrink-0 cursor-pointer bg-white text-black border border-white"
                         } else {
-                            "flex items-center justify-center h-[38px] px-4 rounded-l-[20px] rounded-r-[10px] text-[14px] font-semibold whitespace-nowrap active:scale-95 transition-all leading-none shrink-0 cursor-pointer bg-white/[0.06] backdrop-blur-md text-[#e5e5e5] border-[1.6px] border-white/15"
+                            "flex items-center justify-center h-12 px-4 rounded-[12px] text-[17px] font-medium whitespace-nowrap active:scale-95 transition-all leading-none shrink-0 cursor-pointer bg-white/[0.08] text-[#bdbec0] border border-white/15"
                         }
                     >
                         "Series"
@@ -77,9 +77,9 @@ pub fn CategorySubNavMobile(
                     <button
                         on:click=on_films
                         class=move || if is_movie_active() {
-                            "flex items-center justify-center h-[38px] px-4 rounded-[10px] text-[14px] font-semibold whitespace-nowrap active:scale-95 transition-all leading-none shrink-0 cursor-pointer bg-white/[0.18] backdrop-blur-md text-white border-[1.6px] border-white/40"
+                            "flex items-center justify-center h-12 px-4 rounded-[12px] text-[17px] font-medium whitespace-nowrap active:scale-95 transition-all leading-none shrink-0 cursor-pointer bg-white text-black border border-white"
                         } else {
-                            "flex items-center justify-center h-[38px] px-4 rounded-[10px] text-[14px] font-semibold whitespace-nowrap active:scale-95 transition-all leading-none shrink-0 cursor-pointer bg-white/[0.06] backdrop-blur-md text-[#e5e5e5] border-[1.6px] border-white/15"
+                            "flex items-center justify-center h-12 px-4 rounded-[12px] text-[17px] font-medium whitespace-nowrap active:scale-95 transition-all leading-none shrink-0 cursor-pointer bg-white/[0.08] text-[#bdbec0] border border-white/15"
                         }
                     >
                         "Films"
@@ -89,9 +89,9 @@ pub fn CategorySubNavMobile(
                     <button
                         on:click=on_latest
                         class=move || if is_new_active() {
-                            "flex items-center justify-center h-[38px] px-4 rounded-[10px] text-[14px] font-semibold whitespace-nowrap active:scale-95 transition-all leading-none shrink-0 cursor-pointer bg-white/[0.18] backdrop-blur-md text-white border-[1.6px] border-white/40"
+                            "flex items-center justify-center h-12 px-4 rounded-[12px] text-[17px] font-medium whitespace-nowrap active:scale-95 transition-all leading-none shrink-0 cursor-pointer bg-white text-black border border-white"
                         } else {
-                            "flex items-center justify-center h-[38px] px-4 rounded-[10px] text-[14px] font-semibold whitespace-nowrap active:scale-95 transition-all leading-none shrink-0 cursor-pointer bg-white/[0.06] backdrop-blur-md text-[#e5e5e5] border-[1.6px] border-white/15"
+                            "flex items-center justify-center h-12 px-4 rounded-[12px] text-[17px] font-medium whitespace-nowrap active:scale-95 transition-all leading-none shrink-0 cursor-pointer bg-white/[0.08] text-[#bdbec0] border border-white/15"
                         }
                     >
                         "New & Hot"
@@ -107,9 +107,9 @@ pub fn CategorySubNavMobile(
                             }
                         }
                         class=move || if selected_genre.get().is_some() {
-                            "flex items-center justify-center space-x-1 h-[38px] px-4 rounded-r-[20px] rounded-l-[10px] text-[14px] font-semibold whitespace-nowrap active:scale-95 leading-none shrink-0 cursor-pointer bg-white/[0.18] backdrop-blur-md text-white border-[1.6px] border-white/40"
+                            "flex items-center justify-center space-x-1 h-12 px-4 rounded-[12px] text-[17px] font-medium whitespace-nowrap active:scale-95 leading-none shrink-0 cursor-pointer bg-white text-black border border-white"
                         } else {
-                            "flex items-center justify-center space-x-1 h-[38px] px-4 rounded-r-[20px] rounded-l-[10px] text-[14px] font-semibold whitespace-nowrap active:scale-95 leading-none shrink-0 cursor-pointer bg-white/[0.06] backdrop-blur-md text-[#e5e5e5] border-[1.6px] border-white/15"
+                            "flex items-center justify-center space-x-1 h-12 px-4 rounded-[12px] text-[17px] font-medium whitespace-nowrap active:scale-95 leading-none shrink-0 cursor-pointer bg-white/[0.08] text-[#bdbec0] border border-white/15"
                         }
                     >
                         <span>{active_genre_label}</span>

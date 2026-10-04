@@ -92,7 +92,7 @@ pub fn Row(
             set_can_scroll_left.set(cur > 10.0);
             set_can_scroll_right.set(scroll_w > client_w + 10.0 && scroll_w - (cur + client_w) > 10.0);
 
-            let margin = if client_w >= 1750.0 { 60.0 } else if client_w >= 1350.0 { 56.0 } else if client_w >= 800.0 { 48.0 } else { 16.0 };
+            let margin = crate::utils::layout::app_x();
             let page_w = (client_w - 2.0 * margin + 6.0).max(100.0);
             let idx = ((cur + page_w * 0.3) / page_w).floor() as usize;
             set_page_index.set(idx);
@@ -139,7 +139,7 @@ pub fn Row(
                 let current_scroll = el.scroll_left() as f64;
                 let scroll_width = el.scroll_width() as f64;
                 
-                let margin = if client_width >= 1750.0 { 60.0 } else if client_width >= 1350.0 { 56.0 } else if client_width >= 800.0 { 48.0 } else { 16.0 };
+                let margin = crate::utils::layout::app_x();
                 let step = (client_width - 2.0 * margin + 6.0).max(100.0);
                 
                 let target = if direction == "left" {
@@ -166,9 +166,9 @@ pub fn Row(
     let card_width_class = "netflix-card-width";
 
     view! {
-        <div class="group relative my-3 md:my-4 space-y-1.5 z-10">
-            <div class="flex items-center justify-between px-[var(--app-x,56px)] mb-1">
-                <h2 class="text-sm sm:text-base md:text-lg font-bold text-[#e5e5e5] hover:text-white transition cursor-pointer flex items-center group/title w-fit tracking-wide">
+        <div class="group relative row-block z-10">
+            <div class="flex items-center justify-between px-[var(--app-x,56px)]">
+                <h2 class="row-title cursor-pointer flex items-center group/title w-fit">
                     {title}
                     <span class="text-xs text-cyan-500 ml-2 opacity-0 group-hover/title:opacity-100 transition-opacity duration-300 flex items-center font-semibold">
                         "Explore All ›"
@@ -208,11 +208,11 @@ pub fn Row(
                     let m = movies.get();
                     if m.is_empty() && is_fetching.get() {
                         view! {
-                            <div class="flex overflow-x-scroll scrollbar-hide w-full pointer-events-auto relative z-10 py-2 pb-6 gap-[6px]">
+                            <div class="flex overflow-x-scroll scrollbar-hide w-full pointer-events-auto relative z-10 py-[2px] gap-[var(--tile-gap)]">
                                 <div class="flex-none h-full pointer-events-none" style="width: var(--app-x, 56px);" />
                                 {(0..6).map(|_| view! {
                                     <div
-                                        class=format!("movie-card-container relative flex-none {} aspect-video bg-[#1e1e1e] rounded-[4px] md:rounded-[8px] overflow-hidden border border-white/[0.04] pointer-events-auto", card_width_class)
+                                        class=format!("movie-card-container relative flex-none {} aspect-video bg-[#1e1e1e] rounded-[var(--tile-radius)] overflow-hidden border border-white/[0.04] pointer-events-auto", card_width_class)
                                     >
                                         <div class="absolute inset-0 -translate-x-full animate-[shimmer_1.8s_ease-in-out_infinite] bg-gradient-to-r from-transparent via-white/[0.05] to-transparent" />
                                         <div class="absolute inset-0 bg-gradient-to-b from-[#252525] via-[#1e1e1e] to-[#181818]" />
@@ -236,7 +236,7 @@ pub fn Row(
                                 <div
                                     node_ref=scroll_ref
                                     on:scroll=on_scroll
-                                    class="row-scroll-strip flex overflow-x-scroll scrollbar-hide w-full pointer-events-auto relative z-10 py-2 pb-6 gap-[6px]"
+                                    class="row-scroll-strip flex overflow-x-scroll scrollbar-hide w-full pointer-events-auto relative z-10 py-[2px] gap-[var(--tile-gap)]"
                                     style="scroll-behavior: smooth;"
                                 >
                                     <div class="flex-none h-full pointer-events-none" style="width: var(--app-x, 56px);" />
@@ -250,7 +250,7 @@ pub fn Row(
                                         
                                         view! {
                                             <div 
-                                                class=format!("movie-card-container relative flex-none pointer-events-auto overflow-visible rounded-[4px] md:rounded-[8px] {} aspect-video", card_width_class)
+                                                class=format!("movie-card-container relative flex-none pointer-events-auto overflow-visible rounded-[var(--tile-radius)] {} aspect-video", card_width_class)
                                                 style="z-index: auto;"
                                             >
                                                 <MovieCard

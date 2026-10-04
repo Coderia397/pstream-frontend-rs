@@ -90,7 +90,7 @@ pub fn ContinueWatchingRow() -> impl IntoView {
         }
     };
 
-    let card_width_class = "netflix-card-width";
+    let card_width_class = "netflix-card-width netflix-card-landscape";
 
     view! {
         {move || {
@@ -102,9 +102,9 @@ pub fn ContinueWatchingRow() -> impl IntoView {
                 let scroll_right = scroll.clone();
 
                 view! {
-                    <div class="group relative my-3 md:my-5 space-y-2 z-10">
+                    <div class="group relative row-block z-10">
                         <div class="flex items-center justify-between px-[var(--app-x,56px)]">
-                            <h2 class="text-sm sm:text-base md:text-lg font-bold text-[#e5e5e5] hover:text-white transition cursor-pointer flex items-center group/title w-fit tracking-wide">
+                            <h2 class="row-title cursor-pointer flex items-center group/title w-fit">
                                 "Continue Watching"
                                 <span class="text-xs text-red-500 ml-2 opacity-0 group-hover/title:opacity-100 transition-opacity duration-300 flex items-center font-semibold">
                                     "Jump Back In ›"
@@ -116,7 +116,7 @@ pub fn ContinueWatchingRow() -> impl IntoView {
                             <div
                                 node_ref=scroll_ref
                                 on:scroll=on_scroll
-                                class="row-scroll-strip flex overflow-x-scroll scrollbar-hide w-full pointer-events-auto relative z-10 py-2 pb-4 gap-[6px]"
+                                class="row-scroll-strip flex overflow-x-scroll scrollbar-hide w-full pointer-events-auto relative z-10 py-[2px] gap-[var(--tile-gap)]"
                                 style="scroll-behavior: smooth;"
                             >
                                 <div class="flex-none h-full pointer-events-none" style="width: var(--app-x, 56px);" />
@@ -174,7 +174,7 @@ pub fn ContinueWatchingRow() -> impl IntoView {
 
                                     view! {
                                         <div
-                                            class=format!("relative flex-none {} bg-[#181818] rounded-[4px] md:rounded-[8px] overflow-hidden border border-white/10 hover:border-white/30 transition-all duration-300 shadow-lg hover:shadow-2xl group/card cursor-pointer", card_width_class)
+                                            class=format!("relative flex-none {} bg-[#181818] rounded-[var(--tile-radius)] overflow-hidden border border-white/10 hover:border-white/30 transition-all duration-300 shadow-lg hover:shadow-2xl group/card cursor-pointer", card_width_class)
                                             on:click=handle_play
                                         >
                                             // Thumbnail image with play overlay

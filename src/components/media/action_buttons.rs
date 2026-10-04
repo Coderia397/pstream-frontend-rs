@@ -154,13 +154,13 @@ fn circular_button_specs(size: &str) -> (&'static str, &'static str, u32) {
     match size {
         "xs" | "sm" => ("w-7 h-7", "text-xs", 12),
         "lg" => ("w-11 h-11 md:w-12 md:h-12", "text-xl md:text-2xl", 22),
-        _ => ("w-[39px] h-[39px]", "text-[17px]", 17),
+        _ => ("w-[38px] h-[38px]", "text-[18px]", 18),
     }
 }
 
 fn circular_button_classes(dim_classes: &str, extra_class: &str) -> String {
     format!(
-        "rounded-full border border-white/40 bg-zinc-800/80 hover:bg-white/15 hover:border-white text-white flex items-center justify-center transition-all duration-150 active:scale-95 cursor-pointer shadow-md select-none shrink-0 {} {}",
+        "rounded-full border-[1.8px] border-white/50 bg-[#2a2a2a]/60 hover:bg-white/15 hover:border-white text-white flex items-center justify-center transition-all duration-150 active:scale-95 cursor-pointer select-none shrink-0 {} {}",
         dim_classes, extra_class
     )
 }

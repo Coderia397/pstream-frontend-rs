@@ -40,6 +40,13 @@ pub fn NavbarMobile(
         else { "" }
     };
 
+    // Avatar of the active profile (first profile until the profile store knows better), used in the profile tab and the header
+    let current_avatar = move || {
+        profile_store.profiles.get().first()
+            .and_then(|p| p.avatar_url.clone())
+            .unwrap_or_else(|| "https://wallpapers.com/images/hd/netflix-profile-pictures-1000-x-1000-88wkdmjrorckekha.jpg".to_string())
+    };
+
     let nav_to_browse = navigate.clone();
     let nav_to_latest = navigate.clone();
     let nav_to_search = navigate.clone();
@@ -76,11 +83,11 @@ pub fn NavbarMobile(
         BottomNavItem {
             id: "settings",
             icon: view! { 
-                <div class="w-6 h-6 rounded overflow-hidden flex items-center justify-center bg-[#E50914] text-white font-bold text-[10px] ring-[1.5px] transition-all duration-300 ring-transparent">
-                    <img src="https://wallpapers.com/images/hd/netflix-profile-pictures-1000-x-1000-88wkdmjrorckekha.jpg" alt="Profile" class="w-full h-full object-cover" />
+                <div class="w-6 h-6 rounded overflow-hidden flex items-center justify-center bg-[#E50914] text-white font-bold text-[10px]">
+                    <img src=move || current_avatar() alt="Profile" class="w-full h-full object-cover" />
                 </div>
             }.into_any(),
-            label: "My Netflix",
+            label: "My List",
             on_click: Callback::new(move |_| {
                 set_active_bottom_nav.set("settings");
                 nav_to_settings("/browse/my-list", Default::default());
@@ -88,11 +95,6 @@ pub fn NavbarMobile(
         },
     ];
 
-    let current_avatar = move || {
-        profile_store.profiles.get().first()
-            .and_then(|p| p.avatar_url.clone())
-            .unwrap_or_else(|| "https://wallpapers.com/images/hd/netflix-profile-pictures-1000-x-1000-88wkdmjrorckekha.jpg".to_string())
-    };
 
     view! {
         <div class="sm:hidden select-none">

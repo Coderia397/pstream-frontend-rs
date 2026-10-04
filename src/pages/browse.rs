@@ -92,7 +92,7 @@ pub fn BrowseHome() -> impl IntoView {
                 />
 
                 // Genre picker, mobile only
-                <div class="sm:hidden pt-[calc(52px+env(safe-area-inset-top))]">
+                <div class="sm:hidden">
                     <CategorySubNav
                         title="Home".to_string()
                         genres=genres

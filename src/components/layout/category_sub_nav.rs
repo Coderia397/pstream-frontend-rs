@@ -32,7 +32,7 @@ pub fn CategorySubNav(
 
     view! {
         // Mobile layout: render in-flow
-        <div class="block sm:hidden">
+        <div class="block sm:hidden pt-[calc(52px+env(safe-area-inset-top))]">
             {if let Some(lbl) = mobile_dropdown_label {
                 view! {
                     <CategorySubNavMobile
@@ -158,10 +158,10 @@ fn CategorySubNavDesktop(
 
     view! {
         <div
-            class="fixed inset-x-0 top-16 z-[79] pointer-events-none transition-colors duration-200"
+            class="fixed inset-x-0 top-[88px] z-[79] pointer-events-none transition-colors duration-200"
             style=scroll_bg_style
         >
-            <div class="pointer-events-none relative z-30 flex items-center justify-between pl-8 md:pl-[72px] pr-6 md:pr-14 py-5 select-none w-full">
+            <div class="pointer-events-none relative z-30 flex items-center justify-between pl-[calc(var(--app-x)+36px)] pr-[calc(var(--app-x)+36px)] py-5 select-none w-full">
                 <div node_ref=container_ref class="pointer-events-auto flex items-center gap-4">
                 <h1 class="text-[28px] md:text-[38px] font-bold tracking-[-0.5px] text-white leading-none flex items-center">
                     {

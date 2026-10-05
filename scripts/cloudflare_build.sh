@@ -22,6 +22,11 @@ fi
 curl -sSfL -o tailwindcss "https://github.com/tailwindlabs/tailwindcss/releases/download/${TAILWIND_VERSION}/tailwindcss-linux-x64"
 chmod +x tailwindcss
 
+# The release profile in Cargo.toml (full LTO, one codegen unit) needs about 20 minutes here, which is the builder's limit.
+# Thin LTO with more codegen units keeps the build well inside it at the cost of a slightly larger wasm file.
+export CARGO_PROFILE_RELEASE_LTO="${CARGO_PROFILE_RELEASE_LTO:-thin}"
+export CARGO_PROFILE_RELEASE_CODEGEN_UNITS="${CARGO_PROFILE_RELEASE_CODEGEN_UNITS:-16}"
+
 rustc --version
 ./.tools/trunk --version
 ./.tools/trunk build --release

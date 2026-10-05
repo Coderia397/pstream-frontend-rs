@@ -2,7 +2,11 @@ use serde::{Deserialize, Serialize};
 use gloo_net::http::Request;
 use crate::services::tmdb::MediaItem;
 
-const AI_API_BASE_URL: &str = "http://127.0.0.1:8088";
+/// Base URL of the recommendation engine. Set PSTREAM_ENGINE_URL at build time for a deployed site.
+const AI_API_BASE_URL: &str = match option_env!("PSTREAM_ENGINE_URL") {
+    Some(url) => url,
+    None => "http://127.0.0.1:8088",
+};
 
 #[derive(Clone, Debug, Default, Deserialize, Serialize, PartialEq)]
 pub struct VibeItem {

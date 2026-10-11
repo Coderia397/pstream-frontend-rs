@@ -4,13 +4,13 @@ target = "index.html"
 [watch]
 ignore = [
     "style/output.css",
-    "interop.js",
+    "interop/dist",
 ]
 
 [[hooks]]
 stage = "pre_build"
 command = "sh"
-command_arguments = ["-c", "./tailwindcss -i ./style/input.css -o ./style/output.css && (test -f ../pstream-frontend/node_modules/.bin/esbuild && ../pstream-frontend/node_modules/.bin/esbuild interop/interop.ts --bundle --outfile=interop.js --format=iife --minify || true)"]
+command_arguments = ["-c", "sh scripts/apply_brand.sh && sh scripts/build_interop.sh && ./tailwindcss -i ./style/input.css -o ./style/output.css"]
 
 [serve]
 port = 8080

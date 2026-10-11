@@ -27,6 +27,21 @@ chmod +x tailwindcss
 export CARGO_PROFILE_RELEASE_LTO="${CARGO_PROFILE_RELEASE_LTO:-thin}"
 export CARGO_PROFILE_RELEASE_CODEGEN_UNITS="${CARGO_PROFILE_RELEASE_CODEGEN_UNITS:-16}"
 
+# The interop bundle needs Node 22 or newer and the pinned npm packages. The Pages image may ship an older Node, so fetch a
+# pinned Node into .tools when the one on PATH is missing or too old (checksum verified).
+NODE_VERSION="${NODE_VERSION:-22.23.3}"
+if ! command -v node >/dev/null 2>&1 || [ "$(node -p 'process.versions.node.split(".")[0]')" -lt 22 ]; then
+  NODE_FILE="node-v${NODE_VERSION}-linux-x64.tar.gz"
+  mkdir -p .tools/node
+  curl -sSfL -o ".tools/${NODE_FILE}" "https://nodejs.org/dist/v${NODE_VERSION}/${NODE_FILE}"
+  curl -sSfL -o .tools/SHASUMS256.txt "https://nodejs.org/dist/v${NODE_VERSION}/SHASUMS256.txt"
+  (cd .tools && grep " ${NODE_FILE}\$" SHASUMS256.txt | sha256sum -c -)
+  tar -xzf ".tools/${NODE_FILE}" -C .tools/node --strip-components=1
+  export PATH="$PWD/.tools/node/bin:$PATH"
+fi
+node --version
+npm ci
+
 rustc --version
 ./.tools/trunk --version
 ./.tools/trunk build --release

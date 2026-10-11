@@ -8,21 +8,21 @@ pub struct AmbientRGB {
     pub b: u8,
 }
 
-#[wasm_bindgen]
+#[wasm_bindgen(module = "/interop/dist/index.js")]
 extern "C" {
-    #[wasm_bindgen(js_name = pstream_get_cached_ambient_color)]
+    #[wasm_bindgen(js_name = getCachedAmbientColor)]
     fn js_get_cached_ambient_color(url: &str) -> String;
 
-    #[wasm_bindgen(js_name = pstream_get_last_ambient_color)]
+    #[wasm_bindgen(js_name = getLastAmbientColor)]
     fn js_get_last_ambient_color() -> String;
 
-    #[wasm_bindgen(js_name = pstream_extract_ambient_color)]
+    #[wasm_bindgen(js_name = extractAmbientColor)]
     fn js_extract_ambient_color(url: &str, callback: &js_sys::Function);
 
-    #[wasm_bindgen(js_name = pstream_apply_ambient_color)]
+    #[wasm_bindgen(js_name = applyAmbientColor)]
     fn js_apply_ambient_color(r: u8, g: u8, b: u8);
 
-    #[wasm_bindgen(js_name = pstream_set_theme_color)]
+    #[wasm_bindgen(js_name = setThemeColor)]
     fn js_set_theme_color(r: u8, g: u8, b: u8);
 }
 

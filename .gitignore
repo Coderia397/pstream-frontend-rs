@@ -11,3 +11,6 @@ gemini chat text.md
 
 # Cloudflare build tools
 .tools
+node_modules
+
+interop/dist

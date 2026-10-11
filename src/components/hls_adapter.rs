@@ -2,27 +2,27 @@
 use wasm_bindgen::prelude::*;
 use web_sys::HtmlVideoElement;
 
-#[wasm_bindgen]
+#[wasm_bindgen(module = "/interop/dist/index.js")]
 extern "C" {
-    #[wasm_bindgen(js_namespace = window, js_name = pstream_hls_attach)]
+    #[wasm_bindgen(js_name = hlsAttach)]
     pub fn hls_attach(video_id: &str, stream_url: &str) -> String;
 
-    #[wasm_bindgen(js_namespace = window, js_name = pstream_hls_destroy)]
+    #[wasm_bindgen(js_name = hlsDestroy)]
     pub fn hls_destroy(handle: &str);
 
-    #[wasm_bindgen(js_namespace = window, js_name = pstream_hls_set_audio_track)]
+    #[wasm_bindgen(js_name = hlsSetAudioTrack)]
     pub fn hls_set_audio_track(handle: &str, track_index: i32);
 
-    #[wasm_bindgen(js_namespace = window, js_name = pstream_hls_set_quality)]
+    #[wasm_bindgen(js_name = hlsSetQuality)]
     pub fn hls_set_quality(handle: &str, level: i32);
 
-    #[wasm_bindgen(js_namespace = window, js_name = pstream_hls_seek)]
+    #[wasm_bindgen(js_name = hlsSeek)]
     pub fn hls_seek(handle: &str, seconds: f64);
 
-    #[wasm_bindgen(js_namespace = window, js_name = pstream_hls_current_time)]
+    #[wasm_bindgen(js_name = hlsCurrentTime)]
     pub fn hls_current_time(handle: &str) -> f64;
 
-    #[wasm_bindgen(js_namespace = window, js_name = pstream_hls_duration)]
+    #[wasm_bindgen(js_name = hlsDuration)]
     pub fn hls_duration(handle: &str) -> f64;
 }
 
@@ -35,7 +35,7 @@ impl HlsPlayer {
     pub fn attach(video_element: HtmlVideoElement, stream_url: &str) -> Self {
         let video_id = video_element
             .get_attribute("id")
-            .unwrap_or_else(|| "pstream-video".to_string());
+            .unwrap_or_else(|| crate::keys::VIDEO_ELEMENT_ID.to_string());
         let handle = hls_attach(&video_id, stream_url);
         Self { handle, video_element }
     }

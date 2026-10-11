@@ -1,4 +1,4 @@
-declare const Hls: any;
+import Hls from 'hls.js';
 
 interface HlsInstance {
   destroy(): void;
@@ -6,7 +6,7 @@ interface HlsInstance {
   attachMedia(video: HTMLVideoElement): void;
   audioTrack: number;
   currentLevel: number;
-  media?: HTMLVideoElement;
+  media?: HTMLMediaElement | null;
   _native?: boolean;
   _video?: HTMLVideoElement;
 }
@@ -46,7 +46,7 @@ export function hlsAttach(videoId: string, streamUrl: string): string {
     let mediaRecoveryAttempts = 0;
     let networkRecoveryAttempts = 0;
 
-    hls.on(Hls.Events.ERROR, (_event: any, data: any) => {
+    hls.on(Hls.Events.ERROR, (_event, data) => {
       if (data.fatal) {
         switch (data.type) {
           case Hls.ErrorTypes.NETWORK_ERROR:

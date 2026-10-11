@@ -1,0 +1,31 @@
+name: check
+on:
+  push:
+  pull_request:
+jobs:
+  check:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: dtolnay/rust-toolchain@stable
+        with:
+          targets: wasm32-unknown-unknown
+      - uses: Swatinem/rust-cache@v2
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+      - run: npm ci
+      - name: Interop type check and bundle
+        run: sh scripts/build_interop.sh
+      - name: Interface text keys
+        run: python3 scripts/check_i18n.py
+      - name: Brand guard
+        run: sh scripts/check_brand.sh
+      - name: Tailwind build
+        run: |
+          curl -sSfL -o tailwindcss https://github.com/tailwindlabs/tailwindcss/releases/download/v4.0.9/tailwindcss-linux-x64
+          chmod +x tailwindcss
+          ./tailwindcss -i style/input.css -o style/output.css
+      - name: Cargo check
+        run: cargo check --target wasm32-unknown-unknown

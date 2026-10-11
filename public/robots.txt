@@ -4,3 +4,4 @@ Disallow: /watch/
 Disallow: /api/
 
 Sitemap: https://streams.watch/sitemap.xml
+Disallow: /brand/

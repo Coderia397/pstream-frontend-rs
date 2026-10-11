@@ -1970,3 +1970,31 @@ set-event-pin_reset = Profile lock reset
 set-event-main_profile_changed = Main profile changed
 set-privacy-export = Download my data
 set-privacy-export-hint = Save everything held about your account as a file.
+
+# Settings: desktop account pages (Overview, Security, Devices, Profiles) and per profile playback and notifications
+set-nav-overview = Overview
+set-back-to-app = Back to { $brand }
+set-title-playback = Playback settings
+set-title-notifications = Notification settings
+set-playback-hint = Set autoplay and previews.
+set-playback-autoplay = Autoplay and transitions
+set-notifications-hint = Manage notifications for email and push.
+set-notifications-body = Choose how this profile hears about new arrivals and updates.
+set-notify-email = Email
+set-notify-push = Push notifications
+set-account-details = Account details
+set-access-hint = Manage signed-in devices
+set-overview-quick = Quick links
+set-overview-update-password = Update password
+set-overview-edit = Edit settings
+set-overview-edit-hint = Languages, subtitles, autoplay, notifications, privacy and more
+set-overview-profiles = { $count ->
+    [one] 1 profile
+   *[other] { $count } profiles
+}
+set-security-access = Access and privacy
+set-privacy-hint = Manage the use of your personal information
+set-profiles-parental = Parental controls and permissions
+set-profiles-parental-hint = Set the maturity level, block titles
+set-profiles-settings = Profile settings
+set-now-watching = Now watching

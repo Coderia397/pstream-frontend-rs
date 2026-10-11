@@ -10,7 +10,7 @@ use crate::services::account::{self, AuthError};
 use crate::store::use_profile_store;
 use leptos::prelude::*;
 
-/// How many security events the Devices screen lists.
+/// How many security events the Access and devices screen lists.
 const SECURITY_EVENTS_SHOWN: u32 = 10;
 
 fn error_text(e: &AuthError) -> String {
@@ -117,35 +117,141 @@ pub fn Gate(account: bool, children: ChildrenFn) -> impl IntoView {
     }
 }
 
+/// Shown instead of account values when nobody is signed in.
 #[component]
-pub fn Account() -> impl IntoView {
+fn SignInBanner() -> impl IntoView {
+    account::session().is_none().then(|| view! {
+        <div class="mb-8 rounded-card border border-ink/10 bg-ink/5 p-5 text-center">
+            <p class="mb-4 text-body-md text-ink/70">{t("set-signin-needed")}</p>
+            <a href="/login" class="btn-ink inline-block rounded-control px-8 py-3">{t("help-ui-signin")}</a>
+        </div>
+    })
+}
+
+/// Name, password, email and phone with their current values.
+#[component]
+fn AccountDetails() -> impl IntoView {
     let session = account::session();
     let email = session.as_ref().map(|s| s.email.clone()).unwrap_or_default();
     let phone = session.as_ref().map(|s| s.phone.clone()).unwrap_or_default();
     let full_name = session.as_ref().map(|s| format!("{} {}", s.first_name, s.last_name).trim().to_string()).unwrap_or_default();
     let or_none = |v: String| Signal::derive(move || if v.is_empty() { t("set-none") } else { v.clone() });
     view! {
+        <Section title=t("set-account-details")>
+            <LinkRow icon="identification-card" title=t("set-title-name") href=Screen::Name.path() value=or_none(full_name) />
+            <LinkRow icon="lock-simple" title=t("set-title-password") href=Screen::Password.path() />
+            <LinkRow icon="envelope-simple" title=t("set-title-email") href=Screen::Email.path() value=or_none(email) />
+            <LinkRow icon="device-mobile" title=t("set-title-phone") href=Screen::Phone.path() value=or_none(phone) />
+        </Section>
+    }
+}
+
+#[component]
+fn DevicesSection() -> impl IntoView {
+    view! {
+        <Section title=t("set-account-devices")>
+            <LinkRow icon="devices" title=t("set-title-devices") hint=t("set-access-hint") href=Screen::Access.path() />
+        </Section>
+    }
+}
+
+#[component]
+fn ProfilesSection() -> impl IntoView {
+    view! {
+        <Section title=t("set-account-profiles")>
+            <LinkRow icon="users-three" title=t("set-nav-profiles") href=Screen::Profiles.path() />
+            <LinkRow icon="shield-check" title=t("set-title-privacy") href=Screen::Privacy.path() />
+        </Section>
+    }
+}
+
+fn delete_button() -> impl IntoView {
+    view! { <OutlineButton label=t("set-title-delete") danger=true on_click=Callback::new(|_| go(&Screen::Delete.path())) /> }
+}
+
+fn active_profile_id() -> String {
+    let store = use_profile_store();
+    store.active_profile_id.get_untracked().or_else(|| store.profiles.with_untracked(|l| l.first().map(|p| p.id.clone()))).unwrap_or_default()
+}
+
+/// The Account screen. A phone or tablet gets one page with Security, Devices and Profiles stacked, like the Netflix app. From
+/// 1024 px the same address is the Overview with quick links, and Security, Devices and Profiles are pages of their own.
+#[component]
+pub fn Account() -> impl IntoView {
+    let store = use_profile_store();
+    let profile_count = Memo::new(move |_| store.profiles.with(|l| l.len()));
+    view! {
         <div>
-            {session.is_none().then(|| view! {
-                <div class="mb-8 rounded-card border border-ink/10 bg-ink/5 p-5 text-center">
-                    <p class="mb-4 text-body-md text-ink/70">{t("set-signin-needed")}</p>
-                    <a href="/login" class="btn-ink inline-block rounded-control px-8 py-3">{t("help-ui-signin")}</a>
-                </div>
-            })}
-            <Section title=t("set-account-security")>
-                <LinkRow icon="identification-card" title=t("set-title-name") href=Screen::Name.path() value=or_none(full_name) />
-                <LinkRow icon="lock-simple" title=t("set-title-password") href=Screen::Password.path() />
-                <LinkRow icon="envelope-simple" title=t("set-title-email") href=Screen::Email.path() value=or_none(email) />
-                <LinkRow icon="device-mobile" title=t("set-title-phone") href=Screen::Phone.path() value=or_none(phone) />
+            <SignInBanner />
+            <div class="lg:hidden">
+                <AccountDetails />
+                <DevicesSection />
+                <ProfilesSection />
+                {delete_button()}
+            </div>
+            <div class="hidden lg:block">
+                <Section title=t("set-overview-quick")>
+                    <LinkRow icon="lock-simple" title=t("set-overview-update-password") href=Screen::Password.path() />
+                    <LinkRow icon="devices" title=t("set-title-devices") href=Screen::Access.path() />
+                    <LinkRow icon="warning-circle" title=t("set-title-restrictions") href=Screen::Restrictions(active_profile_id()).path() />
+                </Section>
+                <Section>
+                    <LinkRow icon="sliders-horizontal" title=t("set-overview-edit") hint=t("set-overview-edit-hint") href=Screen::Profile(active_profile_id()).path() />
+                    <LinkRow icon="users-three" title=t("set-nav-profiles") hint=crate::i18n::t_args("set-overview-profiles", &[("count", profile_count.get_untracked().into())]) href=Screen::Profiles.path() />
+                </Section>
+            </div>
+        </div>
+    }
+}
+
+/// Wide screens: Security page (account details, access and privacy, delete).
+#[component]
+pub fn SecurityPage() -> impl IntoView {
+    view! {
+        <div>
+            <SignInBanner />
+            <AccountDetails />
+            <Section title=t("set-security-access")>
+                <LinkRow icon="devices" title=t("set-title-devices") hint=t("set-access-hint") href=Screen::Access.path() />
+                <LinkRow icon="shield-check" title=t("set-title-privacy") hint=t("set-privacy-hint") href=Screen::Privacy.path() />
             </Section>
-            <Section title=t("set-account-devices")>
-                <LinkRow icon="devices" title=t("set-title-devices") href=Screen::Devices.path() />
+            {delete_button()}
+        </div>
+    }
+}
+
+/// Wide screens: Devices page.
+#[component]
+pub fn DevicesPage() -> impl IntoView {
+    view! { <div><SignInBanner /><DevicesSection /></div> }
+}
+
+/// Wide screens: Profiles page (parental controls, then one row per profile).
+#[component]
+pub fn ProfilesPage() -> impl IntoView {
+    let store = use_profile_store();
+    view! {
+        <div>
+            <Section title=t("set-profiles-parental")>
+                <LinkRow icon="warning-circle" title=t("set-title-restrictions") hint=t("set-profiles-parental-hint") href=Screen::Restrictions(active_profile_id()).path() />
             </Section>
-            <Section title=t("set-account-profiles")>
-                <LinkRow icon="users-three" title=t("set-nav-profiles") href=Screen::Profiles.path() />
-                <LinkRow icon="shield-check" title=t("set-title-privacy") href=Screen::Privacy.path() />
+            <Section title=t("set-profiles-settings")>
+                {move || {
+                    let active = store.active_profile_id.get();
+                    store.profiles.get().into_iter().map(|p| {
+                        let now = Some(&p.id) == active.as_ref();
+                        view! {
+                            <a href=Screen::Profile(p.id.clone()).path() class="flex items-center gap-4 px-5 py-3 hover:bg-ink/10">
+                                <img src=p.avatar_url.clone().unwrap_or_else(|| crate::brand::DEFAULT_AVATAR.to_string()) alt="" class="h-10 w-10 rounded-control object-cover" />
+                                <span class="min-w-0 flex-1 truncate text-body-md font-bold">{p.name.clone()}</span>
+                                {now.then(|| view! { <span class="text-label text-ink/50">{t("set-now-watching")}</span> })}
+                                <i class="ph-bold ph-caret-right text-xl text-ink/40 rtl:-scale-x-100" aria-hidden="true"></i>
+                            </a>
+                        }
+                    }).collect_view()
+                }}
+                <LinkRow icon="users-three" title=t("set-manage-profiles") href=Screen::Profiles.path() />
             </Section>
-            <OutlineButton label=t("set-title-delete") danger=true on_click=Callback::new(|_| go(&Screen::Delete.path())) />
         </div>
     }
 }
@@ -302,7 +408,7 @@ pub fn Phone() -> impl IntoView {
 }
 
 #[component]
-pub fn Devices() -> impl IntoView {
+pub fn Access() -> impl IntoView {
     let confirm = RwSignal::new(false);
     let note = RwSignal::new(None::<(Tone, String)>);
     let sign_out_all = Callback::new(move |_| {

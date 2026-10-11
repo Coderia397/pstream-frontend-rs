@@ -111,20 +111,13 @@ pub fn EditProfile(id: String) -> impl IntoView {
                     <LinkRow icon="translate" title=t("set-title-language") hint=t("set-language-hint") href=screen(Screen::Language) value=language_value />
                     <LinkRow icon="subtitles" title=t("set-title-audio-subtitles") hint=t("set-audio-subtitles-hint") href=screen(Screen::AudioSubtitles) />
                     <LinkRow icon="text-aa" title=t("set-title-subtitles") hint=t("set-subtitles-hint") href=screen(Screen::Subtitles) />
-                    <SwitchRow
-                        icon="skip-forward"
-                        title=t("set-autoplay-next")
-                        hint=t("set-autoplay-next-hint")
-                        checked=Signal::derive(move || p_prefs.get().autoplay_next)
-                        on_change=Callback::new(move |v| prefs.update_profile(&id.get_value(), |x| x.autoplay_next = v))
-                    />
-                    <SwitchRow
-                        icon="play-circle"
-                        title=t("set-autoplay-previews")
-                        hint=t("set-autoplay-previews-hint")
-                        checked=Signal::derive(move || p_prefs.get().autoplay_previews)
-                        on_change=Callback::new(move |v| prefs.update_profile(&id.get_value(), |x| x.autoplay_previews = v))
-                    />
+                    // phones and tablets list the autoplay switches here; the website has them on a Playback page
+                    <div class="contents lg:hidden"><AutoplaySwitches id=id.get_value() /></div>
+                    <div class="hidden lg:contents">
+                        <LinkRow icon="play-circle" title=t("set-title-playback") hint=t("set-playback-hint") href=screen(Screen::Playback) />
+                        <LinkRow icon="bell" title=t("set-title-notifications") hint=t("set-notifications-hint") href=screen(Screen::Notifications) />
+                        <LinkRow icon="clock-counter-clockwise" title=t("set-title-activity") hint=t("set-privacy-activity-hint") href=Screen::Activity.path() />
+                    </div>
                     {can_be_main.then(|| view! { <LinkRow icon="crown-simple" title=t("set-main-profile") hint=t("set-main-profile-hint") href=screen(Screen::MainProfile) /> })}
                 </Section>
                 {removable.then(|| view! { <OutlineButton label=t("set-delete-profile") danger=true on_click=Callback::new(move |_| confirm_delete.set(true)) /> })}
@@ -132,6 +125,67 @@ pub fn EditProfile(id: String) -> impl IntoView {
             </div>
         }
         .into_any()
+    }
+}
+
+/// The two autoplay switches of a profile (profile_settings.autoplay_next and autoplay_previews).
+#[component]
+fn AutoplaySwitches(id: String) -> impl IntoView {
+    let prefs = use_prefs();
+    let id = StoredValue::new(id);
+    let p = Memo::new(move |_| prefs.profile(&id.get_value()));
+    view! {
+        <SwitchRow
+            icon="skip-forward"
+            title=t("set-autoplay-next")
+            hint=t("set-autoplay-next-hint")
+            checked=Signal::derive(move || p.get().autoplay_next)
+            on_change=Callback::new(move |v| prefs.update_profile(&id.get_value(), |x| x.autoplay_next = v))
+        />
+        <SwitchRow
+            icon="play-circle"
+            title=t("set-autoplay-previews")
+            hint=t("set-autoplay-previews-hint")
+            checked=Signal::derive(move || p.get().autoplay_previews)
+            on_change=Callback::new(move |v| prefs.update_profile(&id.get_value(), |x| x.autoplay_previews = v))
+        />
+    }
+}
+
+/// Playback settings page (wide screens; phones have the switches on Edit profile).
+#[component]
+pub fn Playback(id: String) -> impl IntoView {
+    view! {
+        <div>
+            <Section title=t("set-playback-autoplay")><AutoplaySwitches id=id /></Section>
+        </div>
+    }
+}
+
+/// Notification settings of a profile: email and push.
+#[component]
+pub fn Notifications(id: String) -> impl IntoView {
+    let prefs = use_prefs();
+    let id = StoredValue::new(id);
+    let p = Memo::new(move |_| prefs.profile(&id.get_value()));
+    view! {
+        <div>
+            <p class="mb-5 text-body-md text-ink/60">{t("set-notifications-body")}</p>
+            <Section>
+                <SwitchRow
+                    icon="envelope-simple"
+                    title=t("set-notify-email")
+                    checked=Signal::derive(move || p.get().notify_email)
+                    on_change=Callback::new(move |v| prefs.update_profile(&id.get_value(), |x| x.notify_email = v))
+                />
+                <SwitchRow
+                    icon="bell"
+                    title=t("set-notify-push")
+                    checked=Signal::derive(move || p.get().notify_push)
+                    on_change=Callback::new(move |v| prefs.update_profile(&id.get_value(), |x| x.notify_push = v))
+                />
+            </Section>
+        </div>
     }
 }
 

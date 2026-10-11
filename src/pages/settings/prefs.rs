@@ -42,6 +42,9 @@ impl Default for SubtitleStyle {
 pub struct ProfilePrefs {
     pub autoplay_next: bool,
     pub autoplay_previews: bool,
+    /// Email and push notifications for this profile. No column yet.
+    pub notify_email: bool,
+    pub notify_push: bool,
     pub audio_language: Option<String>,
     pub subtitle_language: Option<String>,
     pub ui_language: Option<String>,
@@ -53,7 +56,7 @@ pub struct ProfilePrefs {
 
 impl Default for ProfilePrefs {
     fn default() -> Self {
-        Self { autoplay_next: true, autoplay_previews: true, audio_language: None, subtitle_language: None, ui_language: None, maturity: None, blocked_titles: Vec::new(), subtitle_style: SubtitleStyle::default() }
+        Self { autoplay_next: true, autoplay_previews: true, notify_email: true, notify_push: true, audio_language: None, subtitle_language: None, ui_language: None, maturity: None, blocked_titles: Vec::new(), subtitle_style: SubtitleStyle::default() }
     }
 }
 

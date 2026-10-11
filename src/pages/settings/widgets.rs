@@ -3,14 +3,14 @@ use crate::i18n::t;
 use leptos::prelude::*;
 
 /// Row classes shared by every row of a card: the divider sits inside the card edge and the last row has none.
-const ROW: &str = "flex min-h-settings-row w-full items-center border-b border-set-line px-1 py-3 text-start last:border-b-0 hover:bg-ink/5 focus-visible:bg-ink/5 focus-visible:outline-none";
-const CARD: &str = "rounded-card border border-set-edge bg-set-card px-4";
+const ROW: &str = "set-row flex min-h-settings-row w-full items-center border-b border-set-line px-1 py-3 text-start last:border-b-0 hover:bg-ink/5 focus-visible:bg-ink/5 focus-visible:outline-none";
+const CARD: &str = "set-card rounded-card border border-set-edge bg-set-card px-4";
 
 #[component]
 pub fn Section(#[prop(optional, into)] title: Option<String>, children: Children) -> impl IntoView {
     view! {
         <section class="mb-8">
-            {title.map(|t| view! { <h2 class="mb-4 text-title-sm leading-row text-ink/85">{t}</h2> })}
+            {title.map(|t| view! { <h2 class="set-section-title mb-4 text-title-sm leading-row text-ink/85">{t}</h2> })}
             <div class=CARD>{children()}</div>
         </section>
     }
@@ -123,34 +123,6 @@ pub fn ChoiceList(options: Vec<(String, String)>, selected: Signal<String>, on_p
     }
 }
 
-/// Same list with several picks allowed.
-#[component]
-pub fn CheckList(options: Vec<(String, String)>, selected: Signal<Vec<String>>, on_toggle: Callback<String>) -> impl IntoView {
-    view! {
-        <div class=CARD>
-            {options
-                .into_iter()
-                .map(|(value, label)| {
-                    let v = value.clone();
-                    let v2 = value.clone();
-                    view! {
-                        <button
-                            type="button"
-                            role="checkbox"
-                            aria-checked=move || selected.with(|s| s.contains(&v)).to_string()
-                            on:click=move |_| on_toggle.run(v2.clone())
-                            class=ROW
-                        >
-                            <span class="flex-1 text-title-sm leading-row text-ink">{label}</span>
-                            <i class="ph-bold ph-check text-xl text-brand" class=("invisible", { let s = value.clone(); move || !selected.with(|l| l.contains(&s)) }) aria-hidden="true"></i>
-                        </button>
-                    }
-                })
-                .collect_view()}
-        </div>
-    }
-}
-
 /// Labelled text field.
 #[component]
 pub fn Field(
@@ -253,4 +225,256 @@ pub fn OutlineButton(#[prop(into)] label: String, on_click: Callback<()>, #[prop
     view! {
         <button type="button" on:click=move |_| on_click.run(()) class=format!("w-full rounded-control border px-6 py-3 text-body-md font-bold {look}")>{label}</button>
     }
+}
+
+/// Password field with a show or hide button.
+#[component]
+pub fn PasswordField(#[prop(into)] label: String, value: RwSignal<String>, #[prop(default = "current-password")] autocomplete: &'static str) -> impl IntoView {
+    let shown = RwSignal::new(false);
+    view! {
+        <label class="mb-4 block">
+            <span class="mb-1.5 block text-label font-semibold text-ink/60">{label}</span>
+            <span class="flex items-center rounded-control border border-ink/20 bg-ink/10 focus-within:border-ink">
+                <input
+                    type=move || if shown.get() { "text" } else { "password" }
+                    autocomplete=autocomplete
+                    prop:value=move || value.get()
+                    on:input=move |ev| value.set(event_target_value(&ev))
+                    class="min-w-0 flex-1 bg-transparent px-4 py-3 text-body-md text-ink focus:outline-none"
+                />
+                <button
+                    type="button"
+                    aria-label=move || if shown.get() { t("set-password-hide") } else { t("set-password-show") }
+                    aria-pressed=move || shown.get().to_string()
+                    on:click=move |_| shown.update(|s| *s = !*s)
+                    class="flex h-11 w-11 shrink-0 items-center justify-center text-ink/70 hover:text-ink"
+                >
+                    <i class=move || if shown.get() { "ph-bold ph-eye-slash text-xl" } else { "ph-bold ph-eye text-xl" } aria-hidden="true"></i>
+                </button>
+            </span>
+        </label>
+    }
+}
+
+/// A row of digit boxes for a PIN or a code. One real input sits over the boxes, so typing, pasting, the keyboard type and
+/// one time code autofill all work; the boxes only show what was typed.
+#[component]
+pub fn DigitBoxes(#[prop(into)] label: String, value: RwSignal<String>, length: usize, #[prop(default = false)] secret: bool, #[prop(default = false)] one_time_code: bool) -> impl IntoView {
+    let focused = RwSignal::new(false);
+    view! {
+        <div class="mb-4">
+            <span class="mb-1.5 block text-label font-semibold text-ink/60">{label.clone()}</span>
+            <div class="relative inline-block">
+                <div class="flex gap-2" aria-hidden="true">
+                    {(0..length).map(|i| view! {
+                        <span
+                            class="flex h-14 w-11 items-center justify-center rounded-control border bg-ink/10 text-title font-bold text-ink"
+                            class=("border-ink", move || focused.get() && value.with(|v| v.chars().count()) == i)
+                            class=("border-ink/20", move || !(focused.get() && value.with(|v| v.chars().count()) == i))
+                        >
+                            {move || value.with(|v| v.chars().nth(i).map(|c| if secret { '•' } else { c }).map(String::from).unwrap_or_default())}
+                        </span>
+                    }).collect_view()}
+                </div>
+                <input
+                    type="text"
+                    inputmode="numeric"
+                    pattern="[0-9]*"
+                    autocomplete=if one_time_code { "one-time-code" } else { "off" }
+                    maxlength=length
+                    aria-label=label
+                    prop:value=move || value.get()
+                    on:input=move |ev| value.set(event_target_value(&ev).chars().filter(|c| c.is_ascii_digit()).take(length).collect())
+                    on:focus=move |_| focused.set(true)
+                    on:blur=move |_| focused.set(false)
+                    class="absolute inset-0 h-full w-full cursor-text bg-transparent text-transparent caret-transparent opacity-0"
+                />
+            </div>
+        </div>
+    }
+}
+
+/// Levels joined by a line, each level allowing everything below it (the age ratings stepper in the Netflix app). `options` run
+/// from the lowest to the highest level: (value, label, hint).
+#[component]
+pub fn Stepper(options: Vec<(String, String, String)>, selected: Signal<String>, on_pick: Callback<String>) -> impl IntoView {
+    let values: Vec<String> = options.iter().map(|(v, _, _)| v.clone()).collect();
+    let count = options.len();
+    view! {
+        <div role="radiogroup" class="rounded-card border border-set-edge bg-set-card px-4 py-2">
+            {options
+                .into_iter()
+                .enumerate()
+                .map(|(i, (value, label, hint))| {
+                    let values = values.clone();
+                    let v = value.clone();
+                    let reached = {
+                        let values = values.clone();
+                        move || values.iter().position(|x| *x == selected.get()).is_some_and(|at| i <= at)
+                    };
+                    let reached2 = reached.clone();
+                    view! {
+                        <button
+                            type="button"
+                            role="radio"
+                            aria-checked=move || (selected.get() == v).to_string()
+                            on:click=move |_| on_pick.run(value.clone())
+                            class="relative flex w-full items-start gap-4 py-3 text-start focus-visible:outline-none"
+                        >
+                            <span class="relative flex w-7 shrink-0 justify-center">
+                                {(i + 1 < count).then(|| view! { <span class="absolute start-1/2 top-7 -bottom-6 w-0.5 -translate-x-1/2 bg-set-line" class=("bg-brand", { let r = reached2.clone(); move || r() }) aria-hidden="true"></span> })}
+                                <span
+                                    class="relative flex h-7 w-7 items-center justify-center rounded-full border-2"
+                                    class=("border-brand", { let r = reached.clone(); move || r() })
+                                    class=("bg-brand", { let r = reached.clone(); move || r() })
+                                    class=("border-set-edge", { let r = reached.clone(); move || !r() })
+                                >
+                                    <i class="ph-bold ph-check text-fine text-chrome-ink" class=("invisible", { let r = reached.clone(); move || !r() }) aria-hidden="true"></i>
+                                </span>
+                            </span>
+                            <span class="min-w-0 flex-1">
+                                <span class="block text-title-sm font-semibold leading-row text-ink">{label}</span>
+                                <span class="block text-body-sm text-ink/70">{hint}</span>
+                            </span>
+                        </button>
+                    }
+                })
+                .collect_view()}
+        </div>
+    }
+}
+
+/// Round colour swatches, one selected.
+#[component]
+pub fn SwatchPicker(#[prop(into)] label: String, colors: Vec<(String, String, String)>, selected: Signal<String>, on_pick: Callback<String>) -> impl IntoView {
+    view! {
+        <div class="set-row block w-full border-b border-set-line px-1 py-3 last:border-b-0">
+            <span class="mb-2 block text-title-sm font-semibold leading-row text-ink">{label}</span>
+            <div role="radiogroup" class="flex flex-wrap gap-3">
+                {colors
+                    .into_iter()
+                    .map(|(id, hex, name)| {
+                        let hex_none = hex == "transparent";
+                        let sel = id.clone();
+                        let pick = id.clone();
+                        view! {
+                            <button
+                                type="button"
+                                role="radio"
+                                aria-label=name
+                                aria-checked=move || (selected.get() == sel).to_string()
+                                on:click=move |_| on_pick.run(pick.clone())
+                                style=format!("background-color:{hex}")
+                                class="h-9 w-9 rounded-full border-2 border-set-edge focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-brand"
+                                class=("swatch-none", hex_none)
+                                class=("ring-2", { let s = id.clone(); move || selected.get() == s })
+                                class=("ring-brand", { let s = id.clone(); move || selected.get() == s })
+                                class=("ring-offset-2", { let s = id.clone(); move || selected.get() == s })
+                            ></button>
+                        }
+                    })
+                    .collect_view()}
+            </div>
+        </div>
+    }
+}
+
+/// A row that opens to show more (a device card).
+#[component]
+pub fn Expandable(icon: &'static str, #[prop(into)] title: String, #[prop(optional, into)] meta: Option<String>, #[prop(optional, into)] badge: Option<String>, children: ChildrenFn) -> impl IntoView {
+    let open = RwSignal::new(false);
+    view! {
+        <div class="rounded-card border border-set-edge bg-set-card px-4">
+            <button type="button" aria-expanded=move || open.get().to_string() on:click=move |_| open.update(|o| *o = !*o) class="flex w-full items-center gap-3 py-4 text-start focus-visible:outline-none">
+                <i class=format!("ph-bold ph-{icon} text-2xl text-ink/70") aria-hidden="true"></i>
+                <span class="min-w-0 flex-1">
+                    {badge.filter(|b| !b.is_empty()).map(|b| view! { <Badge text=b /> })}
+                    <span class="block truncate text-title-sm font-semibold leading-row text-ink">{title}</span>
+                    {meta.filter(|m| !m.is_empty()).map(|m| view! { <span class="block text-body-sm text-ink/70">{m}</span> })}
+                </span>
+                <i class="ph-bold ph-caret-down text-2xl text-ink/70 transition-transform" class=("rotate-180", move || open.get()) aria-hidden="true"></i>
+            </button>
+            <Show when=move || open.get()>
+                <div class="border-t border-set-line py-3 text-body-sm text-ink/80">{children()}</div>
+            </Show>
+        </div>
+    }
+}
+
+/// Small label: New, Verified, This device.
+#[component]
+pub fn Badge(#[prop(into)] text: String) -> impl IntoView {
+    view! { <span class="mb-1 inline-block rounded-control bg-badge px-1.5 pb-0.5 pt-px text-body-sm font-medium text-paper-ink">{text}</span> }
+}
+
+/// A banner that explains something and may carry a button.
+#[component]
+pub fn Notice(icon: &'static str, #[prop(into)] title: Signal<String>, #[prop(into)] body: Signal<String>, children: Children) -> impl IntoView {
+    view! {
+        <div class="mb-6 rounded-card border border-set-edge bg-set-card p-5">
+            <p class="mb-1 flex items-center gap-2 text-title-sm font-semibold leading-row"><i class=format!("ph-bold ph-{icon} text-2xl") aria-hidden="true"></i>{move || title.get()}</p>
+            <p class="mb-4 text-body-md text-ink/70">{move || body.get()}</p>
+            {children()}
+        </div>
+    }
+}
+
+/// Message that appears for a moment after something was saved. Provided once by the settings page.
+#[derive(Clone, Copy)]
+pub struct Toast(pub RwSignal<Option<String>>);
+
+/// How long a toast stays, in milliseconds.
+pub const TOAST_MS: i32 = 2500;
+
+pub fn toast(text: String) {
+    if let Some(t) = use_context::<Toast>() {
+        t.0.set(Some(text));
+        if let Some(window) = web_sys::window() {
+            let cb = wasm_bindgen::closure::Closure::once_into_js(move || t.0.set(None));
+            let _ = window.set_timeout_with_callback_and_timeout_and_arguments_0(wasm_bindgen::JsCast::unchecked_ref(&cb), TOAST_MS);
+        }
+    }
+}
+
+#[component]
+pub fn Toaster() -> impl IntoView {
+    let Toast(message) = use_context::<Toast>().expect("Toast provided");
+    view! {
+        <div class="pointer-events-none fixed inset-x-0 bottom-6 z-(--z-dialog) flex justify-center px-4" role="status" aria-live="polite">
+            {move || message.get().map(|m| view! { <p class="rounded-control bg-chrome px-5 py-3 text-body-md text-chrome-ink shadow-popover">{m}</p> })}
+        </div>
+    }
+}
+
+/// A time from the database (ISO text) written for the reader's language.
+pub fn local_time(iso: &str) -> String {
+    let date = js_sys::Date::new(&wasm_bindgen::JsValue::from_str(iso));
+    if date.get_time().is_nan() {
+        return iso.to_string();
+    }
+    date.to_locale_string(&crate::i18n::language(), &wasm_bindgen::JsValue::UNDEFINED).as_string().unwrap_or_else(|| iso.to_string())
+}
+
+/// Offers `text` to the browser as a file to save.
+pub fn save_as_file(name: &str, text: &str, mime: &str) {
+    use wasm_bindgen::JsCast;
+    let Some(doc) = web_sys::window().and_then(|w| w.document()) else { return };
+    let Ok(a) = doc.create_element("a") else { return };
+    let href = format!("data:{mime};charset=utf-8,{}", js_sys::encode_uri_component(text));
+    let _ = a.set_attribute("href", &href);
+    let _ = a.set_attribute("download", name);
+    if let Some(el) = a.dyn_ref::<web_sys::HtmlElement>() {
+        el.click();
+    }
+}
+
+
+/// A time written for the reader's language: date only.
+pub fn local_date(millis: f64) -> String {
+    js_sys::Date::new(&wasm_bindgen::JsValue::from_f64(millis)).to_locale_date_string(&crate::i18n::language(), &wasm_bindgen::JsValue::UNDEFINED).as_string().unwrap_or_default()
+}
+
+/// True from the 1024 px width, where the website layout is used.
+pub fn is_wide() -> bool {
+    web_sys::window().and_then(|w| w.match_media("(min-width: 64rem)").ok().flatten()).is_some_and(|m| m.matches())
 }

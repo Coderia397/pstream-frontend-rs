@@ -148,6 +148,11 @@ def run(lang, only=None):
                     continue
                 t = t.replace("\r", "").strip("\n")
                 bad = ftl.check(v, t)
+                if "->" in v and not bad:
+                    wanted = set(c.strip() for c in LANGS[lang][1].split(","))
+                    have = set(re.findall(r"\[(\w+)\]", t)) | {"other"}
+                    if have != wanted:
+                        bad = [f"plural categories must be exactly: {', '.join(sorted(wanted))} (found: {', '.join(sorted(have))})"]
                 if bad:
                     problems.append((k, "; ".join(bad)))
                 else:
@@ -181,6 +186,16 @@ if __name__ == "__main__":
         print(", ".join(LANGS))
         sys.exit(0)
     only = args[args.index("--only") + 1] if "--only" in args else None
+    if "--plurals" in args:
+        # forget the plural messages of the chosen languages so they are asked again with the exact categories
+        en_sel = [k for k, v in ftl.read((ROOT / "i18n/en.ftl").read_text()) if "->" in v]
+        for lang in [a for a in args if a in LANGS] or list(LANGS):
+            f = CACHE / f"{lang}.json"
+            if f.exists():
+                c = json.loads(f.read_text())
+                for k in en_sel:
+                    c.pop(k, None)
+                f.write_text(json.dumps(c, ensure_ascii=False, indent=1))
     langs = [a for a in args if a in LANGS] or list(LANGS)
     for lang in langs:
         run(lang, only)

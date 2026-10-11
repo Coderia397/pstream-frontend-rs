@@ -42,9 +42,12 @@ impl Default for SubtitleStyle {
 pub struct ProfilePrefs {
     pub autoplay_next: bool,
     pub autoplay_previews: bool,
-    /// Email and push notifications for this profile. No column yet.
-    pub notify_email: bool,
-    pub notify_push: bool,
+    /// "email", "push" and "<channel>.<topic>" switches; a missing key means on.
+    pub notifications: HashMap<String, bool>,
+    /// "auto", "low", "medium" or "high" (profile_settings.data_usage).
+    pub data_usage: String,
+    /// Name in Netflix style games (profile_settings.game_handle).
+    pub game_handle: Option<String>,
     pub audio_language: Option<String>,
     pub subtitle_language: Option<String>,
     pub ui_language: Option<String>,
@@ -56,11 +59,16 @@ pub struct ProfilePrefs {
 
 impl Default for ProfilePrefs {
     fn default() -> Self {
-        Self { autoplay_next: true, autoplay_previews: true, notify_email: true, notify_push: true, audio_language: None, subtitle_language: None, ui_language: None, maturity: None, blocked_titles: Vec::new(), subtitle_style: SubtitleStyle::default() }
+        Self { autoplay_next: true, autoplay_previews: true, notifications: HashMap::new(), data_usage: "auto".into(), game_handle: None, audio_language: None, subtitle_language: None, ui_language: None, maturity: None, blocked_titles: Vec::new(), subtitle_style: SubtitleStyle::default() }
     }
 }
 
 impl ProfilePrefs {
+    /// A notification switch; anything never set counts as on.
+    pub fn notify(&self, key: &str) -> bool {
+        self.notifications.get(key).copied().unwrap_or(true)
+    }
+
     /// The level in force: the saved one if it is allowed for this kind of profile, otherwise the default for it.
     pub fn maturity_for(&self, kids: bool) -> &'static str {
         use crate::data::settings::{maturity, DEFAULT_KIDS_MATURITY, DEFAULT_MATURITY};
@@ -84,10 +92,25 @@ impl Default for AppPrefs {
     }
 }
 
+/// Switches of the whole account (account_details.test_participation and profile_transfer).
+#[derive(Clone, Debug, PartialEq, Serialize, Deserialize)]
+#[serde(default)]
+pub struct AccountPrefs {
+    pub test_participation: bool,
+    pub profile_transfer: bool,
+}
+
+impl Default for AccountPrefs {
+    fn default() -> Self {
+        Self { test_participation: true, profile_transfer: true }
+    }
+}
+
 #[derive(Clone, Copy)]
 pub struct Prefs {
     profiles: RwSignal<HashMap<String, ProfilePrefs>>,
     pub app: RwSignal<AppPrefs>,
+    pub account: RwSignal<AccountPrefs>,
     /// Unix seconds until which the password check counts. Kept in memory only, a reload asks again.
     pub verified_until: RwSignal<u64>,
 }
@@ -111,10 +134,12 @@ pub fn provide_prefs() {
     let prefs = Prefs {
         profiles: RwSignal::new(read(crate::keys::PROFILE_PREFS).unwrap_or_default()),
         app: RwSignal::new(read(crate::keys::APP_PREFS).unwrap_or_default()),
+        account: RwSignal::new(read(crate::keys::ACCOUNT_PREFS).unwrap_or_default()),
         verified_until: RwSignal::new(0),
     };
     Effect::new(move |_| prefs.profiles.with(|p| write(crate::keys::PROFILE_PREFS, p)));
     Effect::new(move |_| prefs.app.with(|a| write(crate::keys::APP_PREFS, a)));
+    Effect::new(move |_| prefs.account.with(|a| write(crate::keys::ACCOUNT_PREFS, a)));
     provide_context(prefs);
 }
 
@@ -140,6 +165,7 @@ impl Prefs {
     pub fn forget_all(&self) {
         self.profiles.set(HashMap::new());
         self.app.set(AppPrefs::default());
+        self.account.set(AccountPrefs::default());
     }
 
     pub fn is_verified(&self) -> bool {

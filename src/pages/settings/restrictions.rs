@@ -1,6 +1,6 @@
 //! Viewing restrictions of one profile: the maturity level (profiles.maturity) and the titles that are blocked.
 use super::prefs::use_prefs;
-use super::widgets::{LinkRow, Section};
+use super::widgets::{toast, LinkRow, Section, Stepper};
 use super::Screen;
 use crate::config::{BLOCKED_TITLES_MAX, BLOCKED_TITLE_MAX};
 use crate::data::settings::{maturity, MATURITY_LEVELS};
@@ -29,40 +29,19 @@ pub fn Restrictions(id: String) -> impl IntoView {
     }
 }
 
-/// Maturity levels as radio rows with what each one allows. A Kids profile is offered the two kids levels only.
+/// Maturity levels as a stepper: each level allows everything below it, with what it allows written under it. A Kids profile is
+/// offered the two kids levels only.
 #[component]
 pub fn Ratings(id: String) -> impl IntoView {
     let prefs = use_prefs();
     let id = StoredValue::new(id);
     let kids = is_kids(&id.get_value());
     let selected = Signal::derive(move || prefs.profile(&id.get_value()).maturity_for(kids).to_string());
+    let options: Vec<(String, String, String)> = MATURITY_LEVELS.iter().filter(|m| !kids || m.kids).map(|m| (m.key.to_string(), t(m.label_key), t(m.hint_key))).collect();
     view! {
         <div>
             <p class="mb-5 text-body-md text-ink/60">{t("set-ratings-hint")}</p>
-            <div role="radiogroup" class="overflow-hidden rounded-card border border-ink/10 bg-ink/5 divide-y divide-ink/10">
-                {MATURITY_LEVELS
-                    .iter()
-                    .filter(|m| !kids || m.kids)
-                    .map(|m| {
-                        let key = m.key;
-                        view! {
-                            <button
-                                type="button"
-                                role="radio"
-                                aria-checked=move || (selected.get() == key).to_string()
-                                on:click=move |_| prefs.update_profile(&id.get_value(), |p| p.maturity = Some(key.to_string()))
-                                class="flex w-full items-center px-5 py-4 text-start hover:bg-ink/10 focus-visible:bg-ink/10 focus-visible:outline-none"
-                            >
-                                <span class="min-w-0 flex-1">
-                                    <span class="block text-body-md font-bold">{t(m.label_key)}</span>
-                                    <span class="mt-0.5 block text-label text-ink/50">{t(m.hint_key)}</span>
-                                </span>
-                                <i class="ph-bold ph-check text-xl text-brand" class=("invisible", move || selected.get() != key) aria-hidden="true"></i>
-                            </button>
-                        }
-                    })
-                    .collect_view()}
-            </div>
+            <Stepper options=options selected=selected on_pick=Callback::new(move |v: String| { prefs.update_profile(&id.get_value(), |p| p.maturity = Some(v)); toast(t("set-saved")); }) />
         </div>
     }
 }

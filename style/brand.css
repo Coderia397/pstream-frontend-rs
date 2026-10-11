@@ -57,6 +57,9 @@
   --color-set-card: color-mix(in srgb, var(--color-ink) 5%, transparent);
   --color-set-edge: color-mix(in srgb, var(--color-ink) 10%, transparent);
   --color-set-line: color-mix(in srgb, var(--color-ink) 10%, transparent);
+  --color-set-tile: #1a1a1a;
+  --color-set-sheet: #232323;
+  --color-set-sheet-tile: #2d2d2d;
   --color-chrome: #000000;
   --color-chrome-ink: #ffffff;
   --color-badge: #bcd8ff;
@@ -70,6 +73,10 @@
   --spacing-settings-row: 3.5rem;
   --spacing-settings-header: 4rem;
   --spacing-settings-menu-item: 2.5rem;
+  --spacing-settings-tile: 4.25rem;
+  /* Consent sheet: about a fifth of the screen on a phone, a fixed width pop-up from the sm width */
+  --spacing-sheet-min: 20dvh;
+  --spacing-sheet: 30rem;
 
   /* Text and neutral controls */
   --color-ink-soft: #e5e5e5;

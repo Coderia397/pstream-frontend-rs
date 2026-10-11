@@ -3,7 +3,14 @@
 //! arrow; from 1024 px wide the same routes show a sidebar next to the screen, and the hub address opens the profile screen.
 //! The tree is recorded in notes/32-settings-rebuild-plan-2026-10-11.md.
 mod account;
+mod activity;
 mod app;
+mod devices;
+mod diagnostics;
+mod stepup;
+mod notifications;
+mod privacy;
+mod transfer;
 mod hub;
 mod languages;
 mod prefs;
@@ -37,8 +44,14 @@ pub enum Screen {
     Subtitles(String),
     Playback(String),
     Notifications(String),
+    NotificationChannel(String, String),
+    GameHandle(String),
+    TransferProfile(String),
     App,
     Licences,
+    CheckNetwork,
+    PlaybackSpec,
+    SpeedTest,
     Account,
     AccountSecurity,
     AccountDevices,
@@ -50,6 +63,9 @@ pub enum Screen {
     Access,
     Privacy,
     Activity,
+    PersonalInfo,
+    Testing,
+    TransferSetting,
     Delete,
 }
 
@@ -85,8 +101,14 @@ impl Screen {
             ["profile", _, "subtitles"] => Screen::Subtitles(id()),
             ["profile", _, "playback"] => Screen::Playback(id()),
             ["profile", _, "notifications"] => Screen::Notifications(id()),
+            ["profile", _, "notifications", channel] if crate::data::settings::NOTIFICATION_CHANNELS.iter().any(|(c, _, _)| c == channel) => Screen::NotificationChannel(id(), channel.to_string()),
+            ["profile", _, "game-handle"] => Screen::GameHandle(id()),
+            ["profile", _, "transfer"] => Screen::TransferProfile(id()),
             ["app"] => Screen::App,
             ["app", "licences"] => Screen::Licences,
+            ["app", "network"] => Screen::CheckNetwork,
+            ["app", "playback-spec"] => Screen::PlaybackSpec,
+            ["app", "speed-test"] => Screen::SpeedTest,
             ["account"] => Screen::Account,
             ["account", "security"] => Screen::AccountSecurity,
             ["account", "devices"] => Screen::AccountDevices,
@@ -98,6 +120,9 @@ impl Screen {
             ["account", "access"] => Screen::Access,
             ["account", "privacy"] => Screen::Privacy,
             ["account", "privacy", "activity"] => Screen::Activity,
+            ["account", "personal-info"] => Screen::PersonalInfo,
+            ["account", "testing"] => Screen::Testing,
+            ["account", "transfer"] => Screen::TransferSetting,
             ["account", "delete"] => Screen::Delete,
             _ => Screen::Hub,
         }
@@ -121,8 +146,14 @@ impl Screen {
             Screen::Subtitles(id) => profile(id, "/subtitles"),
             Screen::Playback(id) => profile(id, "/playback"),
             Screen::Notifications(id) => profile(id, "/notifications"),
+            Screen::NotificationChannel(id, channel) => profile(id, &format!("/notifications/{channel}")),
+            Screen::GameHandle(id) => profile(id, "/game-handle"),
+            Screen::TransferProfile(id) => profile(id, "/transfer"),
             Screen::App => format!("{ROOT}/app"),
             Screen::Licences => format!("{ROOT}/app/licences"),
+            Screen::CheckNetwork => format!("{ROOT}/app/network"),
+            Screen::PlaybackSpec => format!("{ROOT}/app/playback-spec"),
+            Screen::SpeedTest => format!("{ROOT}/app/speed-test"),
             Screen::Account => format!("{ROOT}/account"),
             Screen::AccountSecurity => format!("{ROOT}/account/security"),
             Screen::AccountDevices => format!("{ROOT}/account/devices"),
@@ -134,6 +165,9 @@ impl Screen {
             Screen::Access => format!("{ROOT}/account/access"),
             Screen::Privacy => format!("{ROOT}/account/privacy"),
             Screen::Activity => format!("{ROOT}/account/privacy/activity"),
+            Screen::PersonalInfo => format!("{ROOT}/account/personal-info"),
+            Screen::Testing => format!("{ROOT}/account/testing"),
+            Screen::TransferSetting => format!("{ROOT}/account/transfer"),
             Screen::Delete => format!("{ROOT}/account/delete"),
         }
     }
@@ -143,10 +177,11 @@ impl Screen {
         match self {
             Screen::Hub => routes::BROWSE.into(),
             Screen::Profiles | Screen::App | Screen::Account | Screen::Profile(_) | Screen::AccountSecurity | Screen::AccountDevices | Screen::AccountProfiles => Screen::Hub.path(),
-            Screen::Avatar(id) | Screen::Restrictions(id) | Screen::Lock(id) | Screen::MainProfile(id) | Screen::Language(id) | Screen::AudioSubtitles(id) | Screen::Subtitles(id) | Screen::Playback(id) | Screen::Notifications(id) => Screen::Profile(id.clone()).path(),
+            Screen::Avatar(id) | Screen::Restrictions(id) | Screen::Lock(id) | Screen::MainProfile(id) | Screen::Language(id) | Screen::AudioSubtitles(id) | Screen::Subtitles(id) | Screen::Playback(id) | Screen::Notifications(id) | Screen::GameHandle(id) | Screen::TransferProfile(id) => Screen::Profile(id.clone()).path(),
+            Screen::NotificationChannel(id, _) => Screen::Notifications(id.clone()).path(),
             Screen::Ratings(id) | Screen::Blocked(id) => Screen::Restrictions(id.clone()).path(),
-            Screen::Licences => Screen::App.path(),
-            Screen::Name | Screen::Password | Screen::Email | Screen::Phone | Screen::Access | Screen::Privacy | Screen::Delete => Screen::Account.path(),
+            Screen::Licences | Screen::CheckNetwork | Screen::PlaybackSpec | Screen::SpeedTest => Screen::App.path(),
+            Screen::Name | Screen::Password | Screen::Email | Screen::Phone | Screen::Access | Screen::Privacy | Screen::PersonalInfo | Screen::Testing | Screen::TransferSetting | Screen::Delete => Screen::Account.path(),
             Screen::Activity => Screen::Privacy.path(),
         }
     }
@@ -155,7 +190,7 @@ impl Screen {
     /// like the Netflix website. Everything else goes where the phone goes.
     pub fn parent_wide(&self) -> String {
         match self {
-            Screen::Name | Screen::Password | Screen::Email | Screen::Phone | Screen::Privacy | Screen::Delete => Screen::AccountSecurity.path(),
+            Screen::Name | Screen::Password | Screen::Email | Screen::Phone | Screen::Privacy | Screen::PersonalInfo | Screen::Testing | Screen::TransferSetting | Screen::Delete => Screen::AccountSecurity.path(),
             Screen::Access => Screen::AccountDevices.path(),
             Screen::Profiles | Screen::Profile(_) => Screen::AccountProfiles.path(),
             Screen::AccountSecurity | Screen::AccountDevices | Screen::AccountProfiles | Screen::App => Screen::Account.path(),
@@ -180,8 +215,14 @@ impl Screen {
             Screen::Subtitles(_) => "set-title-subtitles",
             Screen::Playback(_) => "set-title-playback",
             Screen::Notifications(_) => "set-title-notifications",
+            Screen::NotificationChannel(_, channel) => if channel == "push" { "set-notify-push" } else { "set-notify-email" },
+            Screen::GameHandle(_) => "set-title-game-handle",
+            Screen::TransferProfile(_) => "set-title-transfer-profile",
             Screen::App => "set-title-app",
             Screen::Licences => "set-app-licences",
+            Screen::CheckNetwork => "set-check-network",
+            Screen::PlaybackSpec => "set-playback-spec",
+            Screen::SpeedTest => "set-title-speed-test",
             Screen::Account => "set-title-account",
             Screen::AccountSecurity => "set-account-security",
             Screen::AccountDevices => "set-account-devices",
@@ -193,21 +234,24 @@ impl Screen {
             Screen::Access => "set-title-devices",
             Screen::Privacy => "set-title-privacy",
             Screen::Activity => "set-title-activity",
+            Screen::PersonalInfo => "set-title-personal-info",
+            Screen::Testing => "set-title-testing",
+            Screen::TransferSetting => "set-title-transfer",
             Screen::Delete => "set-title-delete",
         }
     }
 
     /// Screens Netflix draws white on a phone (the Account pages); the rest are dark there. From 1024 px everything is white.
     fn light_on_phone(&self) -> bool {
-        matches!(self, Screen::Account | Screen::AccountSecurity | Screen::AccountDevices | Screen::AccountProfiles | Screen::Name | Screen::Password | Screen::Email | Screen::Phone | Screen::Access | Screen::Privacy | Screen::Activity | Screen::Delete)
+        matches!(self, Screen::Account | Screen::AccountSecurity | Screen::AccountDevices | Screen::AccountProfiles | Screen::Name | Screen::Password | Screen::Email | Screen::Phone | Screen::Access | Screen::Privacy | Screen::Activity | Screen::PersonalInfo | Screen::Testing | Screen::TransferSetting | Screen::Delete)
     }
 
     fn section(&self) -> Section {
         match self {
             Screen::Hub | Screen::Account => Section::Overview,
-            Screen::AccountSecurity | Screen::Name | Screen::Password | Screen::Email | Screen::Phone | Screen::Privacy | Screen::Activity | Screen::Delete => Section::Security,
+            Screen::AccountSecurity | Screen::Name | Screen::Password | Screen::Email | Screen::Phone | Screen::Privacy | Screen::Activity | Screen::PersonalInfo | Screen::Testing | Screen::TransferSetting | Screen::Delete => Section::Security,
             Screen::AccountDevices | Screen::Access => Section::Devices,
-            Screen::App | Screen::Licences => Section::App,
+            Screen::App | Screen::Licences | Screen::CheckNetwork | Screen::PlaybackSpec | Screen::SpeedTest => Section::App,
             _ => Section::Profiles,
         }
     }
@@ -250,12 +294,13 @@ pub fn SettingsPage() -> impl IntoView {
     });
     let signout_open = RwSignal::new(false);
     provide_context(hub::SignOutOpen(signout_open));
+    provide_context(widgets::Toast(RwSignal::new(None)));
 
     let avatar = Memo::new(move |_| profiles.profiles.with(|l| profiles.active_profile_id.with(|id| l.iter().find(|p| Some(&p.id) == id.as_ref()).or(l.first()).and_then(|p| p.avatar_url.clone()))).unwrap_or_else(|| crate::data::DEFAULT_AVATAR.to_string()));
     let light_phone = move || screen.get().light_on_phone();
 
     view! {
-        <div class="theme-paper-wide min-h-screen bg-void font-sans text-ink selection:bg-brand selection:text-ink" class=("theme-paper", light_phone)>
+        <div class="theme-paper-wide min-h-screen bg-void font-sans text-ink selection:bg-brand selection:text-ink" class=("theme-paper", light_phone) class=("set-tiles", move || !light_phone())>
             // a phone shows the account pages under a black bar with the logo, like the Netflix app
             <Show when=light_phone>
                 <div class="relative flex h-settings-header items-center bg-chrome px-2 lg:hidden">
@@ -335,13 +380,14 @@ pub fn SettingsPage() -> impl IntoView {
                         if current.needs_account_check() || current.needs_profile_check() {
                             let account = current.needs_account_check();
                             let shown = StoredValue::new(current);
-                            view! { <account::Gate account=account>{move || screen_body(shown.get_value())}</account::Gate> }.into_any()
+                            view! { <stepup::Gate account=account>{move || screen_body(shown.get_value())}</stepup::Gate> }.into_any()
                         } else {
                             screen_body(current)
                         }
                     }}
                 </main>
             </div>
+            <widgets::Toaster />
             <widgets::ConfirmDialog open=signout_open title=t("set-sign-out") body=t("set-sign-out-body") confirm_label=t("set-sign-out") on_confirm=Callback::new(|_| hub::sign_out_now()) />
         </div>
     }
@@ -368,9 +414,15 @@ fn screen_body(screen: Screen) -> AnyView {
         Screen::AudioSubtitles(id) => view! { <languages::AudioSubtitles id=id /> }.into_any(),
         Screen::Subtitles(id) => view! { <subtitles::Subtitles id=id /> }.into_any(),
         Screen::Playback(id) => view! { <profile::Playback id=id /> }.into_any(),
-        Screen::Notifications(id) => view! { <profile::Notifications id=id /> }.into_any(),
+        Screen::Notifications(id) => view! { <notifications::Notifications id=id /> }.into_any(),
+        Screen::NotificationChannel(id, channel) => view! { <notifications::Channel id=id channel=channel /> }.into_any(),
+        Screen::GameHandle(id) => view! { <profile::GameHandle id=id /> }.into_any(),
+        Screen::TransferProfile(id) => view! { <transfer::TransferProfile id=id /> }.into_any(),
         Screen::App => view! { <app::AppSettings /> }.into_any(),
         Screen::Licences => view! { <app::Licences /> }.into_any(),
+        Screen::CheckNetwork => view! { <diagnostics::CheckNetwork /> }.into_any(),
+        Screen::PlaybackSpec => view! { <diagnostics::PlaybackSpec /> }.into_any(),
+        Screen::SpeedTest => view! { <diagnostics::SpeedTest /> }.into_any(),
         Screen::Account => view! { <account::Account /> }.into_any(),
         Screen::AccountSecurity => view! { <account::SecurityPage /> }.into_any(),
         Screen::AccountDevices => view! { <account::DevicesPage /> }.into_any(),
@@ -379,9 +431,12 @@ fn screen_body(screen: Screen) -> AnyView {
         Screen::Password => view! { <account::Password /> }.into_any(),
         Screen::Email => view! { <account::Email /> }.into_any(),
         Screen::Phone => view! { <account::Phone /> }.into_any(),
-        Screen::Access => view! { <account::Access /> }.into_any(),
-        Screen::Privacy => view! { <account::Privacy /> }.into_any(),
-        Screen::Activity => view! { <account::Activity /> }.into_any(),
+        Screen::Access => view! { <devices::Access /> }.into_any(),
+        Screen::Privacy => view! { <privacy::Privacy /> }.into_any(),
+        Screen::Activity => view! { <activity::Activity /> }.into_any(),
+        Screen::PersonalInfo => view! { <privacy::PersonalInfo /> }.into_any(),
+        Screen::Testing => view! { <privacy::Testing /> }.into_any(),
+        Screen::TransferSetting => view! { <transfer::TransferSetting /> }.into_any(),
         Screen::Delete => view! { <account::DeleteAccount /> }.into_any(),
     }
 }
@@ -406,8 +461,15 @@ mod tests {
             Screen::Subtitles(id()),
             Screen::Playback(id()),
             Screen::Notifications(id()),
+            Screen::NotificationChannel(id(), "email".into()),
+            Screen::NotificationChannel(id(), "push".into()),
+            Screen::GameHandle(id()),
+            Screen::TransferProfile(id()),
             Screen::App,
             Screen::Licences,
+            Screen::CheckNetwork,
+            Screen::PlaybackSpec,
+            Screen::SpeedTest,
             Screen::Account,
             Screen::AccountSecurity,
             Screen::AccountDevices,
@@ -419,6 +481,9 @@ mod tests {
             Screen::Access,
             Screen::Privacy,
             Screen::Activity,
+            Screen::PersonalInfo,
+            Screen::Testing,
+            Screen::TransferSetting,
             Screen::Delete,
         ]
     }

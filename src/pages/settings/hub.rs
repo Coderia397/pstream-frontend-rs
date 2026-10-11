@@ -1,5 +1,6 @@
 //! The settings hub (the Profile sheet of the Netflix app) and Manage Profiles.
 use super::widgets::{ActionRow, LinkRow, Section};
+use super::Screen;
 use crate::components::profiles::add_edit_modal::{AddEditProfileModal, ProfileFormData};
 use crate::i18n::t;
 use crate::models::profile::Profile;
@@ -60,16 +61,17 @@ pub fn Hub() -> impl IntoView {
     });
 
     view! {
-        <div>
+        <div class="set-sheet">
             {move || active.get().map(|p| view! {
-                <a href=format!("/settings/profile/{}", p.id) class="mb-6 flex items-center gap-5 rounded-card border border-ink/10 bg-ink/5 p-5 hover:bg-ink/10">
-                    <img src=avatar_of(&p) alt="" class="h-20 w-20 rounded-control object-cover" />
-                    <span class="min-w-0 flex-1">
-                        <span class="block truncate text-heading font-bold">{p.name.clone()}</span>
-                        <span class="mt-0.5 block text-label text-ink/50">{t("set-edit-profile-hint")}</span>
-                    </span>
-                    <i class="ph-bold ph-pencil-simple text-2xl text-ink/70" aria-hidden="true"></i>
-                </a>
+                <div class="relative mb-6 flex flex-col items-center gap-3 rounded-modal bg-set-sheet-tile p-6 lg:bg-set-card">
+                    <a href=Screen::Profile(p.id.clone()).path() class="flex flex-col items-center gap-3" aria-label=t("set-title-edit-profile")>
+                        <img src=avatar_of(&p) alt="" class="h-24 w-24 rounded-card object-cover" />
+                        <span class="max-w-full truncate text-heading font-bold">{p.name.clone()}</span>
+                    </a>
+                    <a href=Screen::Profile(p.id.clone()).path() class="absolute end-4 top-4 flex h-10 w-10 items-center justify-center rounded-full text-ink hover:bg-ink/10" aria-label=t("set-title-edit-profile")>
+                        <i class="ph-bold ph-pencil-simple text-2xl" aria-hidden="true"></i>
+                    </a>
+                </div>
             })}
             <ul class="mb-6 flex flex-wrap justify-center gap-5">
                 {move || others.get().into_iter().map(|p| {
@@ -85,11 +87,11 @@ pub fn Hub() -> impl IntoView {
                 }).collect_view()}
             </ul>
             <div class="mb-10 flex justify-center">
-                <a href="/settings/profiles" class="rounded-full bg-ink/10 px-6 py-3 text-body-md font-bold hover:bg-ink/20">{t("set-manage-profiles")}</a>
+                <a href=Screen::Profiles.path() class="rounded-full bg-set-sheet-tile px-6 py-3 text-body-md font-bold hover:bg-ink/20 lg:bg-ink/10">{t("set-manage-profiles")}</a>
             </div>
             <Section>
-                <LinkRow icon="gear-six" title=t("set-nav-app") href="/settings/app" />
-                <LinkRow icon="user" title=t("set-nav-account") href="/settings/account" />
+                <LinkRow icon="gear-six" title=t("set-nav-app") href=Screen::App.path() />
+                <LinkRow icon="user" title=t("set-nav-account") href=Screen::Account.path() />
                 <LinkRow icon="question" title=t("set-nav-help") href=crate::config::routes::HELP />
                 <ActionRow icon="sign-out" title=t("set-sign-out") on_click=Callback::new(move |_| if let Some(s) = signout { s.0.set(true) }) />
             </Section>
@@ -121,7 +123,7 @@ pub fn ManageProfiles() -> impl IntoView {
             <ul class="grid grid-cols-2 gap-6 sm:grid-cols-3">
                 {move || store.profiles.get().into_iter().map(|p| view! {
                     <li>
-                        <a href=format!("/settings/profile/{}", p.id) class="group flex flex-col items-center gap-3 text-center">
+                        <a href=Screen::Profile(p.id.clone()).path() class="group flex flex-col items-center gap-3 text-center">
                             <span class="relative block h-28 w-28 overflow-hidden rounded-card">
                                 <img src=avatar_of(&p) alt="" class="h-full w-full object-cover opacity-70" />
                                 <span class="absolute inset-0 flex items-center justify-center bg-void/40">
@@ -144,9 +146,49 @@ pub fn ManageProfiles() -> impl IntoView {
                     </li>
                 </Show>
             </ul>
+            <ImportProfile />
             <Show when=move || adding.get()>
                 <AddEditProfileModal mode="add" initial=None on_save=on_save on_delete=None on_cancel=Callback::new(move |_| adding.set(false)) />
             </Show>
+        </div>
+    }
+}
+
+/// "Import a profile": picks a file saved by Transfer a profile and adds it to this account.
+#[component]
+fn ImportProfile() -> impl IntoView {
+    use super::prefs::use_prefs;
+    use super::widgets::{toast, ActionRow, Message, Section, Tone};
+    let store = use_profile_store();
+    let prefs = use_prefs();
+    let input = NodeRef::<leptos::html::Input>::new();
+    let note = RwSignal::new(None::<(Tone, String)>);
+    let on_pick = move |_| {
+        let Some(el) = input.get() else { return };
+        let Some(file) = el.files().and_then(|f| f.get(0)) else { return };
+        leptos::task::spawn_local(async move {
+            let text = wasm_bindgen_futures::JsFuture::from(file.text()).await.ok().and_then(|v| v.as_string()).unwrap_or_default();
+            match super::transfer::import_profile(&text, store, prefs) {
+                Ok(name) => {
+                    note.set(None);
+                    toast(crate::i18n::t_args("set-import-done", &[("name", name.into())]));
+                }
+                Err(e) => note.set(Some((Tone::Error, t(match e {
+                    super::transfer::ImportError::NotAProfile => "set-import-invalid",
+                    super::transfer::ImportError::TooNew => "set-import-newer",
+                    super::transfer::ImportError::Full => "set-import-full",
+                })))),
+            }
+        });
+        el.set_value("");
+    };
+    view! {
+        <div class="mt-8">
+            <Message text=note />
+            <Section>
+                <ActionRow icon="file-arrow-up" title=t("set-import-title") hint=t("set-import-hint") on_click=Callback::new(move |_| { if let Some(el) = input.get() { el.click(); } }) />
+            </Section>
+            <input node_ref=input type="file" accept=".json,application/json" class="hidden" on:change=on_pick />
         </div>
     }
 }

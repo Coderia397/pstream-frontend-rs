@@ -3,10 +3,11 @@
 //! take over later (public.profiles: name, avatar, kind, maturity, has_pin, is_main).
 use super::hub::persist_profiles;
 use super::prefs::use_prefs;
-use super::widgets::{ConfirmDialog, Field, FormButtons, LinkRow, Message, OutlineButton, Section, SwitchRow, Tone};
+use super::widgets::{is_wide, toast, ConfirmDialog, DigitBoxes, Field, FormButtons, LinkRow, Message, OutlineButton, Section, SwitchRow, Tone};
 use super::Screen;
-use crate::config::{PIN_LENGTH, PROFILE_NAME_MAX};
-use crate::data::{settings::maturity, AVATAR_CATEGORIES};
+use crate::config::{GAME_HANDLE_MAX, GAME_HANDLE_MIN, PIN_LENGTH, PROFILE_NAME_MAX};
+use crate::data::settings::{maturity, HANDLE_ADJECTIVES, HANDLE_NOUNS, PROFILE_DATA_USAGE};
+use crate::data::AVATAR_CATEGORIES;
 use crate::i18n::{t, t_args};
 use crate::models::profile::Profile;
 use crate::store::use_profile_store;
@@ -65,6 +66,7 @@ pub fn EditProfile(id: String) -> impl IntoView {
         } else if value != current {
             note.set(None);
             change(&id.get_value(), |p| p.name = value);
+            toast(t("set-saved"));
         }
     };
     let delete = Callback::new(move |_| {
@@ -88,24 +90,31 @@ pub fn EditProfile(id: String) -> impl IntoView {
         let removable = p.is_default != Some(true) && store.profiles.with(|l| l.len() > 1);
         let can_be_main = p.is_default != Some(true) && !kids;
         let maturity_value = Signal::derive(move || t(maturity(p_prefs.get().maturity_for(kids)).label_key));
+        let handle_value = Signal::derive(move || p_prefs.get().game_handle.unwrap_or_else(|| t("set-handle-create")));
         let lock_value = Signal::derive(move || if profile.get().is_some_and(|p| p.pin.is_some()) { t("set-lock-on") } else { t("set-lock-off") });
         let language_value = Signal::derive(move || crate::i18n::native_name(&p_prefs.get().ui_language.unwrap_or_else(crate::i18n::language)));
         let screen = move |s: fn(String) -> Screen| s(pid.clone()).path();
         view! {
             <div>
                 <Message text=note />
-                <div class="mb-8 flex items-center gap-6">
+                <div class="mb-8 flex flex-col items-center gap-5 lg:flex-row lg:gap-6">
                     <a href=screen(Screen::Avatar) class="group relative block h-24 w-24 shrink-0 overflow-hidden rounded-card" aria-label=t("set-title-avatar")>
                         <img src=p.avatar_url.clone().unwrap_or_else(|| crate::brand::DEFAULT_AVATAR.to_string()) alt="" class="h-full w-full object-cover" />
                         <span class="absolute bottom-1 end-1 flex h-7 w-7 items-center justify-center rounded-full bg-ink text-void">
                             <i class="ph-bold ph-pencil-simple text-fine" aria-hidden="true"></i>
                         </span>
                     </a>
-                    <div class="min-w-0 flex-1" on:focusout=move |_| save_name() on:keydown=move |ev| if ev.key() == "Enter" { save_name() }>
+                    <div class="w-full min-w-0 lg:flex-1" on:focusout=move |_| if !is_wide() { save_name() } on:keydown=move |ev| if ev.key() == "Enter" { save_name() }>
                         <Field label=t("set-profile-name") value=name maxlength=PROFILE_NAME_MAX as u32 />
+                        // the website saves with a button; the app saves when you leave the field
+                        <div class="hidden gap-3 lg:flex">
+                            <button type="button" on:click=move |_| save_name() class="btn-ink rounded-control px-6 py-2">{t("set-save")}</button>
+                            <button type="button" on:click=move |_| name.set(profile.get_untracked().map(|p| p.name).unwrap_or_default()) class="rounded-control px-6 py-2 text-body-md font-bold text-ink/80 hover:bg-ink/10">{t("set-cancel")}</button>
+                        </div>
                     </div>
                 </div>
                 <Section>
+                    <LinkRow icon="game-controller" title=t("set-title-game-handle") href=screen(Screen::GameHandle) value=handle_value />
                     <LinkRow icon="warning-circle" title=t("set-title-restrictions") href=screen(Screen::Restrictions) value=maturity_value />
                     <LinkRow icon="lock-simple" title=t("set-title-lock") href=screen(Screen::Lock) value=lock_value />
                     <LinkRow icon="translate" title=t("set-title-language") hint=t("set-language-hint") href=screen(Screen::Language) value=language_value />
@@ -117,6 +126,8 @@ pub fn EditProfile(id: String) -> impl IntoView {
                         <LinkRow icon="play-circle" title=t("set-title-playback") hint=t("set-playback-hint") href=screen(Screen::Playback) />
                         <LinkRow icon="bell" title=t("set-title-notifications") hint=t("set-notifications-hint") href=screen(Screen::Notifications) />
                         <LinkRow icon="clock-counter-clockwise" title=t("set-title-activity") hint=t("set-privacy-activity-hint") href=Screen::Activity.path() />
+                        <LinkRow icon="shield-check" title=t("set-title-privacy") hint=t("set-privacy-hint") href=Screen::Privacy.path() />
+                        <LinkRow icon="arrows-left-right" title=t("set-title-transfer-profile") hint=t("set-transfer-profile-hint") href=screen(Screen::TransferProfile) />
                     </div>
                     {can_be_main.then(|| view! { <LinkRow icon="crown-simple" title=t("set-main-profile") hint=t("set-main-profile-hint") href=screen(Screen::MainProfile) /> })}
                 </Section>
@@ -152,41 +163,84 @@ fn AutoplaySwitches(id: String) -> impl IntoView {
     }
 }
 
-/// Playback settings page (wide screens; phones have the switches on Edit profile).
+/// Playback settings (wide screens; phones have the autoplay switches on Edit profile): autoplay and data use per profile.
 #[component]
 pub fn Playback(id: String) -> impl IntoView {
+    let prefs = use_prefs();
+    let id = StoredValue::new(id);
+    let options: Vec<(String, String, String)> = PROFILE_DATA_USAGE.iter().map(|(v, label, hint)| (v.to_string(), t(label), t(hint))).collect();
     view! {
         <div>
-            <Section title=t("set-playback-autoplay")><AutoplaySwitches id=id /></Section>
+            <Section title=t("set-playback-autoplay")><AutoplaySwitches id=id.get_value() /></Section>
+            <h2 class="set-section-title mb-4 text-title-sm leading-row text-ink/85">{t("set-usage-title")}</h2>
+            <div role="radiogroup" class="mb-8 rounded-card border border-set-edge bg-set-card px-4">
+                {options.into_iter().map(|(value, label, hint)| {
+                    let v = value.clone();
+                    let pick = value.clone();
+                    let sel = value.clone();
+                    view! {
+                        <button
+                            type="button"
+                            role="radio"
+                            aria-checked=move || (prefs.profile(&id.get_value()).data_usage == v).to_string()
+                            on:click=move |_| { let x = pick.clone(); prefs.update_profile(&id.get_value(), |p| p.data_usage = x); toast(t("set-saved")); }
+                            class="set-row flex min-h-settings-row w-full items-center border-b border-set-line px-1 py-3 text-start last:border-b-0 hover:bg-ink/5"
+                        >
+                            <span class="min-w-0 flex-1">
+                                <span class="block text-title-sm font-semibold leading-row text-ink">{label}</span>
+                                <span class="block text-body-sm text-ink/70">{hint}</span>
+                            </span>
+                            <i class="ph-bold ph-check text-2xl text-brand" class=("invisible", move || prefs.profile(&id.get_value()).data_usage != sel) aria-hidden="true"></i>
+                        </button>
+                    }
+                }).collect_view()}
+            </div>
         </div>
     }
 }
 
-/// Notification settings of a profile: email and push.
+/// Game handle: the name shown in games, 3 to 16 letters and digits. "Create" suggests one made of two words and a number.
 #[component]
-pub fn Notifications(id: String) -> impl IntoView {
+pub fn GameHandle(id: String) -> impl IntoView {
     let prefs = use_prefs();
+    let navigate = use_navigate();
     let id = StoredValue::new(id);
-    let p = Memo::new(move |_| prefs.profile(&id.get_value()));
+    let value = RwSignal::new(prefs.profile(&id.get_value()).game_handle.unwrap_or_default());
+    let note = RwSignal::new(None::<(Tone, String)>);
+    let suggest = move |_| {
+        fn pick(list: &'static [&'static str]) -> &'static str {
+            list[(js_sys::Math::random() * list.len() as f64) as usize % list.len()]
+        }
+        let digits = (js_sys::Math::random() * 1000.0) as u32;
+        let handle: String = format!("{}{}{}", pick(HANDLE_ADJECTIVES), pick(HANDLE_NOUNS), digits).chars().take(GAME_HANDLE_MAX).collect();
+        value.set(handle);
+        note.set(None);
+    };
+    let save = Callback::new(move |_| {
+        let handle = value.get_untracked().trim().to_string();
+        if !valid_handle(&handle) {
+            note.set(Some((Tone::Error, t_args("set-handle-invalid", &[("min", GAME_HANDLE_MIN.into()), ("max", GAME_HANDLE_MAX.into())]))));
+            return;
+        }
+        prefs.update_profile(&id.get_value(), |p| p.game_handle = Some(handle));
+        toast(t("set-saved"));
+        navigate(&Screen::Profile(id.get_value()).path(), Default::default());
+    });
     view! {
-        <div>
-            <p class="mb-5 text-body-md text-ink/60">{t("set-notifications-body")}</p>
-            <Section>
-                <SwitchRow
-                    icon="envelope-simple"
-                    title=t("set-notify-email")
-                    checked=Signal::derive(move || p.get().notify_email)
-                    on_change=Callback::new(move |v| prefs.update_profile(&id.get_value(), |x| x.notify_email = v))
-                />
-                <SwitchRow
-                    icon="bell"
-                    title=t("set-notify-push")
-                    checked=Signal::derive(move || p.get().notify_push)
-                    on_change=Callback::new(move |v| prefs.update_profile(&id.get_value(), |x| x.notify_push = v))
-                />
-            </Section>
+        <div class="max-w-md">
+            <p class="mb-2 text-body-md text-ink/70">{t("set-handle-body")}</p>
+            <p class="mb-6 text-body-md text-ink/70">{t("set-handle-change")}</p>
+            <Message text=note />
+            <Field label=t("set-title-game-handle") value=value maxlength=GAME_HANDLE_MAX as u32 autocomplete="off" />
+            <p class="-mt-2 mb-4 text-end text-label text-ink/50">{move || format!("{}/{}", value.with(|v| v.chars().count()), GAME_HANDLE_MAX)}</p>
+            <button type="button" on:click=suggest class="mb-6 rounded-control border border-ink/40 px-5 py-2.5 text-body-md font-bold hover:bg-ink/10">{t("set-handle-suggest")}</button>
+            <FormButtons save_label=t("set-save") on_save=save cancel_href=Screen::Profile(id.get_value()).path() />
         </div>
     }
+}
+
+fn valid_handle(handle: &str) -> bool {
+    (GAME_HANDLE_MIN..=GAME_HANDLE_MAX).contains(&handle.chars().count()) && handle.chars().all(|c| c.is_ascii_alphanumeric())
 }
 
 #[component]
@@ -299,6 +353,7 @@ pub fn Lock(id: String) -> impl IntoView {
             return;
         }
         change(&id.get_value(), |p| p.pin = Some(value));
+        toast(t("set-saved"));
         nav_save(&back(), Default::default());
     });
     let nav_remove = navigate.clone();
@@ -341,15 +396,15 @@ pub fn Lock(id: String) -> impl IntoView {
                 }.into_any(),
                 (LockMode::Set, with_pin) => view! {
                     <div class="max-w-md">
-                        {with_pin.then(|| view! { <Field label=t("set-lock-current") value=current kind="password" autocomplete="off" maxlength=PIN_LENGTH as u32 inputmode="numeric" /> })}
-                        <Field label=t("set-lock-pin") value=pin kind="password" autocomplete="off" maxlength=PIN_LENGTH as u32 inputmode="numeric" />
+                        {with_pin.then(|| view! { <DigitBoxes label=t("set-lock-current") value=current length=PIN_LENGTH secret=true /> })}
+                        <DigitBoxes label=t("set-lock-pin") value=pin length=PIN_LENGTH secret=true />
                         <FormButtons save_label=t("set-save") on_save=save cancel_href=back() />
                     </div>
                 }.into_any(),
                 (LockMode::Remove, _) => view! {
                     <div class="max-w-md">
                         <p class="mb-4 text-body-md text-ink/70">{t("set-lock-remove-body")}</p>
-                        <Field label=t("set-lock-current") value=current kind="password" autocomplete="off" maxlength=PIN_LENGTH as u32 inputmode="numeric" />
+                        <DigitBoxes label=t("set-lock-current") value=current length=PIN_LENGTH secret=true />
                         <FormButtons save_label=t("set-lock-remove") on_save=remove cancel_href=back() />
                     </div>
                 }.into_any(),

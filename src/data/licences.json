@@ -1,0 +1,1142 @@
+[
+{
+"name": "@fontsource-variable/inter",
+"version": "5.3.0",
+"license": "OFL-1.1",
+"kind": "js"
+},
+{
+"name": "@phosphor-icons/web",
+"version": "2.1.2",
+"license": "MIT",
+"kind": "js"
+},
+{
+"name": "aho-corasick",
+"version": "1.1.5",
+"license": "Unlicense OR MIT",
+"kind": "rust"
+},
+{
+"name": "any_spawner",
+"version": "0.3.0",
+"license": "MIT",
+"kind": "rust"
+},
+{
+"name": "anyhow",
+"version": "1.0.104",
+"license": "MIT OR Apache-2.0",
+"kind": "rust"
+},
+{
+"name": "async-lock",
+"version": "3.4.2",
+"license": "Apache-2.0 OR MIT",
+"kind": "rust"
+},
+{
+"name": "async-once-cell",
+"version": "0.5.4",
+"license": "MIT OR Apache-2.0",
+"kind": "rust"
+},
+{
+"name": "async-trait",
+"version": "0.1.92",
+"license": "MIT OR Apache-2.0",
+"kind": "rust"
+},
+{
+"name": "attribute-derive",
+"version": "0.10.5",
+"license": "MIT OR Apache-2.0",
+"kind": "rust"
+},
+{
+"name": "attribute-derive-macro",
+"version": "0.10.5",
+"license": "MIT",
+"kind": "rust"
+},
+{
+"name": "base16",
+"version": "0.2.1",
+"license": "CC0-1.0",
+"kind": "rust"
+},
+{
+"name": "base64",
+"version": "0.22.1",
+"license": "MIT OR Apache-2.0",
+"kind": "rust"
+},
+{
+"name": "block-buffer",
+"version": "0.10.4",
+"license": "MIT OR Apache-2.0",
+"kind": "rust"
+},
+{
+"name": "bumpalo",
+"version": "3.20.3",
+"license": "MIT OR Apache-2.0",
+"kind": "rust"
+},
+{
+"name": "bytes",
+"version": "1.12.1",
+"license": "MIT",
+"kind": "rust"
+},
+{
+"name": "camino",
+"version": "1.2.5",
+"license": "MIT OR Apache-2.0",
+"kind": "rust"
+},
+{
+"name": "cfg-if",
+"version": "1.0.4",
+"license": "MIT OR Apache-2.0",
+"kind": "rust"
+},
+{
+"name": "codee",
+"version": "0.3.5",
+"license": "MIT OR Apache-2.0",
+"kind": "rust"
+},
+{
+"name": "collection_literals",
+"version": "1.0.3",
+"license": "MIT",
+"kind": "rust"
+},
+{
+"name": "config",
+"version": "0.15.25",
+"license": "MIT OR Apache-2.0",
+"kind": "rust"
+},
+{
+"name": "console_error_panic_hook",
+"version": "0.1.7",
+"license": "Apache-2.0/MIT",
+"kind": "rust"
+},
+{
+"name": "const-str",
+"version": "1.1.0",
+"license": "MIT",
+"kind": "rust"
+},
+{
+"name": "const_format",
+"version": "0.2.36",
+"license": "Zlib",
+"kind": "rust"
+},
+{
+"name": "const_format_proc_macros",
+"version": "0.2.34",
+"license": "Zlib",
+"kind": "rust"
+},
+{
+"name": "const_str_slice_concat",
+"version": "0.1.0",
+"license": "MIT",
+"kind": "rust"
+},
+{
+"name": "convert_case",
+"version": "0.11.0",
+"license": "MIT",
+"kind": "rust"
+},
+{
+"name": "convert_case",
+"version": "0.6.0",
+"license": "MIT",
+"kind": "rust"
+},
+{
+"name": "convert_case_extras",
+"version": "0.2.0",
+"license": "MIT",
+"kind": "rust"
+},
+{
+"name": "crypto-common",
+"version": "0.1.7",
+"license": "MIT OR Apache-2.0",
+"kind": "rust"
+},
+{
+"name": "derive-where",
+"version": "1.6.1",
+"license": "MIT OR Apache-2.0",
+"kind": "rust"
+},
+{
+"name": "digest",
+"version": "0.10.7",
+"license": "MIT OR Apache-2.0",
+"kind": "rust"
+},
+{
+"name": "displaydoc",
+"version": "0.2.7",
+"license": "MIT OR Apache-2.0",
+"kind": "rust"
+},
+{
+"name": "drain_filter_polyfill",
+"version": "0.1.3",
+"license": "MIT OR Apache-2.0",
+"kind": "rust"
+},
+{
+"name": "either",
+"version": "1.18.0",
+"license": "MIT OR Apache-2.0",
+"kind": "rust"
+},
+{
+"name": "either_of",
+"version": "0.1.9",
+"license": "MIT",
+"kind": "rust"
+},
+{
+"name": "equivalent",
+"version": "1.0.2",
+"license": "Apache-2.0 OR MIT",
+"kind": "rust"
+},
+{
+"name": "erased",
+"version": "0.1.2",
+"license": "MIT",
+"kind": "rust"
+},
+{
+"name": "event-listener",
+"version": "5.4.2",
+"license": "Apache-2.0 OR MIT",
+"kind": "rust"
+},
+{
+"name": "event-listener-strategy",
+"version": "0.5.4",
+"license": "Apache-2.0 OR MIT",
+"kind": "rust"
+},
+{
+"name": "fluent-bundle",
+"version": "0.16.0",
+"license": "Apache-2.0 OR MIT",
+"kind": "rust"
+},
+{
+"name": "fluent-langneg",
+"version": "0.13.1",
+"license": "Apache-2.0 OR MIT",
+"kind": "rust"
+},
+{
+"name": "fluent-syntax",
+"version": "0.12.0",
+"license": "Apache-2.0 OR MIT",
+"kind": "rust"
+},
+{
+"name": "form_urlencoded",
+"version": "1.2.2",
+"license": "MIT OR Apache-2.0",
+"kind": "rust"
+},
+{
+"name": "futures",
+"version": "0.3.34",
+"license": "MIT OR Apache-2.0",
+"kind": "rust"
+},
+{
+"name": "futures-channel",
+"version": "0.3.34",
+"license": "MIT OR Apache-2.0",
+"kind": "rust"
+},
+{
+"name": "futures-core",
+"version": "0.3.34",
+"license": "MIT OR Apache-2.0",
+"kind": "rust"
+},
+{
+"name": "futures-executor",
+"version": "0.3.34",
+"license": "MIT OR Apache-2.0",
+"kind": "rust"
+},
+{
+"name": "futures-io",
+"version": "0.3.34",
+"license": "MIT OR Apache-2.0",
+"kind": "rust"
+},
+{
+"name": "futures-macro",
+"version": "0.3.34",
+"license": "MIT OR Apache-2.0",
+"kind": "rust"
+},
+{
+"name": "futures-sink",
+"version": "0.3.34",
+"license": "MIT OR Apache-2.0",
+"kind": "rust"
+},
+{
+"name": "futures-task",
+"version": "0.3.34",
+"license": "MIT OR Apache-2.0",
+"kind": "rust"
+},
+{
+"name": "futures-util",
+"version": "0.3.34",
+"license": "MIT OR Apache-2.0",
+"kind": "rust"
+},
+{
+"name": "generic-array",
+"version": "0.14.7",
+"license": "MIT",
+"kind": "rust"
+},
+{
+"name": "getrandom",
+"version": "0.4.3",
+"license": "MIT OR Apache-2.0",
+"kind": "rust"
+},
+{
+"name": "gloo-net",
+"version": "0.6.0",
+"license": "MIT OR Apache-2.0",
+"kind": "rust"
+},
+{
+"name": "gloo-net",
+"version": "0.7.0",
+"license": "MIT OR Apache-2.0",
+"kind": "rust"
+},
+{
+"name": "gloo-utils",
+"version": "0.2.0",
+"license": "MIT OR Apache-2.0",
+"kind": "rust"
+},
+{
+"name": "gloo-utils",
+"version": "0.3.0",
+"license": "MIT OR Apache-2.0",
+"kind": "rust"
+},
+{
+"name": "guardian",
+"version": "1.3.0",
+"license": "MIT OR Apache-2.0",
+"kind": "rust"
+},
+{
+"name": "hashbrown",
+"version": "0.17.1",
+"license": "MIT OR Apache-2.0",
+"kind": "rust"
+},
+{
+"name": "hls.js",
+"version": "1.7.3",
+"license": "Apache-2.0",
+"kind": "js"
+},
+{
+"name": "html-escape",
+"version": "0.2.15",
+"license": "MIT",
+"kind": "rust"
+},
+{
+"name": "http",
+"version": "1.5.0",
+"license": "MIT OR Apache-2.0",
+"kind": "rust"
+},
+{
+"name": "hydration_context",
+"version": "0.3.1",
+"license": "MIT",
+"kind": "rust"
+},
+{
+"name": "icu_collections",
+"version": "2.3.0",
+"license": "Unicode-3.0",
+"kind": "rust"
+},
+{
+"name": "icu_locale_core",
+"version": "2.3.0",
+"license": "Unicode-3.0",
+"kind": "rust"
+},
+{
+"name": "icu_normalizer",
+"version": "2.3.0",
+"license": "Unicode-3.0",
+"kind": "rust"
+},
+{
+"name": "icu_normalizer_data",
+"version": "2.3.0",
+"license": "Unicode-3.0",
+"kind": "rust"
+},
+{
+"name": "icu_properties",
+"version": "2.3.0",
+"license": "Unicode-3.0",
+"kind": "rust"
+},
+{
+"name": "icu_properties_data",
+"version": "2.3.0",
+"license": "Unicode-3.0",
+"kind": "rust"
+},
+{
+"name": "icu_provider",
+"version": "2.3.1",
+"license": "Unicode-3.0",
+"kind": "rust"
+},
+{
+"name": "idna",
+"version": "1.1.0",
+"license": "MIT OR Apache-2.0",
+"kind": "rust"
+},
+{
+"name": "idna_adapter",
+"version": "1.2.2",
+"license": "Apache-2.0 OR MIT",
+"kind": "rust"
+},
+{
+"name": "indexmap",
+"version": "2.14.1",
+"license": "Apache-2.0 OR MIT",
+"kind": "rust"
+},
+{
+"name": "interpolator",
+"version": "0.5.0",
+"license": "MIT OR Apache-2.0",
+"kind": "rust"
+},
+{
+"name": "intl-memoizer",
+"version": "0.5.3",
+"license": "Apache-2.0 OR MIT",
+"kind": "rust"
+},
+{
+"name": "intl_pluralrules",
+"version": "7.0.2",
+"license": "Apache-2.0/MIT",
+"kind": "rust"
+},
+{
+"name": "itertools",
+"version": "0.14.0",
+"license": "MIT OR Apache-2.0",
+"kind": "rust"
+},
+{
+"name": "itoa",
+"version": "1.0.18",
+"license": "MIT OR Apache-2.0",
+"kind": "rust"
+},
+{
+"name": "js-sys",
+"version": "0.3.104",
+"license": "MIT OR Apache-2.0",
+"kind": "rust"
+},
+{
+"name": "konst",
+"version": "0.2.20",
+"license": "Zlib",
+"kind": "rust"
+},
+{
+"name": "konst_macro_rules",
+"version": "0.2.19",
+"license": "Zlib",
+"kind": "rust"
+},
+{
+"name": "leptos",
+"version": "0.8.20",
+"license": "MIT",
+"kind": "rust"
+},
+{
+"name": "leptos_config",
+"version": "0.8.10",
+"license": "MIT",
+"kind": "rust"
+},
+{
+"name": "leptos_dom",
+"version": "0.8.8",
+"license": "MIT",
+"kind": "rust"
+},
+{
+"name": "leptos_hot_reload",
+"version": "0.8.6",
+"license": "MIT",
+"kind": "rust"
+},
+{
+"name": "leptos_macro",
+"version": "0.8.17",
+"license": "MIT",
+"kind": "rust"
+},
+{
+"name": "leptos_router",
+"version": "0.8.15",
+"license": "MIT",
+"kind": "rust"
+},
+{
+"name": "leptos_router_macro",
+"version": "0.8.6",
+"license": "MIT",
+"kind": "rust"
+},
+{
+"name": "leptos_server",
+"version": "0.8.7",
+"license": "MIT",
+"kind": "rust"
+},
+{
+"name": "litemap",
+"version": "0.8.3",
+"license": "Unicode-3.0",
+"kind": "rust"
+},
+{
+"name": "log",
+"version": "0.4.34",
+"license": "MIT OR Apache-2.0",
+"kind": "rust"
+},
+{
+"name": "manyhow",
+"version": "0.11.4",
+"license": "MIT OR Apache-2.0",
+"kind": "rust"
+},
+{
+"name": "manyhow-macros",
+"version": "0.11.4",
+"license": "MIT OR Apache-2.0",
+"kind": "rust"
+},
+{
+"name": "memchr",
+"version": "2.8.3",
+"license": "Unlicense OR MIT",
+"kind": "rust"
+},
+{
+"name": "next_tuple",
+"version": "0.1.0",
+"license": "MIT",
+"kind": "rust"
+},
+{
+"name": "oco_ref",
+"version": "0.2.1",
+"license": "MIT",
+"kind": "rust"
+},
+{
+"name": "once_cell",
+"version": "1.21.4",
+"license": "MIT OR Apache-2.0",
+"kind": "rust"
+},
+{
+"name": "or_poisoned",
+"version": "0.1.0",
+"license": "MIT",
+"kind": "rust"
+},
+{
+"name": "paste",
+"version": "1.0.15",
+"license": "MIT OR Apache-2.0",
+"kind": "rust"
+},
+{
+"name": "pathdiff",
+"version": "0.2.3",
+"license": "MIT/Apache-2.0",
+"kind": "rust"
+},
+{
+"name": "percent-encoding",
+"version": "2.3.2",
+"license": "MIT OR Apache-2.0",
+"kind": "rust"
+},
+{
+"name": "pin-project",
+"version": "1.1.13",
+"license": "Apache-2.0 OR MIT",
+"kind": "rust"
+},
+{
+"name": "pin-project-internal",
+"version": "1.1.13",
+"license": "Apache-2.0 OR MIT",
+"kind": "rust"
+},
+{
+"name": "pin-project-lite",
+"version": "0.2.17",
+"license": "Apache-2.0 OR MIT",
+"kind": "rust"
+},
+{
+"name": "potential_utf",
+"version": "0.1.6",
+"license": "Unicode-3.0",
+"kind": "rust"
+},
+{
+"name": "prettyplease",
+"version": "0.2.37",
+"license": "MIT OR Apache-2.0",
+"kind": "rust"
+},
+{
+"name": "proc-macro-error-attr2",
+"version": "2.0.0",
+"license": "MIT OR Apache-2.0",
+"kind": "rust"
+},
+{
+"name": "proc-macro-error2",
+"version": "2.0.1",
+"license": "MIT OR Apache-2.0",
+"kind": "rust"
+},
+{
+"name": "proc-macro-utils",
+"version": "0.10.0",
+"license": "MIT OR Apache-2.0",
+"kind": "rust"
+},
+{
+"name": "proc-macro2",
+"version": "1.0.107",
+"license": "MIT OR Apache-2.0",
+"kind": "rust"
+},
+{
+"name": "proc-macro2-diagnostics",
+"version": "0.10.1",
+"license": "MIT/Apache-2.0",
+"kind": "rust"
+},
+{
+"name": "quote",
+"version": "1.0.47",
+"license": "MIT OR Apache-2.0",
+"kind": "rust"
+},
+{
+"name": "quote-use",
+"version": "0.8.4",
+"license": "MIT",
+"kind": "rust"
+},
+{
+"name": "quote-use-macros",
+"version": "0.8.4",
+"license": "MIT",
+"kind": "rust"
+},
+{
+"name": "reactive_graph",
+"version": "0.2.14",
+"license": "MIT",
+"kind": "rust"
+},
+{
+"name": "reactive_stores",
+"version": "0.4.3",
+"license": "MIT",
+"kind": "rust"
+},
+{
+"name": "reactive_stores_macro",
+"version": "0.4.3",
+"license": "MIT",
+"kind": "rust"
+},
+{
+"name": "regex",
+"version": "1.13.1",
+"license": "MIT OR Apache-2.0",
+"kind": "rust"
+},
+{
+"name": "regex-automata",
+"version": "0.4.18",
+"license": "MIT OR Apache-2.0",
+"kind": "rust"
+},
+{
+"name": "regex-syntax",
+"version": "0.8.11",
+"license": "MIT OR Apache-2.0",
+"kind": "rust"
+},
+{
+"name": "rstml",
+"version": "0.12.1",
+"license": "MIT",
+"kind": "rust"
+},
+{
+"name": "rustc-hash",
+"version": "2.1.3",
+"license": "Apache-2.0 OR MIT",
+"kind": "rust"
+},
+{
+"name": "rustversion",
+"version": "1.0.23",
+"license": "MIT OR Apache-2.0",
+"kind": "rust"
+},
+{
+"name": "same-file",
+"version": "1.0.6",
+"license": "Unlicense/MIT",
+"kind": "rust"
+},
+{
+"name": "self_cell",
+"version": "1.3.0",
+"license": "Apache-2.0 OR GPL-2.0-only",
+"kind": "rust"
+},
+{
+"name": "send_wrapper",
+"version": "0.6.0",
+"license": "MIT/Apache-2.0",
+"kind": "rust"
+},
+{
+"name": "serde",
+"version": "1.0.229",
+"license": "MIT OR Apache-2.0",
+"kind": "rust"
+},
+{
+"name": "serde_core",
+"version": "1.0.229",
+"license": "MIT OR Apache-2.0",
+"kind": "rust"
+},
+{
+"name": "serde_derive",
+"version": "1.0.229",
+"license": "MIT OR Apache-2.0",
+"kind": "rust"
+},
+{
+"name": "serde_json",
+"version": "1.0.151",
+"license": "MIT OR Apache-2.0",
+"kind": "rust"
+},
+{
+"name": "serde_qs",
+"version": "0.15.0",
+"license": "MIT/Apache-2.0",
+"kind": "rust"
+},
+{
+"name": "serde_spanned",
+"version": "1.1.1",
+"license": "MIT OR Apache-2.0",
+"kind": "rust"
+},
+{
+"name": "server_fn",
+"version": "0.8.13",
+"license": "MIT",
+"kind": "rust"
+},
+{
+"name": "server_fn_macro",
+"version": "0.8.10",
+"license": "MIT",
+"kind": "rust"
+},
+{
+"name": "server_fn_macro_default",
+"version": "0.8.5",
+"license": "MIT",
+"kind": "rust"
+},
+{
+"name": "sha2",
+"version": "0.10.9",
+"license": "MIT OR Apache-2.0",
+"kind": "rust"
+},
+{
+"name": "slab",
+"version": "0.4.12",
+"license": "MIT",
+"kind": "rust"
+},
+{
+"name": "slotmap",
+"version": "1.1.1",
+"license": "Zlib",
+"kind": "rust"
+},
+{
+"name": "smallvec",
+"version": "1.15.2",
+"license": "MIT OR Apache-2.0",
+"kind": "rust"
+},
+{
+"name": "stable_deref_trait",
+"version": "1.2.1",
+"license": "MIT OR Apache-2.0",
+"kind": "rust"
+},
+{
+"name": "syn",
+"version": "2.0.119",
+"license": "MIT OR Apache-2.0",
+"kind": "rust"
+},
+{
+"name": "syn",
+"version": "3.0.4",
+"license": "MIT OR Apache-2.0",
+"kind": "rust"
+},
+{
+"name": "syn_derive",
+"version": "0.2.0",
+"license": "MIT OR Apache-2.0",
+"kind": "rust"
+},
+{
+"name": "synstructure",
+"version": "0.13.2",
+"license": "MIT",
+"kind": "rust"
+},
+{
+"name": "tachys",
+"version": "0.2.18",
+"license": "MIT",
+"kind": "rust"
+},
+{
+"name": "Tailwind CSS",
+"version": "4",
+"license": "MIT",
+"kind": "tool"
+},
+{
+"name": "thiserror",
+"version": "1.0.69",
+"license": "MIT OR Apache-2.0",
+"kind": "rust"
+},
+{
+"name": "thiserror",
+"version": "2.0.20",
+"license": "MIT OR Apache-2.0",
+"kind": "rust"
+},
+{
+"name": "thiserror-impl",
+"version": "1.0.69",
+"license": "MIT OR Apache-2.0",
+"kind": "rust"
+},
+{
+"name": "thiserror-impl",
+"version": "2.0.20",
+"license": "MIT OR Apache-2.0",
+"kind": "rust"
+},
+{
+"name": "throw_error",
+"version": "0.3.1",
+"license": "MIT",
+"kind": "rust"
+},
+{
+"name": "tinystr",
+"version": "0.8.4",
+"license": "Unicode-3.0",
+"kind": "rust"
+},
+{
+"name": "toml",
+"version": "1.1.5+spec-1.1.0",
+"license": "MIT OR Apache-2.0",
+"kind": "rust"
+},
+{
+"name": "toml_datetime",
+"version": "1.1.1+spec-1.1.0",
+"license": "MIT OR Apache-2.0",
+"kind": "rust"
+},
+{
+"name": "toml_parser",
+"version": "1.1.3+spec-1.1.0",
+"license": "MIT OR Apache-2.0",
+"kind": "rust"
+},
+{
+"name": "type-map",
+"version": "0.5.1",
+"license": "MIT/Apache-2.0",
+"kind": "rust"
+},
+{
+"name": "typed-builder",
+"version": "0.23.2",
+"license": "MIT OR Apache-2.0",
+"kind": "rust"
+},
+{
+"name": "typed-builder-macro",
+"version": "0.23.2",
+"license": "MIT OR Apache-2.0",
+"kind": "rust"
+},
+{
+"name": "typenum",
+"version": "1.20.1",
+"license": "MIT OR Apache-2.0",
+"kind": "rust"
+},
+{
+"name": "unic-langid",
+"version": "0.9.6",
+"license": "MIT OR Apache-2.0",
+"kind": "rust"
+},
+{
+"name": "unic-langid-impl",
+"version": "0.9.6",
+"license": "MIT OR Apache-2.0",
+"kind": "rust"
+},
+{
+"name": "unicode-ident",
+"version": "1.0.24",
+"license": "(MIT OR Apache-2.0) AND Unicode-3.0",
+"kind": "rust"
+},
+{
+"name": "unicode-segmentation",
+"version": "1.13.3",
+"license": "MIT OR Apache-2.0",
+"kind": "rust"
+},
+{
+"name": "unicode-xid",
+"version": "0.2.6",
+"license": "MIT OR Apache-2.0",
+"kind": "rust"
+},
+{
+"name": "url",
+"version": "2.5.8",
+"license": "MIT OR Apache-2.0",
+"kind": "rust"
+},
+{
+"name": "utf8_iter",
+"version": "1.0.4",
+"license": "Apache-2.0 OR MIT",
+"kind": "rust"
+},
+{
+"name": "uuid",
+"version": "1.26.0",
+"license": "Apache-2.0 OR MIT",
+"kind": "rust"
+},
+{
+"name": "walkdir",
+"version": "2.5.0",
+"license": "Unlicense/MIT",
+"kind": "rust"
+},
+{
+"name": "wasm-bindgen",
+"version": "0.2.127",
+"license": "MIT OR Apache-2.0",
+"kind": "rust"
+},
+{
+"name": "wasm-bindgen-futures",
+"version": "0.4.77",
+"license": "MIT OR Apache-2.0",
+"kind": "rust"
+},
+{
+"name": "wasm-bindgen-macro",
+"version": "0.2.127",
+"license": "MIT OR Apache-2.0",
+"kind": "rust"
+},
+{
+"name": "wasm-bindgen-macro-support",
+"version": "0.2.127",
+"license": "MIT OR Apache-2.0",
+"kind": "rust"
+},
+{
+"name": "wasm-bindgen-shared",
+"version": "0.2.127",
+"license": "MIT OR Apache-2.0",
+"kind": "rust"
+},
+{
+"name": "wasm-streams",
+"version": "0.5.0",
+"license": "MIT OR Apache-2.0",
+"kind": "rust"
+},
+{
+"name": "wasm_split_helpers",
+"version": "0.2.3",
+"license": "MIT OR Apache-2.0",
+"kind": "rust"
+},
+{
+"name": "wasm_split_macros",
+"version": "0.2.2",
+"license": "MIT OR Apache-2.0",
+"kind": "rust"
+},
+{
+"name": "web-sys",
+"version": "0.3.104",
+"license": "MIT OR Apache-2.0",
+"kind": "rust"
+},
+{
+"name": "winnow",
+"version": "1.0.4",
+"license": "MIT",
+"kind": "rust"
+},
+{
+"name": "writeable",
+"version": "0.6.4",
+"license": "Unicode-3.0",
+"kind": "rust"
+},
+{
+"name": "xxhash-rust",
+"version": "0.8.18",
+"license": "BSL-1.0",
+"kind": "rust"
+},
+{
+"name": "yansi",
+"version": "1.0.1",
+"license": "MIT OR Apache-2.0",
+"kind": "rust"
+},
+{
+"name": "yoke",
+"version": "0.8.3",
+"license": "Unicode-3.0",
+"kind": "rust"
+},
+{
+"name": "yoke-derive",
+"version": "0.8.2",
+"license": "Unicode-3.0",
+"kind": "rust"
+},
+{
+"name": "zerofrom",
+"version": "0.1.8",
+"license": "Unicode-3.0",
+"kind": "rust"
+},
+{
+"name": "zerofrom-derive",
+"version": "0.1.7",
+"license": "Unicode-3.0",
+"kind": "rust"
+},
+{
+"name": "zerotrie",
+"version": "0.2.5",
+"license": "Unicode-3.0",
+"kind": "rust"
+},
+{
+"name": "zerovec",
+"version": "0.11.8",
+"license": "Unicode-3.0",
+"kind": "rust"
+},
+{
+"name": "zerovec-derive",
+"version": "0.11.6",
+"license": "Unicode-3.0",
+"kind": "rust"
+},
+{
+"name": "zmij",
+"version": "1.0.23",
+"license": "MIT",
+"kind": "rust"
+}
+]

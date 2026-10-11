@@ -53,3 +53,39 @@
     }
   }
 }
+
+/* Dark settings screens on a phone or tablet look like the Android app: no grouped card, each row is a tile on the black page
+   (Edit profile, the profile sheet), or a full width band (App settings, .set-bands). From 1024 px the card look is used. */
+/* Not in a layer on purpose: these must beat the utility classes the rows already carry. */
+@media (max-width: 63.999rem) {
+    .set-tiles .set-card {
+      border-width: 0;
+      background: transparent;
+      padding: 0;
+      display: flex;
+      flex-direction: column;
+      gap: 0.5rem;
+    }
+    .set-tiles .set-row {
+      min-height: var(--spacing-settings-tile);
+      padding: 1rem;
+      border-bottom-width: 0;
+      border-radius: var(--radius-card);
+      background: var(--color-set-tile);
+    }
+    .set-tiles .set-section-title {
+      font-weight: 700;
+      color: var(--color-ink);
+    }
+    .set-tiles .set-bands .set-card { gap: 0.125rem; margin-inline: -1rem; }
+    .set-tiles .set-bands .set-row { border-radius: 0; }
+    .set-tiles .set-sheet { background: var(--color-set-sheet); border-radius: var(--radius-modal); padding: 1rem; }
+    .set-tiles .set-sheet .set-row { background: var(--color-set-sheet-tile); }
+  }
+
+/* The "none" swatch: an empty circle with a slash. */
+@layer components {
+  .swatch-none {
+    background-image: linear-gradient(135deg, transparent 46%, var(--color-danger) 46% 54%, transparent 54%);
+  }
+}

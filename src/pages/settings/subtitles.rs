@@ -1,7 +1,7 @@
 //! Subtitle appearance: the same six choices as the Netflix app, with a preview that follows them.
 use super::prefs::{use_prefs, SubtitleStyle};
 use crate::data::settings::{PREVIEW_PAD_X_PX, PREVIEW_PAD_Y_PX, PREVIEW_RADIUS_PX, PREVIEW_WINDOW_PX, SUBTITLE_COLORS, SUBTITLE_EDGES, SUBTITLE_SIZES};
-use super::widgets::{Section, SwitchRow};
+use super::widgets::{Section, SwatchPicker, SwitchRow};
 use crate::i18n::t;
 use leptos::prelude::*;
 
@@ -36,8 +36,8 @@ fn paint(name: &str, clear: bool) -> String {
 #[component]
 fn Pick(label_key: &'static str, value: Signal<String>, options: Vec<(String, String)>, on_pick: Callback<String>, ) -> impl IntoView {
     view! {
-        <label class="flex items-center justify-between gap-4 px-5 py-4">
-            <span class="text-body-md font-bold">{t(label_key)}</span>
+        <label class="set-row flex min-h-settings-row w-full items-center justify-between gap-4 border-b border-set-line px-1 py-3 last:border-b-0">
+            <span class="text-title-sm font-semibold leading-row">{t(label_key)}</span>
             <select
                 on:change=move |ev| on_pick.run(event_target_value(&ev))
                 prop:value=move || value.get()
@@ -55,12 +55,12 @@ pub fn Subtitles(id: String) -> impl IntoView {
     let id = StoredValue::new(id);
     let style = Memo::new(move |_| prefs.profile(&id.get_value()).subtitle_style);
     let set = move |apply: Box<dyn FnOnce(&mut SubtitleStyle)>| prefs.update_profile(&id.get_value(), |p| apply(&mut p.subtitle_style));
-    let colors = |none: bool| {
-        let mut v: Vec<(String, String)> = Vec::new();
+    let swatches = |none: bool| {
+        let mut v: Vec<(String, String, String)> = Vec::new();
         if none {
-            v.push(("none".into(), t("set-sub-none")));
+            v.push(("none".into(), "transparent".into(), t("set-sub-none")));
         }
-        v.extend(SUBTITLE_COLORS.iter().map(|(n, _)| (n.to_string(), t(&format!("set-color-{n}")))));
+        v.extend(SUBTITLE_COLORS.iter().map(|(n, h)| (n.to_string(), h.to_string(), t(&format!("set-color-{n}")))));
         v
     };
 
@@ -79,8 +79,8 @@ pub fn Subtitles(id: String) -> impl IntoView {
                 </span>
             </div>
             <Section>
-                <div class="flex items-center justify-between gap-4 px-5 py-4">
-                    <span class="text-body-md font-bold">{t("set-sub-size")}</span>
+                <div class="set-row flex min-h-settings-row w-full items-center justify-between gap-4 border-b border-set-line px-1 py-3 last:border-b-0">
+                    <span class="text-title-sm font-semibold leading-row">{t("set-sub-size")}</span>
                     <div role="radiogroup" class="flex gap-2">
                         {SUBTITLE_SIZES.iter().map(|(n, key, px)| { let (n, key, px) = (*n, *key, *px); view! {
                             <button
@@ -100,17 +100,17 @@ pub fn Subtitles(id: String) -> impl IntoView {
                         } }).collect_view()}
                     </div>
                 </div>
-                <Pick label_key="set-sub-color" value=Signal::derive(move || style.get().color) options=colors(false) on_pick=Callback::new(move |v: String| set(Box::new(move |s| s.color = v))) />
+                <SwatchPicker label=t("set-sub-color") colors=swatches(false) selected=Signal::derive(move || style.get().color) on_pick=Callback::new(move |v: String| set(Box::new(move |s| s.color = v))) />
                 <Pick
                     label_key="set-sub-edge"
                     value=Signal::derive(move || style.get().edge)
                     options=SUBTITLE_EDGES.iter().map(|e| (e.to_string(), t(&format!("set-edge-{e}")))).collect()
                     on_pick=Callback::new(move |v: String| set(Box::new(move |s| s.edge = v)))
                 />
-                <Pick label_key="set-sub-edge-color" value=Signal::derive(move || style.get().edge_color) options=colors(false) on_pick=Callback::new(move |v: String| set(Box::new(move |s| s.edge_color = v))) />
-                <Pick label_key="set-sub-background" value=Signal::derive(move || style.get().background) options=colors(true) on_pick=Callback::new(move |v: String| set(Box::new(move |s| s.background = v))) />
+                <SwatchPicker label=t("set-sub-edge-color") colors=swatches(false) selected=Signal::derive(move || style.get().edge_color) on_pick=Callback::new(move |v: String| set(Box::new(move |s| s.edge_color = v))) />
+                <SwatchPicker label=t("set-sub-background") colors=swatches(true) selected=Signal::derive(move || style.get().background) on_pick=Callback::new(move |v: String| set(Box::new(move |s| s.background = v))) />
                 <SwitchRow icon="circle-half" title=t("set-sub-transparent") checked=Signal::derive(move || style.get().background_clear) on_change=Callback::new(move |v| set(Box::new(move |s| s.background_clear = v))) />
-                <Pick label_key="set-sub-window" value=Signal::derive(move || style.get().window) options=colors(true) on_pick=Callback::new(move |v: String| set(Box::new(move |s| s.window = v))) />
+                <SwatchPicker label=t("set-sub-window") colors=swatches(true) selected=Signal::derive(move || style.get().window) on_pick=Callback::new(move |v: String| set(Box::new(move |s| s.window = v))) />
                 <SwitchRow icon="circle-half" title=t("set-sub-transparent") checked=Signal::derive(move || style.get().window_clear) on_change=Callback::new(move |v| set(Box::new(move |s| s.window_clear = v))) />
             </Section>
             <button type="button" on:click=move |_| set(Box::new(|s| *s = SubtitleStyle::default())) class="rounded-control border border-ink/40 px-6 py-3 text-body-md font-bold hover:bg-ink/10">{t("set-reset")}</button>

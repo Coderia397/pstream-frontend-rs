@@ -40,17 +40,6 @@ pub fn suppressed_on(path: &str) -> bool {
     path.starts_with("/watch")
 }
 
-/// Pages whose main action sits at the bottom of a phone screen (the landing page and the sign in pages). The banner goes to
-/// the top there so it does not cover the button.
-pub fn prefers_top(path: &str) -> bool {
-    matches!(path, "/" | "/login" | "/signup" | "/forgot")
-}
-
-/// Pages that have the phone bottom bar, which the banner has to sit above.
-pub fn has_bottom_bar(path: &str) -> bool {
-    !(path.starts_with("/help") || matches!(path, "/" | "/login" | "/signup" | "/forgot" | "/welcome" | "/privacy" | "/terms" | "/cookies" | "/dmca" | "/disclaimer" | "/credits" | "/contact"))
-}
-
 /// The saved choice, or None when the visitor has not decided yet or the choice is out of date.
 pub fn stored() -> Option<Choice> {
     let choice: Choice = storage().and_then(|s| s.get_item(crate::keys::CONSENT).ok().flatten()).and_then(|raw| serde_json::from_str(&raw).ok())?;
@@ -151,15 +140,8 @@ mod tests {
     }
 
     #[test]
-    fn the_banner_stays_off_the_player_and_clears_the_bottom_bar_elsewhere() {
+    fn the_sheet_stays_off_the_player() {
         assert!(suppressed_on("/watch/603"));
         assert!(!suppressed_on("/browse"));
-        assert!(has_bottom_bar("/browse"));
-        assert!(!has_bottom_bar("/help/article/wont-play"));
-        assert!(!has_bottom_bar("/privacy"));
-        assert!(!has_bottom_bar("/welcome"));
-        assert!(!has_bottom_bar("/signup"));
-        assert!(prefers_top("/"));
-        assert!(!prefers_top("/browse"));
     }
 }

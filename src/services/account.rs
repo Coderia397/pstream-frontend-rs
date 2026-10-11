@@ -81,7 +81,7 @@ pub fn classify(status: u16, body: &Value) -> AuthError {
         return AuthError::RecentSignIn;
     }
     match code {
-        "invalid_credentials" | "invalid_grant" => AuthError::Invalid,
+        "invalid_credentials" | "invalid_grant" | "otp_expired" => AuthError::Invalid,
         "email_not_confirmed" => AuthError::Unconfirmed,
         "weak_password" => AuthError::Weak(msg.to_string()),
         "user_already_exists" | "email_exists" | "signup_disabled" | "validation_failed" | "email_address_invalid" => AuthError::CouldNotCreate,
@@ -281,6 +281,53 @@ pub async fn update_names(first: &str, last: &str) -> Result<(), AuthError> {
         }
     }
     Ok(())
+}
+
+/// Sends a one time code to the account's email address, for the password check. The same answer is given whatever the address.
+pub async fn send_code() -> Result<(), AuthError> {
+    let email = session().ok_or_else(|| AuthError::Other("not signed in".into()))?.email;
+    let (status, body) = post("/auth/v1/otp", &json!({ "email": email, "create_user": false }), None).await?;
+    if status == 200 { Ok(()) } else { Err(classify(status, &body)) }
+}
+
+/// Checks the code from `send_code`. Like `verify_password` the sign in it creates replaces the saved session.
+pub async fn verify_code(code: &str) -> Result<(), AuthError> {
+    let current = session().ok_or_else(|| AuthError::Other("not signed in".into()))?;
+    let remember = storage(true).and_then(|s| s.get_item(crate::keys::SESSION).ok().flatten()).is_some();
+    let (status, body) = post("/auth/v1/verify", &json!({ "type": "email", "email": current.email, "token": code.trim() }), None).await?;
+    if status == 200 {
+        if let Some(fresh) = session_from(&body) {
+            save(&fresh, remember);
+        }
+        return Ok(());
+    }
+    Err(classify(status, &body))
+}
+
+/// One signed in browser of the account (`list_my_sessions`).
+#[derive(Clone, Debug, PartialEq, Deserialize)]
+pub struct DeviceSession {
+    pub id: String,
+    pub created_at: String,
+    pub last_seen: String,
+    #[serde(default)]
+    pub user_agent: Option<String>,
+    pub is_current: bool,
+}
+
+pub async fn sessions() -> Result<Vec<DeviceSession>, AuthError> {
+    let body = rpc("list_my_sessions", &json!({})).await?;
+    serde_json::from_value(body).map_err(|_| AuthError::Other("unexpected answer".into()))
+}
+
+/// Signs one other browser out (`revoke_my_session`), after a recent password check.
+pub async fn revoke_session(id: &str) -> Result<(), AuthError> {
+    rpc("revoke_my_session", &json!({ "p_id": id })).await.map(|_| ())
+}
+
+/// Saves one of the account switches (`test_participation` or `profile_transfer`) through `set_account_switch`.
+pub async fn set_switch(name: &str, value: bool) -> Result<(), AuthError> {
+    rpc("set_account_switch", &json!({ "p_name": name, "p_value": value })).await.map(|_| ())
 }
 
 /// Everything held about the signed in person (`export_my_data`), as text ready to save as a file.

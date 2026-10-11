@@ -41,6 +41,22 @@ pub const BLOCKED_TITLE_MAX: usize = 100;
 pub const BLOCKED_TITLES_MAX: usize = 200;
 /// Longest first or last name (account_details allows 60).
 pub const NAME_MAX: usize = 60;
+/// Titles listed on the Viewing activity screen before "Show more".
+pub const VIEWING_PAGE: usize = 20;
+/// Packages listed on the Open source licences screen before "Show more".
+pub const LICENCES_PAGE: usize = 40;
+/// Devices listed before "Show more".
+pub const DEVICES_SHOWN: usize = 5;
+/// Game handle length (profile_settings allows 3 to 16 letters and digits).
+pub const GAME_HANDLE_MIN: usize = 3;
+pub const GAME_HANDLE_MAX: usize = 16;
+/// Length of the code sent by email for the password check.
+pub const CODE_LENGTH: usize = 6;
+/// Minutes the emailed code stays valid (the Supabase default is one hour; the email template says the same number).
+pub const CODE_VALID_MINUTES: u32 = 10;
+/// Where the internet speed test downloads from, and how much. Override at build time with STREAMS_SPEED_TEST_URL.
+pub const SPEED_TEST_URL: &str = setting(option_env!("STREAMS_SPEED_TEST_URL"), "https://speed.cloudflare.com/__down");
+pub const SPEED_TEST_BYTES: u64 = 10_000_000;
 /// How many security events the Access and devices screen lists.
 pub const SECURITY_EVENTS_SHOWN: u32 = 10;
 
@@ -54,10 +70,13 @@ pub mod routes {
     pub const TERMS: &str = "/terms";
     pub const DMCA: &str = "/dmca";
     pub const DISCLAIMER: &str = "/disclaimer";
+    pub const HELP_CONTACT: &str = "/help/contact";
+    pub const WATCH: &str = "/watch";
 }
 
-/// Where the cookie banner sits. Set STREAMS_COOKIE_BANNER to top, bottom, bottom-start, bottom-end or center when building,
-/// or add ?cookie_banner=top to the address to try one. Narrow screens always get a full width sheet at the bottom.
+/// Where the cookie pop-up sits from the `sm` width up (a foldable or a tablet). Set STREAMS_COOKIE_BANNER to top, bottom,
+/// bottom-start, bottom-end or center when building, or add ?cookie_banner=top to the address to try one. A phone always gets a
+/// full width sheet at the bottom.
 #[derive(Clone, Copy, PartialEq, Eq, Debug)]
 pub enum BannerPosition {
     Top,
@@ -82,7 +101,7 @@ impl BannerPosition {
 
 pub fn cookie_banner_position() -> BannerPosition {
     let from_address = web_sys::window().and_then(|w| w.location().search().ok()).and_then(|q| q.trim_start_matches('?').split('&').find_map(|kv| kv.strip_prefix("cookie_banner=").map(str::to_string)));
-    from_address.as_deref().or(option_env!("STREAMS_COOKIE_BANNER")).and_then(BannerPosition::parse).unwrap_or(BannerPosition::Bottom)
+    from_address.as_deref().or(option_env!("STREAMS_COOKIE_BANNER")).and_then(BannerPosition::parse).unwrap_or(BannerPosition::Center)
 }
 
 #[cfg(test)]

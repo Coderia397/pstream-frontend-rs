@@ -380,7 +380,7 @@ pub fn InfoModal() -> impl IntoView {
                             let match_pct = (75.0 + match_norm * 23.0).round() as u32;
                             let match_score = crate::i18n::t_args("media-percent-match", &[("pct", fluent_bundle::FluentValue::from(match_pct as i64))]);
                             let vibe_tags = derive_vibe_tags(&genres_items, &overview);
-                            let vibe_text = vibe_tags.join(", ");
+                            let vibe_text = vibe_tags.iter().map(|t| crate::i18n::mood_label(t)).collect::<Vec<_>>().join(", ");
 
                             let current_movie_id = details.id;
                             let is_tv_val = details.number_of_seasons.is_some();

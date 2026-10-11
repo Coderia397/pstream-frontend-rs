@@ -64,7 +64,7 @@ pub fn CategoryPage(
         }
     });
 
-    let title = if kind == "tv" { "Series" } else { "Films" };
+    let title = if kind == "tv" { crate::i18n::t("category-series") } else { crate::i18n::t("category-films") };
 
     let ui_store = crate::store::use_ui_store();
 
@@ -148,7 +148,7 @@ pub fn CategoryPage(
                     }>
                         {move || feed.get().map(|rows| {
                             if rows.is_empty() {
-                                let default_top10_title = if kind == "movie" { "Top 10 Movies Today" } else { "Top 10 TV Shows Today" };
+                                let default_top10_title = if kind == "movie" { crate::i18n::t("category-top10-movies") } else { crate::i18n::t("category-top10-series") };
                                 view! {
                                     <TopTenRow title=default_top10_title.to_string() kind=kind.to_string() />
                                     <Row title=crate::i18n::t("browse-action-adventure") genre_id="1365" kind=kind.to_string() />

@@ -107,7 +107,7 @@ pub fn provide_profile_store() {
         .unwrap_or_else(|| vec![
             crate::models::profile::Profile {
                 id: "p1".to_string(),
-                name: "Main".to_string(),
+                name: crate::i18n::t("profile-default-main"),
                 avatar_url: Some(crate::brand::DEFAULT_AVATAR.to_string()),
                 is_kids: false,
                 is_default: Some(true),
@@ -116,7 +116,7 @@ pub fn provide_profile_store() {
             },
             crate::models::profile::Profile {
                 id: "p2".to_string(),
-                name: "Kids".to_string(),
+                name: crate::i18n::t("profile-default-kids"),
                 avatar_url: None,
                 is_kids: true,
                 is_default: Some(false),
@@ -142,7 +142,7 @@ pub fn start_account(store: ProfileStore, first_name: &str) {
         let name = if first_name.trim().is_empty() { "Me".to_string() } else { first_name.trim().chars().take(30).collect() };
         let profiles = vec![
             crate::models::profile::Profile { id: "main".to_string(), name, avatar_url: Some(crate::brand::DEFAULT_AVATAR.to_string()), is_kids: false, is_default: Some(true), pin: None, sort_order: 0 },
-            crate::models::profile::Profile { id: "kids".to_string(), name: "Kids".to_string(), avatar_url: None, is_kids: true, is_default: Some(false), pin: None, sort_order: 1 },
+            crate::models::profile::Profile { id: "kids".to_string(), name: crate::i18n::t("profile-default-kids"), avatar_url: None, is_kids: true, is_default: Some(false), pin: None, sort_order: 1 },
         ];
         if let (Some(s), Ok(json)) = (storage.as_ref(), serde_json::to_string(&profiles)) {
             let _ = s.set_item(crate::keys::PROFILES, &json);

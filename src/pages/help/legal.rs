@@ -51,7 +51,7 @@ pub fn LegalPage(doc: &'static str) -> impl IntoView {
         <HelpShell>
             <main class="mx-auto w-full max-w-[1100px] px-6 pb-20 pt-6 md:px-12">
                 <a href="/help" class="mb-6 inline-flex items-center gap-2 text-body-sm font-semibold text-paper-ink hover:text-brand-active">
-                    <i class="ph-bold ph-arrow-left" aria-hidden="true"></i>
+                    <i class="ph-bold ph-arrow-left rtl:-scale-x-100" aria-hidden="true"></i>
                     {tr("help-ui-back")}
                 </a>
                 <div class="grid gap-10 lg:grid-cols-[230px_minmax(0,1fr)]">

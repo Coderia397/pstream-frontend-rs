@@ -166,7 +166,7 @@ pub fn SearchBox(
                     />
                     {arrow.then(|| view! {
                         <button type="submit" aria-label=move || tr("help-ui-search-label") class="flex h-12 w-12 shrink-0 items-center justify-center text-title text-paper-mute hover:text-paper-ink">
-                            <i class="ph-bold ph-arrow-right" aria-hidden="true"></i>
+                            <i class="ph-bold ph-arrow-right rtl:-scale-x-100" aria-hidden="true"></i>
                         </button>
                     })}
                 </div>

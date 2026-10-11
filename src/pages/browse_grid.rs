@@ -84,7 +84,7 @@ pub fn BrowseGridPage() -> impl IntoView {
                                 view! {
                                     <div class="flex flex-col items-center justify-center mt-24 text-center">
                                         <i class="ph ph-film-slate text-5xl text-ink/30 mb-3"></i>
-                                        <p class="text-ink/50 text-lg">"Nothing to show here yet."</p>
+                                        <p class="text-ink/50 text-lg">{crate::i18n::t("browse-grid-empty")}</p>
                                     </div>
                                 }.into_any()
                             } else {

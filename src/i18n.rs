@@ -8,6 +8,8 @@ const EN: &str = include_str!("../i18n/en.ftl");
 /// Languages shown in the pickers and used for the browser default. A language is added here once its file is translated, so
 /// nobody lands on a page that is mostly English. Files exist for: ar, de, es, fr, hi, it, ja, ko, nl, pl, pt, ru, sv, tr, zh.
 pub const AVAILABLE: &[&str] = &["en"];
+/// Every language that has a file. `?lang=xx` in the address previews any of them, also those not in AVAILABLE yet.
+pub const KNOWN: &[&str] = &["en", "ar", "de", "es", "fr", "hi", "it", "ja", "ko", "nl", "pl", "pt", "ru", "sv", "tr", "zh"];
 
 /// Name of a language in that language, for pickers.
 pub fn native_name(code: &str) -> String {
@@ -78,9 +80,12 @@ fn browser_language() -> Option<String> {
 /// `?lang=xx` in the address first (for testing and shared links), then the language the visitor picked, then the browser's
 /// preferred languages in order, then English. A first visit therefore opens in the browser language.
 pub fn resolve_language() -> String {
-    let wanted = query_language().or_else(stored_language).map(|l| l.split('-').next().unwrap_or("en").to_lowercase());
-    match wanted {
-        Some(code) if AVAILABLE.contains(&code.as_str()) => code,
+    let code = |l: String| l.split('-').next().unwrap_or("en").to_lowercase();
+    if let Some(preview) = query_language().map(code).filter(|c| KNOWN.contains(&c.as_str())) {
+        return preview;
+    }
+    match stored_language().map(code) {
+        Some(c) if AVAILABLE.contains(&c.as_str()) => c,
         _ => browser_language().unwrap_or_else(|| "en".into()),
     }
 }
@@ -257,4 +262,18 @@ mod tests {
         assert_eq!(genre_key("Sci-Fi & Fantasy"), "genre-sci-fi-fantasy");
         assert_eq!(genre_key("Cars, Trucks & Trains"), "genre-cars-trucks-trains");
     }
+}
+
+/// The shown form of a mood word such as "Mind-Bending" or "Feel-Good". Words that have no message (for example ones that come
+/// from the recommendation service) are shown as they are.
+pub fn mood_label(word: &str) -> String {
+    let mut key = String::from("mood-");
+    for c in word.to_lowercase().chars() {
+        if c.is_ascii_alphanumeric() {
+            key.push(c);
+        } else if !key.ends_with('-') {
+            key.push('-');
+        }
+    }
+    t_or(key.trim_end_matches('-'), word)
 }

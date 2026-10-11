@@ -32,6 +32,8 @@ for k in en:
         used.add(k)
     elif k.startswith("help-card-") and any(k.startswith(f"help-card-{t}-") for t in tool_ids):
         used.add(k)  # tool cards on the help home, by tool id
+    elif k.startswith("mood-"):
+        used.add(k)  # mood words, looked up at runtime (i18n::mood_label)
     elif k.startswith("genre-"):
         used.add(k)  # looked up from the genre name at runtime (i18n::genre_label)
     elif k.startswith("legal-") and any(k.startswith(f"legal-{i}-") for i in legal_ids):

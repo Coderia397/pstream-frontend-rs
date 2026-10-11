@@ -34,7 +34,7 @@ pub fn AuthShell(children: Children, #[prop(default = Look::Dark)] look: Look, #
             <header class=header>
                 <div class="mx-auto flex h-[90px] max-w-[1280px] items-center justify-between px-6 md:px-12">
                     <div class="flex items-center gap-2">
-                        {back.then(|| view! { <a href="/" aria-label=move || tr("auth-back") class="-ms-2 flex h-10 w-10 items-center justify-center text-title sm:hidden"><i class="ph-bold ph-arrow-left"></i></a> })}
+                        {back.then(|| view! { <a href="/" aria-label=move || tr("auth-back") class="-ms-2 flex h-10 w-10 items-center justify-center text-title sm:hidden"><i class="ph-bold ph-arrow-left rtl:-scale-x-100"></i></a> })}
                         <a href="/" aria-label=crate::brand::NAME><img src=logo alt=crate::brand::NAME class="h-8 w-auto md:h-10" /></a>
                     </div>
                     {right.map(|(href, key)| view! { <a href=href class=format!("text-body-sm font-bold hover:underline {right_link}")>{tr(key)}</a> })}

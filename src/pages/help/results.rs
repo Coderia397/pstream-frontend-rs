@@ -60,7 +60,7 @@ pub fn ResultsPage() -> impl IntoView {
             <main class="mx-auto w-full max-w-[720px] px-6 pb-20 pt-8">
                 <nav class="mb-5 flex items-center gap-2 text-body-sm text-paper-mute" aria-label="Breadcrumb">
                     <a href="/help" class="underline underline-offset-2 hover:text-brand-active">{tr("help-ui-center")}</a>
-                    <i class="ph-bold ph-caret-right text-fine" aria-hidden="true"></i>
+                    <i class="ph-bold ph-caret-right text-fine rtl:-scale-x-100" aria-hidden="true"></i>
                     <span>{tr("help-ui-search-label")}</span>
                 </nav>
                 <SearchBox initial=initial placeholder="help-ui-search-placeholder" on_query=on_query />
@@ -143,7 +143,7 @@ pub fn ResultsPage() -> impl IntoView {
                                     on:click=move |_| set_page.update(|p| *p = p.saturating_sub(1))
                                     class="flex h-9 w-9 items-center justify-center rounded-control text-paper-ink hover:bg-paper-soft disabled:opacity-30"
                                 >
-                                    <i class="ph-bold ph-caret-left"></i>
+                                    <i class="ph-bold ph-caret-left rtl:-scale-x-100"></i>
                                 </button>
                                 {(0..pages).map(|n| view! {
                                     <button
@@ -163,7 +163,7 @@ pub fn ResultsPage() -> impl IntoView {
                                     on:click=move |_| set_page.update(|p| *p += 1)
                                     class="flex h-9 w-9 items-center justify-center rounded-control text-paper-ink hover:bg-paper-soft disabled:opacity-30"
                                 >
-                                    <i class="ph-bold ph-caret-right"></i>
+                                    <i class="ph-bold ph-caret-right rtl:-scale-x-100"></i>
                                 </button>
                             </nav>
                         })}

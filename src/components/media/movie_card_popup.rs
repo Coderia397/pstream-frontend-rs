@@ -484,7 +484,7 @@ pub fn MovieCardPopup(
                                         } else {
                                             view! { <span /> }.into_any()
                                         }}
-                                        <span>{tag}</span>
+                                        <span>{crate::i18n::mood_label(&tag)}</span>
                                     }
                                 }).collect_view()}
                             </div>

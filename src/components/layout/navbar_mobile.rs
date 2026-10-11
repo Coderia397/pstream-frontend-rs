@@ -105,14 +105,14 @@ pub fn NavbarMobile(
             >
                 // Logo mark (48 x 44 box) and page title, as in the app header
                 <div class="flex items-center min-w-0">
-                    <a href="/browse" class="flex-shrink-0 flex items-center justify-center w-12 h-11">
+                    <a href="/browse" class="flex h-11 w-11 flex-shrink-0 items-center justify-center ms-1">
                         <img
                             src=crate::brand::LOGO_EMBLEM
                             alt=crate::brand::NAME
-                            class="h-[34px] w-auto cursor-pointer select-none transition-transform active:scale-95"
+                            class="h-7 w-7 cursor-pointer select-none object-contain transition-transform active:scale-95"
                         />
                     </a>
-                    <span class="text-heading-md leading-none font-bold text-ink truncate">{page_title}</span>
+                    <span class="ms-1 truncate text-heading font-bold leading-none tracking-tight text-ink">{page_title}</span>
                 </div>
 
                 // Action buttons: Cast & Profile Avatar

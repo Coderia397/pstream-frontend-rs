@@ -425,10 +425,9 @@ fn LandingForm(email: ReadSignal<String>, set_email: WriteSignal<String>, on_sub
     }
 }
 
-/// The phone version of the landing page: four full screen slides (a wall of posters, then three illustrations), dots, and one big
-/// button, like the first screens of the Netflix app. The slides move on by themselves every few seconds; a touch pauses them,
-/// and they stay still for people who ask their device for reduced motion. From a small tablet width up the long page is shown
-/// instead, so the layout follows the width of the window and a touch laptop gets the page that fits its width.
+/// The phone version of the landing page: four full screen slides (a wall of posters, then three illustrations) that the person
+/// swipes through, dots, and one big button, like the first screens of the Netflix app. From a small tablet width up the long
+/// page is shown instead, so the layout follows the width of the window and a touch laptop gets the page that fits its width.
 #[component]
 fn MobileWelcome() -> impl IntoView {
     let navigate = use_navigate();
@@ -439,43 +438,15 @@ fn MobileWelcome() -> impl IntoView {
     // art for each slide: None is the wall of posters
     let slides: [(Option<&'static str>, &'static str, &'static str); 4] = [
         (None, "login-unlimited-films-series-and-more", "auth-tick-free"),
-        (Some("/assets/landing/slide-2.svg"), "landing-slide-everyone", "auth-tick-profiles"),
-        (Some("/assets/landing/slide-3.svg"), "login-reason-screens-title", "auth-tick-devices"),
-        (Some("/assets/landing/slide-4.svg"), "login-reason-place-title", "landing-slide-place"),
+        (Some("/assets/landing/slide-2.webp"), "landing-slide-everyone", "auth-tick-profiles"),
+        (Some("/assets/landing/slide-3.webp"), "login-reason-screens-title", "auth-tick-devices"),
+        (Some("/assets/landing/slide-4.webp"), "login-reason-place-title", "landing-slide-place"),
     ];
     let on_scroll = move |_| {
         if let Some(el) = track.get_untracked() {
             let width = el.client_width().max(1);
             set_index.set(((el.scroll_left() as f64) / (width as f64)).round() as usize);
         }
-    };
-
-    let paused_until = std::rc::Rc::new(std::cell::Cell::new(0.0f64));
-    let reduced = web_sys::window().and_then(|w| w.match_media("(prefers-reduced-motion: reduce)").ok().flatten()).is_some_and(|m| m.matches());
-    if !reduced {
-        let handle = std::rc::Rc::new(std::cell::RefCell::new(None::<IntervalHandle>));
-        let (h, pause) = (handle.clone(), paused_until.clone());
-        let tick = move || {
-            let Some(el) = track.get_untracked() else { return };
-            if !el.is_connected() {
-                // the page was left: stop the timer
-                if let Some(h) = h.borrow_mut().take() {
-                    h.clear();
-                }
-                return;
-            }
-            if js_sys::Date::now() < pause.get() {
-                return;
-            }
-            let width = el.client_width().max(1);
-            let next = (((el.scroll_left() as f64) / (width as f64)).round() as i32 + 1) % 4;
-            el.scroll_to_with_x_and_y((next * width) as f64, 0.0);
-        };
-        *handle.borrow_mut() = set_interval_with_handle(tick, std::time::Duration::from_millis(4500)).ok();
-    }
-    let pause_on_touch = {
-        let p = paused_until.clone();
-        move |_: leptos::ev::PointerEvent| p.set(js_sys::Date::now() + 9000.0)
     };
 
     view! {
@@ -490,7 +461,6 @@ fn MobileWelcome() -> impl IntoView {
             <div
                 node_ref=track
                 on:scroll=on_scroll
-                on:pointerdown=pause_on_touch
                 class="relative flex min-h-0 flex-1 snap-x snap-mandatory scroll-smooth overflow-x-auto overscroll-x-contain [scrollbar-width:none] [&::-webkit-scrollbar]:hidden"
             >
                 {slides
@@ -504,7 +474,15 @@ fn MobileWelcome() -> impl IntoView {
                                         <div class="absolute inset-0 bg-linear-to-b from-page/30 via-transparent to-page" aria-hidden="true"></div>
                                     }
                                     .into_any(),
-                                    Some(src) => view! { <img src=src class="mx-auto h-full w-full object-contain px-6 pt-2" alt="" /> }.into_any(),
+                                    Some(src) => view! {
+                                        <img
+                                            src=src
+                                            class="mx-auto h-full w-full object-contain"
+                                            style="-webkit-mask-image: radial-gradient(closest-side, #000 62%, transparent 100%); mask-image: radial-gradient(closest-side, #000 62%, transparent 100%)"
+                                            alt=""
+                                        />
+                                    }
+                                    .into_any(),
                                 }}
                             </div>
                             <div class="px-8 pb-4 text-center">

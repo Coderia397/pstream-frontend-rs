@@ -24,9 +24,9 @@ pub enum Look {
 #[component]
 pub fn AuthShell(children: Children, #[prop(default = Look::Dark)] look: Look, #[prop(optional)] right: Option<(&'static str, &'static str)>, #[prop(default = false)] back: bool) -> impl IntoView {
     let dark = look == Look::Dark;
-    let page = if dark { "bg-void text-ink" } else { "bg-paper text-paper-ink" };
-    let header = if dark { "border-b border-ink/10 bg-linear-to-b from-brand-deep/50 to-transparent" } else { "border-b border-paper-line bg-paper" };
-    let main = if dark { "bg-linear-to-b from-brand-deep/30 via-void to-void" } else { "bg-paper" };
+    let page = if dark { "bg-linear-to-b from-brand-deep/40 via-void to-void text-ink" } else { "bg-paper text-paper-ink" };
+    let header = if dark { "border-b border-ink/10" } else { "border-b border-paper-line bg-paper" };
+    let main = if dark { "" } else { "bg-paper" };
     let logo = if dark { crate::brand::LOGO_WORDMARK } else { crate::brand::LOGO_WORDMARK_PRIMARY };
     let right_link = if dark { "text-ink" } else { "text-paper-ink" };
     view! {

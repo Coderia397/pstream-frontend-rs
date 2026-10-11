@@ -321,7 +321,7 @@ pub fn SettingsPage() -> impl IntoView {
                     <i class="ph-fill ph-caret-down text-fine" aria-hidden="true"></i>
                 </a>
             </header>
-            <div class="mx-auto flex max-w-settings gap-settings-gap px-4 pb-16 pt-4 sm:px-8 lg:px-0 lg:pt-6">
+            <div class="mx-auto flex max-w-settings gap-settings-gap px-4 pb-16 pt-2 sm:px-8 lg:px-0 lg:pt-6" class=("max-lg:pt-8", light_phone)>
                 <aside class="hidden w-settings-nav shrink-0 lg:block">
                     <a href=routes::BROWSE class="mb-6 flex h-settings-menu-item items-center gap-2 rounded-control px-4 text-body-sm hover:bg-ink/5">
                         <i class="ph-bold ph-arrow-left text-xl rtl:-scale-x-100" aria-hidden="true"></i>
@@ -355,12 +355,12 @@ pub fn SettingsPage() -> impl IntoView {
                 </aside>
 
                 <main class="mx-auto w-full min-w-0 max-w-settings-main flex-1 lg:mx-0">
-                    <header class="mb-6 flex items-center gap-3 lg:mb-4">
+                    <header class="flex items-center gap-3 max-lg:mb-1 lg:mb-4" class=("max-lg:mb-4", light_phone)>
                         // phones and tablets go up one level in the phone tree; from 1024 px the website's tree is used
                         <a
                             href=move || screen.get().parent()
                             aria-label=move || t("set-back")
-                            class="flex h-10 w-10 shrink-0 items-center justify-center rounded-full text-ink hover:bg-ink/10 lg:hidden"
+                            class="flex h-11 w-11 shrink-0 items-center justify-center rounded-full text-ink hover:bg-ink/10 lg:hidden"
                             class=("max-lg:hidden", light_phone)
                         >
                             <i class="ph-bold ph-arrow-left text-2xl rtl:-scale-x-100" aria-hidden="true"></i>

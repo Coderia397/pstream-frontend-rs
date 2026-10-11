@@ -97,14 +97,14 @@ pub fn EditProfile(id: String) -> impl IntoView {
         view! {
             <div>
                 <Message text=note />
-                <div class="mb-8 flex flex-col items-center gap-5 lg:flex-row lg:gap-6">
-                    <a href=screen(Screen::Avatar) class="group relative block h-24 w-24 shrink-0 overflow-hidden rounded-card" aria-label=t("set-title-avatar")>
+                <div class="flex flex-col items-center gap-5 max-lg:mb-1 lg:mb-8 lg:flex-row lg:gap-6">
+                    <a href=screen(Screen::Avatar) class="group relative block h-29 w-29 shrink-0 overflow-hidden rounded-card lg:h-24 lg:w-24" aria-label=t("set-title-avatar")>
                         <img src=p.avatar_url.clone().unwrap_or_else(|| crate::brand::DEFAULT_AVATAR.to_string()) alt="" class="h-full w-full object-cover" />
                         <span class="absolute bottom-1 end-1 flex h-7 w-7 items-center justify-center rounded-full bg-ink text-void">
                             <i class="ph-bold ph-pencil-simple text-fine" aria-hidden="true"></i>
                         </span>
                     </a>
-                    <div class="w-full min-w-0 max-lg:max-w-xs lg:flex-1" on:focusout=move |_| if !is_wide() { save_name() } on:keydown=move |ev| if ev.key() == "Enter" { save_name() }>
+                    <div class="w-full min-w-0 max-lg:max-w-75 lg:flex-1" on:focusout=move |_| if !is_wide() { save_name() } on:keydown=move |ev| if ev.key() == "Enter" { save_name() }>
                         <Field label=t("set-profile-name") label_wide_only=true value=name maxlength=PROFILE_NAME_MAX as u32 />
                         // the website saves with a button; the app saves when you leave the field
                         <div class="hidden gap-3 lg:flex">

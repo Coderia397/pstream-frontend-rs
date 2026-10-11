@@ -152,7 +152,7 @@ pub fn Field(
                 inputmode=inputmode
                 prop:value=move || value.get()
                 on:input=move |ev| value.set(event_target_value(&ev))
-                class="w-full rounded-control border border-set-edge bg-set-card px-4 py-3 text-body-md text-ink focus:border-ink focus:outline-none"
+                class="w-full rounded-control border border-set-edge bg-set-card px-4 py-3 text-body-md text-ink focus:border-ink focus:outline-none max-lg:h-14"
             />
         </label>
     }

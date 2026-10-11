@@ -89,3 +89,8 @@
     background-image: linear-gradient(135deg, transparent 46%, var(--color-danger) 46% 54%, transparent 54%);
   }
 }
+
+/* White phone pages (the Account pages): rows are 64 px apart, 77 px with a second line, as in the Android app. */
+@media (max-width: 63.999rem) {
+  .theme-paper .set-row { min-height: 4rem; padding-block: 0.875rem; }
+}

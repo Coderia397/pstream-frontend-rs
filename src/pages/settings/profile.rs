@@ -1,12 +1,12 @@
 //! Edit Profile and the screens that hang off it: avatar and profile lock. Restrictions, languages and subtitles have their own
 //! files. Profiles are kept in this browser; every change goes through `change` (one place), which is where the account tables
-//! take over later (public.profiles: name, avatar, kind, maturity, has_pin, is_main).
+//! take over later (public.profiles: name, avatar, kind, has_pin, is_main; the rating limit is in profile_settings.age_rating).
 use super::hub::persist_profiles;
 use super::prefs::use_prefs;
 use super::widgets::{is_wide, toast, ConfirmDialog, DigitBoxes, Field, FormButtons, LinkRow, Message, OutlineButton, Section, SwitchRow, Tone};
 use super::Screen;
 use crate::config::{GAME_HANDLE_MAX, GAME_HANDLE_MIN, PIN_LENGTH, PROFILE_NAME_MAX};
-use crate::data::settings::{maturity, HANDLE_ADJECTIVES, HANDLE_NOUNS, PROFILE_DATA_USAGE};
+use crate::data::settings::{rating, HANDLE_ADJECTIVES, HANDLE_NOUNS, PROFILE_DATA_USAGE};
 use crate::data::AVATAR_CATEGORIES;
 use crate::i18n::{t, t_args};
 use crate::models::profile::Profile;
@@ -89,7 +89,7 @@ pub fn EditProfile(id: String) -> impl IntoView {
         // the main profile cannot be deleted, and the account keeps at least one profile
         let removable = p.is_default != Some(true) && store.profiles.with(|l| l.len() > 1);
         let can_be_main = p.is_default != Some(true) && !kids;
-        let maturity_value = Signal::derive(move || t(maturity(p_prefs.get().maturity_for(kids)).label_key));
+        let maturity_value = Signal::derive(move || { let r = rating(p_prefs.get().rating_for(kids)); if r.key == crate::data::settings::DEFAULT_RATING { t("set-restrictions-none") } else { t_args("set-rating-up-to", &[("rating", r.key.into())]) } });
         let handle_value = Signal::derive(move || p_prefs.get().game_handle.unwrap_or_else(|| t("set-handle-create")));
         let lock_value = Signal::derive(move || if profile.get().is_some_and(|p| p.pin.is_some()) { t("set-lock-on") } else { t("set-lock-off") });
         let language_value = Signal::derive(move || crate::i18n::native_name(&p_prefs.get().ui_language.unwrap_or_else(crate::i18n::language)));

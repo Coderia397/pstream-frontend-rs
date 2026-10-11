@@ -1,9 +1,9 @@
-//! Viewing restrictions of one profile: the maturity level (profiles.maturity) and the titles that are blocked.
+//! Viewing restrictions of one profile: the British age rating limit (profile_settings.age_rating) and the titles that are blocked.
 use super::prefs::use_prefs;
 use super::widgets::{toast, LinkRow, Section, Stepper};
 use super::Screen;
 use crate::config::{BLOCKED_TITLES_MAX, BLOCKED_TITLE_MAX};
-use crate::data::settings::{maturity, MATURITY_LEVELS};
+use crate::data::settings::{rating, DEFAULT_RATING, RATINGS};
 use crate::i18n::{t, t_args};
 use crate::store::use_profile_store;
 use leptos::prelude::*;
@@ -16,7 +16,10 @@ fn is_kids(id: &str) -> bool {
 pub fn Restrictions(id: String) -> impl IntoView {
     let prefs = use_prefs();
     let id = StoredValue::new(id);
-    let level_value = Signal::derive(move || t(maturity(prefs.profile(&id.get_value()).maturity_for(is_kids(&id.get_value()))).label_key));
+    let level_value = Signal::derive(move || {
+        let r = rating(prefs.profile(&id.get_value()).rating_for(is_kids(&id.get_value())));
+        if r.key == DEFAULT_RATING { t("set-restrictions-none") } else { t_args("set-rating-up-to", &[("rating", r.key.into())]) }
+    });
     let blocked_value = Signal::derive(move || {
         let n = prefs.profile(&id.get_value()).blocked_titles.len();
         if n == 0 { t("set-none") } else { t_args("set-blocked-count", &[("count", n.into())]) }
@@ -29,19 +32,19 @@ pub fn Restrictions(id: String) -> impl IntoView {
     }
 }
 
-/// Maturity levels as a stepper: each level allows everything below it, with what it allows written under it. A Kids profile is
-/// offered the two kids levels only.
+/// British age ratings as a stepper: each rating allows everything below it, with what it means written under it. A Kids
+/// profile is offered U and PG only. The same ratings are on the titles (TMDB and the catalogue carry them).
 #[component]
 pub fn Ratings(id: String) -> impl IntoView {
     let prefs = use_prefs();
     let id = StoredValue::new(id);
     let kids = is_kids(&id.get_value());
-    let selected = Signal::derive(move || prefs.profile(&id.get_value()).maturity_for(kids).to_string());
-    let options: Vec<(String, String, String)> = MATURITY_LEVELS.iter().filter(|m| !kids || m.kids).map(|m| (m.key.to_string(), t(m.label_key), t(m.hint_key))).collect();
+    let selected = Signal::derive(move || prefs.profile(&id.get_value()).rating_for(kids).to_string());
+    let options: Vec<(String, String, String)> = RATINGS.iter().filter(|r| !kids || r.kids).map(|r| (r.key.to_string(), t(r.label_key), t(r.hint_key))).collect();
     view! {
         <div>
             <p class="mb-5 text-body-md text-ink/60">{t("set-ratings-hint")}</p>
-            <Stepper options=options selected=selected on_pick=Callback::new(move |v: String| { prefs.update_profile(&id.get_value(), |p| p.maturity = Some(v)); toast(t("set-saved")); }) />
+            <Stepper options=options selected=selected on_pick=Callback::new(move |v: String| { prefs.update_profile(&id.get_value(), |p| p.max_rating = Some(v)); toast(t("set-saved")); }) />
         </div>
     }
 }

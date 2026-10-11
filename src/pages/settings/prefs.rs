@@ -35,7 +35,7 @@ impl Default for SubtitleStyle {
 }
 
 /// Settings of one profile. The field names follow the columns of public.profile_settings (autoplay_next, autoplay_previews,
-/// audio_language, subtitle_language, subtitle_style, ui_language) and profiles.maturity, so syncing them is a copy, not a
+/// audio_language, subtitle_language, subtitle_style, ui_language) and profile_settings.age_rating, so syncing them is a copy, not a
 /// translation. Blocked titles have no column yet.
 #[derive(Clone, Debug, PartialEq, Serialize, Deserialize)]
 #[serde(default)]
@@ -51,15 +51,15 @@ pub struct ProfilePrefs {
     pub audio_language: Option<String>,
     pub subtitle_language: Option<String>,
     pub ui_language: Option<String>,
-    /// Key from data::settings::MATURITY_LEVELS; None means the default for the kind of profile.
-    pub maturity: Option<String>,
+    /// Highest British rating shown (key from data::settings::RATINGS); None means the default for the kind of profile.
+    pub max_rating: Option<String>,
     pub blocked_titles: Vec<String>,
     pub subtitle_style: SubtitleStyle,
 }
 
 impl Default for ProfilePrefs {
     fn default() -> Self {
-        Self { autoplay_next: true, autoplay_previews: true, notifications: HashMap::new(), data_usage: "auto".into(), game_handle: None, audio_language: None, subtitle_language: None, ui_language: None, maturity: None, blocked_titles: Vec::new(), subtitle_style: SubtitleStyle::default() }
+        Self { autoplay_next: true, autoplay_previews: true, notifications: HashMap::new(), data_usage: "auto".into(), game_handle: None, audio_language: None, subtitle_language: None, ui_language: None, max_rating: None, blocked_titles: Vec::new(), subtitle_style: SubtitleStyle::default() }
     }
 }
 
@@ -69,12 +69,12 @@ impl ProfilePrefs {
         self.notifications.get(key).copied().unwrap_or(true)
     }
 
-    /// The level in force: the saved one if it is allowed for this kind of profile, otherwise the default for it.
-    pub fn maturity_for(&self, kids: bool) -> &'static str {
-        use crate::data::settings::{maturity, DEFAULT_KIDS_MATURITY, DEFAULT_MATURITY};
-        let default = if kids { DEFAULT_KIDS_MATURITY } else { DEFAULT_MATURITY };
-        let level = maturity(self.maturity.as_deref().unwrap_or(default));
-        if kids && !level.kids { maturity(DEFAULT_KIDS_MATURITY).key } else { level.key }
+    /// The rating limit in force: the saved one if it is allowed for this kind of profile, otherwise the default for it.
+    pub fn rating_for(&self, kids: bool) -> &'static str {
+        use crate::data::settings::{rating, DEFAULT_KIDS_RATING, DEFAULT_RATING};
+        let default = if kids { DEFAULT_KIDS_RATING } else { DEFAULT_RATING };
+        let level = rating(self.max_rating.as_deref().unwrap_or(default));
+        if kids && !level.kids { rating(DEFAULT_KIDS_RATING).key } else { level.key }
     }
 }
 
@@ -190,13 +190,13 @@ mod tests {
     }
 
     #[test]
-    fn a_kids_profile_never_gets_an_adult_level() {
+    fn a_kids_profile_never_gets_an_adult_limit() {
         let mut p = ProfilePrefs::default();
-        assert_eq!(p.maturity_for(false), "adult");
-        assert_eq!(p.maturity_for(true), "older_kids");
-        p.maturity = Some("adult".into());
-        assert_eq!(p.maturity_for(true), "older_kids");
-        p.maturity = Some("teens".into());
-        assert_eq!(p.maturity_for(false), "teens");
+        assert_eq!(p.rating_for(false), "18");
+        assert_eq!(p.rating_for(true), "PG");
+        p.max_rating = Some("18".into());
+        assert_eq!(p.rating_for(true), "PG");
+        p.max_rating = Some("15".into());
+        assert_eq!(p.rating_for(false), "15");
     }
 }

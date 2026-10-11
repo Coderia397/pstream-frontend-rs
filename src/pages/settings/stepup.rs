@@ -3,11 +3,15 @@
 //! sign in too). Without an account session the profile screens open freely and the account screens ask to sign in.
 use super::account::error_text;
 use super::prefs::{now_secs, use_prefs};
-use super::widgets::{ActionRow, DigitBoxes, Message, PasswordField, Section, Tone};
+use super::widgets::{DigitBoxes, Message, PasswordField, Tone};
 use crate::config::{routes, CODE_LENGTH, CODE_VALID_MINUTES};
 use crate::i18n::{t, t_args};
 use crate::services::account::{self, AuthError};
 use leptos::prelude::*;
+
+/// Set while the check is on screen, so the page can hide its own title.
+#[derive(Clone, Copy)]
+pub struct GateActive(pub RwSignal<bool>);
 
 #[derive(Clone, Copy, PartialEq, Eq)]
 enum Step {
@@ -95,6 +99,11 @@ pub fn Gate(account: bool, children: ChildrenFn) -> impl IntoView {
         });
     });
     let children = StoredValue::new(children);
+    let showing = move || signed_in && !verified();
+    if let Some(active) = use_context::<GateActive>() {
+        Effect::new(move |_| active.0.set(showing()));
+        on_cleanup(move || active.0.set(false));
+    }
 
     move || {
         if !signed_in {
@@ -114,18 +123,26 @@ pub fn Gate(account: bool, children: ChildrenFn) -> impl IntoView {
             return children.with_value(|c| c()).into_any();
         }
         view! {
-            <div class="max-w-md">
-                <h2 class="mb-2 text-account-title-sm font-bold leading-tight lg:text-title">{move || if step.get() == Step::Code { t("set-code-title") } else { t("set-verify-title") }}</h2>
+            <div class="max-w-md max-lg:pt-8">
+                <h2 class="mb-3 text-account-title-sm font-bold leading-tight lg:text-account-title">{move || if step.get() == Step::Code { t("set-code-title") } else { t("set-verify-title") }}</h2>
                 <p class="mb-6 text-body-md text-ink/60">
                     {move || if step.get() == Step::Code { t_args("set-code-body", &[("target", masked.get_value().into()), ("minutes", CODE_VALID_MINUTES.into())]) } else { t("set-verify-body") }}
                 </p>
                 <Message text=note />
                 {move || match step.get() {
                     Step::Choose => view! {
-                        <Section>
-                            <ActionRow icon="envelope-simple" title=t("set-code-email") hint=masked.get_value() chevron=true on_click=send_code />
-                            <ActionRow icon="lock-simple" title=t("set-password-confirm") chevron=true on_click=Callback::new(move |_| { note.set(None); step.set(Step::Password) }) />
-                        </Section>
+                        <div class="space-y-3">
+                            <button type="button" on:click=move |_| send_code.run(()) class="flex w-full items-center gap-3 rounded-card bg-ink/5 px-4 py-4 text-start hover:bg-ink/10">
+                                <i class="ph-bold ph-envelope-simple text-2xl text-ink/70" aria-hidden="true"></i>
+                                <span class="min-w-0 flex-1"><span class="block text-title-sm font-semibold leading-row">{t("set-code-email")}</span><span class="block text-body-sm text-ink/70">{masked.get_value()}</span></span>
+                                <i class="ph-bold ph-caret-right text-2xl text-ink/70 rtl:-scale-x-100" aria-hidden="true"></i>
+                            </button>
+                            <button type="button" on:click=move |_| { note.set(None); step.set(Step::Password) } class="flex w-full items-center gap-3 rounded-card bg-ink/5 px-4 py-4 text-start hover:bg-ink/10">
+                                <i class="ph-bold ph-lock-simple text-2xl text-ink/70" aria-hidden="true"></i>
+                                <span class="min-w-0 flex-1"><span class="block text-title-sm font-semibold leading-row">{t("set-password-confirm")}</span></span>
+                                <i class="ph-bold ph-caret-right text-2xl text-ink/70 rtl:-scale-x-100" aria-hidden="true"></i>
+                            </button>
+                        </div>
                     }.into_any(),
                     Step::Password => view! {
                         <form on:submit=move |ev| { ev.prevent_default(); submit_password.run(()); }>

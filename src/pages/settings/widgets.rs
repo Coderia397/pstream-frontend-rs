@@ -10,7 +10,7 @@ const CARD: &str = "set-card rounded-card border border-set-edge bg-set-card px-
 pub fn Section(#[prop(optional, into)] title: Option<String>, children: Children) -> impl IntoView {
     view! {
         <section class="mb-8">
-            {title.map(|t| view! { <h2 class="set-section-title mb-4 text-title-sm leading-row text-ink/85">{t}</h2> })}
+            {title.map(|t| view! { <h2 class="set-section-title mb-3 text-body-md leading-row text-ink/85 lg:mb-4 lg:text-title-sm">{t}</h2> })}
             <div class=CARD>{children()}</div>
         </section>
     }
@@ -20,10 +20,12 @@ fn row_body(icon: &'static str, title: String, hint: Option<String>, value: Opti
     view! {
         <i class=format!("ph-bold ph-{icon} me-3 text-2xl text-ink/70") aria-hidden="true"></i>
         <span class="min-w-0 flex-1">
-            <span class="block text-title-sm font-semibold leading-row text-ink">{title}</span>
-            {hint.map(|h| view! { <span class="block pt-1 text-body-sm leading-normal text-ink/70">{h}</span> })}
+            <span class="block text-body-md font-semibold leading-row text-ink lg:text-title-sm">{title}</span>
+            {hint.clone().map(|h| view! { <span class="block pt-0.5 text-label leading-normal text-ink/70 lg:pt-1 lg:text-body-sm">{h}</span> })}
+            // on a phone the value sits under the title, as in the Android app, unless the row has a hint of its own
+            {hint.is_none().then(|| value.map(|v| view! { <span class="block truncate pt-0.5 text-label text-ink/70 lg:hidden">{move || v.get()}</span> }))}
         </span>
-        {value.map(|v| view! { <span class="ms-3 max-w-2/5 truncate text-body-sm text-ink/70">{move || v.get()}</span> })}
+        {value.map(|v| view! { <span class="ms-3 hidden max-w-2/5 truncate text-body-sm text-ink/70 lg:block">{move || v.get()}</span> })}
         {chevron.then(|| view! { <i class="ph-bold ph-caret-right ms-3 text-2xl text-ink/70 rtl:-scale-x-100" aria-hidden="true"></i> })}
     }
 }
@@ -97,9 +99,9 @@ pub fn SwitchRow(
 
 /// Radio list: one choice picked, each row a full width button.
 #[component]
-pub fn ChoiceList(options: Vec<(String, String)>, selected: Signal<String>, on_pick: Callback<String>) -> impl IntoView {
+pub fn ChoiceList(options: Vec<(String, String)>, selected: Signal<String>, on_pick: Callback<String>, #[prop(default = false)] plain: bool) -> impl IntoView {
     view! {
-        <div role="radiogroup" class=CARD>
+        <div role="radiogroup" class=if plain { "" } else { CARD }>
             {options
                 .into_iter()
                 .map(|(value, label)| {
@@ -111,10 +113,15 @@ pub fn ChoiceList(options: Vec<(String, String)>, selected: Signal<String>, on_p
                             role="radio"
                             aria-checked=move || (selected.get() == v).to_string()
                             on:click=move |_| on_pick.run(v2.clone())
-                            class=ROW
+                            class=if plain { "flex min-h-12 w-full items-center gap-4 py-2 text-start focus-visible:outline-none" } else { ROW }
                         >
-                            <span class="flex-1 text-title-sm leading-row text-ink">{label}</span>
-                            <i class="ph-bold ph-check text-xl text-brand" class=("invisible", { let s = value.clone(); move || selected.get() != s }) aria-hidden="true"></i>
+                            {plain.then(|| view! {
+                                <span class="flex h-6 w-6 shrink-0 items-center justify-center rounded-full border-2 border-ink/70" class=("border-brand", { let s = value.clone(); move || selected.get() == s })>
+                                    <span class="h-3 w-3 rounded-full bg-brand" class=("invisible", { let s = value.clone(); move || selected.get() != s })></span>
+                                </span>
+                            })}
+                            <span class="flex-1 text-body-md leading-row text-ink lg:text-title-sm">{label}</span>
+                            {(!plain).then(|| view! { <i class="ph-bold ph-check text-xl text-brand" class=("invisible", { let s = value.clone(); move || selected.get() != s }) aria-hidden="true"></i> })}
                         </button>
                     }
                 })
@@ -127,6 +134,8 @@ pub fn ChoiceList(options: Vec<(String, String)>, selected: Signal<String>, on_p
 #[component]
 pub fn Field(
     #[prop(into)] label: String,
+    /// Show the label only from 1024 px (the Android app has none above the name field).
+    #[prop(default = false)] label_wide_only: bool,
     value: RwSignal<String>,
     #[prop(default = "text")] kind: &'static str,
     #[prop(default = "off")] autocomplete: &'static str,
@@ -135,7 +144,7 @@ pub fn Field(
 ) -> impl IntoView {
     view! {
         <label class="mb-4 block">
-            <span class="mb-1.5 block text-label font-semibold text-ink/60">{label}</span>
+            <span class=if label_wide_only { "mb-1.5 hidden text-label font-semibold text-ink/60 lg:block" } else { "mb-1.5 block text-label font-semibold text-ink/60" }>{label}</span>
             <input
                 type=kind
                 autocomplete=autocomplete
@@ -143,7 +152,7 @@ pub fn Field(
                 inputmode=inputmode
                 prop:value=move || value.get()
                 on:input=move |ev| value.set(event_target_value(&ev))
-                class="w-full rounded-control border border-ink/20 bg-ink/10 px-4 py-3 text-body-md text-ink focus:border-ink focus:outline-none"
+                class="w-full rounded-control border border-set-edge bg-set-card px-4 py-3 text-body-md text-ink focus:border-ink focus:outline-none"
             />
         </label>
     }
@@ -170,16 +179,17 @@ pub fn Message(text: RwSignal<Option<(Tone, String)>>) -> impl IntoView {
 #[component]
 pub fn FormButtons(#[prop(into)] save_label: String, on_save: Callback<()>, #[prop(into)] cancel_href: String, #[prop(optional, into)] busy: Option<Signal<bool>>) -> impl IntoView {
     view! {
-        <div class="mt-2 flex flex-wrap items-center gap-3">
+        // a phone stacks them full width, like the Android app; wide screens put them side by side
+        <div class="mt-2 flex flex-col items-stretch gap-3 lg:flex-row lg:flex-wrap lg:items-center">
             <button
                 type="button"
                 on:click=move |_| on_save.run(())
                 disabled=move || busy.map(|b| b.get()).unwrap_or(false)
-                class="btn-ink rounded-control px-8 py-2.5 disabled:opacity-50"
+                class="btn-ink rounded-control px-8 py-3 disabled:opacity-50 lg:py-2.5"
             >
                 {save_label}
             </button>
-            <a href=cancel_href class="rounded-control px-6 py-2.5 text-body-md font-bold text-ink/80 hover:bg-ink/10">{t("set-cancel")}</a>
+            <a href=cancel_href class="rounded-control px-6 py-2.5 text-center text-body-md font-bold text-ink/80 hover:bg-ink/10">{t("set-cancel")}</a>
         </div>
     }
 }
@@ -234,7 +244,7 @@ pub fn PasswordField(#[prop(into)] label: String, value: RwSignal<String>, #[pro
     view! {
         <label class="mb-4 block">
             <span class="mb-1.5 block text-label font-semibold text-ink/60">{label}</span>
-            <span class="flex items-center rounded-control border border-ink/20 bg-ink/10 focus-within:border-ink">
+            <span class="flex items-center rounded-control border border-set-edge bg-set-card focus-within:border-ink">
                 <input
                     type=move || if shown.get() { "text" } else { "password" }
                     autocomplete=autocomplete
@@ -301,7 +311,7 @@ pub fn Stepper(options: Vec<(String, String, String)>, selected: Signal<String>,
     let values: Vec<String> = options.iter().map(|(v, _, _)| v.clone()).collect();
     let count = options.len();
     view! {
-        <div role="radiogroup" class="rounded-card border border-set-edge bg-set-card px-4 py-2">
+        <div role="radiogroup" class="px-0 py-2 lg:rounded-card lg:border lg:border-set-edge lg:bg-set-card lg:px-4">
             {options
                 .into_iter()
                 .enumerate()
@@ -333,8 +343,8 @@ pub fn Stepper(options: Vec<(String, String, String)>, selected: Signal<String>,
                                 </span>
                             </span>
                             <span class="min-w-0 flex-1">
-                                <span class="block text-title-sm font-semibold leading-row text-ink">{label}</span>
-                                <span class="block text-body-sm text-ink/70">{hint}</span>
+                                <span class="block text-body-md font-semibold leading-row text-ink lg:text-title-sm">{label}</span>
+                                <span class="block text-label text-ink/70 lg:text-body-sm">{hint}</span>
                             </span>
                         </button>
                     }

@@ -294,6 +294,9 @@ pub fn SettingsPage() -> impl IntoView {
     });
     let signout_open = RwSignal::new(false);
     provide_context(hub::SignOutOpen(signout_open));
+    // while the password check is showing it has its own heading, so the page title steps aside
+    let gate_active = RwSignal::new(false);
+    provide_context(stepup::GateActive(gate_active));
     provide_context(widgets::Toast(RwSignal::new(None)));
 
     let avatar = Memo::new(move |_| profiles.profiles.with(|l| profiles.active_profile_id.with(|id| l.iter().find(|p| Some(&p.id) == id.as_ref()).or(l.first()).and_then(|p| p.avatar_url.clone()))).unwrap_or_else(|| crate::data::DEFAULT_AVATAR.to_string()));
@@ -370,7 +373,7 @@ pub fn SettingsPage() -> impl IntoView {
                         >
                             <i class="ph-bold ph-arrow-left text-2xl rtl:-scale-x-100" aria-hidden="true"></i>
                         </a>
-                        <h1 class="truncate text-heading font-bold lg:text-account-title lg:leading-tight" class=("max-lg:text-account-title-sm", light_phone)>
+                        <h1 class="text-title font-bold lg:truncate lg:text-account-title lg:leading-tight" class=("max-lg:text-account-title-sm", light_phone) class=("hidden", move || gate_active.get() || screen.get() == Screen::TransferSetting)>
                             <span class=("lg:hidden", move || screen.get() == Screen::Hub)>{move || t(screen.get().title_key())}</span>
                             <span class="hidden" class=("lg:inline", move || screen.get() == Screen::Hub)>{move || t(Screen::Account.title_key())}</span>
                         </h1>

@@ -73,7 +73,8 @@
   --spacing-settings-row: 3.5rem;
   --spacing-settings-header: 4rem;
   --spacing-settings-menu-item: 2.5rem;
-  --spacing-settings-tile: 4.25rem;
+  --spacing-settings-tile: 3.5rem;
+  --spacing-settings-hero-min: 70dvh;
   /* Consent sheet: about a fifth of the screen on a phone, a fixed width pop-up from the sm width */
   --spacing-sheet-min: 20dvh;
   --spacing-sheet: 30rem;

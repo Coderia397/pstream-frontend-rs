@@ -22,6 +22,7 @@ pub fn DisplayLanguage(id: String) -> impl IntoView {
             <ChoiceList
                 options=options
                 selected=current.into()
+                plain=true
                 on_pick=Callback::new(move |code: String| {
                     crate::i18n::set_language(&code);
                     prefs.update_profile(&id.get_value(), |p| p.ui_language = Some(code.clone()));
@@ -53,6 +54,7 @@ pub fn AudioSubtitles(id: String) -> impl IntoView {
                 <ChoiceList
                     options=language_options(vec![(FOLLOW, "set-lang-follow")])
                     selected=audio
+                    plain=true
                     on_pick=Callback::new(move |v: String| prefs.update_profile(&id.get_value(), |p| p.audio_language = none_if_follow(v)))
                 />
             </section>
@@ -61,6 +63,7 @@ pub fn AudioSubtitles(id: String) -> impl IntoView {
                 <ChoiceList
                     options=language_options(vec![(FOLLOW, "set-lang-follow"), (OFF, "set-subtitles-off")])
                     selected=subtitles
+                    plain=true
                     on_pick=Callback::new(move |v: String| prefs.update_profile(&id.get_value(), |p| p.subtitle_language = none_if_follow(v)))
                 />
             </section>

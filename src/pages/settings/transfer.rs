@@ -3,7 +3,7 @@
 //! The file holds the name, picture, kind, settings and viewing history of one profile; it never holds the PIN.
 use super::hub::persist_profiles;
 use super::prefs::{use_prefs, Prefs, ProfilePrefs};
-use super::widgets::{save_as_file, toast, Message, Notice, Section, SwitchRow, Tone};
+use super::widgets::{save_as_file, toast, Message, Notice, Tone};
 use super::Screen;
 use crate::config::{MAX_PROFILES, PROFILE_NAME_MAX};
 use crate::i18n::t;
@@ -95,13 +95,15 @@ pub fn import_profile(text: &str, store: ProfileStore, prefs: Prefs) -> Result<S
     Ok(name)
 }
 
-/// The account setting: whether profiles may be copied out of the account.
+/// The account setting: whether profiles may be copied out of the account. A dark red page with the state in large type and one
+/// outlined button, like the Netflix page; the same on every width.
 #[component]
 pub fn TransferSetting() -> impl IntoView {
     let prefs = use_prefs();
     let note = RwSignal::new(None::<(Tone, String)>);
     let on = Signal::derive(move || prefs.account.get().profile_transfer);
-    let set = Callback::new(move |value: bool| {
+    let toggle = move |_| {
+        let value = !on.get_untracked();
         prefs.account.update(|a| a.profile_transfer = value);
         if account::session().is_some() {
             leptos::task::spawn_local(async move {
@@ -111,16 +113,14 @@ pub fn TransferSetting() -> impl IntoView {
             });
         }
         toast(t("set-saved"));
-    });
+    };
     view! {
-        <div class="max-w-xl">
+        <div class="-mx-4 -mt-4 flex min-h-settings-hero flex-col items-center justify-center bg-linear-to-b from-chrome via-danger-deep to-chrome px-6 py-10 text-center text-chrome-ink sm:-mx-8 lg:mx-0 lg:rounded-card">
+            <i class="ph-bold ph-arrows-left-right mb-6 text-8xl text-chrome-ink/90" aria-hidden="true"></i>
+            <h2 class="mb-4 max-w-md text-heading-lg font-bold leading-tight">{move || if on.get() { t("set-transfer-on-title") } else { t("set-transfer-off-title") }}</h2>
+            <p class="mb-8 max-w-md text-body-md text-chrome-ink/80">{move || if on.get() { t("set-transfer-on-body") } else { t("set-transfer-off-body") }}</p>
             <Message text=note />
-            <Notice icon="arrows-left-right" title=move || if on.get() { t("set-transfer-on-title") } else { t("set-transfer-off-title") } body=move || if on.get() { t("set-transfer-on-body") } else { t("set-transfer-off-body") }>
-                <span></span>
-            </Notice>
-            <Section>
-                <SwitchRow icon="arrows-left-right" title=t("set-transfer-switch") hint=t("set-transfer-switch-hint") checked=on on_change=set />
-            </Section>
+            <button type="button" on:click=toggle class="w-full max-w-md rounded-control border border-danger px-6 py-3 text-body-md font-bold text-chrome-ink hover:bg-danger/20">{move || if on.get() { t("set-transfer-turn-off") } else { t("set-transfer-turn-on") }}</button>
         </div>
     }
 }

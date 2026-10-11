@@ -104,8 +104,8 @@ pub fn EditProfile(id: String) -> impl IntoView {
                             <i class="ph-bold ph-pencil-simple text-fine" aria-hidden="true"></i>
                         </span>
                     </a>
-                    <div class="w-full min-w-0 lg:flex-1" on:focusout=move |_| if !is_wide() { save_name() } on:keydown=move |ev| if ev.key() == "Enter" { save_name() }>
-                        <Field label=t("set-profile-name") value=name maxlength=PROFILE_NAME_MAX as u32 />
+                    <div class="w-full min-w-0 max-lg:max-w-xs lg:flex-1" on:focusout=move |_| if !is_wide() { save_name() } on:keydown=move |ev| if ev.key() == "Enter" { save_name() }>
+                        <Field label=t("set-profile-name") label_wide_only=true value=name maxlength=PROFILE_NAME_MAX as u32 />
                         // the website saves with a button; the app saves when you leave the field
                         <div class="hidden gap-3 lg:flex">
                             <button type="button" on:click=move |_| save_name() class="btn-ink rounded-control px-6 py-2">{t("set-save")}</button>
@@ -230,11 +230,18 @@ pub fn GameHandle(id: String) -> impl IntoView {
         <div class="max-w-md">
             <p class="mb-2 text-body-md text-ink/70">{t("set-handle-body")}</p>
             <p class="mb-6 text-body-md text-ink/70">{t("set-handle-change")}</p>
+            {move || find(&id.get_value()).map(|p| view! {
+                <div class="mb-6 flex flex-col items-center gap-1 text-center">
+                    <img src=p.avatar_url.clone().unwrap_or_else(|| crate::brand::DEFAULT_AVATAR.to_string()) alt="" class="mb-2 h-24 w-24 rounded-card object-cover" />
+                    <span class="text-title font-bold">{p.name.clone()}</span>
+                    <span class="flex items-center gap-1 text-body-sm text-ink/70"><i class="ph-bold ph-game-controller" aria-hidden="true"></i>{t("set-title-game-handle")}</span>
+                </div>
+            })}
             <Message text=note />
             <Field label=t("set-title-game-handle") value=value maxlength=GAME_HANDLE_MAX as u32 autocomplete="off" />
             <p class="-mt-2 mb-4 text-end text-label text-ink/50">{move || format!("{}/{}", value.with(|v| v.chars().count()), GAME_HANDLE_MAX)}</p>
             <button type="button" on:click=suggest class="mb-6 rounded-control border border-ink/40 px-5 py-2.5 text-body-md font-bold hover:bg-ink/10">{t("set-handle-suggest")}</button>
-            <FormButtons save_label=t("set-save") on_save=save cancel_href=Screen::Profile(id.get_value()).path() />
+            <FormButtons save_label=t("set-save") on_save=save cancel_href=Screen::Profile(id.get_value()).path() busy=Signal::derive(move || { let v = value.get(); !valid_handle(v.trim()) || prefs.profile(&id.get_value()).game_handle.as_deref() == Some(v.trim()) }) />
         </div>
     }
 }
@@ -374,16 +381,16 @@ pub fn Lock(id: String) -> impl IntoView {
     let confirm_reset = RwSignal::new(false);
 
     view! {
-        <div>
+        <div class="max-lg:flex max-lg:min-h-settings-hero max-lg:flex-col max-lg:justify-center">
             <div class="mb-6 flex flex-col items-center gap-4 text-center">
-                <span class="flex h-24 w-24 items-center justify-center rounded-full bg-ink/10"><i class="ph-bold ph-lock-simple text-5xl" aria-hidden="true"></i></span>
-                <h2 class="text-title font-bold">{move || if has_pin.get() { t("set-lock-title-on") } else { t("set-lock-title-off") }}</h2>
+                <span class="flex h-36 w-36 items-center justify-center rounded-full bg-ink/10 lg:h-24 lg:w-24"><i class="ph-bold ph-lock-simple text-7xl lg:text-5xl" aria-hidden="true"></i></span>
+                <h2 class="text-heading-lg font-bold lg:text-title">{move || if has_pin.get() { t("set-lock-title-on") } else { t("set-lock-title-off") }}</h2>
                 <p class="max-w-md text-body-md text-ink/60">{move || t_args("set-lock-body", &[("digits", PIN_LENGTH.into())])}</p>
             </div>
             <Message text=note />
             {move || match (mode.get(), has_pin.get()) {
                 (LockMode::Idle, false) => view! {
-                    <button type="button" on:click=move |_| mode.set(LockMode::Set) class="btn-ink w-full rounded-control px-8 py-3">{t("set-lock-create")}</button>
+                    <button type="button" on:click=move |_| mode.set(LockMode::Set) class="btn-ink mx-auto block rounded-control px-8 py-3 lg:w-full">{t("set-lock-create")}</button>
                 }.into_any(),
                 (LockMode::Idle, true) => view! {
                     <div class="space-y-3">

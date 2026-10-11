@@ -212,7 +212,7 @@ pub fn NavbarMobile(
                                 <span>{crate::i18n::t("nav-my-list")}</span>
                             </a>
                             <a
-                                href="/browse"
+                                href="/settings"
                                 class="flex items-center gap-3 p-2 text-ink/80 hover:text-ink transition-colors text-body"
                                 on:click=move |_| set_profile_sheet_open.set(false)
                             >

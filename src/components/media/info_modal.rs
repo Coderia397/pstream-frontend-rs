@@ -706,6 +706,8 @@ pub fn InfoModal() -> impl IntoView {
                                 </>
                             }.into_any()
                         },
+                        // the message only exists while the window is open, so it is not read out or indexed on every page
+                        None if !is_open.get() => view! { <></> }.into_any(),
                         None => view! {
                             <div class="w-full h-40 text-ink p-10 flex items-center justify-center">
                                 {crate::i18n::t("info-modal-error-loading-details")}

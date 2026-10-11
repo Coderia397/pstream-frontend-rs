@@ -62,27 +62,27 @@ pub fn NotificationsDropdown() -> impl IntoView {
                 if count >= 8 { break; }
                 if let Some(backdrop) = m.backdrop_url("w300").or_else(|| m.poster_url("w300")) {
                     let rel = match idx {
-                        0 => "New".to_string(),
-                        1 => "1 day ago".to_string(),
-                        2 => "3 days ago".to_string(),
-                        3 => "1 week ago".to_string(),
-                        4 => "2 weeks ago".to_string(),
-                        5 => "3 weeks ago".to_string(),
-                        _ => "1 month ago".to_string(),
+                        0 => crate::i18n::t("notif-new"),
+                        1 => crate::i18n::t_args("notif-ago-days", &[("n", fluent_bundle::FluentValue::from(1))]),
+                        2 => crate::i18n::t_args("notif-ago-days", &[("n", fluent_bundle::FluentValue::from(3))]),
+                        3 => crate::i18n::t_args("notif-ago-weeks", &[("n", fluent_bundle::FluentValue::from(1))]),
+                        4 => crate::i18n::t_args("notif-ago-weeks", &[("n", fluent_bundle::FluentValue::from(2))]),
+                        5 => crate::i18n::t_args("notif-ago-weeks", &[("n", fluent_bundle::FluentValue::from(3))]),
+                        _ => crate::i18n::t_args("notif-ago-months", &[("n", fluent_bundle::FluentValue::from(1))]),
                     };
                     list.push(AppNotification {
                         id: format!("notif-movie-{}", m.id),
                         movie_id: m.id,
                         is_tv: false,
                         headline: match idx {
-                            0 => "Top pick for you".to_string(),
-                            1 => "Trending now".to_string(),
-                            2 => "Don't miss out".to_string(),
-                            3 => "New arrival".to_string(),
-                            4 => "A must-watch".to_string(),
-                            5 => "Top 10 in the UK".to_string(),
-                            6 => "Critics' choice".to_string(),
-                            _ => format!("New on {}", crate::brand::NAME),
+                            0 => crate::i18n::t("notif-h-top-pick"),
+                            1 => crate::i18n::t("notif-h-trending"),
+                            2 => crate::i18n::t("notif-h-dont-miss"),
+                            3 => crate::i18n::t("notif-h-new-arrival"),
+                            4 => crate::i18n::t("notif-h-must-watch"),
+                            5 => crate::i18n::t("notif-h-top10-films"),
+                            6 => crate::i18n::t("notif-h-critics"),
+                            _ => crate::i18n::t_args("notif-h-new-on", &[("brand", fluent_bundle::FluentValue::from(crate::brand::NAME))]),
                         },
                         body: m.title.clone().unwrap_or_default(),
                         backdrop,
@@ -96,26 +96,26 @@ pub fn NotificationsDropdown() -> impl IntoView {
                 if count >= 16 { break; }
                 if let Some(backdrop) = s.backdrop_url("w300").or_else(|| s.poster_url("w300")) {
                     let rel = match idx {
-                        0 => "New".to_string(),
-                        1 => "2 days ago".to_string(),
-                        2 => "1 week ago".to_string(),
+                        0 => crate::i18n::t("notif-new"),
+                        1 => crate::i18n::t_args("notif-ago-days", &[("n", fluent_bundle::FluentValue::from(2))]),
+                        2 => crate::i18n::t_args("notif-ago-weeks", &[("n", fluent_bundle::FluentValue::from(1))]),
                         3 => "2 weeks ago".to_string(),
                         4 => "3 weeks ago".to_string(),
-                        _ => "1 month ago".to_string(),
+                        _ => crate::i18n::t_args("notif-ago-months", &[("n", fluent_bundle::FluentValue::from(1))]),
                     };
                     list.push(AppNotification {
                         id: format!("notif-tv-{}", s.id),
                         movie_id: s.id,
                         is_tv: true,
                         headline: match idx {
-                            0 => "New season available".to_string(),
-                            1 => "Top series for you".to_string(),
-                            2 => "Everyone's watching".to_string(),
-                            3 => "A top comedy picked for you".to_string(),
-                            4 => "Binge-worthy".to_string(),
-                            5 => "Top 10 series in the UK".to_string(),
-                            6 => "New arrival".to_string(),
-                            _ => format!("New on {}", crate::brand::NAME),
+                            0 => crate::i18n::t("notif-h-new-season"),
+                            1 => crate::i18n::t("notif-h-top-series"),
+                            2 => crate::i18n::t("notif-h-everyone"),
+                            3 => crate::i18n::t("notif-h-comedy"),
+                            4 => crate::i18n::t("notif-h-binge"),
+                            5 => crate::i18n::t("notif-h-top10-series"),
+                            6 => crate::i18n::t("notif-h-new-arrival"),
+                            _ => crate::i18n::t_args("notif-h-new-on", &[("brand", fluent_bundle::FluentValue::from(crate::brand::NAME))]),
                         },
                         body: s.title.clone().unwrap_or_default(),
                         backdrop,
@@ -206,7 +206,7 @@ pub fn NotificationsDropdown() -> impl IntoView {
                 <div class="absolute right-0 top-[calc(100%+8px)] w-[360px] sm:w-[420px] max-h-[560px] overflow-y-auto bg-menu rounded-modal shadow-2xl z-50 scrollbar-hide">
                     // Header
                     <div class="px-4 py-3">
-                        <p class="text-ink font-bold text-body">"Notifications"</p>
+                        <p class="text-ink font-bold text-body">{crate::i18n::t("notif-title")}</p>
                     </div>
                     <Show
                         when=move || !is_loading.get()

@@ -110,7 +110,7 @@ fn CategorySubNavDesktop(
 
     // 3-column transposed layout matching Netflix
     let mut sorted_genres = genres.clone();
-    sorted_genres.sort_by(|a, b| a.name.cmp(&b.name));
+    sorted_genres.sort_by_cached_key(|g| crate::i18n::genre_label(&g.name));
     let num_cols = 3;
     let num_rows = (sorted_genres.len() + num_cols - 1) / num_cols;
     let mut transposed_genres: Vec<Option<SubNavGenre>> = Vec::new();
@@ -181,7 +181,7 @@ fn CategorySubNavDesktop(
                                             ">"
                                         </span>
                                         <span class="whitespace-nowrap">
-                                            {g_name}
+                                            {crate::i18n::genre_label(&g_name)}
                                         </span>
                                     </>
                                 }.into_any()
@@ -201,7 +201,7 @@ fn CategorySubNavDesktop(
                     let d_l = dropdown_label.clone();
                     move || {
                         if selected_genre.get().is_none() && !s_g.is_empty() {
-                            let label = d_l.clone().unwrap_or_else(|| "Genres".to_string());
+                            let label = d_l.clone().unwrap_or_else(|| crate::i18n::t("nav-genres"));
                             let transposed = t_g.clone();
                             let on_select = on_genre_select;
 
@@ -245,7 +245,7 @@ fn CategorySubNavDesktop(
                                                                 aria-selected="false"
                                                                 class="text-left text-body-sm md:text-body font-medium transition-all px-3 py-1.5 rounded-card hover:bg-ink/15 whitespace-nowrap text-ink/80 hover:text-ink cursor-pointer"
                                                             >
-                                                                {genre.name}
+                                                                {crate::i18n::genre_label(&genre.name)}
                                                             </button>
                                                         }.into_any()
                                                     } else {

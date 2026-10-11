@@ -59,7 +59,7 @@ pub fn MaturityBadge(
                 height=h_px
                 viewBox="0 0 110 96"
                 class="shrink-0 inline-block align-middle select-none drop-shadow-sm"
-                aria-label=format!("BBFC {} rating", label)
+                aria-label=crate::i18n::t_args("media-rating-aria", &[("rating", fluent_bundle::FluentValue::from(label.to_string()))])
             >
                 // Outer dark outline
                 <path d="M 55 12 L 98 86 L 12 86 Z" fill="black" stroke="black" stroke-width="10" stroke-linejoin="round" />
@@ -88,7 +88,7 @@ pub fn MaturityBadge(
                 height=h_px
                 viewBox="0 0 100 100"
                 class="shrink-0 inline-block align-middle select-none drop-shadow-sm"
-                aria-label=format!("BBFC {} rating", label)
+                aria-label=crate::i18n::t_args("media-rating-aria", &[("rating", fluent_bundle::FluentValue::from(label.to_string()))])
             >
                 // Outer dark outline
                 <rect x="3" y="3" width="94" height="94" rx="18" ry="18" fill="black" />
@@ -118,7 +118,7 @@ pub fn MaturityBadge(
                 height=h_px
                 viewBox="0 0 100 100"
                 class="shrink-0 inline-block align-middle select-none drop-shadow-sm"
-                aria-label=format!("BBFC {} rating", label)
+                aria-label=crate::i18n::t_args("media-rating-aria", &[("rating", fluent_bundle::FluentValue::from(label.to_string()))])
             >
                 // Outer dark outline
                 <circle cx="50" cy="50" r="49" fill="black" />

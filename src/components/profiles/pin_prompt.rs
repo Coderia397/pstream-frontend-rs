@@ -117,7 +117,7 @@ pub fn ProfilePinPrompt(
                 {crate::i18n::t("pin-prompt-profile-lock-is-currently-on")}
             </p>
             <h1 class="text-ink text-xl sm:text-2xl font-bold mb-8 text-center max-w-md">
-                {format!("Enter your PIN to access {}'s profile.", profile_name)}
+                {crate::i18n::t_args("profile-enter-pin", &[("name", fluent_bundle::FluentValue::from(profile_name.clone()))])}
             </h1>
 
             // 4-box PIN inputs with shake animation (Task 098)

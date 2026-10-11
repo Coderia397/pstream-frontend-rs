@@ -2,13 +2,30 @@ use gloo_net::http::Request;
 use serde::{Deserialize, Serialize};
 use crate::models::mapping::{map_genre_key_to_tmdb, MediaKind};
 
-const TMDB_BASE_URL: &str = "https://api.themoviedb.org/3";
+const TMDB_BASE_URL: &str = crate::config::TMDB_API_URL;
 
-// NOTE: Replace with your actual TMDB API key.
-// This key lives in the client and is freely visible in browser devtools.
-// TMDB keys are free and easily cycled — the tradeoff is zero server cost.
-const TMDB_API_KEY: &str = "fc5fec3b73d8605daaeb1eb3b91157eb";
-const TMDB_IMAGE_BASE: &str = "https://image.tmdb.org/t/p";
+const TMDB_API_KEY: &str = crate::config::TMDB_API_KEY;
+const TMDB_IMAGE_BASE: &str = crate::config::TMDB_IMAGE_URL;
+
+/// Adds the interface language to a catalog request so titles, summaries and genre names come back translated. Trailers and
+/// logos are left alone because their language filters would hide most of them.
+fn localised(url: &str) -> String {
+    if url.contains("/videos") || url.contains("/images") {
+        return url.to_string();
+    }
+    let lang = crate::i18n::tmdb_language();
+    if url.contains("language=") {
+        url.replace("language=en-US", &format!("language={lang}"))
+    } else if url.contains('?') {
+        format!("{url}&language={lang}")
+    } else {
+        format!("{url}?language={lang}")
+    }
+}
+
+fn get(url: &str) -> gloo_net::http::RequestBuilder {
+    Request::get(&localised(url))
+}
 
 #[derive(Clone, Debug, Deserialize, Serialize)]
 pub struct TmdbResponse<T> {
@@ -111,7 +128,7 @@ pub async fn fetch_trending(kind: &str) -> Result<Vec<MediaItem>, gloo_net::Erro
         "{}/trending/{}/week?api_key={}&language=en-US",
         TMDB_BASE_URL, kind, TMDB_API_KEY
     );
-    let resp: TmdbResponse<MediaItem> = Request::get(&url).send().await?.json().await?;
+    let resp: TmdbResponse<MediaItem> = get(&url).send().await?.json().await?;
     let items = resp.results.into_iter().filter(|i| !i.is_nsfw() && (i.backdrop_path.is_some() || i.poster_path.is_some())).collect();
     Ok(items)
 }
@@ -122,7 +139,7 @@ pub async fn fetch_top_rated(kind: &str) -> Result<Vec<MediaItem>, gloo_net::Err
         "{}/{}/top_rated?api_key={}&language=en-US",
         TMDB_BASE_URL, kind, TMDB_API_KEY
     );
-    let resp: TmdbResponse<MediaItem> = Request::get(&url).send().await?.json().await?;
+    let resp: TmdbResponse<MediaItem> = get(&url).send().await?.json().await?;
     let items = resp.results.into_iter().filter(|i| !i.is_nsfw() && (i.backdrop_path.is_some() || i.poster_path.is_some())).collect();
     Ok(items)
 }
@@ -133,7 +150,7 @@ pub async fn fetch_by_genre(kind: &str, genre_id: u32) -> Result<Vec<MediaItem>,
         "{}/discover/{}?api_key={}&with_genres={}&language=en-US&sort_by=popularity.desc",
         TMDB_BASE_URL, kind, TMDB_API_KEY, genre_id
     );
-    let resp: TmdbResponse<MediaItem> = Request::get(&url).send().await?.json().await?;
+    let resp: TmdbResponse<MediaItem> = get(&url).send().await?.json().await?;
     Ok(resp.results)
 }
 
@@ -143,7 +160,7 @@ pub async fn fetch_british_tv() -> Result<Vec<MediaItem>, gloo_net::Error> {
         "{}/discover/tv?api_key={}&with_origin_country=GB&language=en-US&sort_by=popularity.desc",
         TMDB_BASE_URL, TMDB_API_KEY
     );
-    let resp: TmdbResponse<MediaItem> = Request::get(&url).send().await?.json().await?;
+    let resp: TmdbResponse<MediaItem> = get(&url).send().await?.json().await?;
     Ok(resp.results)
 }
 
@@ -180,7 +197,7 @@ pub async fn fetch_movie_logo(id: u32, is_tv: bool) -> Result<Option<String>, gl
         "{}/{}/{}/images?api_key={}",
         TMDB_BASE_URL, kind, id, TMDB_API_KEY
     );
-    let resp: TmdbImages = Request::get(&url).send().await?.json().await?;
+    let resp: TmdbImages = get(&url).send().await?.json().await?;
     
     // Find english logo or first available
     let logo = resp.logos.iter().find(|l| l.iso_639_1.as_deref() == Some("en"))
@@ -240,7 +257,7 @@ pub async fn fetch_details(id: u32, is_tv: bool) -> Result<DetailedMediaItem, gl
         "{}/{}/{}?api_key={}&append_to_response=credits",
         TMDB_BASE_URL, kind, id, TMDB_API_KEY
     );
-    Request::get(&url).send().await?.json().await
+    get(&url).send().await?.json().await
 }
 
 #[derive(Clone, Debug, serde::Deserialize, serde::Serialize)]
@@ -262,7 +279,7 @@ pub async fn search_media(query: &str) -> Result<Vec<MediaItem>, gloo_net::Error
         "{}/search/multi?api_key={}&language=en-US&query={}&page=1&include_adult=false",
         TMDB_BASE_URL, TMDB_API_KEY, encoded_query
     );
-    let resp: TmdbResponse<MediaItem> = Request::get(&url).send().await?.json().await?;
+    let resp: TmdbResponse<MediaItem> = get(&url).send().await?.json().await?;
     // Filter out people, nsfw content, and items without artwork
     let filtered = resp.results.into_iter().filter(|i| {
         i.media_type.as_deref() != Some("person")
@@ -279,7 +296,7 @@ pub async fn fetch_recommendations(id: u32, is_tv: bool) -> Result<Vec<MediaItem
         "{}/{}/{}/recommendations?api_key={}&language=en-US&page=1",
         TMDB_BASE_URL, kind, id, TMDB_API_KEY
     );
-    let resp: TmdbResponse<MediaItem> = Request::get(&url).send().await?.json().await?;
+    let resp: TmdbResponse<MediaItem> = get(&url).send().await?.json().await?;
     let filtered = resp.results.into_iter().filter(|i| {
         !i.is_nsfw() && (i.backdrop_path.is_some() || i.poster_path.is_some())
     }).collect();
@@ -389,7 +406,7 @@ pub async fn fetch_videos(id: u32, is_tv: bool) -> Result<Vec<VideoResult>, gloo
         "{}/{}/{}/videos?api_key={}&language=en-US",
         TMDB_BASE_URL, kind, id, TMDB_API_KEY
     );
-    let resp: TmdbVideos = Request::get(&url).send().await?.json().await?;
+    let resp: TmdbVideos = get(&url).send().await?.json().await?;
     Ok(resp.results)
 }
 
@@ -423,13 +440,13 @@ pub async fn fetch_season_details(series_id: u32, season_number: u32) -> Result<
         "{}/tv/{}/season/{}?api_key={}&language=en-US",
         TMDB_BASE_URL, series_id, season_number, TMDB_API_KEY
     );
-    Request::get(&url).send().await?.json().await
+    get(&url).send().await?.json().await
 }
 
 pub async fn fetch_trending_page(kind: &str, page: u32) -> Result<Vec<MediaItem>, gloo_net::Error> {
     let safe_kind = if kind == "tv" { "tv" } else { "movie" };
     let url = format!("{}/trending/{}/day?api_key={}&page={}", TMDB_BASE_URL, safe_kind, TMDB_API_KEY, page);
-    let resp = Request::get(&url).send().await?;
+    let resp = get(&url).send().await?;
     let data: TmdbResponse<MediaItem> = resp.json().await?;
     let items = data.results.into_iter().filter_map(|mut item| {
         if item.is_nsfw() {
@@ -470,7 +487,7 @@ pub async fn fetch_row_content(
                 url.push_str(&format!("&{}", extra_clean));
             }
         }
-        if let Ok(resp) = Request::get(&url).send().await {
+        if let Ok(resp) = get(&url).send().await {
             if let Ok(data) = resp.json::<TmdbResponse<MediaItem>>().await {
                 let items: Vec<MediaItem> = data.results.into_iter().filter_map(|mut item| {
                     if item.is_nsfw() {
@@ -741,7 +758,7 @@ pub async fn fetch_row_content(
             }
         }
 
-        if let Ok(resp) = Request::get(&url).send().await {
+        if let Ok(resp) = get(&url).send().await {
             if let Ok(data) = resp.json::<TmdbResponse<MediaItem>>().await {
                 let items: Vec<MediaItem> = data.results.into_iter().filter_map(|mut item| {
                     if item.is_nsfw() {
@@ -773,7 +790,7 @@ pub async fn fetch_row_content(
             } else {
                 url.clone()
             };
-            if let Ok(resp) = Request::get(&base_url).send().await {
+            if let Ok(resp) = get(&base_url).send().await {
                 if let Ok(data) = resp.json::<TmdbResponse<MediaItem>>().await {
                     let items: Vec<MediaItem> = data.results.into_iter().filter_map(|mut item| {
                         if item.is_nsfw() || (item.backdrop_path.is_none() && item.poster_path.is_none()) {
@@ -806,13 +823,13 @@ pub async fn fetch_by_language(lang: &str, page: u32) -> Result<Vec<MediaItem>, 
         "{}/discover/movie?api_key={}&with_original_language={}&sort_by=popularity.desc&page={}",
         TMDB_BASE_URL, TMDB_API_KEY, lang, page
     );
-    let resp_movie: Result<TmdbResponse<MediaItem>, _> = Request::get(&url_movie).send().await?.json().await;
+    let resp_movie: Result<TmdbResponse<MediaItem>, _> = get(&url_movie).send().await?.json().await;
 
     let url_tv = format!(
         "{}/discover/tv?api_key={}&with_original_language={}&sort_by=popularity.desc&page={}",
         TMDB_BASE_URL, TMDB_API_KEY, lang, page
     );
-    let resp_tv: Result<TmdbResponse<MediaItem>, _> = Request::get(&url_tv).send().await?.json().await;
+    let resp_tv: Result<TmdbResponse<MediaItem>, _> = get(&url_tv).send().await?.json().await;
 
     let mut combined = resp_movie.map(|r| r.results).unwrap_or_default();
     if let Ok(tv_resp) = resp_tv {

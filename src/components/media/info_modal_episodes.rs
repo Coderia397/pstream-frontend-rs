@@ -40,7 +40,7 @@ pub fn InfoModalEpisodes(
         <div class="mt-8">
             // Header: "Episodes" title and Season dropdown
             <div class="flex items-center justify-between mb-4">
-                <h3 class="text-2xl font-medium text-ink">"Episodes"</h3>
+                <h3 class="text-2xl font-medium text-ink">{crate::i18n::t("media-episodes")}</h3>
 
                 {if total_seasons > 0 {
                     view! {
@@ -50,7 +50,7 @@ pub fn InfoModalEpisodes(
                                 on:click=toggle_dropdown
                                 class="flex items-center bg-transparent border border-ink/30 hover:border-ink/70 rounded-control px-4 py-1.5 text-sm font-bold transition min-w-[130px] justify-between text-ink cursor-pointer"
                             >
-                                <span>{move || format!("Season {}", selected_season.get())}</span>
+                                <span>{move || crate::i18n::t_args("media-season-n", &[("n", fluent_bundle::FluentValue::from(selected_season.get() as i64))])}</span>
                                 <i class=move || if dropdown_open.get() { "ph-bold ph-caret-up ml-2 text-xs" } else { "ph-bold ph-caret-down ml-2 text-xs" }></i>
                             </button>
 
@@ -72,7 +72,7 @@ pub fn InfoModalEpisodes(
                                                     class=("text-ink", is_selected)
                                                     class=("text-gray-300", move || !is_selected())
                                                 >
-                                                    {format!("Season {}", s)}
+                                                    {crate::i18n::t_args("media-season-n", &[("n", fluent_bundle::FluentValue::from(s as i64))])}
                                                 </div>
                                             }
                                         }).collect_view()}
@@ -120,7 +120,7 @@ pub fn InfoModalEpisodes(
                                         let ep_num = ep.episode_number;
                                         let ep_name = ep.name.clone();
                                         let ep_overview = if ep.overview.is_empty() {
-                                            "No description available.".to_string()
+                                            crate::i18n::t("media-no-description")
                                         } else {
                                             ep.overview.clone()
                                         };
@@ -218,7 +218,7 @@ pub fn InfoModalEpisodes(
                             }.into_any()
                         },
                         _ => view! {
-                            <div class="text-gray-500 text-center py-6">"No episodes available."</div>
+                            <div class="text-gray-500 text-center py-6">{crate::i18n::t("media-no-episodes")}</div>
                         }.into_any()
                     })}
                 </Suspense>

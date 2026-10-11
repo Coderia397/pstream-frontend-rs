@@ -34,7 +34,7 @@ impl WatchRecord {
             if p.starts_with("http") {
                 p.clone()
             } else {
-                format!("https://image.tmdb.org/t/p/{}{}", size, p)
+                format!("{}/{}{}", crate::config::TMDB_IMAGE_URL, size, p)
             }
         })
     }
@@ -44,7 +44,7 @@ impl WatchRecord {
             if p.starts_with("http") {
                 p.clone()
             } else {
-                format!("https://image.tmdb.org/t/p/{}{}", size, p)
+                format!("{}/{}{}", crate::config::TMDB_IMAGE_URL, size, p)
             }
         })
     }
@@ -154,6 +154,14 @@ impl WatchStore {
         let key = record.key();
         self.records.update(|map| {
             map.insert(key, record);
+            save_to_storage(map);
+        });
+    }
+
+    /// Forgets every saved position and rewrites the saved copy.
+    pub fn clear_all(&self) {
+        self.records.update(|map| {
+            map.clear();
             save_to_storage(map);
         });
     }

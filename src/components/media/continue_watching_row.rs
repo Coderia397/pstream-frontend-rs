@@ -107,7 +107,7 @@ pub fn ContinueWatchingRow() -> impl IntoView {
                             <h2 class="row-title cursor-pointer flex items-center group/title w-fit">
                                 {crate::i18n::t("continue-watching-row-continue-watching")}
                                 <span class="text-xs text-danger ml-2 opacity-0 group-hover/title:opacity-100 transition-opacity duration-(--motion-slow) flex items-center font-semibold">
-                                    "Jump Back In ›"
+                                    {crate::i18n::t("row-jump-back-in")}
                                 </span>
                             </h2>
                         </div>
@@ -233,7 +233,7 @@ pub fn ContinueWatchingRow() -> impl IntoView {
                                                             </p>
                                                         }.into_any()
                                                     } else {
-                                                        let pct_str = format!("{:.0}% watched", percentage);
+                                                        let pct_str = crate::i18n::t_args("media-percent-watched", &[("pct", fluent_bundle::FluentValue::from(format!("{:.0}", percentage)))]);
                                                         view! {
                                                             <p class="text-ink/40 text-caption truncate mt-0.5">
                                                                 {pct_str}

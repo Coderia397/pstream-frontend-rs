@@ -152,7 +152,7 @@ pub fn HeroSection(
             if bp.starts_with("http") {
                 bp.to_string()
             } else {
-                format!("https://image.tmdb.org/t/p/original{}", bp)
+                format!("{}/original{}", crate::config::TMDB_IMAGE_URL, bp)
             }
         } else {
             String::new()
@@ -236,13 +236,13 @@ pub fn HeroSection(
     });
 
     let media_type_label = move || {
-        if current_is_tv() { "Series" } else { "Film" }
+        if current_is_tv() { crate::i18n::t("media-series") } else { crate::i18n::t("media-film") }
     };
 
     let genre_label = move || {
         details_resource.get().and_then(|d| {
             d.and_then(|item| item.genres.and_then(|g| g.first().map(|x| x.name.clone())))
-        }).unwrap_or_else(|| "Action".to_string())
+        }).unwrap_or_else(|| crate::i18n::t("media-genre-fallback"))
     };
 
     let year_label = move || {
@@ -267,7 +267,7 @@ pub fn HeroSection(
             let seasons = details_resource.get()
                 .and_then(|d| d.and_then(|x| x.number_of_seasons))
                 .unwrap_or(1);
-            format!("{} Season{}", seasons, if seasons == 1 { "" } else { "s" })
+            crate::i18n::t_args("media-seasons", &[("n", fluent_bundle::FluentValue::from(seasons as i64))])
         } else {
             let runtime = details_resource.get()
                 .and_then(|d| d.and_then(|x| x.runtime))
@@ -347,8 +347,8 @@ pub fn HeroSection(
         if let Some(Some(details)) = details_resource.get() {
             if let Some(credits) = details.credits {
                 if let Some(director) = credits.crew.iter().find(|c| c.job.as_deref() == Some("Director") || c.job.as_deref() == Some("Creator")) {
-                    let prefix = if is_tv { "Created by" } else { "Directed by" };
-                    return Some(("clapper".to_string(), format!("{} {}", prefix, director.name)));
+                    let key = if is_tv { "media-created-by" } else { "media-directed-by" };
+                    return Some(("clapper".to_string(), crate::i18n::t_args(key, &[("name", fluent_bundle::FluentValue::from(director.name.clone()))])));
                 }
             }
         }
@@ -372,11 +372,11 @@ pub fn HeroSection(
         let yr = year_label().parse::<u32>().unwrap_or(2024);
         let vote = current_item().vote_average;
         if vote >= 8.2 {
-            Some(("clapper".to_string(), "Critically Acclaimed Masterpiece".to_string()))
+            Some(("clapper".to_string(), crate::i18n::t("media-badge-masterpiece")))
         } else if vote >= 7.8 {
-            Some(("clapper".to_string(), "Critically Acclaimed".to_string()))
+            Some(("clapper".to_string(), crate::i18n::t("media-badge-acclaimed")))
         } else if yr >= 2024 && vote >= 7.2 {
-            Some(("megaphone".to_string(), "Trending Now".to_string()))
+            Some(("megaphone".to_string(), crate::i18n::t("media-badge-trending-now")))
         } else {
             None
         }

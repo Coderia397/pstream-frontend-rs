@@ -104,7 +104,7 @@ pub fn WhosWatchingGate() -> impl IntoView {
     view! {
         <div class="fixed inset-0 z-(--z-screen) bg-page text-ink flex flex-col items-center justify-center animate-in fade-in duration-(--motion-slower) select-none">
             <h1 class="text-3xl md:text-5xl text-ink font-medium mb-12 tracking-wide text-center">
-                {move || if edit_mode.get() { "Manage Profiles:" } else { "Who's watching?" }}
+                {move || if edit_mode.get() { crate::i18n::t("profile-manage-title") } else { crate::i18n::t("profile-whos-watching") }}
             </h1>
 
             // Profile tiles grid (Task 095)
@@ -212,7 +212,7 @@ pub fn WhosWatchingGate() -> impl IntoView {
                     class=("bg-ink", move || edit_mode.get())
                     class=("!text-void", move || edit_mode.get())
                 >
-                    {move || if edit_mode.get() { "Done" } else { "Manage Profiles" }}
+                    {move || if edit_mode.get() { crate::i18n::t("common-done") } else { crate::i18n::t("profile-manage") }}
                 </button>
             </div>
 

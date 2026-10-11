@@ -17,7 +17,7 @@ pub fn MyListPage() -> impl IntoView {
         <Layout>
             <div class="relative min-h-screen">
                 <div class="pt-36 md:pt-44 px-[var(--app-x,56px)] pb-12">
-                    <h1 class="text-3xl font-bold text-ink mb-8">"My List"</h1>
+                    <h1 class="text-3xl font-bold text-ink mb-8">{crate::i18n::t("nav-my-list")}</h1>
                     
                     {move || {
                         let items = sorted_list();
@@ -27,8 +27,8 @@ pub fn MyListPage() -> impl IntoView {
                                     <div class="w-20 h-20 rounded-full bg-placeholder flex items-center justify-center mb-6 border border-ink/5">
                                         <i class="ph-bold ph-playlist text-display text-gray-600"></i>
                                     </div>
-                                    <p class="text-xl font-medium text-gray-300">"Your list is empty"</p>
-                                    <p class="text-sm mt-2 max-w-md text-center">"Add shows and movies to keep track of what you want to watch."</p>
+                                    <p class="text-xl font-medium text-gray-300">{crate::i18n::t("mylist-empty")}</p>
+                                    <p class="text-sm mt-2 max-w-md text-center">{crate::i18n::t("mylist-empty-hint")}</p>
                                 </div>
                             }.into_any()
                         } else {

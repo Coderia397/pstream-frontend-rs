@@ -1,7 +1,12 @@
 use gloo_net::http::Request;
 use serde::{Deserialize, Serialize};
 
-const RESOLVER_BASE_URL: &str = "https://resolver.pstream.watch";
+const RESOLVER_BASE_URL: &str = crate::config::RESOLVER_URL;
+
+/// Where the resolver lives, for the help center health check.
+pub fn resolver_base_url() -> &'static str {
+    RESOLVER_BASE_URL
+}
 
 #[derive(Clone, Debug, Deserialize, Serialize)]
 pub struct RawStreamResponse {

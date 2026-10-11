@@ -68,13 +68,13 @@ pub fn Navbar(
     };
 
     let nav_items = vec![
-        ("home", "Home", "/browse"),
-        ("tv", "Series", "/browse/series"),
-        ("movies", "Films", "/browse/films"),
-        ("games", "Games", "/browse/games"),
-        ("new", "New & Popular", "/latest"),
-        ("list", "My List", "/browse/my-list"),
-        ("language", "Browse by language", "/browse/language"),
+        ("home", "nav-home", "/browse"),
+        ("tv", "nav-series", "/browse/series"),
+        ("movies", "nav-films", "/browse/films"),
+        ("games", "nav-games", "/browse/games"),
+        ("new", "nav-new-popular", "/latest"),
+        ("list", "nav-my-list", "/browse/my-list"),
+        ("language", "nav-browse-language", "/browse/language"),
     ];
 
     view! {
@@ -105,7 +105,7 @@ pub fn Navbar(
                                     "cursor-pointer transition-all duration-(--motion-base) whitespace-nowrap text-ink/70 hover:text-ink text-body-md rounded-full bg-transparent hover:bg-mute/40 h-[40px] px-4 font-normal inline-flex items-center justify-center"
                                 }
                             >
-                                <a href=href class="no-underline text-inherit flex items-center justify-center w-full h-full">{label}</a>
+                                <a href=href class="no-underline text-inherit flex items-center justify-center w-full h-full">{crate::i18n::t(label)}</a>
                             </li>
                         }
                     }).collect::<Vec<_>>()}
@@ -158,7 +158,7 @@ pub fn Navbar(
                                 <div class="w-8 h-8 rounded-control overflow-hidden flex items-center justify-center">
                                     <crate::components::profiles::kids_avatar::KidsAvatar size=32.0 />
                                 </div>
-                                <span class="text-label leading-[13px] font-normal text-ink">"Kids"</span>
+                                <span class="text-label leading-[13px] font-normal text-ink">{crate::i18n::t("nav-kids")}</span>
                             </button>
                         }.into_any()
                     }

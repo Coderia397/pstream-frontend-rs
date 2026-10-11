@@ -31,13 +31,13 @@ pub fn NavbarMobile(
     let location = use_location();
     let page_title = move || {
         let p = location.pathname.get();
-        if p.starts_with("/browse/my-list") { "My List" }
-        else if p.starts_with("/browse/series") || p.starts_with("/browse/shows") { "Series" }
-        else if p.starts_with("/browse/films") || p.starts_with("/browse/movies") { "Films" }
-        else if p.starts_with("/browse/games") || p.starts_with("/games") { "Games" }
-        else if p.starts_with("/latest") { "New & Hot" }
-        else if p == "/browse" || p == "/" || p.is_empty() { "Home" }
-        else { "" }
+        if p.starts_with("/browse/my-list") { crate::i18n::t("nav-my-list") }
+        else if p.starts_with("/browse/series") || p.starts_with("/browse/shows") { crate::i18n::t("nav-series") }
+        else if p.starts_with("/browse/films") || p.starts_with("/browse/movies") { crate::i18n::t("nav-films") }
+        else if p.starts_with("/browse/games") || p.starts_with("/games") { crate::i18n::t("nav-games") }
+        else if p.starts_with("/latest") { crate::i18n::t("nav-new-hot") }
+        else if p == "/browse" || p == "/" || p.is_empty() { crate::i18n::t("nav-home") }
+        else { String::new() }
     };
 
     // Avatar of the active profile (first profile until the profile store knows better), used in the profile tab and the header
@@ -56,7 +56,7 @@ pub fn NavbarMobile(
         BottomNavItem {
             id: "home",
             icon: view! { <i class="ph-bold ph-house text-heading"></i> }.into_any(),
-            label: "Home",
+            label: "nav-home",
             on_click: Callback::new(move |_| {
                 set_active_bottom_nav.set("home");
                 nav_to_browse("/browse", Default::default());
@@ -65,7 +65,7 @@ pub fn NavbarMobile(
         BottomNavItem {
             id: "clips",
             icon: view! { <i class="ph-bold ph-play-circle text-heading"></i> }.into_any(),
-            label: "Clips",
+            label: "nav-clips",
             on_click: Callback::new(move |_| {
                 set_active_bottom_nav.set("clips");
                 nav_to_latest("/latest", Default::default());
@@ -74,7 +74,7 @@ pub fn NavbarMobile(
         BottomNavItem {
             id: "search",
             icon: view! { <i class="ph-bold ph-magnifying-glass text-heading"></i> }.into_any(),
-            label: "Search",
+            label: "nav-search",
             on_click: Callback::new(move |_| {
                 set_active_bottom_nav.set("search");
                 nav_to_search("/search", Default::default());
@@ -87,7 +87,7 @@ pub fn NavbarMobile(
                     <img src=move || current_avatar() alt=crate::i18n::t("navbar-mobile-profile") class="w-full h-full object-cover" />
                 </div>
             }.into_any(),
-            label: "My List",
+            label: "nav-my-list",
             on_click: Callback::new(move |_| {
                 set_active_bottom_nav.set("settings");
                 nav_to_settings("/browse/my-list", Default::default());
@@ -108,7 +108,7 @@ pub fn NavbarMobile(
                     <a href="/browse" class="flex-shrink-0 flex items-center justify-center w-12 h-11">
                         <img
                             src=crate::brand::LOGO_EMBLEM
-                            alt=format!("{} emblem", crate::brand::NAME)
+                            alt=crate::brand::NAME
                             class="h-[34px] w-auto cursor-pointer select-none transition-transform active:scale-95"
                         />
                     </a>
@@ -154,7 +154,7 @@ pub fn NavbarMobile(
 
                     <div class="absolute bottom-0 inset-x-0 bg-page border-t border-ink/10 rounded-t-sheet max-h-[80vh] flex flex-col z-10 shadow-2xl animate-in slide-in-from-bottom duration-(--motion-base)">
                         <div class="flex items-center justify-between p-4 border-b border-ink/10">
-                            <span class="text-title-sm font-bold text-ink">"Profiles & More"</span>
+                            <span class="text-title-sm font-bold text-ink">{crate::i18n::t("nav-profiles-more")}</span>
                             <button
                                 on:click=move |_| set_profile_sheet_open.set(false)
                                 class="w-8 h-8 rounded-full bg-ink/10 flex items-center justify-center text-ink/70 hover:text-ink"
@@ -209,7 +209,7 @@ pub fn NavbarMobile(
                                 on:click=move |_| set_profile_sheet_open.set(false)
                             >
                                 <i class="ph-bold ph-list-plus text-xl"></i>
-                                <span>"My List"</span>
+                                <span>{crate::i18n::t("nav-my-list")}</span>
                             </a>
                             <a
                                 href="/browse"
@@ -217,7 +217,7 @@ pub fn NavbarMobile(
                                 on:click=move |_| set_profile_sheet_open.set(false)
                             >
                                 <i class="ph-bold ph-gear text-xl"></i>
-                                <span>"Account Settings"</span>
+                                <span>{crate::i18n::t("nav-account-settings")}</span>
                             </a>
                         </div>
                     </div>

@@ -44,7 +44,7 @@ pub fn BottomNavMobile(
                                 class=("font-medium", move || is_active())
                                 class=("font-normal", move || !is_active())
                             >
-                                {label}
+                                {crate::i18n::t(label)}
                             </span>
                         </button>
                     }

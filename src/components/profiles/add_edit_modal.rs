@@ -49,7 +49,7 @@ pub fn AddEditProfileModal(
     };
 
     let is_edit = mode == "edit";
-    let modal_title = if is_edit { "Edit Profile" } else { "Add Profile" };
+    let modal_title = if is_edit { crate::i18n::t("profile-edit-title") } else { crate::i18n::t("profile-add") };
 
     let handle_save = move |_| {
         if !can_save() { return; }
@@ -80,7 +80,7 @@ pub fn AddEditProfileModal(
                     {modal_title}
                 </h2>
                 <p class="text-ink/40 text-sm text-center mb-8">
-                    {if is_edit { "Update this profile's name, icon, and lock.".to_string() } else { format!("Add a profile for another person watching {}.", crate::brand::NAME) }}
+                    {if is_edit { crate::i18n::t("profile-edit-hint") } else { crate::i18n::t_args("profile-add-hint", &[("brand", fluent_bundle::FluentValue::from(crate::brand::NAME))]) }}
                 </p>
 
                 // Avatar + Name Input (Task 100)
@@ -118,7 +118,7 @@ pub fn AddEditProfileModal(
                 <div class="border-t border-ink/10 py-5">
                     <label class="flex items-center justify-between gap-4 cursor-pointer">
                         <div>
-                            <span class="text-ink font-semibold text-body">"Kids Profile"</span>
+                            <span class="text-ink font-semibold text-body">{crate::i18n::t("profile-kids")}</span>
                             <p class="text-ink/40 text-label mt-0.5">
                                 {crate::i18n::t("add-edit-modal-only-see-childfriendly-series-and")}
                             </p>
@@ -136,7 +136,7 @@ pub fn AddEditProfileModal(
                 <div class="border-t border-ink/10 py-5 space-y-3">
                     <label class="flex items-center justify-between gap-4 cursor-pointer">
                         <div>
-                            <span class="text-ink font-semibold text-body">"Profile Lock"</span>
+                            <span class="text-ink font-semibold text-body">{crate::i18n::t("profile-lock")}</span>
                             <p class="text-ink/40 text-label mt-0.5">
                                 {crate::i18n::t("add-edit-modal-require-a-4digit-pin-to")}
                             </p>
@@ -166,7 +166,7 @@ pub fn AddEditProfileModal(
                                         class="w-48 bg-field border border-ink/20 rounded-control px-4 py-2 text-ink text-base tracking-widest placeholder:tracking-normal placeholder:text-ink/30 outline-none focus:border-ink transition-colors"
                                     />
                                     <Show when=move || !is_pin_valid()>
-                                        <p class="text-danger-soft text-xs mt-1">"PIN must be exactly 4 numeric digits."</p>
+                                        <p class="text-danger-soft text-xs mt-1">{crate::i18n::t("profile-pin-invalid")}</p>
                                     </Show>
                                 </div>
                             }.into_any()

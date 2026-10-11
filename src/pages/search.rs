@@ -25,7 +25,7 @@ pub fn SearchPage() -> impl IntoView {
             <div class="pt-[calc(5rem+env(safe-area-inset-top))] md:pt-28 px-[var(--app-x,56px)] pb-12 min-h-screen bg-void md:bg-page">
                 <div class="mb-8">
                     <h1 class="text-gray-400 text-lg">
-                        {move || if !q().is_empty() { format!("Results for \"{}\"", q()) } else { "Search".to_string() }}
+                        {move || if !q().is_empty() { format!("Results for \"{}\"", q()) } else { crate::i18n::t("nav-search") }}
                     </h1>
                 </div>
 
@@ -40,8 +40,8 @@ pub fn SearchPage() -> impl IntoView {
                         if media.is_empty() && !q().is_empty() {
                             return view! {
                                 <div class="flex flex-col items-center justify-center mt-20 text-center">
-                                    <div class="text-xl text-ink mb-2">"No matches found"</div>
-                                    <div class="text-gray-400 text-sm">"Try a different keyword."</div>
+                                    <div class="text-xl text-ink mb-2">{crate::i18n::t("search-no-matches")}</div>
+                                    <div class="text-gray-400 text-sm">{crate::i18n::t("search-try-another")}</div>
                                 </div>
                             }.into_any();
                         }
@@ -49,8 +49,8 @@ pub fn SearchPage() -> impl IntoView {
                         if media.is_empty() {
                             return view! {
                                 <div class="flex flex-col items-center justify-center mt-20 text-center">
-                                    <div class="text-xl text-ink mb-2">"Explore titles"</div>
-                                    <div class="text-gray-400 text-sm">"Type in the search bar above to find movies, shows, or people."</div>
+                                    <div class="text-xl text-ink mb-2">{crate::i18n::t("search-explore")}</div>
+                                    <div class="text-gray-400 text-sm">{crate::i18n::t("search-explore-hint")}</div>
                                 </div>
                             }.into_any();
                         }

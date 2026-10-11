@@ -48,9 +48,9 @@ pub fn CategorySubNavMobile(
 
     let active_genre_label = move || {
         if let Some(g) = selected_genre.get() {
-            g.name
+            crate::i18n::genre_label(&g.name)
         } else {
-            dropdown_label.clone().unwrap_or_else(|| "Categories".to_string())
+            dropdown_label.clone().unwrap_or_else(|| crate::i18n::t("nav-categories"))
         }
     };
 
@@ -140,7 +140,7 @@ pub fn CategorySubNavMobile(
                     // Sheet content
                     <div class="absolute bottom-0 inset-x-0 bg-page border-t border-ink/10 rounded-t-sheet max-h-[75vh] flex flex-col z-10 shadow-2xl animate-in slide-in-from-bottom duration-(--motion-base)">
                         <div class="flex items-center justify-between p-4 border-b border-ink/10">
-                            <span class="text-body-lg font-bold text-ink">"Categories"</span>
+                            <span class="text-body-lg font-bold text-ink">{crate::i18n::t("nav-categories")}</span>
                             <button
                                 on:click=move |_| set_genre_menu_open.set(false)
                                 class="w-8 h-8 rounded-full bg-ink/10 flex items-center justify-center text-ink/70 hover:text-ink"
@@ -161,7 +161,7 @@ pub fn CategorySubNavMobile(
                                             }
                                             class="text-left text-body-md font-medium py-2.5 px-3 rounded-control hover:bg-ink/10 text-ink transition-colors cursor-pointer"
                                         >
-                                            {genre.name.clone()}
+                                            {crate::i18n::genre_label(&genre.name)}
                                         </button>
                                     }
                                 }).collect::<Vec<_>>()

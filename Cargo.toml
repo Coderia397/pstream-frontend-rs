@@ -21,6 +21,7 @@ log = "0.4.34"
 serde = { version = "1.0.229", features = ["derive"] }
 serde_json = "1.0"
 fluent-bundle = "0.16"
+futures = { version = "0.3", default-features = false, features = ["std", "async-await"] }
 unic-langid = "0.9"
 wasm-bindgen = "0.2"
 wasm-bindgen-futures = "0.4"
@@ -40,6 +41,15 @@ web-sys = { version = "0.3", features = [
     "CssStyleDeclaration",
     "Navigator",
     "Clipboard",
+    "FocusEvent",
+    "Node",
+    "HtmlSelectElement",
+    "Location",
+    "AbortController",
+    "AbortSignal",
+    "RequestMode",
+    "Performance",
+    "Screen",
 ] }
 
 [profile.release]

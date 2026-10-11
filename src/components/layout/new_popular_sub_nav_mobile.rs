@@ -15,11 +15,11 @@ pub fn NewPopularSubNavMobile(
     on_tab_change: Callback<NewPopularTab>,
 ) -> impl IntoView {
     let tabs = vec![
-        (NewPopularTab::Watching, "Everyone's Watching"),
-        (NewPopularTab::JustLanded, "Just Landed"),
-        (NewPopularTab::Top10Movies, "Top 10 Movies"),
-        (NewPopularTab::Top10Series, "Top 10 Series"),
-        (NewPopularTab::ComingSoon, "Coming Soon"),
+        (NewPopularTab::Watching, "tabs-everyone-watching"),
+        (NewPopularTab::JustLanded, "tabs-just-landed"),
+        (NewPopularTab::Top10Movies, "tabs-top10-movies"),
+        (NewPopularTab::Top10Series, "tabs-top10-series"),
+        (NewPopularTab::ComingSoon, "tabs-coming-soon"),
     ];
 
     let total = tabs.len();
@@ -54,7 +54,7 @@ pub fn NewPopularSubNavMobile(
                                     )
                                 }
                             >
-                                {label}
+                                {crate::i18n::t(label)}
                             </button>
                         }
                     }).collect::<Vec<_>>()}

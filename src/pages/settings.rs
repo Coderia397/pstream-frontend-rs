@@ -29,7 +29,7 @@ pub fn SettingsPage() -> impl IntoView {
     };
 
     let profile_name = move || {
-        active_profile().map(|p| p.name).unwrap_or_else(|| "User".to_string())
+        active_profile().map(|p| p.name).unwrap_or_else(|| crate::i18n::t("settings-default-name"))
     };
 
     let avatar_url = move || {
@@ -47,7 +47,7 @@ pub fn SettingsPage() -> impl IntoView {
     let (autoplay_video, set_autoplay_video) = signal(true);
 
     // Language settings
-    let (display_lang, set_display_lang) = signal("en".to_string());
+    let (display_lang, set_display_lang) = signal(crate::i18n::language());
     let (sub_lang, set_sub_lang) = signal("en".to_string());
 
     // Edit name temporary input
@@ -68,14 +68,14 @@ pub fn SettingsPage() -> impl IntoView {
     };
 
     let title = move || match current_view.get() {
-        SettingsView::Overview => "Account & Preferences",
-        SettingsView::ProfileEdit => "Edit Profile",
-        SettingsView::AvatarPicker => "Choose Profile Icon",
-        SettingsView::Language => "Languages",
-        SettingsView::Subtitle => "Subtitle Appearance",
-        SettingsView::Playback => "Playback Settings",
-        SettingsView::ViewingActivity => "Viewing Activity",
-        SettingsView::Privacy => "Privacy & Data Settings",
+        SettingsView::Overview => crate::i18n::t("settings-title"),
+        SettingsView::ProfileEdit => crate::i18n::t("settings-edit-profile"),
+        SettingsView::AvatarPicker => crate::i18n::t("settings-choose-icon"),
+        SettingsView::Language => crate::i18n::t("settings-languages"),
+        SettingsView::Subtitle => crate::i18n::t("settings-subtitle-appearance"),
+        SettingsView::Playback => crate::i18n::t("settings-playback"),
+        SettingsView::ViewingActivity => crate::i18n::t("settings-viewing-activity"),
+        SettingsView::Privacy => crate::i18n::t("settings-privacy"),
     };
 
     view! {
@@ -117,7 +117,7 @@ pub fn SettingsPage() -> impl IntoView {
                                         </div>
                                         <div class="flex-1 min-w-0">
                                             <div class="text-body-lg font-bold text-ink truncate">{profile_name}</div>
-                                            <div class="text-label text-ink/40 mt-0.5">"Edit personal information and icon"</div>
+                                            <div class="text-label text-ink/40 mt-0.5">{crate::i18n::t("settings-edit-profile-hint")}</div>
                                         </div>
                                         <i class="ph-bold ph-caret-right text-xl text-ink/40 group-hover:text-ink transition-colors"></i>
                                     </div>
@@ -136,8 +136,8 @@ pub fn SettingsPage() -> impl IntoView {
                                         >
                                             <i class="ph-bold ph-translate text-2xl text-ink/70 mr-4"></i>
                                             <div class="flex-1 min-w-0">
-                                                <div class="text-body-md font-bold text-ink">"Languages"</div>
-                                                <div class="text-label text-ink/40 mt-0.5">"Set languages for display and audio"</div>
+                                                <div class="text-body-md font-bold text-ink">{crate::i18n::t("settings-languages")}</div>
+                                                <div class="text-label text-ink/40 mt-0.5">{crate::i18n::t("settings-languages-hint")}</div>
                                             </div>
                                             <i class="ph-bold ph-caret-right text-xl text-ink/40 group-hover:text-ink transition-colors"></i>
                                         </div>
@@ -149,8 +149,8 @@ pub fn SettingsPage() -> impl IntoView {
                                         >
                                             <i class="ph-bold ph-subtitles text-2xl text-ink/70 mr-4"></i>
                                             <div class="flex-1 min-w-0">
-                                                <div class="text-body-md font-bold text-ink">"Subtitle Appearance"</div>
-                                                <div class="text-label text-ink/40 mt-0.5">"Customize the way subtitles look"</div>
+                                                <div class="text-body-md font-bold text-ink">{crate::i18n::t("settings-subtitle-appearance")}</div>
+                                                <div class="text-label text-ink/40 mt-0.5">{crate::i18n::t("settings-subtitle-hint")}</div>
                                             </div>
                                             <i class="ph-bold ph-caret-right text-xl text-ink/40 group-hover:text-ink transition-colors"></i>
                                         </div>
@@ -162,8 +162,8 @@ pub fn SettingsPage() -> impl IntoView {
                                         >
                                             <i class="ph-bold ph-play-circle text-2xl text-ink/70 mr-4"></i>
                                             <div class="flex-1 min-w-0">
-                                                <div class="text-body-md font-bold text-ink">"Playback Settings"</div>
-                                                <div class="text-label text-ink/40 mt-0.5">"Configure autoplay, audio and video quality"</div>
+                                                <div class="text-body-md font-bold text-ink">{crate::i18n::t("settings-playback")}</div>
+                                                <div class="text-label text-ink/40 mt-0.5">{crate::i18n::t("settings-playback-hint")}</div>
                                             </div>
                                             <i class="ph-bold ph-caret-right text-xl text-ink/40 group-hover:text-ink transition-colors"></i>
                                         </div>
@@ -175,8 +175,8 @@ pub fn SettingsPage() -> impl IntoView {
                                         >
                                             <i class="ph-bold ph-clock text-2xl text-ink/70 mr-4"></i>
                                             <div class="flex-1 min-w-0">
-                                                <div class="text-body-md font-bold text-ink">"Viewing Activity"</div>
-                                                <div class="text-label text-ink/40 mt-0.5">"Manage viewing history and ratings"</div>
+                                                <div class="text-body-md font-bold text-ink">{crate::i18n::t("settings-viewing-activity")}</div>
+                                                <div class="text-label text-ink/40 mt-0.5">{crate::i18n::t("settings-viewing-hint")}</div>
                                             </div>
                                             <i class="ph-bold ph-caret-right text-xl text-ink/40 group-hover:text-ink transition-colors"></i>
                                         </div>
@@ -188,8 +188,8 @@ pub fn SettingsPage() -> impl IntoView {
                                         >
                                             <i class="ph-bold ph-shield-check text-2xl text-ink/70 mr-4"></i>
                                             <div class="flex-1 min-w-0">
-                                                <div class="text-body-md font-bold text-ink">"Privacy & Data Settings"</div>
-                                                <div class="text-label text-ink/40 mt-0.5">"Manage usage of personal information"</div>
+                                                <div class="text-body-md font-bold text-ink">{crate::i18n::t("settings-privacy")}</div>
+                                                <div class="text-label text-ink/40 mt-0.5">{crate::i18n::t("settings-privacy-hint")}</div>
                                             </div>
                                             <i class="ph-bold ph-caret-right text-xl text-ink/40 group-hover:text-ink transition-colors"></i>
                                         </div>
@@ -227,7 +227,7 @@ pub fn SettingsPage() -> impl IntoView {
                                         </div>
                                     </div>
                                     <div class="flex-1">
-                                        <label class="block text-xs text-ink/40 font-semibold mb-2">"PROFILE NAME"</label>
+                                        <label class="block text-xs text-ink/40 font-semibold mb-2">{crate::i18n::t("settings-profile-name")}</label>
                                         <input
                                             type="text"
                                             prop:value=edit_name
@@ -309,21 +309,25 @@ pub fn SettingsPage() -> impl IntoView {
                         SettingsView::Language => view! {
                             <div class="space-y-8 animate-fadeIn max-w-[600px]">
                                 <div>
-                                    <h3 class="text-lg font-bold text-ink mb-2">"Display Language"</h3>
-                                    <p class="text-sm text-ink/50 mb-4">"Choose the language used for navigation, titles, and menus."</p>
+                                    <h3 class="text-lg font-bold text-ink mb-2">{crate::i18n::t("settings-display-language")}</h3>
+                                    <p class="text-sm text-ink/50 mb-4">{crate::i18n::t("settings-display-language-hint")}</p>
                                     <select
-                                        on:change=move |e| set_display_lang.set(event_target_value(&e))
+                                        on:change=move |e| {
+                                            let code = event_target_value(&e);
+                                            set_display_lang.set(code.clone());
+                                            crate::i18n::set_language(&code);
+                                        }
                                         prop:value=display_lang
                                         class="w-full bg-ink/10 border border-ink/20 rounded-control p-3 text-ink focus:outline-none focus:border-ink"
                                     >
-                                        {DISPLAY_LANGUAGES.iter().map(|l| {
-                                            view! { <option value=l.code class="bg-page text-ink">{l.label}</option> }
+                                        {crate::i18n::AVAILABLE.iter().map(|code| {
+                                            view! { <option value=*code class="bg-page text-ink">{crate::i18n::native_name(code)}</option> }
                                         }).collect::<Vec<_>>()}
                                     </select>
                                 </div>
 
                                 <div class="pt-4 border-t border-ink/10">
-                                    <h3 class="text-lg font-bold text-ink mb-2">"Preferred Subtitle Language"</h3>
+                                    <h3 class="text-lg font-bold text-ink mb-2">{crate::i18n::t("settings-subtitle-language")}</h3>
                                     <div class="grid grid-cols-2 sm:grid-cols-3 gap-3">
                                         {SUBTITLE_LANGUAGES.iter().map(|l| {
                                             let code = l.code;
@@ -336,7 +340,7 @@ pub fn SettingsPage() -> impl IntoView {
                                                         if is_sel() { "bg-ink text-void border-ink" } else { "bg-ink/5 text-ink/70 border-ink/10 hover:border-ink/30" }
                                                     )
                                                 >
-                                                    {l.label}
+                                                    {crate::i18n::language_name(l.code)}
                                                 </button>
                                             }
                                         }).collect::<Vec<_>>()}
@@ -389,7 +393,7 @@ pub fn SettingsPage() -> impl IntoView {
 
                                 // Font size
                                 <div>
-                                    <h4 class="text-sm font-bold text-ink/60 mb-2">"TEXT SIZE"</h4>
+                                    <h4 class="text-sm font-bold text-ink/60 mb-2">{crate::i18n::t("settings-text-size")}</h4>
                                     <div class="flex gap-2">
                                         {["tiny", "small", "medium", "large", "huge"].iter().map(|sz| {
                                             let s = sz.to_string();
@@ -413,7 +417,7 @@ pub fn SettingsPage() -> impl IntoView {
 
                                 // Color
                                 <div>
-                                    <h4 class="text-sm font-bold text-ink/60 mb-2">"COLOR"</h4>
+                                    <h4 class="text-sm font-bold text-ink/60 mb-2">{crate::i18n::t("settings-color")}</h4>
                                     <div class="flex gap-2">
                                         {["white", "yellow", "cyan", "green", "red"].iter().map(|c| {
                                             let col = c.to_string();
@@ -437,7 +441,7 @@ pub fn SettingsPage() -> impl IntoView {
 
                                 // Opacity
                                 <div>
-                                    <h4 class="text-sm font-bold text-ink/60 mb-2">"BACKGROUND OPACITY"</h4>
+                                    <h4 class="text-sm font-bold text-ink/60 mb-2">{crate::i18n::t("settings-bg-opacity")}</h4>
                                     <input
                                         type="range"
                                         min="0"
@@ -469,8 +473,8 @@ pub fn SettingsPage() -> impl IntoView {
                                     // Autoplay next
                                     <div class="flex items-center justify-between p-5">
                                         <div>
-                                            <div class="font-bold text-ink">"Autoplay next episode"</div>
-                                            <div class="text-xs text-ink/40 mt-0.5">"Automatically start the next episode in a series."</div>
+                                            <div class="font-bold text-ink">{crate::i18n::t("settings-autoplay-next")}</div>
+                                            <div class="text-xs text-ink/40 mt-0.5">{crate::i18n::t("settings-autoplay-next-hint")}</div>
                                         </div>
                                         <button
                                             on:click=move |_| set_autoplay_next.update(|v| *v = !*v)
@@ -489,8 +493,8 @@ pub fn SettingsPage() -> impl IntoView {
                                     // Autoplay previews
                                     <div class="flex items-center justify-between p-5">
                                         <div>
-                                            <div class="font-bold text-ink">"Autoplay previews"</div>
-                                            <div class="text-xs text-ink/40 mt-0.5">"Play trailers while browsing titles."</div>
+                                            <div class="font-bold text-ink">{crate::i18n::t("settings-autoplay-previews")}</div>
+                                            <div class="text-xs text-ink/40 mt-0.5">{crate::i18n::t("settings-autoplay-previews-hint")}</div>
                                         </div>
                                         <button
                                             on:click=move |_| set_autoplay_previews.update(|v| *v = !*v)
@@ -509,8 +513,8 @@ pub fn SettingsPage() -> impl IntoView {
                                     // Autoplay video
                                     <div class="flex items-center justify-between p-5">
                                         <div>
-                                            <div class="font-bold text-ink">"High Definition Streaming"</div>
-                                            <div class="text-xs text-ink/40 mt-0.5">"Prefer 1080p and 4K streams when available."</div>
+                                            <div class="font-bold text-ink">{crate::i18n::t("settings-hd")}</div>
+                                            <div class="text-xs text-ink/40 mt-0.5">{crate::i18n::t("settings-hd-hint")}</div>
                                         </div>
                                         <button
                                             on:click=move |_| set_autoplay_video.update(|v| *v = !*v)
@@ -543,7 +547,7 @@ pub fn SettingsPage() -> impl IntoView {
                                 </p>
                                 <div class="p-6 bg-ink/5 border border-ink/10 rounded-card text-center">
                                     <i class="ph-bold ph-film-slate text-3xl text-ink/30 mb-2"></i>
-                                    <div class="text-ink/40 text-sm">"No recent history to display."</div>
+                                    <div class="text-ink/40 text-sm">{crate::i18n::t("settings-no-history")}</div>
                                 </div>
                             </div>
                         }.into_any(),
@@ -555,10 +559,10 @@ pub fn SettingsPage() -> impl IntoView {
                                 </p>
                                 <div class="p-4 bg-ink/5 border border-ink/10 rounded-card flex items-center justify-between">
                                     <div>
-                                        <div class="font-bold text-ink text-sm">"Diagnostic Reporting"</div>
-                                        <div class="text-xs text-ink/40 mt-0.5">"Help improve client performance."</div>
+                                        <div class="font-bold text-ink text-sm">{crate::i18n::t("settings-diagnostic")}</div>
+                                        <div class="text-xs text-ink/40 mt-0.5">{crate::i18n::t("settings-diagnostic-hint")}</div>
                                     </div>
-                                    <span class="text-xs font-semibold text-green-400">"Enabled"</span>
+                                    <span class="text-xs font-semibold text-green-400">{crate::i18n::t("settings-enabled")}</span>
                                 </div>
                             </div>
                         }.into_any(),

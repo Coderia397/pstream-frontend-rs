@@ -362,14 +362,14 @@ pub fn InfoModal() -> impl IntoView {
                         Some(details) => {
                             let title = details.display_title().to_string();
                             let fallback_title = title.clone();
-                            let backdrop = details.backdrop_path.as_ref().map(|p| format!("https://image.tmdb.org/t/p/original{}", p)).unwrap_or_default();
+                            let backdrop = details.backdrop_path.as_ref().map(|p| format!("{}/original{}", crate::config::TMDB_IMAGE_URL, p)).unwrap_or_default();
                             let overview = details.overview;
                             let release_year = details.release_date.or(details.first_air_date)
                                 .map(|d| d.chars().take(4).collect::<String>()).unwrap_or_default();
                             let runtime = details.runtime.map(|r| format!("{}h {}m", r / 60, r % 60));
                             let seasons_count = details.number_of_seasons.unwrap_or(0);
                             let seasons_label = if seasons_count > 0 {
-                                Some(format!("{} {}", seasons_count, if seasons_count == 1 { "Season" } else { "Seasons" }))
+                                Some(crate::i18n::t_args("media-seasons", &[("n", fluent_bundle::FluentValue::from(seasons_count as i64))]))
                             } else {
                                 None
                             };
@@ -378,7 +378,7 @@ pub fn InfoModal() -> impl IntoView {
                             let genres_items = details.genres.clone().map(|g| g.into_iter().map(|gx| (gx.id, gx.name)).collect::<Vec<_>>()).unwrap_or_default();
                             let match_norm = ((details.vote_average - 5.5) / 3.3).clamp(0.0, 1.0);
                             let match_pct = (75.0 + match_norm * 23.0).round() as u32;
-                            let match_score = format!("{}% Match", match_pct);
+                            let match_score = crate::i18n::t_args("media-percent-match", &[("pct", fluent_bundle::FluentValue::from(match_pct as i64))]);
                             let vibe_tags = derive_vibe_tags(&genres_items, &overview);
                             let vibe_text = vibe_tags.join(", ");
 
@@ -635,7 +635,7 @@ pub fn InfoModal() -> impl IntoView {
 
                                                     view! {
                                                         <div class="flex flex-wrap gap-x-1">
-                                                            <span class="text-ink-ash font-normal mr-1">"Cast: "</span>
+                                                            <span class="text-ink-ash font-normal mr-1">{crate::i18n::t("media-cast")}</span>
                                                             {cast_rendered}
                                                         </div>
                                                     }.into_any()
@@ -659,7 +659,7 @@ pub fn InfoModal() -> impl IntoView {
 
                                                     view! {
                                                         <div class="flex flex-wrap gap-x-1">
-                                                            <span class="text-ink-ash font-normal mr-1">"Genres: "</span>
+                                                            <span class="text-ink-ash font-normal mr-1">{crate::i18n::t("media-genres")}</span>
                                                             {genres_rendered}
                                                         </div>
                                                     }.into_any()
@@ -668,7 +668,7 @@ pub fn InfoModal() -> impl IntoView {
                                                 }}
 
                                                 {
-                                                    let vibe_label = if is_tv_val { "This show is: " } else { "This movie is: " };
+                                                    let vibe_label = if is_tv_val { crate::i18n::t("media-this-show-is") } else { crate::i18n::t("media-this-movie-is") };
                                                     view! {
                                                         <div class="flex flex-wrap gap-x-1">
                                                             <span class="text-ink-ash font-normal mr-1">{vibe_label}</span>

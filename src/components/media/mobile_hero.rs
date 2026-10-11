@@ -35,7 +35,7 @@ pub fn MobileHero(
         if p.starts_with("http") {
             p.clone()
         } else {
-            format!("https://image.tmdb.org/t/p/w780{}", p)
+            format!("{}/w780{}", crate::config::TMDB_IMAGE_URL, p)
         }
     }).unwrap_or_default();
 
@@ -165,11 +165,11 @@ pub fn MobileHero(
 
                     // Genre / category chips
                     <div class="flex items-center justify-center flex-wrap gap-x-2 gap-y-1 mb-3.5 text-body-sm font-medium text-ink-warm select-none">
-                        <span>"Trending"</span>
+                        <span>{crate::i18n::t("media-trending")}</span>
                         <span class="text-ink/30">"•"</span>
-                        <span>"Popular"</span>
+                        <span>{crate::i18n::t("media-popular")}</span>
                         <span class="text-ink/30">"•"</span>
-                        <span>{if is_tv { "Series" } else { "Film" }}</span>
+                        <span>{if is_tv { crate::i18n::t("media-series") } else { crate::i18n::t("media-film") }}</span>
                     </div>
 
                     // Buttons Row
@@ -185,10 +185,10 @@ pub fn MobileHero(
                                 let watch_store = crate::store::use_watch_store();
                                 if let Some(rec) = watch_store.get_record(movie_id, is_tv) {
                                     if rec.percentage > 0.0 {
-                                        return "Resume";
+                                        return crate::i18n::t("media-resume");
                                     }
                                 }
-                                "Play"
+                                crate::i18n::t("media-play")
                             }}</span>
                         </button>
 
@@ -199,7 +199,7 @@ pub fn MobileHero(
                             class="btn-glass flex-1 flex items-center justify-center h-12 rounded-full text-lg gap-2 transition-all active:scale-95"
                         >
                             <i class=move || if is_added.get() { "ph-bold ph-check text-2xl" } else { "ph-bold ph-plus text-2xl" }></i>
-                            <span>"My List"</span>
+                            <span>{crate::i18n::t("nav-my-list")}</span>
                         </button>
                     </div>
                 </div>

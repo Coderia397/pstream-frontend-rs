@@ -33,7 +33,7 @@ pub fn SkipButton(
                     class="flex items-center gap-2.5 px-6 py-3 bg-void/75 hover:bg-void/90 backdrop-blur-md text-ink font-bold text-sm rounded-card border border-ink/20 shadow-2xl hover:scale-105 active:scale-95 transition-all duration-(--motion-fast) select-none group"
                 >
                     <i class="ph ph-fast-forward text-lg text-ink group-hover:text-brand transition-colors"></i>
-                    <span>"Skip Intro"</span>
+                    <span>{crate::i18n::t("player-skip-intro")}</span>
                 </button>
             </Show>
 
@@ -43,7 +43,7 @@ pub fn SkipButton(
                     class="btn-brand flex items-center gap-2.5 px-6 py-3 text-sm rounded-card shadow-2xl hover:scale-105 active:scale-95 transition-all duration-(--motion-fast) select-none"
                 >
                     <i class="ph ph-skip-forward text-lg"></i>
-                    <span>"Next Episode"</span>
+                    <span>{crate::i18n::t("player-next-episode")}</span>
                 </button>
             </Show>
         </div>

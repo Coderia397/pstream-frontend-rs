@@ -1,5 +1,7 @@
 pub mod brand;
 pub mod components;
+pub mod config;
+pub mod consent;
 pub mod data;
 pub mod i18n;
 pub mod keys;
@@ -24,6 +26,11 @@ pub fn App() -> impl IntoView {
     crate::store::provide_profile_store();
     crate::store::provide_library_store();
     crate::store::provide_watch_store();
+    crate::consent::provide_ui();
+
+    // On help.<domain> the front door is the help center
+    let on_help_host = web_sys::window().and_then(|w| w.location().hostname().ok()).map(|h| h.starts_with("help.")).unwrap_or(false);
+    let home = if on_help_host { "/help" } else { "/browse" }.to_string();
 
     let profile_store = crate::store::use_profile_store();
     let has_no_profile = move || profile_store.active_profile_id.get().is_none();
@@ -39,7 +46,11 @@ pub fn App() -> impl IntoView {
                 <Route path=path!("/browse/genre/:id") view=crate::pages::browse_grid::BrowseGridPage />
                 <Route path=path!("/watch/:id") view=crate::pages::player::PlayerPage />
                 <Route path=path!("/watch/:kind/:id") view=crate::pages::player::PlayerPage />
-                <Route path=path!("") view=|| view! { <leptos_router::components::Redirect path="/browse" /> } />
+                <Route path=path!("") view=move || view! { <leptos_router::components::Redirect path=home.clone() /> } />
+                <Route path=path!("/help") view=crate::pages::help::HelpPage />
+                <Route path=path!("/help/search") view=crate::pages::help::ResultsPage />
+                <Route path=path!("/help/contact") view=crate::pages::help::ContactPage />
+                <Route path=path!("/help/article/:slug") view=crate::pages::help::ArticlePage />
                 <Route path=path!("/search") view=crate::pages::search::SearchPage />
                 <Route path=path!("/browse/my-list") view=crate::pages::my_list::MyListPage />
                 <Route path=path!("/browse/movies") view=|| view! { <crate::pages::category::CategoryPage kind="movie" /> } />
@@ -66,6 +77,7 @@ pub fn App() -> impl IntoView {
                 <Route path=path!("/contact") view=crate::pages::legal::ContactPage />
                 <Route path=path!("/notifications") view=crate::pages::notifications::NotificationsPage />
             </Routes>
+            <crate::components::consent::CookieManager />
         </Router>
     }
 }

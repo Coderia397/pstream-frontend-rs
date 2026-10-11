@@ -124,7 +124,7 @@ pub fn ClipCard(
                         }}
                     </div>
                     <span class="text-caption font-semibold drop-shadow">
-                        {move || if is_muted.get() { "Muted" } else { "Sound" }}
+                        {move || if is_muted.get() { crate::i18n::t("clips-muted") } else { crate::i18n::t("clips-sound") }}
                     </span>
                 </button>
 
@@ -140,7 +140,7 @@ pub fn ClipCard(
                             view! { <i class="ph-bold ph-plus text-xl text-ink"></i> }.into_any()
                         }}
                     </div>
-                    <span class="text-caption font-semibold drop-shadow">"My List"</span>
+                    <span class="text-caption font-semibold drop-shadow">{crate::i18n::t("nav-my-list")}</span>
                 </button>
 
                 // Play Button
@@ -155,10 +155,10 @@ pub fn ClipCard(
                         let watch_store = crate::store::use_watch_store();
                         if let Some(rec) = watch_store.get_record(movie_id, is_tv) {
                             if rec.percentage > 0.0 {
-                                return "Resume";
+                                return crate::i18n::t("media-resume");
                             }
                         }
-                        "Play"
+                        crate::i18n::t("media-play")
                     }}</span>
                 </button>
 
@@ -170,7 +170,7 @@ pub fn ClipCard(
                     <div class="w-11 h-11 rounded-full bg-void/50 backdrop-blur-md flex items-center justify-center border border-ink/20 group-active:scale-90 transition-transform">
                         <i class="ph-bold ph-info text-xl text-ink"></i>
                     </div>
-                    <span class="text-caption font-semibold drop-shadow">"Info"</span>
+                    <span class="text-caption font-semibold drop-shadow">{crate::i18n::t("clips-info")}</span>
                 </button>
             </div>
 

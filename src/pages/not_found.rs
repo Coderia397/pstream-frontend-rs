@@ -17,73 +17,73 @@ pub struct DimensionConfig {
 pub const DIMENSIONS: [DimensionConfig; 6] = [
     DimensionConfig {
         id: "dim1",
-        title: "404: The Silicon Void",
+        title: "nf-dim1-title",
         backdrop: "/assets/404_assets/dim1-backdrop.jpeg",
         poster: "/assets/404_assets/dim1-poster.jpeg",
         title_img: "/assets/404_assets/dim1-title.png",
-        subtitle: "AN ERROR 404 ORIGINAL",
-        synopsis: "Deep inside the motherboard, a glowing red pixel cube falls into a dark vortex, watched by a silhouetted crimson eye peeking from the shadows of a torn canvas.",
+        subtitle: "nf-original",
+        synopsis: "nf-dim1-synopsis",
         error_code: "NSES-404-CUBE",
     },
     DimensionConfig {
         id: "dim2",
-        title: "404: Offline Signal",
+        title: "nf-dim2-title",
         backdrop: "/assets/404_assets/dim2-backdrop.jpeg",
         poster: "/assets/404_assets/dim2-poster.jpeg",
         title_img: "/assets/404_assets/dim2-title.png",
-        subtitle: "AN ERROR 404 ORIGINAL",
-        synopsis: "Row after row of velvet cinema seats sit completely empty. On stage, a broken retro CRT television flickers with color-bars and signal static under a glitchy sky.",
+        subtitle: "nf-original",
+        synopsis: "nf-dim2-synopsis",
         error_code: "NSES-404-SIGNAL",
     },
     DimensionConfig {
         id: "dim3",
-        title: "404: Shattered Clues",
+        title: "nf-dim3-title",
         backdrop: "/assets/404_assets/dim3-backdrop.jpeg",
         poster: "/assets/404_assets/dim3-poster.jpeg",
         title_img: "/assets/404_assets/dim3-title.png",
-        subtitle: "AN ERROR 404 ORIGINAL",
-        synopsis: "A lone detective in a trench coat searches a dark room, tracking a missing web asset that shattered into a thousand shards of glass. Every lead is a broken redirect.",
+        subtitle: "nf-original",
+        synopsis: "nf-dim3-synopsis",
         error_code: "NSES-404-SHATTER",
     },
     DimensionConfig {
         id: "dim4",
-        title: "404: Lost Reels",
+        title: "nf-dim4-title",
         backdrop: "/assets/404_assets/dim4-backdrop.jpeg",
         poster: "/assets/404_assets/dim4-poster.jpeg",
         title_img: "/assets/404_assets/dim4-title.png",
-        subtitle: "AN ERROR 404 ORIGINAL",
-        synopsis: "A massive, breathing grid of forgotten movie reels pulses in high-contrast red. As you search the archive, the celluloid strip snaps, leaving you in the cinematic dark.",
+        subtitle: "nf-original",
+        synopsis: "nf-dim4-synopsis",
         error_code: "NSES-404-REEL",
     },
     DimensionConfig {
         id: "dim5",
-        title: "404: The Watcher",
+        title: "nf-dim5-title",
         backdrop: "/assets/404_assets/dim5-backdrop.jpeg",
         poster: "/assets/404_assets/dim5-poster.jpeg",
         title_img: "/assets/404_assets/dim5-title.png",
-        subtitle: "AN ERROR 404 ORIGINAL",
-        synopsis: "A glowing digital projector beam cuts through a swirling black hole, shining through a shattered lens that stares back like a towering mechanical watcher.",
+        subtitle: "nf-original",
+        synopsis: "nf-dim5-synopsis",
         error_code: "NSES-404-EYE",
     },
     DimensionConfig {
         id: "dim6",
-        title: "404: Cosmic Drift",
+        title: "nf-dim6-title",
         backdrop: "/assets/404_assets/dim6-backdrop.jpeg",
         poster: "/assets/404_assets/dim6-poster.jpeg",
         title_img: "/assets/404_assets/dim6-title.png",
-        subtitle: "AN ERROR 404 ORIGINAL",
-        synopsis: "Adrift in a cosmic cloud, ancient space cables float through a stellar nebula, trying to route packets through a tear in the space-time fabric. Connection timed out.",
+        subtitle: "nf-original",
+        synopsis: "nf-dim6-synopsis",
         error_code: "NSES-404-NEBULA",
     },
 ];
 
 pub const GLITCH_ZONES: [&str; 6] = [
-    "Hardware Glitches",
-    "Signal Failures",
-    "Lost Data Files",
-    "Analog Corruption",
-    "Void Sentinels",
-    "Cosmic Drift",
+    "nf-zone-1",
+    "nf-zone-2",
+    "nf-zone-3",
+    "nf-zone-4",
+    "nf-zone-5",
+    "nf-zone-6",
 ];
 
 #[component]
@@ -104,7 +104,7 @@ pub fn NotFoundPage() -> impl IntoView {
     let user_agent = move || {
         web_sys::window()
             .and_then(|w| w.navigator().user_agent().ok())
-            .unwrap_or_else(|| "Unknown agent".to_string())
+            .unwrap_or_else(|| crate::i18n::t("nf-unknown-agent"))
     };
 
     let iso_now = move || {
@@ -137,7 +137,7 @@ pub fn NotFoundPage() -> impl IntoView {
                         on:click=move |_| set_dropdown_open.update(|o| *o = !*o)
                         class="flex items-center gap-2 bg-void/80 hover:bg-void border border-ink/70 px-4 py-1.5 text-sm font-bold text-ink rounded-control transition-colors"
                     >
-                        <span>{move || GLITCH_ZONES[active_index.get()]}</span>
+                        <span>{move || crate::i18n::t(GLITCH_ZONES[active_index.get()])}</span>
                         <i class="ph-bold ph-caret-down text-xs" />
                     </button>
 
@@ -161,7 +161,7 @@ pub fn NotFoundPage() -> impl IntoView {
                                                 }
                                             }
                                         >
-                                            {name}
+                                            {crate::i18n::t(name)}
                                         </button>
                                     }
                                 }).collect::<Vec<_>>()}
@@ -190,7 +190,7 @@ pub fn NotFoundPage() -> impl IntoView {
                 <div class="absolute top-0 left-0 w-full h-full flex flex-col justify-end z-20 pl-[calc(1.5rem+env(safe-area-inset-left,0px))] md:pl-14 lg:pl-16 pr-4 md:pr-12 pointer-events-none pb-[12%] sm:pb-[9%] md:pb-[6%]">
                     <div class="max-w-[95%] sm:max-w-lg md:max-w-xl lg:max-w-2xl space-y-4 md:space-y-5 pointer-events-auto">
                         <div class="text-micro sm:text-xs font-bold tracking-[0.25em] text-danger drop-shadow-brand-sm">
-                            {move || active().subtitle}
+                            {move || crate::i18n::t(active().subtitle)}
                         </div>
 
                         // Neon 404 Title Image with layers
@@ -210,7 +210,7 @@ pub fn NotFoundPage() -> impl IntoView {
                                 />
                                 <img
                                     src=move || active().title_img
-                                    alt=move || active().title
+                                    alt=move || crate::i18n::t(active().title)
                                     class="relative object-contain object-bottom select-none animate-pulse duration-[3000ms]"
                                     style="max-height: clamp(80px, 18vw, 190px); max-width: clamp(250px, 55vw, 550px); mix-blend-mode: screen;"
                                 />
@@ -218,7 +218,7 @@ pub fn NotFoundPage() -> impl IntoView {
                         </div>
 
                         <p class="text-fine sm:text-label md:text-body font-medium text-ink/90 line-clamp-3 leading-relaxed max-w-[90%] sm:max-w-lg transition-all duration-(--motion-slowest) drop-shadow-md">
-                            {move || active().synopsis}
+                            {move || crate::i18n::t(active().synopsis)}
                         </p>
 
                         <div class="flex items-center flex-wrap gap-2 md:gap-3 pt-2">
@@ -230,7 +230,7 @@ pub fn NotFoundPage() -> impl IntoView {
                                 class="btn-ink flex items-center justify-center px-6 sm:px-8 h-[36px] md:h-[42px] rounded-control text-body-sm md:text-body-lg gap-2 active:scale-95 shadow-lg duration-(--motion-base)"
                             >
                                 <i class="ph-fill ph-house text-xl text-void" />
-                                <span>"Return to Home"</span>
+                                <span>{crate::i18n::t("nf-return-home")}</span>
                             </button>
 
                             <button
@@ -238,7 +238,7 @@ pub fn NotFoundPage() -> impl IntoView {
                                 class="btn-glass flex items-center justify-center px-5 sm:px-8 h-[36px] md:h-[42px] rounded-control transition-all text-body-sm md:text-body-lg gap-2 active:scale-95 shadow-lg duration-(--motion-base)"
                             >
                                 <i class="ph-bold ph-info text-xl" />
-                                <span>"More Info"</span>
+                                <span>{crate::i18n::t("nf-more-info")}</span>
                             </button>
                         </div>
                     </div>
@@ -268,14 +268,14 @@ pub fn NotFoundPage() -> impl IntoView {
                             >
                                 <img
                                     src=dim.backdrop
-                                    alt=dim.title
+                                    alt=crate::i18n::t(dim.title)
                                     class="w-full h-full object-cover"
                                     loading="lazy"
                                 />
                                 <div class="absolute inset-0 bg-void/20 hover:bg-void/0 transition-colors flex items-center justify-center p-4">
                                     <img
                                         src=dim.title_img
-                                        alt=dim.title
+                                        alt=crate::i18n::t(dim.title)
                                         class="max-h-[70%] max-w-[85%] object-contain select-none filter drop-shadow-text"
                                         style="mix-blend-mode: screen;"
                                     />
@@ -313,21 +313,21 @@ pub fn NotFoundPage() -> impl IntoView {
 
                                 <div class="space-y-4 text-sm font-sans text-ink/80">
                                     <div class="space-y-1">
-                                        <span class="text-xs text-ink/40 uppercase tracking-wider">"System Code"</span>
+                                        <span class="text-xs text-ink/40 uppercase tracking-wider">{crate::i18n::t("nf-system-code")}</span>
                                         <p class="text-base font-mono text-danger font-semibold">{move || active().error_code}</p>
                                     </div>
                                     <div class="space-y-1">
-                                        <span class="text-xs text-ink/40 uppercase tracking-wider">"Requested Endpoint"</span>
+                                        <span class="text-xs text-ink/40 uppercase tracking-wider">{crate::i18n::t("nf-endpoint")}</span>
                                         <p class="text-base font-mono bg-void/40 px-3 py-1.5 rounded-control border border-ink/5 whitespace-nowrap overflow-x-auto select-text">
                                             {current_path()}
                                         </p>
                                     </div>
                                     <div class="space-y-1">
-                                        <span class="text-xs text-ink/40 uppercase tracking-wider">"Incident Timestamp"</span>
+                                        <span class="text-xs text-ink/40 uppercase tracking-wider">{crate::i18n::t("nf-timestamp")}</span>
                                         <p class="text-base font-mono">{iso_now()}</p>
                                     </div>
                                     <div class="space-y-1">
-                                        <span class="text-xs text-ink/40 uppercase tracking-wider">"Platform Agent"</span>
+                                        <span class="text-xs text-ink/40 uppercase tracking-wider">{crate::i18n::t("nf-agent")}</span>
                                         <p class="text-xs font-mono text-ink/50 bg-void/20 p-2 rounded-control leading-normal border border-ink/5 max-h-24 overflow-y-auto select-text">
                                             {user_agent()}
                                         </p>
@@ -335,7 +335,7 @@ pub fn NotFoundPage() -> impl IntoView {
                                 </div>
 
                                 <div class="bg-danger/10 border border-danger/20 rounded-control p-4 text-label leading-relaxed text-danger-mid font-sans">
-                                    <strong>"System Notice: "</strong>
+                                    <strong>{crate::i18n::t("nf-system-notice")}" "</strong>
                                     {crate::i18n::t("not-found-the-targeted-router-endpoint-has")}
                                 </div>
                             </div>
@@ -351,7 +351,7 @@ pub fn NotFoundPage() -> impl IntoView {
                                 class="w-full py-3.5 bg-brand hover:bg-danger-strong text-ink font-bold rounded-control flex items-center justify-center gap-2 transition-colors duration-(--motion-base) active:scale-[0.98] shadow-lg font-sans text-sm sm:text-base mt-8"
                             >
                                 <i class="ph-bold ph-caret-left text-xl" />
-                                <span>"Return to Home"</span>
+                                <span>{crate::i18n::t("nf-return-home")}</span>
                             </button>
                         </div>
                     </div>

@@ -193,7 +193,7 @@ pub fn MovieCardPopup(
     let title_stored = StoredValue::new(title);
     let cert_stored = StoredValue::new(cert);
     let image_url = backdrop.map(|p| {
-        if p.starts_with("http") { p } else { format!("https://image.tmdb.org/t/p/w780{}", p) }
+        if p.starts_with("http") { p } else { format!("{}/w780{}", crate::config::TMDB_IMAGE_URL, p) }
     });
     let image_url_stored = StoredValue::new(image_url);
 
@@ -451,7 +451,7 @@ pub fn MovieCardPopup(
                     // Badges & Details Row
                     <div class="flex items-center gap-2 my-[12.8px] min-h-[32px] text-body-md font-normal text-ink-silver flex-wrap">
                         <span class="text-success font-bold">
-                            {format!("{}% Match", movie_stored.get_value().match_score())}
+                            {crate::i18n::t_args("media-percent-match", &[("pct", fluent_bundle::FluentValue::from(movie_stored.get_value().match_score() as i64))])}
                         </span>
                         <MaturityBadge
                             certification=cert_stored.get_value().unwrap_or_default()
@@ -460,7 +460,7 @@ pub fn MovieCardPopup(
                             size="xs".to_string()
                         />
                         <span>
-                            {if is_tv { "Series" } else { "Film" }}
+                            {if is_tv { crate::i18n::t("media-series") } else { crate::i18n::t("media-film") }}
                         </span>
                         <span class="border border-ink/40 rounded-tick px-[5.6px] text-caption-sm leading-[16px] text-ink/90">
                             {crate::i18n::t("movie-card-popup-hd")}

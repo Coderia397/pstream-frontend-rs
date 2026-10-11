@@ -84,7 +84,7 @@ fn LandingTopTenCard(movie: TopMovie, index: usize) -> impl IntoView {
 // ── LandingTopTenRow ──────────────────────────────────────────────────────────
 
 #[component]
-fn LandingTopTenRow(title: &'static str) -> impl IntoView {
+fn LandingTopTenRow(#[prop(into)] title: String) -> impl IntoView {
     let movies = LocalResource::new(move || async move {
         crate::services::tmdb::fetch_trending("all").await.unwrap_or_default()
     });
@@ -273,7 +273,7 @@ fn FeatureIcon(id: &'static str) -> impl IntoView {
 // ── FeatureCard ───────────────────────────────────────────────────────────────
 
 #[component]
-fn FeatureCard(id: &'static str, title: &'static str, #[prop(into)] desc: String) -> impl IntoView {
+fn FeatureCard(id: &'static str, #[prop(into)] title: String, #[prop(into)] desc: String) -> impl IntoView {
     view! {
         <div class="bg-gradient-to-br from-[#1A2144] from-40% to-[#30181b] rounded-sheet p-5 md:p-7 flex flex-col justify-between min-h-[175px] md:min-h-[210px] relative overflow-hidden group transition-all duration-(--motion-slow)">
             <div>
@@ -341,10 +341,10 @@ fn AuthModal(
                 on:click=move |e| e.stop_propagation()
             >
                 <h2 class="text-2xl font-bold text-ink mb-1">
-                    {move || if view_mode.get() == "signin" { "Sign In" } else { "Create Account" }}
+                    {move || if view_mode.get() == "signin" { crate::i18n::t("login-sign-in") } else { crate::i18n::t("login-create-account") }}
                 </h2>
                 <p class="text-ink/40 text-sm mb-6">
-                    {move || if view_mode.get() == "signin" { format!("Welcome back to {}.", crate::brand::NAME) } else { format!("Join {} today.", crate::brand::NAME) }}
+                    {move || if view_mode.get() == "signin" { crate::i18n::t_args("login-welcome-back", &[("brand", fluent_bundle::FluentValue::from(crate::brand::NAME))]) } else { crate::i18n::t_args("login-join-today", &[("brand", fluent_bundle::FluentValue::from(crate::brand::NAME))]) }}
                 </p>
 
                 // Google
@@ -449,7 +449,7 @@ fn AuthModal(
                         }).collect::<Vec<_>>();
                         view! {
                             <div class="space-y-2 pt-1 pb-1">
-                                <span class="text-ink/40 text-xs font-semibold block">"Choose your profile icon"</span>
+                                <span class="text-ink/40 text-xs font-semibold block">{crate::i18n::t("login-choose-icon")}</span>
                                 <div class="flex gap-3 justify-center pb-2">{avatars}</div>
                             </div>
                         }.into_any()
@@ -466,12 +466,12 @@ fn AuthModal(
                         disabled=move || loading.get()
                         class="btn-brand w-full py-3.5 rounded-control text-sm shadow-lg duration-(--motion-fast) active:scale-95 disabled:opacity-50 mt-1"
                     >
-                        {move || if view_mode.get() == "signup" { "Create Account" } else { "Sign In" }}
+                        {move || if view_mode.get() == "signup" { crate::i18n::t("login-create-account") } else { crate::i18n::t("login-sign-in") }}
                     </button>
                 </form>
 
                 <p class="mt-5 text-center text-ink/40 text-sm">
-                    {move || if view_mode.get() == "signin" { "Don't have an account? " } else { "Already have an account? " }}
+                    {move || if view_mode.get() == "signin" { crate::i18n::t("login-no-account") } else { crate::i18n::t("login-have-account") }}
                     <button
                         on:click=move |_| {
                             let next = if view_mode.get() == "signin" { "signup" } else { "signin" };
@@ -482,7 +482,7 @@ fn AuthModal(
                         }
                         class="text-ink hover:underline font-medium"
                     >
-                        {move || if view_mode.get() == "signin" { "Sign Up" } else { "Sign In" }}
+                        {move || if view_mode.get() == "signin" { crate::i18n::t("login-sign-up") } else { crate::i18n::t("login-sign-in") }}
                     </button>
                 </p>
             </div>
@@ -551,7 +551,7 @@ pub fn LoginPage() -> impl IntoView {
                             type="submit"
                             class="btn-brand w-full sm:w-[35%] h-14 text-lg rounded-control flex items-center justify-center gap-2 whitespace-nowrap transition-all duration-(--motion-fast) active:scale-95 shadow-xl"
                         >
-                            "Get Started"
+                            {crate::i18n::t("login-get-started")}
                             <i class="ph-bold ph-caret-right text-title-md" />
                         </button>
                     </form>
@@ -560,32 +560,32 @@ pub fn LoginPage() -> impl IntoView {
 
             // ── Top 10 Trending Row ─────────────────────────────────────────
             <section class="pt-12 pb-6 bg-void">
-                <LandingTopTenRow title="Trending Now" />
+                <LandingTopTenRow title=crate::i18n::t("media-badge-trending-now") />
             </section>
 
             // ── More Reasons to Join ────────────────────────────────────────
             <section class="py-12 md:py-20 px-6 md:px-20 lg:px-32 xl:px-44 2xl:px-56 bg-void">
-                <h2 class="text-ink text-2xl md:text-4xl font-black mb-8 md:mb-12">"More reasons to join"</h2>
+                <h2 class="text-ink text-2xl md:text-4xl font-black mb-8 md:mb-12">{crate::i18n::t("login-more-reasons")}</h2>
                 <div class="grid grid-cols-[repeat(auto-fit,minmax(240px,1fr))] gap-4">
                     <FeatureCard
                         id="tv"
-                        title="Watch on any screen"
-                        desc=format!("Stream on your smart TV, laptop, tablet or phone. Wherever you are, {} comes with you.", crate::brand::NAME)
+                        title=crate::i18n::t("login-reason-screens-title")
+                        desc=crate::i18n::t_args("login-reason-screens-body", &[("brand", fluent_bundle::FluentValue::from(crate::brand::NAME))])
                     />
                     <FeatureCard
                         id="stream"
-                        title="Stream in HD & 4K"
-                        desc="Enjoy stunning picture quality with HD and Ultra HD streams, powered by the best available sources."
+                        title=crate::i18n::t("login-reason-hd-title")
+                        desc=crate::i18n::t("login-reason-hd-body")
                     />
                     <FeatureCard
                         id="subtitles"
-                        title="Subtitles your way"
-                        desc="Choose from 40+ languages. Customise font size, colour, and background to your taste."
+                        title=crate::i18n::t("login-reason-subs-title")
+                        desc=crate::i18n::t("login-reason-subs-body")
                     />
                     <FeatureCard
                         id="place"
-                        title="Never lose your place"
-                        desc="Continue Watching picks up exactly where you left off — across every show and season, on any device."
+                        title=crate::i18n::t("login-reason-place-title")
+                        desc=crate::i18n::t("login-reason-place-body")
                     />
                 </div>
             </section>
@@ -593,7 +593,7 @@ pub fn LoginPage() -> impl IntoView {
             // ── Bottom CTA ──────────────────────────────────────────────────
             <section class="py-16 px-6 text-center bg-void flex flex-col items-center w-full">
                 <p class="text-base sm:text-lg md:text-xl font-normal mb-6 max-w-[600px] mx-auto leading-relaxed text-ink/90">
-                    "Ready to watch? Enter your email to create or log in to your account."
+                    {crate::i18n::t("login-ready")}
                 </p>
                 <form
                     on:submit=handle_get_started

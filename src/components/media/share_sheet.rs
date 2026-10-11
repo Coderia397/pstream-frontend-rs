@@ -95,7 +95,7 @@ pub fn ShareSheet(
                     let u = u_val.clone();
                     move |_| {
                         copy_to_clipboard(&u);
-                        set_toast_msg("Link copied — paste it into Instagram".to_string());
+                        set_toast_msg(crate::i18n::t("share-copied-instagram"));
                     }
                 };
 
@@ -103,7 +103,7 @@ pub fn ShareSheet(
                     let u = u_val.clone();
                     move |_| {
                         copy_to_clipboard(&u);
-                        set_toast_msg("Link copied — paste it into Snapchat".to_string());
+                        set_toast_msg(crate::i18n::t("share-copied-snapchat"));
                     }
                 };
 
@@ -123,7 +123,7 @@ pub fn ShareSheet(
                     let u = u_val.clone();
                     move |_| {
                         copy_to_clipboard(&u);
-                        set_toast_msg("Link copied".to_string());
+                        set_toast_msg(crate::i18n::t("share-copied"));
                     }
                 };
 
@@ -184,7 +184,7 @@ pub fn ShareSheet(
                                     <div class="w-14 h-14 rounded-full flex items-center justify-center shadow-md bg-[#2f8ff0]">
                                         <i class="ph-fill ph-chat-teardrop-dots text-ink text-2xl"></i>
                                     </div>
-                                    <span class="text-ink/85 text-caption text-center leading-tight">"Messages"</span>
+                                    <span class="text-ink/85 text-caption text-center leading-tight">{crate::i18n::t("share-messages")}</span>
                                 </button>
 
                                 // Instagram Stories
@@ -232,7 +232,7 @@ pub fn ShareSheet(
                                     <div class="w-14 h-14 rounded-full bg-lift flex items-center justify-center shadow-md hover:bg-line-strong transition-colors">
                                         <i class="ph-bold ph-link text-ink text-xl"></i>
                                     </div>
-                                    <span class="text-ink/85 text-caption text-center leading-tight">"Copy link"</span>
+                                    <span class="text-ink/85 text-caption text-center leading-tight">{crate::i18n::t("share-copy-link")}</span>
                                 </button>
                             </div>
 

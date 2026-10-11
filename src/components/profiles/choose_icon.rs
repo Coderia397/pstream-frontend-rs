@@ -22,8 +22,8 @@ pub fn ChooseIconModal(
                         <i class="ph-bold ph-arrow-left text-2xl"></i>
                     </button>
                     <div>
-                        <h1 class="text-xl sm:text-2xl font-bold text-ink">"Choose an Icon"</h1>
-                        <p class="text-xs sm:text-sm text-ink/50">"Select an avatar for your profile"</p>
+                        <h1 class="text-xl sm:text-2xl font-bold text-ink">{crate::i18n::t("profile-choose-icon")}</h1>
+                        <p class="text-xs sm:text-sm text-ink/50">{crate::i18n::t("profile-choose-icon-hint")}</p>
                     </div>
                 </div>
 

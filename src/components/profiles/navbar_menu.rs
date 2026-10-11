@@ -103,13 +103,13 @@ pub fn NavbarProfileMenu() -> impl IntoView {
                         class="flex items-center gap-3 hover:underline cursor-pointer mt-1 text-ink/80 hover:text-ink"
                     >
                         <i class="ph-bold ph-pencil-simple text-gray-400 text-xl w-8 text-center"></i>
-                        <span class="text-sm font-medium">"Manage Profiles"</span>
+                        <span class="text-sm font-medium">{crate::i18n::t("profile-manage")}</span>
                     </div>
 
                     // Transfer Profile
                     <div class="flex items-center gap-3 hover:underline cursor-pointer text-ink/80 hover:text-ink">
                         <i class="ph-bold ph-user-focus text-gray-400 text-xl w-8 text-center"></i>
-                        <span class="text-sm font-medium">"Transfer Profile"</span>
+                        <span class="text-sm font-medium">{crate::i18n::t("profile-transfer")}</span>
                     </div>
 
                     // Account
@@ -121,19 +121,19 @@ pub fn NavbarProfileMenu() -> impl IntoView {
                         class="flex items-center gap-3 hover:underline cursor-pointer text-ink/80 hover:text-ink"
                     >
                         <i class="ph-bold ph-user text-gray-400 text-xl w-8 text-center"></i>
-                        <span class="text-sm font-medium">"Account"</span>
+                        <span class="text-sm font-medium">{crate::i18n::t("help-ui-account")}</span>
                     </div>
 
                     // Help Center
                     <div
                         on:click=move |_| {
                             set_is_open.set(false);
-                            nav_to_help("/browse", Default::default());
+                            nav_to_help("/help", Default::default());
                         }
                         class="flex items-center gap-3 hover:underline cursor-pointer text-ink/80 hover:text-ink"
                     >
                         <i class="ph-bold ph-question text-gray-400 text-xl w-8 text-center"></i>
-                        <span class="text-sm font-medium">"Help Center"</span>
+                        <span class="text-sm font-medium">{crate::i18n::t("footer-help")}</span>
                     </div>
                 </div>
                 
@@ -143,7 +143,7 @@ pub fn NavbarProfileMenu() -> impl IntoView {
                         on:click=logout
                         class="text-ink text-sm font-bold hover:underline cursor-pointer"
                     >
-                        format!("Sign out of {}", crate::brand::NAME)
+                        crate::i18n::t_args("profile-sign-out", &[("brand", fluent_bundle::FluentValue::from(crate::brand::NAME))])
                     </button>
                 </div>
             </div>

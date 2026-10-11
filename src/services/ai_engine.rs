@@ -2,11 +2,8 @@ use serde::{Deserialize, Serialize};
 use gloo_net::http::Request;
 use crate::services::tmdb::MediaItem;
 
-/// Base URL of the recommendation engine. Set PSTREAM_ENGINE_URL at build time for a deployed site.
-const AI_API_BASE_URL: &str = match option_env!("PSTREAM_ENGINE_URL") {
-    Some(url) => url,
-    None => "http://127.0.0.1:8088",
-};
+/// Base URL of the recommendation engine, from crate::config.
+const AI_API_BASE_URL: &str = crate::config::ENGINE_URL;
 
 #[derive(Clone, Debug, Default, Deserialize, Serialize, PartialEq)]
 pub struct VibeItem {
@@ -101,7 +98,20 @@ pub struct FeedResponse {
     pub rows: Vec<FeedRow>,
 }
 
+thread_local! {
+    /// Session number used while personalisation is off: it lives for this page load only and is never stored.
+    static VOLATILE_SESSION: std::cell::RefCell<Option<String>> = const { std::cell::RefCell::new(None) };
+}
+
+/// Where the recommendation engine lives. Used by the help center to check that it answers.
+pub fn engine_base_url() -> &'static str {
+    AI_API_BASE_URL
+}
+
 fn get_or_create_session_id() -> String {
+    if !crate::consent::personalization_allowed() {
+        return VOLATILE_SESSION.with(|v| v.borrow_mut().get_or_insert_with(|| format!("sess_tmp_{}_{}", (js_sys::Math::random() * 1_000_000.0) as u32, js_sys::Date::now() as u64)).clone());
+    }
     if let Some(storage) = web_sys::window().and_then(|w| w.local_storage().ok().flatten()) {
         if let Ok(Some(sid)) = storage.get_item(crate::keys::SESSION_ID) {
             if !sid.is_empty() {
@@ -292,6 +302,9 @@ struct FeedbackBody<'a> {
 /// Reports an implicit signal (click, start, complete, like, skip) so the engine
 /// can adapt the session's feed and hero. Fire and forget: failures are ignored.
 pub async fn send_feedback(item_id: u32, media_type: Option<&str>, event: &str) {
+    if !crate::consent::personalization_allowed() {
+        return;
+    }
     let session_id = get_or_create_session_id();
     let body = FeedbackBody { session_id: &session_id, item_id, media_type, event };
     let url = format!("{}/api/feedback", AI_API_BASE_URL);

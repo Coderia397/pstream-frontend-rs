@@ -124,7 +124,7 @@ pub fn ControlsOverlay(
                         <button
                             on:click=move |_| on_toggle_play.run(())
                             class="text-ink hover:text-ink/80 active:scale-90 transition-transform duration-(--motion-quick)"
-                            title=move || if is_playing.get() { "Pause (Space)" } else { "Play (Space)" }
+                            title=move || if is_playing.get() { crate::i18n::t("player-pause") } else { crate::i18n::t("player-play") }
                         >
                             <i class=play_icon_class></i>
                         </button>
@@ -154,7 +154,7 @@ pub fn ControlsOverlay(
                             <button
                                 on:click=move |_| on_toggle_mute.run(())
                                 class="text-ink hover:text-ink/80 transition-colors"
-                                title=move || if is_muted.get() { "Unmute (M)" } else { "Mute (M)" }
+                                title=move || if is_muted.get() { crate::i18n::t("player-unmute") } else { crate::i18n::t("player-mute") }
                             >
                                 <i class=speaker_icon_class></i>
                             </button>

@@ -96,7 +96,7 @@ pub fn VibeRow(
                 <h2 class="row-title cursor-pointer flex items-center group/title w-fit">
                     {title.clone()}
                     <span class="text-xs text-cyan-500 ml-2 opacity-0 group-hover/title:opacity-100 transition-opacity duration-(--motion-slow) flex items-center font-semibold">
-                        "Explore Vibe ›"
+                        {crate::i18n::t("row-explore-vibe")}
                     </span>
                 </h2>
 

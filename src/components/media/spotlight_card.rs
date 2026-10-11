@@ -89,7 +89,7 @@ pub fn SpotlightCard(
     let backdrop_src = if backdrop_path.starts_with("http") {
         backdrop_path.clone()
     } else if !backdrop_path.is_empty() {
-        format!("https://image.tmdb.org/t/p/w780{}", backdrop_path)
+        format!("{}/w780{}", crate::config::TMDB_IMAGE_URL, backdrop_path)
     } else {
         String::new()
     };
@@ -172,7 +172,7 @@ pub fn SpotlightCard(
                     {if is_coming_soon && !coming_soon_label.is_empty() {
                         view! {
                             <p class="text-brand font-bold text-xs md:text-sm tracking-wider uppercase">
-                                {format!("Coming {}", coming_soon_label)}
+                                {crate::i18n::t_args("media-coming", &[("when", fluent_bundle::FluentValue::from(coming_soon_label.clone()))])}
                             </p>
                         }.into_any()
                     } else {
@@ -195,12 +195,12 @@ pub fn SpotlightCard(
                                     {move || if is_in_my_list() {
                                         view! {
                                             <i class="ph-bold ph-check text-xl text-ink"></i>
-                                            <span>"In My List"</span>
+                                            <span>{crate::i18n::t("media-in-list")}</span>
                                         }.into_any()
                                     } else {
                                         view! {
                                             <i class="ph-bold ph-plus text-xl text-ink"></i>
-                                            <span>"Add to My List"</span>
+                                            <span>{crate::i18n::t("media-add-to-list")}</span>
                                         }.into_any()
                                     }}
                                 </button>
@@ -217,10 +217,10 @@ pub fn SpotlightCard(
                                             let watch_store = crate::store::use_watch_store();
                                             if let Some(rec) = watch_store.get_record(movie_id, is_tv) {
                                                 if rec.percentage > 0.0 {
-                                                    return "Resume";
+                                                    return crate::i18n::t("media-resume");
                                                 }
                                             }
-                                            "Play"
+                                            crate::i18n::t("media-play")
                                         }}</span>
                                     </button>
                                     <button
@@ -230,12 +230,12 @@ pub fn SpotlightCard(
                                         {move || if is_in_my_list() {
                                             view! {
                                                 <i class="ph-bold ph-check text-xl text-ink"></i>
-                                                <span>"In My List"</span>
+                                                <span>{crate::i18n::t("media-in-list")}</span>
                                             }.into_any()
                                         } else {
                                             view! {
                                                 <i class="ph-bold ph-plus text-xl text-ink"></i>
-                                                <span>"My List"</span>
+                                                <span>{crate::i18n::t("nav-my-list")}</span>
                                             }.into_any()
                                         }}
                                     </button>

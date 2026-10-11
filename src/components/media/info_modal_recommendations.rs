@@ -21,7 +21,7 @@ pub fn RecCard(
     let year = rec.release_date.as_ref().or(rec.first_air_date.as_ref())
         .map(|d| d.chars().take(4).collect::<String>()).unwrap_or_default();
     let overview = if rec.overview.is_empty() {
-        "No description available.".to_string()
+        crate::i18n::t("media-no-description")
     } else {
         rec.overview.clone()
     };
@@ -75,7 +75,7 @@ pub fn RecCard(
             if p.starts_with("http") {
                 p.clone()
             } else {
-                format!("https://image.tmdb.org/t/p/w342{}", p)
+                format!("{}/w342{}", crate::config::TMDB_IMAGE_URL, p)
             }
         });
 
@@ -162,7 +162,7 @@ pub fn RecCard(
                 <div class="flex items-center justify-between gap-2 mb-2.5">
                     <div class="flex items-center gap-2 flex-wrap">
                         <span class="text-success font-bold text-xs">
-                            {format!("{}% Match", match_score)}
+                            {crate::i18n::t_args("media-percent-match", &[("pct", fluent_bundle::FluentValue::from(match_score as i64))])}
                         </span>
                         <MaturityBadge
                             adult=rec.adult.unwrap_or(false)
@@ -225,7 +225,7 @@ pub fn InfoModalRecommendations(
     view! {
         <Suspense fallback=move || view! {
             <div class="mt-12">
-                <h3 class="text-2xl font-medium text-ink mb-5">"More Like This"</h3>
+                <h3 class="text-2xl font-medium text-ink mb-5">{crate::i18n::t("media-more-like-this")}</h3>
                 <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
                     {(0..6).map(|_| view! {
                         <div class="bg-panel rounded-control aspect-[4/5] animate-pulse" />
@@ -242,7 +242,7 @@ pub fn InfoModalRecommendations(
 
                     view! {
                         <div class="mt-12">
-                            <h3 class="text-2xl font-medium text-ink mb-5">"More Like This"</h3>
+                            <h3 class="text-2xl font-medium text-ink mb-5">{crate::i18n::t("media-more-like-this")}</h3>
                             <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
                                 {visible_items.into_iter().map(|item| {
                                     let movie = Movie::from(item);

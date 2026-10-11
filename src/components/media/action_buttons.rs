@@ -42,10 +42,10 @@ pub fn PlayPillButton(
                 <a
                     href=move || url_sig.get()
                     class=base_classes
-                    title=move || if is_resume.get() { "Resume" } else { "Play" }
+                    title=move || if is_resume.get() { crate::i18n::t("media-resume") } else { crate::i18n::t("media-play") }
                 >
                     <i class=format!("ph-fill ph-play {}", icon_classes)></i>
-                    <span>{move || if is_resume.get() { "Resume" } else { "Play" }}</span>
+                    <span>{move || if is_resume.get() { crate::i18n::t("media-resume") } else { crate::i18n::t("media-play") }}</span>
                 </a>
             }.into_any()
         } else {
@@ -55,10 +55,10 @@ pub fn PlayPillButton(
                     type="button"
                     on:click=move |_| click_cb.run(())
                     class=base_classes
-                    title=move || if is_resume.get() { "Resume" } else { "Play" }
+                    title=move || if is_resume.get() { crate::i18n::t("media-resume") } else { crate::i18n::t("media-play") }
                 >
                     <i class=format!("ph-fill ph-play {}", icon_classes)></i>
-                    <span>{move || if is_resume.get() { "Resume" } else { "Play" }}</span>
+                    <span>{move || if is_resume.get() { crate::i18n::t("media-resume") } else { crate::i18n::t("media-play") }}</span>
                 </button>
             }.into_any()
         }}
@@ -140,7 +140,7 @@ pub fn PlayCircleButton(
                 "rounded-full bg-ink text-void flex items-center justify-center hover:bg-ink/80 active:scale-95 transition-all shadow-md cursor-pointer select-none shrink-0 {} {}",
                 dim_classes, extra_class
             )
-            title=move || if is_resume.get() { "Resume" } else { "Play" }
+            title=move || if is_resume.get() { crate::i18n::t("media-resume") } else { crate::i18n::t("media-play") }
         >
             <i class=format!("ph-fill ph-play translate-x-0.5 {}", icon_classes)></i>
         </button>
@@ -179,7 +179,7 @@ pub fn MyListButton(
     let extra_class = class.unwrap_or_default();
     let btn_classes = circular_button_classes(dim_classes, &extra_class);
 
-    let title_text = move || if is_in_list.get() { "Remove from My List" } else { "Add to My List" };
+    let title_text = move || if is_in_list.get() { crate::i18n::t("media-remove-from-list") } else { crate::i18n::t("media-add-to-list") };
 
     let btn = view! {
         <button

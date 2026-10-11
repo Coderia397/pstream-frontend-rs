@@ -37,7 +37,7 @@ pub fn EpisodeDrawer(
                 // Header
                 <div class="flex items-center justify-between px-6 py-5 border-b border-ink/10">
                     <div class="flex items-center gap-3">
-                        <h2 class="text-xl font-bold text-ink tracking-tight">"Episodes"</h2>
+                        <h2 class="text-xl font-bold text-ink tracking-tight">{crate::i18n::t("media-episodes")}</h2>
                         // Season Selector
                         <div class="relative">
                             <select
@@ -52,7 +52,7 @@ pub fn EpisodeDrawer(
                                     let is_curr = s == selected_season.get();
                                     view! {
                                         <option value=s selected=is_curr class="bg-raised text-ink">
-                                            {format!("Season {}", s)}
+                                            {crate::i18n::t_args("media-season-n", &[("n", fluent_bundle::FluentValue::from(s as i64))])}
                                         </option>
                                     }
                                 }).collect::<Vec<_>>()}

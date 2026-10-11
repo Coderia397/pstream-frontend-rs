@@ -33,11 +33,11 @@ pub fn NotificationsPage() -> impl IntoView {
                 id: format!("notif-trend-m-{}", m.id),
                 movie_id: m.id,
                 is_tv: false,
-                badge: "Trending #1".to_string(),
+                badge: crate::i18n::t("notif-badge-trending"),
                 title: m.display_title().to_string(),
-                description: "Everyone is watching this right now. Watch the trailer or add to My List.".to_string(),
+                description: crate::i18n::t("notif-desc-trending"),
                 backdrop: m.backdrop_url("w780").or_else(|| m.poster_url("w500")),
-                time_label: "Today".to_string(),
+                time_label: crate::i18n::t("notif-today"),
             });
         }
 
@@ -47,11 +47,11 @@ pub fn NotificationsPage() -> impl IntoView {
                 id: format!("notif-trend-tv-{}", tv.id),
                 movie_id: tv.id,
                 is_tv: true,
-                badge: "Top Series".to_string(),
+                badge: crate::i18n::t("notif-badge-top-series"),
                 title: tv.display_title().to_string(),
-                description: "New episodes are streaming. Catch up on the story today.".to_string(),
+                description: crate::i18n::t("notif-desc-series"),
                 backdrop: tv.backdrop_url("w780").or_else(|| tv.poster_url("w500")),
-                time_label: "1 day ago".to_string(),
+                time_label: crate::i18n::t_args("notif-ago-days", &[("n", fluent_bundle::FluentValue::from(1))]),
             });
         }
 
@@ -61,11 +61,11 @@ pub fn NotificationsPage() -> impl IntoView {
                 id: format!("notif-top-m-{}", top.id),
                 movie_id: top.id,
                 is_tv: false,
-                badge: "Critic's Choice".to_string(),
+                badge: crate::i18n::t("notif-badge-critics"),
                 title: top.display_title().to_string(),
-                description: "Highest rated title of the season. Highly recommended based on your tastes.".to_string(),
+                description: crate::i18n::t("notif-desc-critics"),
                 backdrop: top.backdrop_url("w780").or_else(|| top.poster_url("w500")),
-                time_label: "2 days ago".to_string(),
+                time_label: crate::i18n::t_args("notif-ago-days", &[("n", fluent_bundle::FluentValue::from(2))]),
             });
         }
 
@@ -75,15 +75,15 @@ pub fn NotificationsPage() -> impl IntoView {
                 id: format!("notif-m-{}", item.id),
                 movie_id: item.id,
                 is_tv: item.is_tv(),
-                badge: "New Arrival".to_string(),
+                badge: crate::i18n::t("notif-h-new-arrival"),
                 title: item.display_title().to_string(),
                 description: if item.overview.trim().is_empty() {
-                    "Now available in your streaming library.".to_string()
+                    crate::i18n::t("notif-desc-available")
                 } else {
                     item.overview.clone()
                 },
                 backdrop: item.backdrop_url("w780").or_else(|| item.poster_url("w500")),
-                time_label: format!("{} days ago", idx + 3),
+                time_label: crate::i18n::t_args("notif-ago-days", &[("n", fluent_bundle::FluentValue::from((idx + 3) as i64))]),
             });
         }
 
@@ -131,8 +131,8 @@ pub fn NotificationsPage() -> impl IntoView {
                                         <div class="w-16 h-16 rounded-full bg-ink/5 flex items-center justify-center mb-4 text-ink/40">
                                             <i class="ph-bold ph-bell text-3xl"></i>
                                         </div>
-                                        <div class="text-xl text-ink font-semibold mb-1">"You're all caught up"</div>
-                                        <div class="text-ink/40 text-sm">"New notifications and arrivals will appear here."</div>
+                                        <div class="text-xl text-ink font-semibold mb-1">{crate::i18n::t("notif-caught-up")}</div>
+                                        <div class="text-ink/40 text-sm">{crate::i18n::t("notif-caught-up-body")}</div>
                                     </div>
                                 }.into_any();
                             }

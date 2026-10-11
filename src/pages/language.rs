@@ -34,15 +34,12 @@ pub const BROWSE_LANGUAGES: &[LangItem] = &[
     LangItem { code: "id", label: "Indonesian" },
 ];
 
-pub const PREF_TYPES: &[&'static str] = &[
-    "Original Language",
-    "Dubbing",
-    "Subtitles",
-];
+/// Message keys of the three ways to pick a language.
+pub const PREF_TYPES: &[&'static str] = &["lang-original", "lang-dubbing", "lang-subtitles"];
 
 #[component]
 pub fn BrowseLanguagePage() -> impl IntoView {
-    let (selected_pref_type, set_selected_pref_type) = signal("Original Language");
+    let (selected_pref_type, set_selected_pref_type) = signal("lang-original");
     let (pref_dropdown_open, set_pref_dropdown_open) = signal(false);
 
     let (selected_lang, set_selected_lang) = signal("en");
@@ -85,8 +82,8 @@ pub fn BrowseLanguagePage() -> impl IntoView {
         BROWSE_LANGUAGES
             .iter()
             .find(|l| l.code == code)
-            .map(|l| l.label)
-            .unwrap_or("English")
+            .map(|l| crate::i18n::language_name(l.code))
+            .unwrap_or_else(|| crate::i18n::language_name("en"))
     };
 
     let items_resource = LocalResource::new(move || {
@@ -133,7 +130,7 @@ pub fn BrowseLanguagePage() -> impl IntoView {
                                     on:click=toggle_pref_dropdown
                                     class="flex items-center justify-between min-w-[160px] md:min-w-[170px] px-3.5 py-1.5 text-label md:text-body-sm font-bold tracking-tight text-ink bg-void border border-line-strong hover:border-ink transition-colors gap-x-2.5 cursor-pointer select-none rounded-hairline"
                                 >
-                                    <span>{move || selected_pref_type.get()}</span>
+                                    <span>{move || crate::i18n::t(selected_pref_type.get())}</span>
                                     <i class="ph-fill ph-caret-down text-ink text-micro transition-transform duration-(--motion-base)"
                                        class=("rotate-180", move || pref_dropdown_open.get())></i>
                                 </button>
@@ -156,7 +153,7 @@ pub fn BrowseLanguagePage() -> impl IntoView {
                                                                 "w-full text-left px-3.5 py-1.5 text-label md:text-body-sm text-ink-soft hover:text-ink hover:bg-ink/5 transition-colors cursor-pointer"
                                                             }
                                                         >
-                                                            {t}
+                                                            {crate::i18n::t(t)}
                                                         </button>
                                                     }
                                                 }).collect::<Vec<_>>()}
@@ -185,7 +182,7 @@ pub fn BrowseLanguagePage() -> impl IntoView {
                                             <div class="absolute top-[calc(100%+4px)] left-0 w-full min-w-[150px] max-h-64 overflow-y-auto bg-void/95 border border-line shadow-2xl z-50 py-1 scrollbar-hide rounded-hairline">
                                                 {BROWSE_LANGUAGES.iter().map(|lang| {
                                                     let code = lang.code;
-                                                    let label = lang.label;
+                                                    let label = crate::i18n::language_name(lang.code);
                                                     let is_selected = selected_lang.get() == code;
                                                     view! {
                                                         <button
@@ -226,7 +223,7 @@ pub fn BrowseLanguagePage() -> impl IntoView {
                                 view! {
                                     <div class="flex flex-col items-center justify-center mt-24 text-center">
                                         <i class="ph ph-globe text-5xl text-ink/30 mb-3"></i>
-                                        <p class="text-ink/50 text-lg">"No titles available for this language."</p>
+                                        <p class="text-ink/50 text-lg">{crate::i18n::t("lang-no-titles")}</p>
                                     </div>
                                 }.into_any()
                             } else {

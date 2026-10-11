@@ -171,7 +171,7 @@ pub fn Row(
                 <h2 class="row-title cursor-pointer flex items-center group/title w-fit">
                     {title}
                     <span class="text-xs text-cyan-500 ml-2 opacity-0 group-hover/title:opacity-100 transition-opacity duration-(--motion-slow) flex items-center font-semibold">
-                        "Explore All ›"
+                        {crate::i18n::t("row-explore-all")}
                     </span>
                 </h2>
 

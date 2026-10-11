@@ -11,6 +11,7 @@ pub mod reads;
 pub mod settings;
 pub mod login;
 pub mod legal;
+pub mod help;
 pub mod notifications;
 pub mod not_found;
 pub mod games;

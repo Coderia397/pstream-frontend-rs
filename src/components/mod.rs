@@ -1,3 +1,4 @@
+pub mod consent;
 pub mod layout;
 pub mod media;
 pub mod player;

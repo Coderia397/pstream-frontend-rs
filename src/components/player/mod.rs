@@ -350,7 +350,7 @@ pub fn NetflixVideoPlayer(
                 });
             } else {
                 set_player_state.set(PlayerState::Error(
-                    "Unable to stream video. All source providers were unavailable or unsupported by your browser.".to_string(),
+                    crate::i18n::t("player-error-no-source"),
                 ));
             }
         }
@@ -419,7 +419,7 @@ pub fn NetflixVideoPlayer(
                 "S{}:E{} \"{}\"",
                 season.unwrap_or(1),
                 episode.unwrap_or(1),
-                episode_title.as_deref().unwrap_or("Episode")
+                episode_title.as_deref().map(str::to_string).unwrap_or_else(|| crate::i18n::t("player-episode"))
             )
         } else {
             year.clone().unwrap_or_default()
@@ -447,7 +447,7 @@ pub fn NetflixVideoPlayer(
                         <div class="w-16 h-16 rounded-sheet bg-ink/10 flex items-center justify-center mb-4 text-brand text-3xl">
                             <i class="ph ph-warning-circle"></i>
                         </div>
-                        <h3 class="text-xl font-bold text-ink mb-2">"Playback Unavailable"</h3>
+                        <h3 class="text-xl font-bold text-ink mb-2">{crate::i18n::t("player-unavailable")}</h3>
                         <p class="text-ink/60 text-sm max-w-md mb-6">{err_msg}</p>
                         <div class="flex items-center gap-4">
                             <button
@@ -489,7 +489,7 @@ pub fn NetflixVideoPlayer(
                                                 class="flex items-center gap-2 px-4 py-2 rounded-full bg-void/80 hover:bg-void text-ink text-sm font-semibold backdrop-blur-md shadow-lg"
                                             >
                                                 <i class="ph ph-arrow-left text-lg"></i>
-                                                <span>"Back"</span>
+                                                <span>{crate::i18n::t("player-back")}</span>
                                             </button>
                                         </div>
                                     </div>

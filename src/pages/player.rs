@@ -99,7 +99,7 @@ pub fn PlayerPage() -> impl IntoView {
             <Suspense fallback=move || view! {
                 <div class="w-full h-full flex flex-col items-center justify-center bg-void">
                     <div class="w-16 h-16 rounded-full border-4 border-brand border-t-transparent animate-spin mb-4 shadow-2xl"></div>
-                    <p class="text-ink/80 text-sm font-semibold">"Loading title..."</p>
+                    <p class="text-ink/80 text-sm font-semibold">{crate::i18n::t("player-loading")}</p>
                 </div>
             }>
                 {move || {
@@ -136,8 +136,8 @@ pub fn PlayerPage() -> impl IntoView {
                         }
                         None => view! {
                             <div class="w-full h-full flex flex-col items-center justify-center bg-void text-center px-4">
-                                <h2 class="text-xl font-bold text-ink mb-2">"Media Not Found"</h2>
-                                <p class="text-ink/60 text-sm mb-6">"Unable to locate title information."</p>
+                                <h2 class="text-xl font-bold text-ink mb-2">{crate::i18n::t("player-not-found")}</h2>
+                                <p class="text-ink/60 text-sm mb-6">{crate::i18n::t("player-not-found-hint")}</p>
                                 <button
                                     on:click=move |_| on_close.run(())
                                     class="btn-brand px-6 py-2.5 rounded-card text-sm"

@@ -54,7 +54,7 @@ pub fn SubtitleDrawer(
                                     }
                                 )
                             >
-                                <span>"Off"</span>
+                                <span>{crate::i18n::t("player-subs-off")}</span>
                                 <Show when=move || selected_sub_url.get().is_none()>
                                     <i class="ph ph-check text-base text-brand"></i>
                                 </Show>

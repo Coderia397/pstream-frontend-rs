@@ -9,6 +9,8 @@ pub const USER_AFFINITY: &str = "pstream_user_affinity";
 pub const LANGUAGE: &str = "pstream_language";
 pub const NOTIFICATIONS_READ: &str = "pstream-notifications-read:default";
 pub const AMBIENT_LAST: &str = "pstream-ambient:last";
+pub const CONSENT: &str = "pstream_consent";
+pub const HELP_VOTES: &str = "pstream_help_votes";
 
 pub const VIDEO_ELEMENT_ID: &str = "pstream-video";
 pub const PLAYER_CONTAINER_ID: &str = "pstream-main-player";

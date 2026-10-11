@@ -5,7 +5,31 @@ use std::cell::RefCell;
 
 const EN: &str = include_str!("../i18n/en.ftl");
 /// Languages with a file in i18n/. Add the code here when a new .ftl file is added.
-pub const AVAILABLE: &[&str] = &["en"];
+pub const AVAILABLE: &[&str] = &["en", "ar", "de", "es", "fr", "hi", "it", "ja", "ko", "nl", "pl", "pt", "ru", "sv", "tr", "zh"];
+
+/// Name of a language in that language, for pickers.
+pub fn native_name(code: &str) -> String {
+    match code {
+        "en" => "English",
+        "ar" => "العربية",
+        "de" => "Deutsch",
+        "es" => "Español",
+        "fr" => "Français",
+        "hi" => "हिन्दी",
+        "it" => "Italiano",
+        "ja" => "日本語",
+        "ko" => "한국어",
+        "nl" => "Nederlands",
+        "pl" => "Polski",
+        "pt" => "Português",
+        "ru" => "Русский",
+        "sv" => "Svenska",
+        "tr" => "Türkçe",
+        "zh" => "中文",
+        other => other,
+    }
+    .to_string()
+}
 const RTL: &[&str] = &["ar", "he", "fa", "ur"];
 
 struct State {
@@ -39,11 +63,39 @@ fn query_language() -> Option<String> {
     search.trim_start_matches('?').split('&').find_map(|kv| kv.strip_prefix("lang=").map(|v| v.to_string()))
 }
 
-/// `?lang=xx` in the address first (for testing and shared links), then the saved choice, then the browser language, then English.
+/// The first of the browser's preferred languages that the app has a file for.
+fn browser_language() -> Option<String> {
+    let nav = web_sys::window()?.navigator();
+    let mut tags: Vec<String> = nav.languages().iter().filter_map(|v| v.as_string()).collect();
+    if tags.is_empty() {
+        tags.extend(nav.language());
+    }
+    tags.into_iter().map(|t| t.split('-').next().unwrap_or("en").to_lowercase()).find(|c| AVAILABLE.contains(&c.as_str()))
+}
+
+/// `?lang=xx` in the address first (for testing and shared links), then the language the visitor picked, then the browser's
+/// preferred languages in order, then English. A first visit therefore opens in the browser language.
 pub fn resolve_language() -> String {
-    let wanted = query_language().or_else(stored_language).or_else(|| web_sys::window().and_then(|w| w.navigator().language()));
-    let code = wanted.map(|l| l.split('-').next().unwrap_or("en").to_lowercase()).unwrap_or_else(|| "en".into());
-    if AVAILABLE.contains(&code.as_str()) { code } else { "en".into() }
+    let wanted = query_language().or_else(stored_language).map(|l| l.split('-').next().unwrap_or("en").to_lowercase());
+    match wanted {
+        Some(code) if AVAILABLE.contains(&code.as_str()) => code,
+        _ => browser_language().unwrap_or_else(|| "en".into()),
+    }
+}
+
+/// True when the visitor has not picked a language yet and the one in use came from the browser.
+pub fn is_browser_default() -> bool {
+    query_language().or_else(stored_language).is_none()
+}
+
+/// Forgets the saved choice so the browser language applies again.
+pub fn use_browser_language() {
+    if let Some(s) = web_sys::window().and_then(|w| w.local_storage().ok().flatten()) {
+        let _ = s.remove_item(crate::keys::LANGUAGE);
+    }
+    if let Some(w) = web_sys::window() {
+        let _ = w.location().reload();
+    }
 }
 
 pub fn set_language(code: &str) {
@@ -99,4 +151,103 @@ pub fn t_args(key: &str, args: &[(&str, FluentValue)]) -> String {
         let Some(st) = s.as_ref() else { return key.to_string() };
         st.active.as_ref().and_then(|b| format(b, key, fa)).or_else(|| format(&st.en, key, fa)).unwrap_or_else(|| key.to_string())
     })
+}
+
+/// Name of a language in the language the interface is shown in, from the browser's own language data, so no list of names has
+/// to be kept in sync. Falls back to the code.
+pub fn language_name(code: &str) -> String {
+    use wasm_bindgen::JsCast;
+    let lang = language();
+    let lookup = || -> Option<String> {
+        let intl = js_sys::Reflect::get(&js_sys::global(), &"Intl".into()).ok()?;
+        let ctor = js_sys::Reflect::get(&intl, &"DisplayNames".into()).ok()?.dyn_into::<js_sys::Function>().ok()?;
+        let options = js_sys::Object::new();
+        js_sys::Reflect::set(&options, &"type".into(), &"language".into()).ok()?;
+        let args = js_sys::Array::of2(&js_sys::Array::of1(&lang.as_str().into()), &options);
+        let names = js_sys::Reflect::construct(&ctor, &args).ok()?;
+        let of = js_sys::Reflect::get(&names, &"of".into()).ok()?.dyn_into::<js_sys::Function>().ok()?;
+        of.call1(&names, &code.into()).ok()?.as_string()
+    };
+    let name = lookup().unwrap_or_else(|| code.to_string());
+    let mut chars = name.chars();
+    match chars.next() {
+        Some(first) => first.to_uppercase().chain(chars).collect(),
+        None => name,
+    }
+}
+
+/// Like `t`, but returns `fallback` when no message has this key, so names that come from data can be translated one at a time.
+pub fn t_or(key: &str, fallback: &str) -> String {
+    let known = STATE.with(|s| s.borrow().as_ref().is_some_and(|st| st.active.as_ref().is_some_and(|b| b.has_message(key)) || st.en.has_message(key)));
+    if known { t(key) } else { fallback.to_string() }
+}
+
+/// Message key for a genre or category name, for example "Sci-Fi & Fantasy" becomes "genre-sci-fi-fantasy".
+pub fn genre_key(name: &str) -> String {
+    let mut slug = String::from("genre-");
+    for c in name.to_lowercase().chars() {
+        if c.is_ascii_alphanumeric() {
+            slug.push(c);
+        } else if !slug.ends_with('-') {
+            slug.push('-');
+        }
+    }
+    slug.trim_end_matches('-').to_string()
+}
+
+/// The shown name of a genre. Matching and links keep using the English name; only what is displayed changes.
+pub fn genre_label(name: &str) -> String {
+    t_or(&genre_key(name), name)
+}
+
+/// The language tag TMDB expects for the interface language, so titles, summaries and genre names come back translated.
+pub fn tmdb_language() -> &'static str {
+    match language().as_str() {
+        "ar" => "ar-SA",
+        "de" => "de-DE",
+        "es" => "es-ES",
+        "fr" => "fr-FR",
+        "hi" => "hi-IN",
+        "it" => "it-IT",
+        "ja" => "ja-JP",
+        "ko" => "ko-KR",
+        "nl" => "nl-NL",
+        "pl" => "pl-PL",
+        "pt" => "pt-BR",
+        "ru" => "ru-RU",
+        "sv" => "sv-SE",
+        "tr" => "tr-TR",
+        "zh" => "zh-CN",
+        _ => "en-US",
+    }
+}
+
+#[cfg(test)]
+mod tests {
+    use super::*;
+
+    /// Every language file must parse without errors, so no message is silently dropped at runtime.
+    #[test]
+    fn every_language_file_parses() {
+        let dir = std::path::Path::new(env!("CARGO_MANIFEST_DIR")).join("i18n");
+        let mut count = 0;
+        for entry in std::fs::read_dir(dir).expect("i18n dir") {
+            let path = entry.expect("entry").path();
+            if path.extension().and_then(|e| e.to_str()) != Some("ftl") {
+                continue;
+            }
+            let text = std::fs::read_to_string(&path).expect("read");
+            if let Err((_, errors)) = FluentResource::try_new(text) {
+                panic!("{} has {} errors, first: {:?}", path.display(), errors.len(), errors.first());
+            }
+            count += 1;
+        }
+        assert!(count >= 1);
+    }
+
+    #[test]
+    fn genre_keys_are_slugs() {
+        assert_eq!(genre_key("Sci-Fi & Fantasy"), "genre-sci-fi-fantasy");
+        assert_eq!(genre_key("Cars, Trucks & Trains"), "genre-cars-trucks-trains");
+    }
 }

@@ -27,3 +27,22 @@
   }
   .btn-glass:hover { background-color: color-mix(in srgb, var(--color-button-secondary) 60%, transparent); }
 }
+
+/* Light page for the settings screens that Netflix draws white: the account pages on a phone and everything from 1024 px wide.
+   The colour tokens are swapped inside the scope, so every text-ink, bg-ink/5 and bg-void class flips with it. */
+@layer components {
+  .theme-paper {
+    --color-ink: var(--color-paper-ink);
+    --color-void: var(--color-paper);
+    --color-page: var(--color-paper);
+    --color-danger: #c11119;
+  }
+  @media (min-width: 64rem) {
+    .theme-paper-wide {
+      --color-ink: var(--color-paper-ink);
+      --color-void: var(--color-paper);
+      --color-page: var(--color-paper);
+      --color-danger: #c11119;
+    }
+  }
+}

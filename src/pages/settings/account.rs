@@ -165,8 +165,12 @@ fn ProfilesSection() -> impl IntoView {
     }
 }
 
+/// Delete account: an outline button on phones, a red text link on the website.
 fn delete_button() -> impl IntoView {
-    view! { <OutlineButton label=t("set-title-delete") danger=true on_click=Callback::new(|_| go(&Screen::Delete.path())) /> }
+    view! {
+        <div class="lg:hidden"><OutlineButton label=t("set-title-delete") danger=true on_click=Callback::new(|_| go(&Screen::Delete.path())) /></div>
+        <a href=Screen::Delete.path() class="hidden rounded-control px-4 py-2 text-body-lg font-medium text-danger hover:bg-danger/10 lg:inline-block">{t("set-title-delete")}</a>
+    }
 }
 
 fn active_profile_id() -> String {

@@ -196,6 +196,11 @@ impl Screen {
         }
     }
 
+    /// Screens Netflix draws white on a phone (the Account pages); the rest are dark there. From 1024 px everything is white.
+    fn light_on_phone(&self) -> bool {
+        matches!(self, Screen::Account | Screen::AccountSecurity | Screen::AccountDevices | Screen::AccountProfiles | Screen::Name | Screen::Password | Screen::Email | Screen::Phone | Screen::Access | Screen::Privacy | Screen::Activity | Screen::Delete)
+    }
+
     fn section(&self) -> Section {
         match self {
             Screen::Hub | Screen::Account => Section::Overview,
@@ -246,11 +251,23 @@ pub fn SettingsPage() -> impl IntoView {
     provide_context(hub::SignOutOpen(signout_open));
 
     view! {
-        <div class="min-h-screen bg-void font-sans text-ink selection:bg-brand selection:text-ink">
+        <div
+            class="theme-paper-wide min-h-screen bg-void font-sans text-ink selection:bg-brand selection:text-ink"
+            class=("theme-paper", move || screen.get().light_on_phone())
+        >
+            // a phone shows the account pages under a black bar with the logo, like the Netflix app
+            <Show when=move || screen.get().light_on_phone()>
+                <div class="relative flex h-14 items-center bg-[#000] px-2 lg:hidden">
+                    <a href=move || screen.get().parent() aria-label=move || t("set-back") class="flex h-10 w-10 items-center justify-center text-[#fff]">
+                        <i class="ph-bold ph-arrow-left text-2xl rtl:-scale-x-100" aria-hidden="true"></i>
+                    </a>
+                    <img src=crate::brand::LOGO_WORDMARK alt=crate::brand::NAME class="absolute inset-x-0 mx-auto h-6 w-auto" />
+                </div>
+            </Show>
             <div class="mx-auto flex max-w-[1100px] gap-12 px-4 pb-16 pt-4 sm:px-8 lg:px-12 lg:pt-10">
                 <aside class="hidden w-60 shrink-0 lg:block">
                     <a href="/browse" class="mb-6 flex items-center" aria-label=crate::brand::NAME>
-                        <img src=crate::brand::LOGO_WORDMARK alt=crate::brand::NAME class="h-7 w-auto" />
+                        <img src=crate::brand::LOGO_WORDMARK_PRIMARY alt=crate::brand::NAME class="h-7 w-auto" />
                     </a>
                     <a href="/browse" class="mb-4 flex items-center gap-2 rounded-control border border-ink/30 px-4 py-2 text-body-sm font-semibold hover:bg-ink/10">
                         <i class="ph-bold ph-arrow-left text-lg rtl:-scale-x-100" aria-hidden="true"></i>
@@ -262,8 +279,9 @@ pub fn SettingsPage() -> impl IntoView {
                             .map(|(icon, key, target, section)| view! {
                                 <a
                                     href=target.path()
-                                    class="flex items-center gap-3 rounded-control px-4 py-3 text-body-md font-semibold hover:bg-ink/10"
+                                    class="flex items-center gap-3 rounded-control px-4 py-3 text-[0.9375rem] hover:bg-ink/10"
                                     class=("bg-ink/10", move || screen.get().section() == section)
+                                    class=("font-semibold", move || screen.get().section() == section)
                                     class=("text-ink", move || screen.get().section() == section)
                                     class=("text-ink/70", move || screen.get().section() != section)
                                     aria-current=move || (screen.get().section() == section).then_some("page")
@@ -291,6 +309,7 @@ pub fn SettingsPage() -> impl IntoView {
                             href=move || screen.get().parent()
                             aria-label=move || t("set-back")
                             class="flex h-10 w-10 shrink-0 items-center justify-center rounded-full text-ink hover:bg-ink/10 lg:hidden"
+                            class=("max-lg:hidden", move || screen.get().light_on_phone())
                         >
                             <i class="ph-bold ph-arrow-left text-2xl rtl:-scale-x-100" aria-hidden="true"></i>
                         </a>
@@ -302,7 +321,7 @@ pub fn SettingsPage() -> impl IntoView {
                         >
                             <i class="ph-bold ph-arrow-left text-2xl rtl:-scale-x-100" aria-hidden="true"></i>
                         </a>
-                        <h1 class="truncate text-heading font-bold lg:text-title">
+                        <h1 class="truncate text-heading font-bold lg:text-[2.5rem] lg:leading-tight" class=("max-lg:text-[2rem]", move || screen.get().light_on_phone()) class=("max-lg:font-black", move || screen.get().light_on_phone())>
                             <span class=("lg:hidden", move || screen.get() == Screen::Hub)>{move || t(screen.get().title_key())}</span>
                             <span class="hidden" class=("lg:inline", move || screen.get() == Screen::Hub)>{move || t(Screen::Account.title_key())}</span>
                         </h1>

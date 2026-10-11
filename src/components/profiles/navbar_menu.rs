@@ -137,7 +137,7 @@ pub fn NavbarProfileMenu() -> impl IntoView {
                     role="menuitem"
                     on:click=move |_| {
                         set_is_open.set(false);
-                        nav_to_account("/settings", Default::default());
+                        nav_to_account("/settings/account", Default::default());
                     }
                     class="flex w-full cursor-pointer items-center gap-3 px-4 py-2.5 text-start hover:underline"
                 >

@@ -28,6 +28,18 @@ pub const TMDB_API_KEY: &str = setting(option_env!("STREAMS_TMDB_KEY"), "fc5fec3
 pub const SUPABASE_URL: &str = setting(option_env!("STREAMS_SUPABASE_URL"), "https://emvyjhleyhimxxdqybsn.supabase.co");
 pub const SUPABASE_KEY: &str = setting(option_env!("STREAMS_SUPABASE_KEY"), "sb_publishable_m286TDvNziieAgk--uDLlQ_MJQHgxNV");
 
+/// Account and settings limits. They mirror the database rules in pstream-backend-rs/supabase (five profiles not counting the
+/// automatic Kids profile, 4 digit PINs, a password check no older than five minutes), so a change there is made here too.
+pub const MAX_PROFILES: usize = 5;
+pub const PROFILE_NAME_MAX: usize = 30;
+pub const PIN_LENGTH: usize = 4;
+pub const MIN_PASSWORD_LENGTH: usize = 8;
+/// How long a password check counts for the screens that change account data.
+pub const RECENT_SIGN_IN_SECONDS: u64 = 300;
+pub const PHONE_DIGITS: std::ops::RangeInclusive<usize> = 6..=15;
+pub const BLOCKED_TITLE_MAX: usize = 100;
+pub const BLOCKED_TITLES_MAX: usize = 200;
+
 /// Where the cookie banner sits. Set STREAMS_COOKIE_BANNER to top, bottom, bottom-start, bottom-end or center when building,
 /// or add ?cookie_banner=top to the address to try one. Narrow screens always get a full width sheet at the bottom.
 #[derive(Clone, Copy, PartialEq, Eq, Debug)]

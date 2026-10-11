@@ -27,6 +27,7 @@ pub fn App() -> impl IntoView {
     crate::store::provide_library_store();
     crate::store::provide_watch_store();
     crate::consent::provide_ui();
+    crate::pages::settings::provide_prefs();
 
     // On help.<domain> the front door is the help center
     let on_help_host = web_sys::window().and_then(|w| w.location().hostname().ok()).map(|h| h.starts_with("help.")).unwrap_or(false);
@@ -78,6 +79,7 @@ pub fn App() -> impl IntoView {
                 <Route path=path!("/clips") view=crate::pages::clips::ClipsPage />
                 <Route path=path!("/reads") view=crate::pages::reads::ReadsPage />
                 <Route path=path!("/settings") view=crate::pages::settings::SettingsPage />
+                <Route path=path!("/settings/*any") view=crate::pages::settings::SettingsPage />
                 <Route path=path!("/login") view=crate::pages::auth::LoginPage />
                 <Route path=path!("/signup") view=crate::pages::auth::SignupPage />
                 <Route path=path!("/forgot") view=crate::pages::auth::ForgotPage />

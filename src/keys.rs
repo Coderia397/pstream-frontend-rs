@@ -15,6 +15,8 @@ pub const CONSENT_DISMISSED: &str = "pstream_consent_dismissed";
 pub const HELP_RECENT: &str = "pstream_help_recent";
 pub const HELP_VIEWED: &str = "pstream_help_viewed";
 pub const HELP_VOTES: &str = "pstream_help_votes";
+pub const PROFILE_PREFS: &str = "pstream_profile_prefs";
+pub const APP_PREFS: &str = "pstream_app_prefs";
 
 pub const VIDEO_ELEMENT_ID: &str = "pstream-video";
 pub const PLAYER_CONTAINER_ID: &str = "pstream-main-player";

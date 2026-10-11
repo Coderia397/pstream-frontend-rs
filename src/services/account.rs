@@ -15,6 +15,8 @@ pub struct Session {
     pub email: String,
     pub first_name: String,
     pub last_name: String,
+    #[serde(default)]
+    pub phone: String,
 }
 
 #[derive(Clone, Debug, PartialEq)]
@@ -28,6 +30,8 @@ pub enum AuthError {
     /// Signing up failed in a way that must not reveal whether the address is already registered.
     CouldNotCreate,
     RateLimited,
+    /// The database wants a password check made in the last few minutes (error 28000).
+    RecentSignIn,
     Network,
     Other(String),
 }
@@ -65,6 +69,7 @@ fn session_from(v: &Value) -> Option<Session> {
         email: v["user"]["email"].as_str().unwrap_or_default().to_string(),
         first_name: text(&meta["first_name"]),
         last_name: text(&meta["last_name"]),
+        phone: text(&meta["phone"]),
     })
 }
 
@@ -72,6 +77,9 @@ fn session_from(v: &Value) -> Option<Session> {
 pub fn classify(status: u16, body: &Value) -> AuthError {
     let code = body["error_code"].as_str().or_else(|| body["code"].as_str()).unwrap_or_default();
     let msg = body["msg"].as_str().or_else(|| body["message"].as_str()).or_else(|| body["error_description"].as_str()).unwrap_or_default();
+    if code == "28000" || msg.contains("recent sign in") {
+        return AuthError::RecentSignIn;
+    }
     match code {
         "invalid_credentials" | "invalid_grant" => AuthError::Invalid,
         "email_not_confirmed" => AuthError::Unconfirmed,
@@ -162,6 +170,147 @@ pub fn sign_out() {
             let _ = st.remove_item(crate::keys::SESSION);
         }
     }
+}
+
+async fn put_user(body: &Value, token: &str) -> Result<(), AuthError> {
+    let resp = Request::put(&url("/auth/v1/user"))
+        .header("apikey", crate::config::SUPABASE_KEY)
+        .header("Content-Type", "application/json")
+        .header("Authorization", &format!("Bearer {token}"))
+        .body(body.to_string())
+        .map_err(|_| AuthError::Network)?
+        .send()
+        .await
+        .map_err(|_| AuthError::Network)?;
+    let status = resp.status();
+    let text = resp.text().await.unwrap_or_default();
+    if status == 200 { Ok(()) } else { Err(classify(status, &serde_json::from_str(&text).unwrap_or(Value::Null))) }
+}
+
+fn token() -> Result<String, AuthError> {
+    session().map(|s| s.access_token).ok_or_else(|| AuthError::Other("not signed in".into()))
+}
+
+/// Checks the password of the signed in account for the step up check. The sign in it creates replaces the saved session (in the
+/// same storage), because the database decides "recent sign in" from the time the password was last used, and that time is in the
+/// new token.
+pub async fn verify_password(password: &str) -> Result<(), AuthError> {
+    let current = session().ok_or_else(|| AuthError::Other("not signed in".into()))?;
+    let remember = storage(true).and_then(|s| s.get_item(crate::keys::SESSION).ok().flatten()).is_some();
+    let (status, body) = post("/auth/v1/token?grant_type=password", &json!({ "email": current.email, "password": password }), None).await?;
+    if status == 200 {
+        if let Some(fresh) = session_from(&body) {
+            save(&fresh, remember);
+        }
+        return Ok(());
+    }
+    Err(classify(status, &body))
+}
+
+pub async fn change_password(new_password: &str) -> Result<(), AuthError> {
+    put_user(&json!({ "password": new_password }), &token()?).await
+}
+
+/// Starts an email change; the address in use changes once the new one is confirmed.
+pub async fn change_email(new_email: &str) -> Result<(), AuthError> {
+    put_user(&json!({ "email": new_email.trim() }), &token()?).await
+}
+
+/// Keeps the mobile number in the account's profile data (no text message is sent for it).
+pub async fn save_phone(phone: &str) -> Result<(), AuthError> {
+    put_user(&json!({ "data": { "phone": phone.trim() } }), &token()?).await?;
+    // the saved session keeps the number so the Account screen shows it without asking again
+    for persistent in [true, false] {
+        if let Some(st) = storage(persistent) {
+            if let Some(mut saved) = st.get_item(crate::keys::SESSION).ok().flatten().and_then(|raw| serde_json::from_str::<Session>(&raw).ok()) {
+                saved.phone = phone.trim().to_string();
+                if let Ok(raw) = serde_json::to_string(&saved) {
+                    let _ = st.set_item(crate::keys::SESSION, &raw);
+                }
+            }
+        }
+    }
+    Ok(())
+}
+
+/// Signs this browser and every other browser out of the account.
+pub async fn sign_out_everywhere() -> Result<(), AuthError> {
+    let t = token()?;
+    let (status, body) = post("/auth/v1/logout?scope=global", &json!({}), Some(&t)).await?;
+    if status != 204 && status != 200 {
+        return Err(classify(status, &body));
+    }
+    for persistent in [true, false] {
+        if let Some(st) = storage(persistent) {
+            let _ = st.remove_item(crate::keys::SESSION);
+        }
+    }
+    Ok(())
+}
+
+async fn rpc(name: &str, args: &Value) -> Result<Value, AuthError> {
+    let t = token()?;
+    let resp = Request::post(&url(&format!("/rest/v1/rpc/{name}")))
+        .header("apikey", crate::config::SUPABASE_KEY)
+        .header("Content-Type", "application/json")
+        .header("Authorization", &format!("Bearer {t}"))
+        .body(args.to_string())
+        .map_err(|_| AuthError::Network)?
+        .send()
+        .await
+        .map_err(|_| AuthError::Network)?;
+    let status = resp.status();
+    let text = resp.text().await.unwrap_or_default();
+    let body: Value = serde_json::from_str(&text).unwrap_or(Value::Null);
+    if (200..300).contains(&status) { Ok(body) } else { Err(classify(status, &body)) }
+}
+
+/// Changes the first and last name through `update_account_names` (the main profile follows its first name there). The names are
+/// also kept in the session so the screens show them at once.
+pub async fn update_names(first: &str, last: &str) -> Result<(), AuthError> {
+    rpc("update_account_names", &json!({ "p_first": first.trim(), "p_last": last.trim() })).await?;
+    for persistent in [true, false] {
+        if let Some(st) = storage(persistent) {
+            if let Some(mut saved) = st.get_item(crate::keys::SESSION).ok().flatten().and_then(|raw| serde_json::from_str::<Session>(&raw).ok()) {
+                saved.first_name = first.trim().to_string();
+                saved.last_name = last.trim().to_string();
+                if let Ok(raw) = serde_json::to_string(&saved) {
+                    let _ = st.set_item(crate::keys::SESSION, &raw);
+                }
+            }
+        }
+    }
+    Ok(())
+}
+
+/// Everything held about the signed in person (`export_my_data`), as text ready to save as a file.
+pub async fn export_data() -> Result<String, AuthError> {
+    let body = rpc("export_my_data", &json!({})).await?;
+    serde_json::to_string_pretty(&body).map_err(|_| AuthError::Other("unexpected answer".into()))
+}
+
+/// The newest security events of the account (sign ins that changed things, PIN changes, profile changes): time and event name.
+pub async fn security_events(limit: u32) -> Result<Vec<(String, String)>, AuthError> {
+    let t = token()?;
+    let resp = Request::get(&url(&format!("/rest/v1/account_events?select=ts,event&order=ts.desc&limit={limit}")))
+        .header("apikey", crate::config::SUPABASE_KEY)
+        .header("Authorization", &format!("Bearer {t}"))
+        .send()
+        .await
+        .map_err(|_| AuthError::Network)?;
+    let status = resp.status();
+    let text = resp.text().await.unwrap_or_default();
+    let body: Value = serde_json::from_str(&text).unwrap_or(Value::Null);
+    if status != 200 {
+        return Err(classify(status, &body));
+    }
+    Ok(body.as_array().map(|rows| rows.iter().filter_map(|r| Some((r["ts"].as_str()?.to_string(), r["event"].as_str()?.to_string()))).collect()).unwrap_or_default())
+}
+
+/// Deletes the signed in account and everything stored for it, through the `delete_my_account` database function. The caller
+/// clears the data kept in this browser afterwards.
+pub async fn delete_account() -> Result<(), AuthError> {
+    rpc("delete_my_account", &json!({})).await.map(|_| ())
 }
 
 /// True for someone who has been here before: signed in, or a profile was chosen on this browser. They go straight to the app;

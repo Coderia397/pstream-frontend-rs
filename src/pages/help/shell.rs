@@ -75,7 +75,7 @@ fn AccountMenu(name: Signal<String>, dark: bool) -> impl IntoView {
             </button>
             <Show when=move || open.get()>
                 <div role="menu" class="absolute end-0 top-full z-(--z-dialog) mt-2 w-56 rounded-field border border-paper-line bg-paper py-2 shadow-popover">
-                    <a role="menuitem" href="/settings" class="flex items-center gap-2 px-4 py-2 text-body-md text-paper-ink hover:bg-paper-soft">
+                    <a role="menuitem" href="/settings/account" class="flex items-center gap-2 px-4 py-2 text-body-md text-paper-ink hover:bg-paper-soft">
                         {tr("help-ui-account")}
                         <i class="ph-bold ph-caret-right text-fine text-brand" aria-hidden="true"></i>
                     </a>

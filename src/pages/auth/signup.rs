@@ -23,7 +23,7 @@ impl Step {
 }
 
 /// Minimum password length. Matches what the Supabase project is set to require.
-const MIN_PASSWORD: usize = 8;
+const MIN_PASSWORD: usize = crate::config::MIN_PASSWORD_LENGTH;
 
 #[component]
 pub fn SignupPage() -> impl IntoView {

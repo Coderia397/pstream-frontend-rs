@@ -2141,3 +2141,11 @@ set-rating-15 = 15
 set-rating-15-hint = Suitable for ages 15 and over.
 set-rating-18 = 18
 set-rating-18-hint = Adults only. Suitable for ages 18 and over.
+
+# Email links (/auth/confirm)
+auth-confirm-title = Confirming your email
+auth-confirm-working = Confirming…
+auth-confirm-working-body = One moment while we check your link.
+auth-confirm-failed-title = This link did not work
+auth-confirm-failed-body = The link may have expired or already been used. Sign in, or ask for a new link.
+auth-confirm-new-link = Send me a new link

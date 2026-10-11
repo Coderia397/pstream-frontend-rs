@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html>
+<html data-boot-quiet-minutes="360">
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
@@ -30,8 +30,18 @@
     <link rel="apple-touch-startup-image" media="(device-width: 834px) and (device-height: 1194px) and (-webkit-device-pixel-ratio: 2) and (orientation: portrait)" href="/assets/logos/splash/splash-ipad-pro-11.png" />
     <link rel="apple-touch-startup-image" media="(device-width: 820px) and (device-height: 1180px) and (-webkit-device-pixel-ratio: 2) and (orientation: portrait)" href="/assets/logos/splash/splash-ipad-10.9.png" />
     <link rel="apple-touch-startup-image" media="(device-width: 744px) and (device-height: 1133px) and (-webkit-device-pixel-ratio: 2) and (orientation: portrait)" href="/assets/logos/splash/splash-ipad-mini.png" />
+    <script>
+      /* The start animation is for the first visit and for a return after a long time. A visit within the last
+         data-boot-quiet-minutes (set on <body>) never shows it. It also waits 1.2 s, so a quick start never shows it. */
+      try {
+        var seen = Number(localStorage.getItem("pstream_boot_seen") || 0);
+        var quiet = Number(document.documentElement.getAttribute("data-boot-quiet-minutes") || 360) * 60000;
+        if (seen && Date.now() - seen < quiet) document.documentElement.classList.add("boot-skip");
+      } catch (e) {}
+    </script>
     <style>
-      #boot{position:fixed;inset:0;width:100%;height:100vh;height:100dvh;z-index:2147483000;background:#0b0b0c;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:22px;opacity:0;animation:bootin .25s ease .4s forwards}#boot.done{animation:bootout .2s ease forwards}@keyframes bootin{to{opacity:1}}@keyframes bootout{from{opacity:1}to{opacity:0}}
+      html.boot-skip #boot{display:none}
+      #boot{position:fixed;inset:0;width:100%;height:100vh;height:100dvh;z-index:2147483000;background:#0b0b0c;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:22px;opacity:0;animation:bootin .25s ease 1.2s forwards}#boot.done{animation:bootout .2s ease forwards}@keyframes bootin{to{opacity:1}}@keyframes bootout{from{opacity:1}to{opacity:0}}
       #boot svg.mark{width:96px;height:96px}
       #boot .dots{display:flex;gap:10px;height:10px}
       #boot .dots i{display:block;width:10px;height:10px;background:#2f6bff;opacity:0;animation:bootdot 1.2s infinite}

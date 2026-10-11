@@ -1,9 +1,11 @@
 //! Sign in, sign up and password reset pages, laid out like the Netflix ones: a black page with a colored glow for sign in, a
 //! white page with steps for sign up, floating label fields, a full width action button and a footer of links.
+mod confirm;
 mod forgot;
 mod login;
 mod signup;
 
+pub use confirm::ConfirmPage;
 pub use forgot::ForgotPage;
 pub use login::LoginPage;
 pub use signup::SignupPage;

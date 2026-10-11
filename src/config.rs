@@ -72,6 +72,8 @@ pub mod routes {
     pub const DISCLAIMER: &str = "/disclaimer";
     pub const HELP_CONTACT: &str = "/help/contact";
     pub const WATCH: &str = "/watch";
+    /// Where the links in our emails land (the branded templates point here, not at supabase.co).
+    pub const AUTH_CONFIRM: &str = "/auth/confirm";
 }
 
 /// Where the cookie pop-up sits from the `sm` width up (a foldable or a tablet). Set STREAMS_COOKIE_BANNER to top, bottom,

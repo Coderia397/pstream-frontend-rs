@@ -103,6 +103,11 @@ async fn post(path: &str, body: &Value, token: Option<&str>) -> Result<(u16, Val
     Ok((status, serde_json::from_str(&text).unwrap_or(Value::Null)))
 }
 
+/// The address emails send people back to, encoded for use in a query.
+fn confirm_address() -> String {
+    js_sys::encode_uri_component(&format!("{}{}", crate::config::SITE_URL, crate::config::routes::AUTH_CONFIRM)).as_string().unwrap_or_default()
+}
+
 fn save(session: &Session, remember: bool) {
     // the other storage must not keep an older copy
     if let Some(other) = storage(!remember) {
@@ -134,7 +139,7 @@ pub async fn sign_in(email: &str, password: &str, remember: bool) -> Result<Sess
 
 pub async fn sign_up(email: &str, password: &str, first: &str, last: &str) -> Result<SignUp, AuthError> {
     let data = json!({ "first_name": first.trim(), "last_name": last.trim(), "full_name": format!("{} {}", first.trim(), last.trim()).trim() });
-    let (status, body) = post("/auth/v1/signup", &json!({ "email": email.trim(), "password": password, "data": data }), None).await?;
+    let (status, body) = post(&format!("/auth/v1/signup?redirect_to={}", confirm_address()), &json!({ "email": email.trim(), "password": password, "data": data }), None).await?;
     if status == 200 {
         return Ok(match session_from(&body) {
             Some(session) => {
@@ -149,7 +154,7 @@ pub async fn sign_up(email: &str, password: &str, first: &str, last: &str) -> Re
 
 /// Asks for a reset link. The answer is the same whether or not the address has an account.
 pub async fn recover(email: &str) -> Result<(), AuthError> {
-    let (status, body) = post("/auth/v1/recover", &json!({ "email": email.trim() }), None).await?;
+    let (status, body) = post(&format!("/auth/v1/recover?redirect_to={}", confirm_address()), &json!({ "email": email.trim() }), None).await?;
     if status == 200 || status == 400 && classify(status, &body) == AuthError::Invalid { Ok(()) } else { Err(classify(status, &body)) }
 }
 
@@ -323,6 +328,42 @@ pub async fn sessions() -> Result<Vec<DeviceSession>, AuthError> {
 /// Signs one other browser out (`revoke_my_session`), after a recent password check.
 pub async fn revoke_session(id: &str) -> Result<(), AuthError> {
     rpc("revoke_my_session", &json!({ "p_id": id })).await.map(|_| ())
+}
+
+/// Completes a link from one of our emails: the address carries the token hash and the kind (signup, magiclink, recovery,
+/// email_change, invite). The sign in it creates is saved and kept.
+pub async fn confirm_token(kind: &str, token_hash: &str) -> Result<Session, AuthError> {
+    let (status, body) = post("/auth/v1/verify", &json!({ "type": kind, "token_hash": token_hash }), None).await?;
+    if status == 200 {
+        let session = session_from(&body).ok_or_else(|| AuthError::Other("unexpected answer".into()))?;
+        save(&session, true);
+        return Ok(session);
+    }
+    Err(classify(status, &body))
+}
+
+/// Links from the default Supabase email come back with the sign in in the address after the #: access_token, refresh_token,
+/// expires_in and type. Reads them, asks who the user is, and saves the session. None when there is nothing to read.
+pub async fn session_from_fragment(fragment: &str) -> Option<Result<(Session, String), AuthError>> {
+    let pairs: Vec<(String, String)> = fragment.trim_start_matches('#').split('&').filter_map(|kv| kv.split_once('=')).map(|(k, v)| (k.to_string(), js_sys::decode_uri_component(v).ok().and_then(|s| s.as_string()).unwrap_or_else(|| v.to_string()))).collect();
+    let get = |key: &str| pairs.iter().find(|(k, _)| k == key).map(|(_, v)| v.clone());
+    let access = get("access_token")?;
+    let kind = get("type").unwrap_or_default();
+    let result = async {
+        let resp = Request::get(&url("/auth/v1/user")).header("apikey", crate::config::SUPABASE_KEY).header("Authorization", &format!("Bearer {access}")).send().await.map_err(|_| AuthError::Network)?;
+        let status = resp.status();
+        let text = resp.text().await.unwrap_or_default();
+        let user: Value = serde_json::from_str(&text).unwrap_or(Value::Null);
+        if status != 200 {
+            return Err(classify(status, &user));
+        }
+        let expires_in = get("expires_in").and_then(|v| v.parse::<u64>().ok()).unwrap_or(3600);
+        let value = json!({ "access_token": access, "refresh_token": get("refresh_token").unwrap_or_default(), "expires_in": expires_in, "user": user });
+        let session = session_from(&value).ok_or_else(|| AuthError::Other("unexpected answer".into()))?;
+        save(&session, true);
+        Ok((session, kind))
+    };
+    Some(result.await)
 }
 
 /// Saves one of the account switches (`test_participation` or `profile_transfer`) through `set_account_switch`.

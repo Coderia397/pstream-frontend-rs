@@ -83,6 +83,7 @@ pub fn App() -> impl IntoView {
                 <Route path=path!("/login") view=crate::pages::auth::LoginPage />
                 <Route path=path!("/signup") view=crate::pages::auth::SignupPage />
                 <Route path=path!("/forgot") view=crate::pages::auth::ForgotPage />
+                <Route path=path!("/auth/confirm") view=crate::pages::auth::ConfirmPage />
                 <Route path=path!("/welcome") view=|| view! { <leptos_router::components::Redirect path="/" /> } />
                 <Route path=path!("/privacy") view=|| view! { <crate::pages::help::LegalPage doc="privacy" /> } />
                 <Route path=path!("/terms") view=|| view! { <crate::pages::help::LegalPage doc="terms" /> } />

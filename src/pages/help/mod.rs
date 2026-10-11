@@ -54,6 +54,10 @@ pub fn set_page_title(page: &str) {
     shell::set_title(page);
 }
 
+pub fn set_page_description(text: &str) {
+    shell::set_description(text);
+}
+
 pub fn encode(s: &str) -> String {
     js_sys::encode_uri_component(s).as_string().unwrap_or_default()
 }

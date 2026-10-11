@@ -79,6 +79,7 @@ fn article_view(a: &'static Article) -> impl IntoView {
     let toc = markup::headings(&parsed);
     let body = markup::blocks(parsed);
     set_title(&title);
+    super::shell::set_description(&art(a.slug, "summary"));
     recent::remember_viewed(a.slug);
     view! {
         <div class="grid gap-10 lg:grid-cols-[minmax(0,1fr)_320px]">

@@ -18,7 +18,8 @@ const COLORS = {
 };
 const NAME = 'Streams';
 const SITE = 'https://streams.watch';
-const SUPPORT = 'support@streams.watch';
+const SUPPORT = 'help@streams.watch'; // one mailbox for everything
+const HELP_SITE = 'https://help.streams.watch';
 
 const fontPath = process.argv[2];
 if (!fontPath) { console.error('usage: node scripts/make_brand_kit.mjs "<font.ttf>"'); process.exit(1); }
@@ -262,21 +263,31 @@ pngFixed(canvas(1200, 320, wordAt(I, 600, 160, 700), P), 1200, 320, path.join(E,
 put(path.join(E, 'bimi-logo.svg'), `<?xml version="1.0" encoding="UTF-8"?>\n<svg version="1.2" baseProfile="tiny-ps" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"><title>${NAME}</title><rect width="512" height="512" fill="${P}"/><svg x="108" y="108" width="296" height="296" viewBox="${vb(mark)}"><path fill="${I}" d="${mark.d}"/></svg></svg>\n`);
 
 const base = ({ preheader, heading, body, button, link, note }) => `<!doctype html>
-<html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><meta name="color-scheme" content="light dark"><meta name="supported-color-schemes" content="light dark"><title>${NAME}</title></head>
-<body style="margin:0;padding:0;background:${L};">
-<div style="display:none;max-height:0;overflow:hidden;opacity:0;color:transparent;">${preheader}</div>
-<table role="presentation" width="100%" cellpadding="0" cellspacing="0" style="background:${L};"><tr><td align="center" style="padding:32px 16px;">
-<table role="presentation" width="560" cellpadding="0" cellspacing="0" style="width:100%;max-width:560px;background:#ffffff;border-radius:14px;overflow:hidden;">
+<html lang="en" xmlns:v="urn:schemas-microsoft-com:vml" xmlns:o="urn:schemas-microsoft-com:office:office"><head><meta charset="utf-8"><meta http-equiv="X-UA-Compatible" content="IE=edge"><meta name="viewport" content="width=device-width,initial-scale=1"><meta name="color-scheme" content="light dark"><meta name="supported-color-schemes" content="light dark"><title>${NAME}</title>
+<!--[if mso]><xml><o:OfficeDocumentSettings><o:PixelsPerInch>96</o:PixelsPerInch></o:OfficeDocumentSettings></xml><![endif]-->
+<style>
+  :root{color-scheme:light dark;supported-color-schemes:light dark}
+  @media (prefers-color-scheme: dark){
+    .bg-page{background:#0b0b0c!important}.card{background:#16161a!important}.ink{color:#f3f1ec!important}.body{color:#d6d6da!important}
+    .muted{color:#a8a8ad!important}.rule{border-color:#2a2a2e!important}.muted a{color:#a8a8ad!important}
+  }
+  @media only screen and (max-width:600px){.pad{padding-left:22px!important;padding-right:22px!important}}
+</style></head>
+<body class="bg-page" style="margin:0;padding:0;background:${L};">
+<div style="display:none;max-height:0;overflow:hidden;opacity:0;color:transparent;">${preheader}&#8199;&#847;&#8199;&#847;&#8199;&#847;&#8199;&#847;</div>
+<table role="presentation" width="100%" cellpadding="0" cellspacing="0" class="bg-page" style="background:${L};"><tr><td align="center" style="padding:32px 16px;">
+<table role="presentation" width="560" cellpadding="0" cellspacing="0" class="card" style="width:100%;max-width:560px;background:#ffffff;border-radius:14px;overflow:hidden;">
 <tr><td align="center" style="background:${V};padding:30px 24px;"><a href="${SITE}"><img src="${SITE}/assets/email/logo-white@2x.png" width="150" alt="${NAME}" style="display:block;border:0;height:auto;"></a></td></tr>
-<tr><td style="padding:36px 36px 8px;font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,Helvetica,Arial,sans-serif;color:${V};">
-<h1 style="margin:0 0 14px;font-size:24px;line-height:1.25;font-weight:700;">${heading}</h1>
-<p style="margin:0 0 24px;font-size:16px;line-height:1.55;color:#3a3a3d;">${body}</p>
-${button ? `<table role="presentation" cellpadding="0" cellspacing="0"><tr><td style="background:${P};border-radius:8px;"><a href="${link}" style="display:inline-block;padding:14px 28px;font-size:16px;font-weight:600;color:#ffffff;text-decoration:none;">${button}</a></td></tr></table>
-<p style="margin:22px 0 0;font-size:13px;line-height:1.5;color:#6b6b70;">If the button does not work, copy this address into your browser:<br><a href="${link}" style="color:${P};word-break:break-all;">${link}</a></p>` : ''}
-${note ? `<p style="margin:22px 0 0;font-size:13px;line-height:1.5;color:#6b6b70;">${note}</p>` : ''}
+<tr><td class="pad ink" style="padding:36px 36px 8px;font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,Helvetica,Arial,sans-serif;color:${V};">
+<h1 class="ink" style="margin:0 0 14px;font-size:24px;line-height:1.25;font-weight:700;color:${V};">${heading}</h1>
+<p class="body" style="margin:0 0 24px;font-size:16px;line-height:1.55;color:#3a3a3d;">${body}</p>
+${button ? `<!--[if mso]><v:roundrect xmlns:v="urn:schemas-microsoft-com:vml" href="${link}" style="height:48px;v-text-anchor:middle;width:240px;" arcsize="17%" stroke="f" fillcolor="${P}"><w:anchorlock/><center style="color:#ffffff;font-family:Arial,sans-serif;font-size:16px;font-weight:bold;">${button}</center></v:roundrect><![endif]-->
+<!--[if !mso]><!--><table role="presentation" cellpadding="0" cellspacing="0"><tr><td style="background:${P};border-radius:8px;"><a href="${link}" style="display:inline-block;padding:14px 28px;font-size:16px;font-weight:600;color:#ffffff;text-decoration:none;">${button}</a></td></tr></table><!--<![endif]-->
+<p class="muted" style="margin:22px 0 0;font-size:13px;line-height:1.5;color:#6b6b70;">If the button does not work, copy this address into your browser:<br><a href="${link}" style="color:${P};word-break:break-all;">${link}</a></p>` : ''}
+${note ? `<p class="muted" style="margin:22px 0 0;font-size:13px;line-height:1.5;color:#6b6b70;">${note}</p>` : ''}
 </td></tr>
-<tr><td style="padding:28px 36px 34px;font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,Helvetica,Arial,sans-serif;font-size:12px;line-height:1.5;color:#8a8a8f;border-top:1px solid #ececec;margin-top:24px;">
-Sent by ${NAME}. Questions? Write to <a href="mailto:${SUPPORT}" style="color:#8a8a8f;">${SUPPORT}</a>.<br>You received this email because of an action on ${SITE.replace('https://', '')}.</td></tr>
+<tr><td class="pad muted rule" style="padding:28px 36px 34px;font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,Helvetica,Arial,sans-serif;font-size:12px;line-height:1.6;color:#8a8a8f;border-top:1px solid #ececec;">
+Sent by ${NAME}. Questions? Read the <a href="${HELP_SITE}" style="color:#8a8a8f;">Help Center</a> or write to <a href="mailto:${SUPPORT}" style="color:#8a8a8f;">${SUPPORT}</a>.<br>You received this email because of an action on ${SITE.replace('https://', '')}. We never ask for your password or payment details by email.</td></tr>
 </table></td></tr></table></body></html>
 `;
 const tpl = path.join(E, 'templates');

@@ -12,7 +12,10 @@ pub fn LegalPage(doc: &'static str) -> impl IntoView {
     let title = legal_text(&format!("legal-{doc}-title"));
     {
         let t = title.clone();
-        Effect::new(move |_| set_title(&t));
+        Effect::new(move |_| {
+            set_title(&t);
+            super::shell::set_description(&legal_text(&format!("legal-{doc}-1-body")).chars().take(160).collect::<String>());
+        });
     }
     let toc: Vec<(String, String)> = (1..=d.sections).map(|n| (format!("s-{n}"), legal_text(&format!("legal-{doc}-{n}-title")))).collect();
     let sections = (1..=d.sections)

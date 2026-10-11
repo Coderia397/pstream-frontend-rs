@@ -2,12 +2,34 @@ use super::tr;
 use leptos::prelude::*;
 use wasm_bindgen::JsCast;
 
-/// Sets the browser tab title to "<page> | <brand> Help Center".
+/// Sets the browser tab title to "<page> | <brand> Help Center" and points the canonical link and the sharing title at this page.
 pub fn set_title(page: &str) {
     let suffix = tr("help-ui-doc-title");
     let full = if page.is_empty() { suffix } else { format!("{page} | {suffix}") };
+    if let Some(window) = web_sys::window() {
+        if let Some(doc) = window.document() {
+            doc.set_title(&full);
+            let path = window.location().pathname().unwrap_or_default();
+            set_attr(&doc, "link[rel=canonical]", "href", &format!("{}{path}", crate::config::SITE_URL));
+            set_attr(&doc, "meta[property='og:url']", "content", &format!("{}{path}", crate::config::SITE_URL));
+            set_attr(&doc, "meta[property='og:title']", "content", &full);
+            set_attr(&doc, "meta[name='twitter:title']", "content", &full);
+        }
+    }
+}
+
+/// Sets the description that search results and link previews show for this page.
+pub fn set_description(text: &str) {
     if let Some(doc) = web_sys::window().and_then(|w| w.document()) {
-        doc.set_title(&full);
+        set_attr(&doc, "meta[name=description]", "content", text);
+        set_attr(&doc, "meta[property='og:description']", "content", text);
+        set_attr(&doc, "meta[name='twitter:description']", "content", text);
+    }
+}
+
+fn set_attr(doc: &web_sys::Document, selector: &str, name: &str, value: &str) {
+    if let Ok(Some(el)) = doc.query_selector(selector) {
+        let _ = el.set_attribute(name, value);
     }
 }
 

@@ -21,6 +21,8 @@ pub fn NavbarProfileMenu() -> impl IntoView {
     };
 
     let logout = move |_| {
+        crate::services::account::sign_out();
+        profile_store.is_authenticated.set(false);
         active_profile_id.set(None);
         if let Some(storage) = web_sys::window().and_then(|w| w.local_storage().ok().flatten()) {
             let _ = storage.remove_item(crate::keys::ACTIVE_PROFILE);
@@ -41,13 +43,36 @@ pub fn NavbarProfileMenu() -> impl IntoView {
     let nav_to_account = navigate.clone();
     let nav_to_help = navigate.clone();
 
+    // The menu opens and closes on click, and closes on a click elsewhere or Escape.
+    let root = NodeRef::<leptos::html::Div>::new();
+    window_event_listener(leptos::ev::click, move |ev| {
+        if !is_open.get_untracked() {
+            return;
+        }
+        use wasm_bindgen::JsCast;
+        let inside = ev.target().and_then(|t| t.dyn_into::<web_sys::Node>().ok()).zip(root.get_untracked()).is_some_and(|(n, r)| r.contains(Some(&n)));
+        if !inside {
+            set_is_open.set(false);
+        }
+    });
+    window_event_listener(leptos::ev::keydown, move |ev| {
+        if ev.key() == "Escape" {
+            set_is_open.set(false);
+        }
+    });
+
     view! {
-        <div 
-            class="relative flex items-center group/menu cursor-pointer select-none p-0.5 rounded-field hover:bg-mute/40"
-            on:mouseenter=move |_| set_is_open.set(true)
-            on:mouseleave=move |_| set_is_open.set(false)
+        <div
+            node_ref=root
+            class="relative flex items-center group/menu select-none"
         >
-            <div class="flex items-center">
+            <button
+                type="button"
+                aria-haspopup="menu"
+                aria-expanded=move || is_open.get().to_string()
+                on:click=move |_| set_is_open.update(|o| *o = !*o)
+                class="flex cursor-pointer items-center"
+            >
                 <div class="w-8 h-8 rounded-control overflow-hidden">
                     {move || {
                         let p = active_profile();
@@ -59,91 +84,84 @@ pub fn NavbarProfileMenu() -> impl IntoView {
                         }
                     }}
                 </div>
-                <i class="ph-fill ph-caret-down text-ink text-base mx-2 transition-transform duration-(--motion-base)"
+                <i class="ph-fill ph-caret-down text-ink-silver text-fine ms-3 me-1 transition-transform duration-(--motion-base)"
                    class=("rotate-180", move || is_open.get())></i>
-            </div>
+            </button>
 
-            // Dropdown menu (Task 104)
-            <div 
-                class=move || if is_open.get() {
-                    "absolute top-[120%] right-0 w-[220px] bg-void/95 border border-line rounded-control py-2 shadow-2xl transition-all duration-(--motion-base) origin-top-right z-50 divide-y divide-line opacity-100 scale-100 pointer-events-auto"
-                } else {
-                    "absolute top-[120%] right-0 w-[220px] bg-void/95 border border-line rounded-control py-2 shadow-2xl transition-all duration-(--motion-base) origin-top-right z-50 divide-y divide-line opacity-0 scale-95 pointer-events-none"
-                }
+            // Dropdown menu, laid out like the Netflix one: 250px wide, 52px rows, 32px avatars and icons, a line above Sign out
+            <div
+                role="menu"
+                class=move || format!(
+                    "absolute top-[calc(100%+8px)] right-0 w-[250px] origin-top-right rounded-modal bg-field py-1 shadow-popover transition-all duration-(--motion-base) z-50 {}",
+                    if is_open.get() { "opacity-100 scale-100 pointer-events-auto" } else { "opacity-0 scale-95 pointer-events-none" }
+                )
             >
-                <div class="flex flex-col gap-3 px-3 pb-3">
-                    // Other profiles list
-                    {move || other_profiles().into_iter().map(|p| {
-                        let id = p.id.clone();
-                        let name = p.name.clone();
-                        let is_kids = p.is_kids;
-                        let has_custom_avatar = p.avatar_url.is_some();
-                        let avatar = p.avatar_url.clone().unwrap_or_else(|| crate::brand::DEFAULT_AVATAR.to_string());
-                        
-                        view! {
-                            <div 
-                                class="flex items-center gap-3 hover:underline cursor-pointer group"
-                                on:click=move |_| switch_profile(id.clone())
-                            >
-                                <div class="w-8 h-8 rounded-control overflow-hidden shrink-0">
-                                    {if is_kids && !has_custom_avatar {
-                                        view! { <crate::components::profiles::kids_avatar::KidsAvatar size=32.0 /> }.into_any()
-                                    } else {
-                                        view! { <img src=avatar class="w-full h-full object-cover" alt=name.clone() /> }.into_any()
-                                    }}
-                                </div>
-                                <span class="text-ink text-sm font-medium group-hover:underline truncate">{name}</span>
-                            </div>
-                        }
-                    }).collect::<Vec<_>>()}
+                // Other profiles
+                {move || other_profiles().into_iter().map(|p| {
+                    let id = p.id.clone();
+                    let name = p.name.clone();
+                    let is_kids = p.is_kids;
+                    let has_custom_avatar = p.avatar_url.is_some();
+                    let avatar = p.avatar_url.clone().unwrap_or_else(|| crate::brand::DEFAULT_AVATAR.to_string());
+                    view! {
+                        <button
+                            type="button"
+                            role="menuitem"
+                            class="flex w-full cursor-pointer items-center gap-3 px-4 py-2.5 text-start hover:underline"
+                            on:click=move |_| switch_profile(id.clone())
+                        >
+                            <span class="h-8 w-8 shrink-0 overflow-hidden rounded-control">
+                                {if is_kids && !has_custom_avatar {
+                                    view! { <crate::components::profiles::kids_avatar::KidsAvatar size=32.0 /> }.into_any()
+                                } else {
+                                    view! { <img src=avatar class="h-full w-full object-cover" alt=name.clone() /> }.into_any()
+                                }}
+                            </span>
+                            <span class="truncate text-body-lg text-ink">{name}</span>
+                        </button>
+                    }
+                }).collect::<Vec<_>>()}
 
-                    // Manage Profiles button
-                    <div
-                        on:click=manage_profiles
-                        class="flex items-center gap-3 hover:underline cursor-pointer mt-1 text-ink/80 hover:text-ink"
-                    >
-                        <i class="ph-bold ph-pencil-simple text-gray-400 text-xl w-8 text-center"></i>
-                        <span class="text-sm font-medium">{crate::i18n::t("profile-manage")}</span>
-                    </div>
+                <button type="button" role="menuitem" on:click=manage_profiles class="flex w-full cursor-pointer items-center gap-3 px-4 py-2.5 text-start hover:underline">
+                    <i class="ph ph-pencil-simple flex h-8 w-8 shrink-0 items-center justify-center text-heading-lg text-ink-silver" aria-hidden="true"></i>
+                    <span class="text-body-lg text-ink">{crate::i18n::t("profile-manage")}</span>
+                </button>
 
-                    // Transfer Profile
-                    <div class="flex items-center gap-3 hover:underline cursor-pointer text-ink/80 hover:text-ink">
-                        <i class="ph-bold ph-user-focus text-gray-400 text-xl w-8 text-center"></i>
-                        <span class="text-sm font-medium">{crate::i18n::t("profile-transfer")}</span>
-                    </div>
+                <button type="button" role="menuitem" class="flex w-full cursor-pointer items-center gap-3 px-4 py-2.5 text-start hover:underline">
+                    <i class="ph ph-user-switch flex h-8 w-8 shrink-0 items-center justify-center text-heading-lg text-ink-silver" aria-hidden="true"></i>
+                    <span class="text-body-lg text-ink">{crate::i18n::t("profile-transfer")}</span>
+                </button>
 
-                    // Account
-                    <div
-                        on:click=move |_| {
-                            set_is_open.set(false);
-                            nav_to_account("/browse/my-list", Default::default());
-                        }
-                        class="flex items-center gap-3 hover:underline cursor-pointer text-ink/80 hover:text-ink"
-                    >
-                        <i class="ph-bold ph-user text-gray-400 text-xl w-8 text-center"></i>
-                        <span class="text-sm font-medium">{crate::i18n::t("help-ui-account")}</span>
-                    </div>
+                <button
+                    type="button"
+                    role="menuitem"
+                    on:click=move |_| {
+                        set_is_open.set(false);
+                        nav_to_account("/browse/my-list", Default::default());
+                    }
+                    class="flex w-full cursor-pointer items-center gap-3 px-4 py-2.5 text-start hover:underline"
+                >
+                    <i class="ph ph-user flex h-8 w-8 shrink-0 items-center justify-center text-heading-lg text-ink-silver" aria-hidden="true"></i>
+                    <span class="text-body-lg text-ink">{crate::i18n::t("help-ui-account")}</span>
+                </button>
 
-                    // Help Center
-                    <div
-                        on:click=move |_| {
-                            set_is_open.set(false);
-                            nav_to_help("/help", Default::default());
-                        }
-                        class="flex items-center gap-3 hover:underline cursor-pointer text-ink/80 hover:text-ink"
-                    >
-                        <i class="ph-bold ph-question text-gray-400 text-xl w-8 text-center"></i>
-                        <span class="text-sm font-medium">{crate::i18n::t("footer-help")}</span>
-                    </div>
-                </div>
-                
-                // Sign out button
-                <div class="pt-3 px-3 text-center">
-                    <button 
-                        on:click=logout
-                        class="text-ink text-sm font-bold hover:underline cursor-pointer"
-                    >
-                        crate::i18n::t_args("profile-sign-out", &[("brand", fluent_bundle::FluentValue::from(crate::brand::NAME))])
+                <button
+                    type="button"
+                    role="menuitem"
+                    on:click=move |_| {
+                        set_is_open.set(false);
+                        nav_to_help("/help", Default::default());
+                    }
+                    class="flex w-full cursor-pointer items-center gap-3 px-4 py-2.5 text-start hover:underline"
+                >
+                    <i class="ph ph-question flex h-8 w-8 shrink-0 items-center justify-center text-heading-lg text-ink-silver" aria-hidden="true"></i>
+                    <span class="text-body-lg text-ink">{crate::i18n::t("footer-help")}</span>
+                </button>
+
+                // Sign out
+                <div class="mt-1 border-t border-ink/15">
+                    <button type="button" role="menuitem" on:click=logout class="w-full cursor-pointer px-4 py-4 text-start text-body-lg text-ink hover:underline">
+                        {crate::i18n::t_args("profile-sign-out", &[("brand", fluent_bundle::FluentValue::from(crate::brand::NAME))])}
                     </button>
                 </div>
             </div>

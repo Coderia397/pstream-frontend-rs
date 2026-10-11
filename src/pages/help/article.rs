@@ -1,5 +1,6 @@
 use super::shell::{set_title, HelpShell};
-use super::{art, markup, mailto, tr, tr_with};
+use super::toc::Toc;
+use super::{art, mailto, markup, recent, tr, tr_with};
 use crate::data::help::{self, Article};
 use fluent_bundle::FluentValue;
 use leptos::prelude::*;
@@ -74,8 +75,11 @@ fn related(a: &'static Article) -> impl IntoView {
 
 fn article_view(a: &'static Article) -> impl IntoView {
     let title = art(a.slug, "title");
-    let body = markup::blocks(markup::parse(&art(a.slug, "body")));
+    let parsed = markup::parse(&art(a.slug, "body"));
+    let toc = markup::headings(&parsed);
+    let body = markup::blocks(parsed);
     set_title(&title);
+    recent::remember_viewed(a.slug);
     view! {
         <div class="grid gap-10 lg:grid-cols-[minmax(0,1fr)_320px]">
             <article class="min-w-0 max-w-[680px]">
@@ -83,7 +87,10 @@ fn article_view(a: &'static Article) -> impl IntoView {
                 {body}
                 <Feedback slug=a.slug />
             </article>
-            <div class="lg:pt-2">{related(a)}</div>
+            <div class="space-y-8 lg:sticky lg:top-6 lg:self-start lg:pt-2">
+                {(toc.len() >= 2).then(|| view! { <div class="hidden lg:block"><Toc items=toc title=tr("help-ui-on-this-page") /></div> })}
+                {related(a)}
+            </div>
         </div>
     }
 }

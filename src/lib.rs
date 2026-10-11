@@ -30,7 +30,6 @@ pub fn App() -> impl IntoView {
 
     // On help.<domain> the front door is the help center
     let on_help_host = web_sys::window().and_then(|w| w.location().hostname().ok()).map(|h| h.starts_with("help.")).unwrap_or(false);
-    let home = if on_help_host { "/help" } else { "/browse" }.to_string();
 
     let profile_store = crate::store::use_profile_store();
     let has_no_profile = move || profile_store.active_profile_id.get().is_none();
@@ -46,7 +45,18 @@ pub fn App() -> impl IntoView {
                 <Route path=path!("/browse/genre/:id") view=crate::pages::browse_grid::BrowseGridPage />
                 <Route path=path!("/watch/:id") view=crate::pages::player::PlayerPage />
                 <Route path=path!("/watch/:kind/:id") view=crate::pages::player::PlayerPage />
-                <Route path=path!("") view=move || view! { <leptos_router::components::Redirect path=home.clone() /> } />
+                <Route
+                    path=path!("")
+                    view=move || {
+                        if on_help_host {
+                            view! { <leptos_router::components::Redirect path="/help" /> }.into_any()
+                        } else if crate::services::account::is_returning() {
+                            view! { <leptos_router::components::Redirect path="/browse" /> }.into_any()
+                        } else {
+                            view! { <crate::pages::login::LandingPage /> }.into_any()
+                        }
+                    }
+                />
                 <Route path=path!("/help") view=crate::pages::help::HelpPage />
                 <Route path=path!("/help/search") view=crate::pages::help::ResultsPage />
                 <Route path=path!("/help/contact") view=crate::pages::help::ContactPage />
@@ -68,13 +78,17 @@ pub fn App() -> impl IntoView {
                 <Route path=path!("/clips") view=crate::pages::clips::ClipsPage />
                 <Route path=path!("/reads") view=crate::pages::reads::ReadsPage />
                 <Route path=path!("/settings") view=crate::pages::settings::SettingsPage />
-                <Route path=path!("/login") view=crate::pages::login::LoginPage />
-                <Route path=path!("/privacy") view=crate::pages::legal::PrivacyPage />
-                <Route path=path!("/terms") view=crate::pages::legal::TermsPage />
-                <Route path=path!("/cookies") view=crate::pages::legal::CookiePolicyPage />
-                <Route path=path!("/dmca") view=crate::pages::legal::DmcaPage />
-                <Route path=path!("/disclaimer") view=crate::pages::legal::DisclaimerPage />
-                <Route path=path!("/contact") view=crate::pages::legal::ContactPage />
+                <Route path=path!("/login") view=crate::pages::auth::LoginPage />
+                <Route path=path!("/signup") view=crate::pages::auth::SignupPage />
+                <Route path=path!("/forgot") view=crate::pages::auth::ForgotPage />
+                <Route path=path!("/welcome") view=|| view! { <leptos_router::components::Redirect path="/" /> } />
+                <Route path=path!("/privacy") view=|| view! { <crate::pages::help::LegalPage doc="privacy" /> } />
+                <Route path=path!("/terms") view=|| view! { <crate::pages::help::LegalPage doc="terms" /> } />
+                <Route path=path!("/cookies") view=|| view! { <crate::pages::help::LegalPage doc="cookie-policy" /> } />
+                <Route path=path!("/dmca") view=|| view! { <crate::pages::help::LegalPage doc="dmca" /> } />
+                <Route path=path!("/credits") view=|| view! { <crate::pages::help::LegalPage doc="credits" /> } />
+                <Route path=path!("/disclaimer") view=|| view! { <crate::pages::help::LegalPage doc="disclaimer" /> } />
+                <Route path=path!("/contact") view=|| view! { <leptos_router::components::Redirect path="/help/contact" /> } />
                 <Route path=path!("/notifications") view=crate::pages::notifications::NotificationsPage />
             </Routes>
             <crate::components::consent::CookieManager />

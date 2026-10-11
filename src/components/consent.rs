@@ -151,7 +151,15 @@ fn Center() -> impl IntoView {
 pub fn CookieManager() -> impl IntoView {
     let ui = use_ui();
     let location = use_location();
-    let on_player = move || location.pathname.get().starts_with("/watch");
+    // Show only after a short pause, on pages where it makes sense, and not over the Who's watching screen.
+    let profiles = crate::store::use_profile_store();
+    let (ready, set_ready) = signal(false);
+    if let Some(w) = web_sys::window() {
+        let on_ready = wasm_bindgen::closure::Closure::once_into_js(move || set_ready.set(true));
+        let _ = w.set_timeout_with_callback_and_timeout_and_arguments_0(wasm_bindgen::JsCast::unchecked_ref(&on_ready), crate::consent::SHOW_DELAY_MS);
+    }
+    let visible = move || ui.banner.get() && ready.get() && profiles.active_profile_id.get().is_some() && !crate::consent::suppressed_on(&location.pathname.get());
+    let lift = move || if crate::consent::has_bottom_bar(&location.pathname.get()) { "max-md:mb-(--bottom-nav-h)" } else { "" };
     // Where the banner sits is a setting (crate::config). Narrow screens always get a full width sheet at the bottom.
     let place = match cookie_banner_position() {
         BannerPosition::Top => "top-3 inset-x-3 mx-auto max-w-[1100px] max-md:inset-x-0 max-md:bottom-0 max-md:top-auto",
@@ -160,19 +168,20 @@ pub fn CookieManager() -> impl IntoView {
         BannerPosition::BottomEnd => "bottom-3 end-3 w-[min(440px,calc(100%-1.5rem))] max-md:inset-x-0 max-md:bottom-0 max-md:end-0 max-md:w-auto",
         BannerPosition::Center => "start-1/2 top-1/2 w-[min(560px,calc(100%-1.5rem))] -translate-x-1/2 -translate-y-1/2",
     };
+    let top_place = "top-16 inset-x-3 mx-auto max-w-[1100px]";
     view! {
-        <Show when=move || ui.banner.get() && !on_player()>
-            <div role="region" aria-label=move || tr("cookie-center-title") class=format!("fixed z-(--z-modal) border border-paper-line bg-paper-soft px-5 py-4 font-sans text-paper-ink shadow-popover md:px-7 {place}")>
+        <Show when=visible>
+            <div role="region" aria-label=move || tr("cookie-center-title") class=move || format!("fixed z-(--z-modal) border border-paper-line bg-paper-soft px-4 py-3 font-sans text-paper-ink shadow-popover sm:px-5 sm:py-4 md:px-7 {} {}", if crate::consent::prefers_top(&location.pathname.get()) { top_place } else { place }, lift())>
                 <div class="flex items-start gap-4">
                     <div class="flex-1">
-                        <p class="text-body-sm leading-6">{markup::text(&tr("cookie-banner"))}</p>
-                        <div class="mt-4 flex flex-wrap gap-3">
-                            <button on:click=move |_| ui.open_center() class="rounded-control border border-paper-edge bg-paper px-5 py-2.5 text-body-sm font-bold hover:bg-paper-soft">{tr("cookie-learn")}</button>
-                            <button on:click=move |_| ui.decide(false) class="rounded-control bg-brand px-5 py-2.5 text-body-sm font-bold text-ink hover:bg-brand-hover">{tr("cookie-reject")}</button>
-                            <button on:click=move |_| ui.decide(true) class="rounded-control bg-brand px-5 py-2.5 text-body-sm font-bold text-ink hover:bg-brand-hover">{tr("cookie-accept")}</button>
+                        <p class="text-fine leading-5 sm:text-body-sm sm:leading-6">{markup::text(&tr("cookie-banner"))}</p>
+                        <div class="mt-3 grid grid-cols-3 gap-2 sm:mt-4 sm:flex sm:flex-wrap sm:gap-3">
+                            <button on:click=move |_| ui.open_center() class="rounded-control border border-paper-edge bg-paper px-3 py-2 text-fine font-bold hover:bg-paper-soft sm:px-5 sm:py-2.5 sm:text-body-sm">{tr("cookie-learn")}</button>
+                            <button on:click=move |_| ui.decide(false) class="rounded-control bg-brand px-3 py-2 text-fine font-bold text-ink hover:bg-brand-hover sm:px-5 sm:py-2.5 sm:text-body-sm">{tr("cookie-reject")}</button>
+                            <button on:click=move |_| ui.decide(true) class="rounded-control bg-brand px-3 py-2 text-fine font-bold text-ink hover:bg-brand-hover sm:px-5 sm:py-2.5 sm:text-body-sm">{tr("cookie-accept")}</button>
                         </div>
                     </div>
-                    <button aria-label=move || tr("cookie-dismiss") on:click=move |_| ui.banner.set(false) class="text-title text-paper-ink">
+                    <button aria-label=move || tr("cookie-dismiss") on:click=move |_| ui.dismiss() class="text-title text-paper-ink">
                         <i class="ph-bold ph-x"></i>
                     </button>
                 </div>

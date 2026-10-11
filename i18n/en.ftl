@@ -44,8 +44,6 @@ info-modal-episodes-no-image = No Image
 info-modal-error-loading-details = Error loading details.
 language-browse-by-language = Browse by Language
 language-select-your-preferences = Select your preferences
-login-continue-with-google = Continue with Google
-login-display-name = Display name
 login-email-address = Email address
 login-get-started = Get Started
 login-password = Password
@@ -147,9 +145,6 @@ help-ui-suggestions = Suggested articles
 help-ui-contact-title = Contact us
 help-ui-contact-prompt = Tell us more and we’ll find the best solution for you
 help-ui-describe = Describe your issue
-help-ui-email-title = Still need help?
-help-ui-email-body = Write to us and say what you were doing, the title, your device and browser, and any message you saw. The button adds your browser details to the message.
-help-ui-email-button = Write to us
 help-ui-mail-subject = Help request
 help-ui-mail-intro = Describe the problem here:
 help-ui-mail-details = Details added automatically
@@ -866,8 +861,6 @@ cookie-save = Save settings
 cookie-always-active = Always Active
 cookie-details = Cookies Details
 cookie-hide-details = Hide details
-cookie-toggle-on = On
-cookie-toggle-off = Off
 cookie-nav-general = General Description
 cookie-nav-essential = Essential Cookies
 cookie-nav-personal = Personalisation Cookies
@@ -888,6 +881,7 @@ cookie-essential =
 cookie-essential-list =
     - <b>pstream_profiles</b> and <b>pstream_active_profile</b>: your profiles and the one in use.
     - <b>pstream_watch_progress_v1</b>: how far you watched each title.
+    - <b>pstream_session</b>: your sign in, when you have one.
     - <b>pstream_language</b>: the language you chose.
     - <b>pstream_consent</b>: the choices you make in this window.
     - <b>pstream_help_votes</b>: your answers to “Was this article helpful?”
@@ -1015,7 +1009,6 @@ footer-disclaimer = Disclaimer
 footer-cookie-policy = Cookie Policy
 footer-contact = Contact Us
 footer-help = Help Center
-footer-logo-credit = Logo set in Baby Blocks by
 footer-cookie-preferences = Cookie Preferences
 notif-new = New
 notif-today = Today
@@ -1131,9 +1124,6 @@ settings-diagnostic = Diagnostic Reporting
 settings-diagnostic-hint = Help improve client performance.
 settings-enabled = Enabled
 settings-default-name = User
-login-create-account = Create Account
-login-choose-icon = Choose your profile icon
-login-sign-up = Sign Up
 login-more-reasons = More reasons to join
 login-reason-screens-title = Watch on any screen
 login-reason-hd-title = Stream in HD & 4K
@@ -1172,10 +1162,6 @@ profile-choose-icon = Choose an Icon
 profile-choose-icon-hint = Select an avatar for your profile
 common-done = Done
 profile-pin-invalid = PIN must be exactly 4 numeric digits.
-login-welcome-back = Welcome back to { $brand }.
-login-join-today = Join { $brand } today.
-login-no-account = Don't have an account?
-login-have-account = Already have an account?
 login-reason-screens-body = Stream on your smart TV, laptop, tablet or phone. Wherever you are, { $brand } comes with you.
 player-pause = Pause (Space)
 player-play = Play (Space)
@@ -1387,5 +1373,317 @@ legal-disclaimer-4-title = 4. Link Availability
 legal-disclaimer-4-body = Embedded links indexed by { $brand } point to resources on third-party servers. We cannot guarantee the ongoing availability, quality, or completeness of any linked content, and links may break or become unavailable without notice.
 legal-disclaimer-5-title = 5. Accuracy of Information
 legal-disclaimer-5-body = Metadata displayed on { $brand } (including titles, descriptions, ratings, and images) is sourced from third-party data providers such as TMDB. We do not guarantee the accuracy or completeness of this metadata.
-legal-contact-title = Contact Us
-legal-contact-intro = If you have any questions or concerns about our services, please contact us at:
+help-ui-kind-policy = Policy
+help-ui-filter-all = All
+help-ui-filter-articles = Help articles
+help-ui-filter-policies = Policies
+help-ui-recent = Recent searches
+help-ui-clear = Clear
+help-ui-did-you-mean = Did you mean “{ $query }”?
+help-ui-viewed = Recently viewed
+help-ui-on-this-page = On this page
+help-ui-other-policies = Other policies
+help-ui-section-link = Link to this section
+help-ui-policy-questions = Questions about this policy?
+help-topic-legal = Legal and Policies
+help-group-policies = Policies
+help-art-fake-sites-title = How to spot fake { $brand } sites and messages
+help-art-fake-sites-summary = The official addresses, what we never ask for, and what to do about a copy.
+help-art-fake-sites-keywords = fake scam phishing copycat imitation official address safe download password payment email
+help-art-fake-sites-body =
+    Copies of popular sites appear all the time. These are the only addresses that belong to { $brand }:
+
+    - <b>streams.watch</b>, the app
+    - <b>help.streams.watch</b>, this Help Center
+    - <b>@streams.watch</b> email addresses, such as <a=mailto:{ $help_email }>{ $help_email }</a>
+
+    ## What we never ask for
+    - A card number, bank details or any payment. { $brand } is free. See <a=/help/article/free-to-use>Is { $brand } free?</a>
+    - Your password by email, chat or a form outside the sign in page.
+    - A download, an extension, a codec or an update to watch.
+
+    ## If you find a copy
+    1. Close the page and do not enter any details.
+    2. If you did enter a password, change it on the site it belongs to.
+    3. Send the address to <a=mailto:{ $help_email }>{ $help_email }</a> so we can report it.
+
+help-art-security-report-title = Report a security problem
+help-art-security-report-summary = How to tell us about a weakness safely.
+help-art-security-report-keywords = security vulnerability bug bounty responsible disclosure exploit hack report weakness
+help-art-security-report-body =
+    If you found a way to read someone else's data, bypass a profile PIN, or break the site, please tell us before you tell anyone else.
+
+    1. Write to <a=mailto:{ $help_email }>{ $help_email }</a> with the subject <b>Security</b>.
+    2. Describe what you found, the steps to repeat it and the page or address it affects.
+    3. Do not access other people's data and do not test with automated floods of requests.
+
+    We read every report. The same details are in the machine readable file at <a=/.well-known/security.txt>/.well-known/security.txt</a>.
+
+help-art-translate-title = Help translate { $brand }
+help-art-translate-summary = Interface text lives in plain files, one per language, and anyone can improve one.
+help-art-translate-keywords = translate translation localisation localization language contribute ftl fluent grammar gender plural
+help-art-translate-body =
+    All interface text is stored in one plain text file per language. A translation does not need programming.
+
+    ## What to know
+    - Messages look like <b>key = text</b>. Only change the text after the equals sign.
+    - Words in curly brackets, such as <b>{ "{ $brand }" }</b>, are filled in by the app. Keep them as they are, and move them where your language needs them.
+    - Some messages have forms for one and for many (<b>1 season</b>, <b>2 seasons</b>). Languages with more than two forms can add all of them.
+    - Where your language changes a word for gender or case, write the form that fits the sentence.
+
+    ## How to send one
+    Write to <a=mailto:{ $contribute_email }>{ $contribute_email }</a> with the language and either the file or a link to your change. Native speakers who review each other's work are the best check we have.
+
+help-art-cookies-explained-title = Cookies and local storage explained
+help-art-cookies-explained-summary = What your browser keeps for { $brand }, in plain words.
+help-art-cookies-explained-keywords = cookies local storage browser data tracking consent banner preferences session third party
+help-art-cookies-explained-body =
+    <b>Cookies</b> are small notes a website asks your browser to keep. <b>Local storage</b> is a similar place that only the site can read and that is not sent with every request.
+
+    { $brand } uses local storage for your profiles, PINs, viewing progress and language. Those stay on your device. Other websites that serve us pictures or video may set their own cookies, which we cannot control. See <a=/help/article/sources>Where titles come from</a>.
+
+    ## Your choices
+    - The first time you visit, a banner asks whether recommendations may use what you watch. You can change your mind at any time.
+    - Choosing <b>Reject</b> keeps everything that is needed to use the site and turns off personalisation.
+    - Your browser can block or delete cookies and site data as well. If it does, your profiles and progress are lost.
+
+    @@ cookies
+
+help-art-stuck-loading-title = The page stays on the logo or a blank screen
+help-art-stuck-loading-summary = What to try when { $brand } never finishes starting.
+help-art-stuck-loading-keywords = stuck loading logo blank white screen splash not starting webassembly wasm frozen startup
+help-art-stuck-loading-body =
+    While { $brand } starts you see the cube logo with a row of moving dots. It should take a few seconds. { $brand } runs as a WebAssembly app, so a browser or setting that switches WebAssembly off will leave you on that screen.
+
+    1. Reload with <b>Ctrl + Shift + R</b> (<b>Cmd + Shift + R</b> on a Mac) to fetch the newest version.
+    2. Open the page in a private window. If it works there, an extension is in the way. See <a=/help/article/extensions-blockers>Extensions that block the player</a>.
+    3. Update your browser. See <a=/help/article/supported-browsers>Supported browsers</a>.
+    4. Turn off any mode that limits web features, such as a lockdown or strict security mode, for this site.
+    5. Clear this site's data. See <a=/help/article/clear-data>How to clear your saved data</a>.
+
+    @@ refresh
+
+help-art-slow-pages-title = Pages load slowly
+help-art-slow-pages-summary = Make browsing faster on a slow connection or an older device.
+help-art-slow-pages-keywords = slow lag performance speed loading memory old phone laggy scrolling previews
+help-art-slow-pages-body =
+    The first visit downloads the app, about 3 MB. After that, most of the wait is pictures and previews.
+
+    - Turn off <b>Autoplay previews</b> in <b>Settings</b>, under <b>Playback Settings</b>. Trailers that start by themselves use data and memory.
+    - Close tabs and other apps that use the network or a lot of memory.
+    - Use a current browser. Older ones run the app more slowly.
+    - On mobile data, switch to Wi-Fi if you can.
+
+    @@ diagnostics
+
+help-art-vpn-network-title = VPNs, school and work networks
+help-art-vpn-network-summary = Why some networks block titles or pictures, and what to try.
+help-art-vpn-network-keywords = vpn proxy school work network firewall dns filter blocked safedns restricted wifi
+help-art-vpn-network-body =
+    { $brand } loads details and pictures from a public film catalog and streams from independent sources. Some networks block those sites, and some sources refuse certain addresses.
+
+    - <b>VPN or proxy.</b> Some sources do not answer VPN addresses. Turn it off, or choose another country.
+    - <b>School, work or public Wi-Fi.</b> Filters often block streaming or the catalog. Try your phone's mobile data.
+    - <b>DNS filters.</b> A filtering DNS service can block the catalog and leave rows or pictures empty. Use a different DNS or turn the filter off for this site.
+
+    The device check shows which service your network cannot reach.
+
+    @@ diagnostics
+
+help-art-is-down-title = Is { $brand } down?
+help-art-is-down-summary = Check which parts are working from your device.
+help-art-is-down-keywords = down outage status not working offline unavailable server maintenance error site
+help-art-is-down-body =
+    { $brand } has three parts that can fail separately:
+
+    - <b>The app</b>, which you are looking at now.
+    - <b>The film and series catalog</b>, which gives details and pictures.
+    - <b>The stream sources</b>, which provide the video.
+
+    Run the check to see which of them answers from your device. If the catalog or the sources do not answer for everyone, wait a few minutes and try again. If one is unreachable only for you, see <a=/help/article/vpn-network>VPNs, school and work networks</a>.
+
+    @@ diagnostics
+
+help-art-no-sound-title = There is no sound
+help-art-no-sound-summary = Fix a title that plays without audio.
+help-art-no-sound-keywords = no sound audio muted silent volume speaker bluetooth headphones autoplay
+help-art-no-sound-body =
+    1. Press <b>M</b>, or select the speaker button in the player, to unmute. Browsers often start a video muted when it begins by itself, see <a=/help/article/autoplay-blocked>Video starts muted</a>.
+    2. Press the <b>Up arrow</b> to raise the volume, and check the volume of your device.
+    3. Check that the browser tab is not muted. Right click the tab to see.
+    4. Open <b>Audio & Subtitles</b> and choose another audio track if there is one.
+    5. If you use Bluetooth, disconnect and reconnect your headphones.
+
+help-art-autoplay-blocked-title = Video starts muted or does not start by itself
+help-art-autoplay-blocked-summary = Why browsers stop sound from starting alone, and how { $brand } handles it.
+help-art-autoplay-blocked-keywords = autoplay blocked muted start policy browser sound auto play previews trailer
+help-art-autoplay-blocked-body =
+    Browsers do not let a page start video with sound until you have clicked or tapped on it. { $brand } first tries to start with sound. If the browser refuses, it starts muted and shows the muted speaker, and you can unmute with <b>M</b> or the speaker button.
+
+    - To make trailers and previews stop starting by themselves, turn off <b>Autoplay previews</b> in <b>Settings</b>, under <b>Playback Settings</b>.
+    - If a title never starts, see <a=/help/article/wont-play>A title will not play</a>.
+
+help-art-clips-title = Using Clips
+help-art-clips-summary = Scroll short previews and add what you like to your list.
+help-art-clips-keywords = clips shorts previews scroll vertical trailers swipe mute info my list
+help-art-clips-body =
+    <b>Clips</b> shows short previews one after another, in the bottom bar on a phone.
+
+    1. Scroll or swipe to the next clip.
+    2. Select the speaker button to turn sound on or off. Clips start muted.
+    3. Select <b>My List</b> to save the title, <b>Play</b> to watch it, or <b>Info</b> to read about it.
+
+help-art-genres-title = Browse by genre
+help-art-genres-summary = Narrow Films and Series to the kind of title you want.
+help-art-genres-keywords = genres categories comedy drama horror action filter browse films series sub menu
+help-art-genres-body =
+    1. Open <b>Films</b> or <b>Series</b> in the top bar.
+    2. Select <b>Genres</b> next to the page title.
+    3. Choose a genre. The page then shows only that genre, with rows made for it.
+
+    To go back to everything, open <b>Films</b> or <b>Series</b> again. On a phone the genre list opens as a sheet from the bottom.
+
+help-art-top-10-title = What are the Top 10 rows?
+help-art-top-10-summary = A row of the ten titles people watch most right now.
+help-art-top-10-keywords = top 10 top ten popular trending ranking numbers row most watched
+help-art-top-10-body =
+    A <b>Top 10</b> row shows the ten most watched titles of the moment, with a large number on each. It follows current popularity in the catalog and changes from day to day. It is the same for everyone and is not based on your profile.
+
+help-art-episodes-title = Seasons and episodes
+help-art-episodes-summary = Pick a season and an episode from the details window or the player.
+help-art-episodes-keywords = seasons episodes series list next episode drawer binge selector tv shows
+help-art-episodes-body =
+    ## Before you press play
+    Open a series and select <b>Episodes</b>. Use the season menu to change season, then select an episode.
+
+    ## While you watch
+    - Select <b>Episodes</b> in the player controls to open the list without leaving.
+    - Select <b>Next Episode</b>, or let it start by itself. See <a=/help/article/skip-intro-next>Skip Intro and Next Episode</a>.
+
+help-art-share-title = How to share a title
+help-art-share-summary = Send a link to a title to a friend.
+help-art-share-keywords = share link whatsapp messages instagram snapchat copy send friend
+help-art-share-body =
+    1. Open a title's details and select <b>Share</b>.
+    2. Choose <b>WhatsApp</b> or <b>Messages</b> to send the link, or <b>Copy link</b> to paste it anywhere.
+    3. For Instagram and Snapchat the link is copied and you paste it into the app.
+
+    The link opens the title's page on { $brand }. The person who opens it does not need to be signed in.
+
+help-art-title-details-title = The title details window
+help-art-title-details-summary = What you can read and do before you press play.
+help-art-title-details-keywords = more info details modal cast genres synopsis similar more like this trailer rating match
+help-art-title-details-body =
+    Select a title card, or <b>More Info</b>, to open its details.
+
+    - <b>Play</b> or <b>Resume</b> starts the title where you left it.
+    - <b>My List</b> saves it, and the thumb rates it.
+    - The summary, cast, genres and a few words that describe the mood help you decide.
+    - For series, <b>Episodes</b> lists the seasons.
+    - <b>More Like This</b> shows titles that are close in meaning, which is a good way to find something new.
+
+help-art-accessibility-title = Accessibility on { $brand }
+help-art-accessibility-summary = Subtitles, keyboard control and display settings that help.
+help-art-accessibility-keywords = accessibility screen reader keyboard subtitles captions size contrast zoom reduced motion disability
+help-art-accessibility-body =
+    - <b>Subtitles.</b> Choose the language, size, color and background in <b>Settings</b>. See <a=/help/article/subtitles>How to use subtitles, captions, or choose the audio language</a>.
+    - <b>Keyboard.</b> Use <b>Tab</b> to move between controls and <b>Esc</b> to close windows. The player has its own keys, see <a=/help/article/shortcuts>Keyboard shortcuts</a>.
+    - <b>Text size.</b> Zoom your browser with <b>Ctrl</b> and <b>+</b> (<b>Cmd</b> and <b>+</b> on a Mac). The layout adjusts.
+    - <b>Motion.</b> If your device asks for reduced motion, the animated logo stays still.
+
+    If something is hard to use, tell us on the <a=/help/article/report-bug>Report a problem</a> page. We take these reports seriously.
+
+help-art-profile-icons-title = How to choose a profile icon
+help-art-profile-icons-summary = Pick an avatar for a profile.
+help-art-profile-icons-keywords = profile icon avatar picture image change choose character
+help-art-profile-icons-body =
+    1. Open <b>Manage Profiles</b> and select the profile.
+    2. Select the icon.
+    3. Pick one from the groups, then choose <b>Save</b>.
+
+    A Kids profile uses the striped Kids icon unless you choose another. You can also reach the icon picker from <b>Settings</b>.
+auth-questions = Questions?
+auth-email = Email address
+auth-password = Password
+auth-continue = Continue
+auth-next = Next
+auth-show-password = Show password
+auth-hide-password = Hide password
+auth-login-title = Enter your info to sign in
+auth-login-subtitle = Or get started with a new account.
+auth-new-here = New to { $brand }?
+auth-signup-link = Sign up now
+auth-welcome-back = Welcome back
+auth-not-you = Not you?
+auth-signing-in = Signing in…
+auth-remember = Remember me
+auth-forgot-link = Forgot your password?
+auth-get-help = Get help
+auth-resend = Send the confirmation email again
+auth-resent = We sent a new confirmation email to { $email }.
+auth-error-email = Enter a valid email address.
+auth-error-invalid = Incorrect email or password. Try again or reset your password.
+auth-error-unconfirmed = Confirm your email address first. We sent a link to { $email }.
+auth-error-rate = Too many attempts. Wait a minute and try again.
+auth-error-network = We could not reach the server. Check your connection and try again.
+auth-error-generic = Something went wrong. Please try again.
+auth-error-name = Enter your first and last name.
+auth-error-password-short = Use a password of at least { $min } characters.
+auth-error-could-not-create = We could not create an account with those details. If you already have an account, sign in or reset your password.
+auth-forgot-title = Reset your password
+auth-forgot-body = Enter your email address and we will send you a link to choose a new password.
+auth-send-link = Send the link
+auth-back-to-sign-in = Back to sign in
+auth-forgot-sent-title = Check your email
+auth-forgot-sent = If there is an account for { $email }, a link to reset the password is on its way.
+auth-step = Step { $n } of { $total }
+auth-signup-title = Create your account
+auth-welcome-title = Welcome to { $brand }
+auth-tick-free = Free. No payment details, no commitments.
+auth-tick-devices = Your list and progress follow you to every device.
+auth-tick-profiles = Profiles for everyone at home, with a Kids profile ready to go.
+auth-details-title = Create your account
+auth-details-body = Tell us who you are. Your first name becomes the name of your main profile.
+auth-first-name = First name
+auth-last-name = Last name
+auth-password-rule = At least { $min } characters.
+auth-create = Create account
+auth-creating = Creating your account…
+auth-terms = By creating an account you agree to the <a=/terms>Terms of Service</a> and the <a=/privacy>Privacy Policy</a>.
+auth-check-title = Check your email
+auth-check-body = We sent a link to { $email }. Open it to confirm your address, then sign in.
+auth-check-spam = Not there? Look in your spam folder.
+landing-promo-title = { $brand } is free.
+landing-promo-body = No subscription, no card, no commitments.
+landing-learn-more = Learn more
+landing-faq = Frequently Asked Questions
+landing-read-more = Read the full article
+legal-credits-title = Licenses and credits
+legal-credits-updated = Last updated: October 2026
+legal-credits-1-title = 1. Fonts
+legal-credits-1-body = The text in the logo is set in a pixel font. All other interface text is set in Inter.
+legal-credits-1-b1 = <strong>Baby Blocks</strong> by Colorful Typhoon, used for the { $brand } logo under its linkware terms for personal, non-commercial use. See <a href="http://www.geocities.jp/kitschlabo/" target="_blank" rel="noopener">Colorful Typhoon</a>.
+legal-credits-1-b2 = <strong>Inter</strong> by Rasmus Andersson, used under the SIL Open Font License 1.1.
+legal-credits-2-title = 2. Icons
+legal-credits-2-body = Interface icons come from Phosphor Icons, used under the MIT License.
+legal-credits-3-title = 3. Film and series information
+legal-credits-3-body = This product uses the TMDB API but is not endorsed or certified by TMDB. Titles, summaries, posters, ratings and cast information come from <a href="https://www.themoviedb.org" target="_blank" rel="noopener">The Movie Database</a>.
+legal-credits-4-title = 4. Software
+legal-credits-4-body = { $brand } is built with open source software, each used under its own license:
+legal-credits-4-b1 = <strong>Rust</strong> and <strong>Leptos</strong> for the application (MIT and Apache 2.0).
+legal-credits-4-b2 = <strong>Tailwind CSS</strong> for styling (MIT).
+legal-credits-4-b3 = <strong>hls.js</strong> for adaptive video playback (Apache 2.0).
+legal-credits-4-b4 = <strong>Project Fluent</strong> for translated interface text (Apache 2.0 and MIT).
+legal-credits-5-title = 5. Trademarks and artwork
+legal-credits-5-body = Names, logos, posters and artwork of films, series and services shown on { $brand } belong to their owners. They are shown to identify the title and do not mean that the owner supports { $brand }.
+legal-credits-6-title = 6. Contact
+legal-credits-6-body = If you believe something here is credited wrongly or needs to change, please write to { $support_email }.
+help-ui-legal-credits = Licenses and credits
+landing-browse-guest = Or just look around without an account
+landing-slide-everyone = A place for everyone
+landing-slide-place = Pick up exactly where you left off.
+auth-login-app-title = Ready to watch?
+auth-login-app-subtitle = Enter your info to sign in or get started with a new account.
+auth-forgot-email = Forgot email address?
+auth-learn-signin = Learn more about signing in
+auth-back = Back

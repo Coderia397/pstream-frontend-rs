@@ -49,6 +49,9 @@ web-sys = { version = "0.3", features = [
     "AbortSignal",
     "RequestMode",
     "Performance",
+    "History",
+    "MediaQueryList",
+    "Element",
     "Screen",
 ] }
 

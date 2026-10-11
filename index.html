@@ -20,13 +20,13 @@
     <link rel="apple-touch-startup-image" media="(device-width: 820px) and (device-height: 1180px) and (-webkit-device-pixel-ratio: 2) and (orientation: portrait)" href="/assets/logos/splash/splash-ipad-10.9.png" />
     <link rel="apple-touch-startup-image" media="(device-width: 744px) and (device-height: 1133px) and (-webkit-device-pixel-ratio: 2) and (orientation: portrait)" href="/assets/logos/splash/splash-ipad-mini.png" />
     <style>
-      #boot{position:fixed;inset:0;z-index:2147483000;background:#0b0b0c;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:22px}
+      #boot{position:fixed;inset:0;width:100%;height:100vh;height:100dvh;z-index:2147483000;background:#0b0b0c;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:22px;opacity:0;animation:bootin .25s ease .4s forwards}#boot.done{animation:bootout .2s ease forwards}@keyframes bootin{to{opacity:1}}@keyframes bootout{from{opacity:1}to{opacity:0}}
       #boot svg.mark{width:96px;height:96px}
       #boot .dots{display:flex;gap:10px;height:10px}
       #boot .dots i{display:block;width:10px;height:10px;background:#2f6bff;opacity:0;animation:bootdot 1.2s infinite}
       #boot .dots i:nth-child(2){animation-delay:.15s}#boot .dots i:nth-child(3){animation-delay:.3s}#boot .dots i:nth-child(4){animation-delay:.45s}#boot .dots i:nth-child(5){animation-delay:.6s}
       @keyframes bootdot{0%{opacity:0;transform:translateX(-10px)}30%{opacity:1}70%{opacity:1}100%{opacity:0;transform:translateX(10px)}}
-      @media (prefers-reduced-motion:reduce){#boot .dots i{animation:none;opacity:.6}}
+      @media (prefers-reduced-motion:reduce){#boot .dots i{animation:none;opacity:.6}#boot,#boot.done{animation-duration:.01s}}
     </style>
     <link rel="icon" href="/assets/logos/favicon.svg" type="image/svg+xml" />
     <link rel="icon" href="/assets/logos/favicon.ico" sizes="48x48" />
@@ -73,11 +73,6 @@
     <link data-trunk rel="copy-file" href="public/opensearch.xml" />
     <link data-trunk rel="copy-file" href="public/_headers" />
     <link data-trunk rel="copy-file" href="public/security.txt" data-target-path=".well-known" />
-    <script>
-        if (window.location.pathname === "/" || window.location.pathname === "/index.html") {
-            window.location.replace("/browse");
-        }
-    </script>
   </head>
   <body class="bg-black text-white">
     <div id="boot" aria-hidden="true"><svg class="mark" viewBox="64 -768 1024 1024" xmlns="http://www.w3.org/2000/svg"><path fill="#ffffff" shape-rendering="crispEdges" d="M576 64L384 64L384 0L320 0L320-64L384-64L384 0L576 0L576-128L640-128L640 0L576 0L576 64M896 256L64 256L64-576L128-576L128-640L192-640L192-704L256-704L256-768L1088-768L1088 64L1024 64L1024 128L960 128L960 192L896 192L896 256M128 192L832 192L832-512L128-512L128 192M384-192L320-192L320-320L384-320L384-384L576-384L576-320L640-320L640-256L576-256L576-320L384-320L384-192M960 128L960 64L1024 64L1024-640L960-640L960-576L896-576L896 128L960 128M896-576L896-640L960-640L960-704L256-704L256-640L192-640L192-576L896-576M576-128L384-128L384-192L576-192"/></svg><div class="dots"><i></i><i></i><i></i><i></i><i></i></div></div>

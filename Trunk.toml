@@ -10,7 +10,7 @@ ignore = [
 [[hooks]]
 stage = "pre_build"
 command = "sh"
-command_arguments = ["-c", "sh scripts/apply_brand.sh && sh scripts/build_interop.sh && ./tailwindcss -i ./style/input.css -o ./style/output.css"]
+command_arguments = ["-c", "python3 scripts/make_sitemap.py || true; sh scripts/apply_brand.sh && sh scripts/build_interop.sh && ./tailwindcss -i ./style/input.css -o ./style/output.css"]
 
 [serve]
 port = 8080

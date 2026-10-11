@@ -5,15 +5,19 @@ mod actions;
 mod article;
 mod contact;
 mod home;
+mod legal;
 pub(crate) mod markup;
+mod recent;
 mod results;
 mod search;
 mod shell;
+mod toc;
 mod widgets;
 
 pub use article::ArticlePage;
 pub use contact::ContactPage;
 pub use home::HelpPage;
+pub use legal::LegalPage;
 pub use results::ResultsPage;
 
 use fluent_bundle::FluentValue;
@@ -23,7 +27,7 @@ pub fn tr(key: &str) -> String {
     tr_with(key, &[])
 }
 
-pub(crate) fn tr_with(key: &str, extra: &[(&str, FluentValue)]) -> String {
+pub fn tr_with(key: &str, extra: &[(&str, FluentValue)]) -> String {
     let mut args: Vec<(&str, FluentValue)> = vec![
         ("brand", FluentValue::from(crate::brand::NAME)),
         ("help_email", FluentValue::from(crate::brand::HELP_EMAIL)),
@@ -33,12 +37,24 @@ pub(crate) fn tr_with(key: &str, extra: &[(&str, FluentValue)]) -> String {
     crate::i18n::t_args(key, &args)
 }
 
+/// A policy text with the product name and the one contact address filled in.
+pub(crate) fn legal_text(key: &str) -> String {
+    crate::i18n::t_args(
+        key,
+        &[("brand", FluentValue::from(crate::brand::NAME)), ("support_email", FluentValue::from(crate::brand::HELP_EMAIL)), ("help_email", FluentValue::from(crate::brand::HELP_EMAIL))],
+    )
+}
+
 /// One part (title, summary, keywords, body) of an article.
-pub(crate) fn art(slug: &str, part: &str) -> String {
+pub fn art(slug: &str, part: &str) -> String {
     tr(&crate::data::help::key(slug, part))
 }
 
-pub(crate) fn encode(s: &str) -> String {
+pub fn set_page_title(page: &str) {
+    shell::set_title(page);
+}
+
+pub fn encode(s: &str) -> String {
     js_sys::encode_uri_component(s).as_string().unwrap_or_default()
 }
 

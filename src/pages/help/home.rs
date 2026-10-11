@@ -1,8 +1,8 @@
 use super::shell::{set_title, HelpShell, Look};
 use super::widgets::{SearchBox, Variant};
 use super::actions::{self, TOOLS};
-use super::{art, tr};
-use crate::data::help::{Group, Topic, POPULAR, QUICK_LINKS, TOPICS};
+use super::{art, legal_text, recent, tr};
+use crate::data::help::{legal_doc, Group, Topic, DOC_PREFIX, POPULAR, QUICK_LINKS, TOPICS};
 use leptos::prelude::*;
 
 /// Id of the group that is open. Only one group is open at a time on the whole page, like the Netflix help home.
@@ -29,11 +29,18 @@ fn GroupView(group: &'static Group) -> impl IntoView {
                     {group
                         .articles
                         .iter()
-                        .map(|slug| view! {
-                            <li class="flex gap-3">
-                                <i class="ph-bold ph-article mt-0.5 text-body-md text-paper-ink" aria-hidden="true"></i>
-                                <a href=format!("/help/article/{slug}") class="text-body-md text-paper-ink underline underline-offset-2 hover:text-brand-active">{move || art(slug, "title")}</a>
-                            </li>
+                        .map(|slug| {
+                            // entries starting with doc: are policies, which open their own page
+                            let (href, icon, label) = match slug.strip_prefix(DOC_PREFIX).and_then(legal_doc) {
+                                Some(d) => (d.path.to_string(), "ph-scales", legal_text(&format!("legal-{}-title", d.id))),
+                                None => (format!("/help/article/{slug}"), "ph-article", art(slug, "title")),
+                            };
+                            view! {
+                                <li class="flex gap-3">
+                                    <i class=format!("ph-bold {icon} mt-0.5 text-body-md text-paper-ink") aria-hidden="true"></i>
+                                    <a href=href class="text-body-md text-paper-ink underline underline-offset-2 hover:text-brand-active">{label}</a>
+                                </li>
+                            }
                         })
                         .collect_view()}
                 </ul>
@@ -53,6 +60,25 @@ fn TopicCard(topic: &'static Topic) -> impl IntoView {
             {topic.groups.iter().map(|g| view! { <GroupView group=g /> }).collect_view()}
         </section>
     }
+}
+
+/// The articles this browser opened last, so a visitor can get back to them.
+#[component]
+fn RecentlyViewed() -> impl IntoView {
+    let slugs: Vec<String> = recent::viewed().into_iter().filter(|s| crate::data::help::article(s).is_some()).collect();
+    (!slugs.is_empty()).then(|| view! {
+        <section aria-labelledby="viewed-title">
+            <h2 id="viewed-title" class="mb-4 text-title font-semibold text-paper-ink">{tr("help-ui-viewed")}</h2>
+            <ul class="space-y-3">
+                {slugs.into_iter().map(|slug| view! {
+                    <li class="flex gap-3">
+                        <i class="ph-bold ph-clock-counter-clockwise mt-0.5 text-body-md text-paper-mute" aria-hidden="true"></i>
+                        <a href=format!("/help/article/{slug}") class="text-body-md text-paper-ink underline underline-offset-2 hover:text-brand-active">{art(&slug, "title")}</a>
+                    </li>
+                }).collect_view()}
+            </ul>
+        </section>
+    })
 }
 
 /// Icon for each self-service tool card.
@@ -211,6 +237,7 @@ pub fn HelpPage() -> impl IntoView {
                 </div>
 
                 <div id="topics" class="mx-auto flex w-full max-w-[670px] scroll-mt-20 flex-col gap-5 px-6 pb-14 pt-10">
+                    <RecentlyViewed />
                     <ForYou />
                     {TOPICS.iter().map(|t| view! { <TopicCard topic=t /> }).collect_view()}
                     <div class="pt-6">

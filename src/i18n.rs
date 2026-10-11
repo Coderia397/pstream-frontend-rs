@@ -5,7 +5,9 @@ use std::cell::RefCell;
 
 const EN: &str = include_str!("../i18n/en.ftl");
 /// Languages with a file in i18n/. Add the code here when a new .ftl file is added.
-pub const AVAILABLE: &[&str] = &["en", "ar", "de", "es", "fr", "hi", "it", "ja", "ko", "nl", "pl", "pt", "ru", "sv", "tr", "zh"];
+/// Languages shown in the pickers and used for the browser default. A language is added here once its file is translated, so
+/// nobody lands on a page that is mostly English. Files exist for: ar, de, es, fr, hi, it, ja, ko, nl, pl, pt, ru, sv, tr, zh.
+pub const AVAILABLE: &[&str] = &["en"];
 
 /// Name of a language in that language, for pickers.
 pub fn native_name(code: &str) -> String {
@@ -174,6 +176,11 @@ pub fn language_name(code: &str) -> String {
         Some(first) => first.to_uppercase().chain(chars).collect(),
         None => name,
     }
+}
+
+/// True when a message with this key exists in the active language or in English.
+pub fn has(key: &str) -> bool {
+    STATE.with(|s| s.borrow().as_ref().is_some_and(|st| st.active.as_ref().is_some_and(|b| b.has_message(key)) || st.en.has_message(key)))
 }
 
 /// Like `t`, but returns `fallback` when no message has this key, so names that come from data can be translated one at a time.

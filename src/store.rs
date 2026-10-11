@@ -85,7 +85,7 @@ pub fn use_ui_store() -> UIStore {
     use_context::<UIStore>().expect("UIStore not provided")
 }
 
-#[derive(Clone)]
+#[derive(Clone, Copy)]
 pub struct ProfileStore {
     pub active_profile_id: RwSignal<Option<String>>,
     pub profiles: RwSignal<Vec<crate::models::profile::Profile>>,
@@ -131,6 +131,29 @@ pub fn provide_profile_store() {
         is_authenticated: RwSignal::new(true),
         is_kids_mode: RwSignal::new(false),
     });
+}
+
+/// Called after sign in or sign up. The first time on this browser it creates the main profile, named after the first name, and
+/// the Kids profile; then it shows the Who's watching screen. Profiles are kept in this browser until the account stores them.
+pub fn start_account(store: ProfileStore, first_name: &str) {
+    let storage = web_sys::window().and_then(|w| w.local_storage().ok().flatten());
+    let has_saved = storage.as_ref().and_then(|s| s.get_item(crate::keys::PROFILES).ok().flatten()).is_some();
+    if !has_saved {
+        let name = if first_name.trim().is_empty() { "Me".to_string() } else { first_name.trim().chars().take(30).collect() };
+        let profiles = vec![
+            crate::models::profile::Profile { id: "main".to_string(), name, avatar_url: Some(crate::brand::DEFAULT_AVATAR.to_string()), is_kids: false, is_default: Some(true), pin: None, sort_order: 0 },
+            crate::models::profile::Profile { id: "kids".to_string(), name: "Kids".to_string(), avatar_url: None, is_kids: true, is_default: Some(false), pin: None, sort_order: 1 },
+        ];
+        if let (Some(s), Ok(json)) = (storage.as_ref(), serde_json::to_string(&profiles)) {
+            let _ = s.set_item(crate::keys::PROFILES, &json);
+        }
+        store.profiles.set(profiles);
+    }
+    if let Some(s) = storage {
+        let _ = s.remove_item(crate::keys::ACTIVE_PROFILE);
+    }
+    store.is_authenticated.set(true);
+    store.active_profile_id.set(None);
 }
 
 pub fn use_profile_store() -> ProfileStore {

@@ -15,6 +15,31 @@ pub struct Group {
     pub articles: &'static [&'static str],
 }
 
+/// A policy shown inside the help center. Its text is in i18n/en.ftl as legal-<id>-title, legal-<id>-updated,
+/// legal-<id>-<n>-title, legal-<id>-<n>-body and optional legal-<id>-<n>-b<k> bullets.
+pub struct LegalDoc {
+    pub id: &'static str,
+    pub path: &'static str,
+    /// Number of numbered sections.
+    pub sections: u8,
+}
+
+pub const LEGAL: &[LegalDoc] = &[
+    LegalDoc { id: "privacy", path: "/privacy", sections: 8 },
+    LegalDoc { id: "terms", path: "/terms", sections: 10 },
+    LegalDoc { id: "cookie-policy", path: "/cookies", sections: 1 },
+    LegalDoc { id: "dmca", path: "/dmca", sections: 6 },
+    LegalDoc { id: "disclaimer", path: "/disclaimer", sections: 5 },
+    LegalDoc { id: "credits", path: "/credits", sections: 6 },
+];
+
+pub fn legal_doc(id: &str) -> Option<&'static LegalDoc> {
+    LEGAL.iter().find(|d| d.id == id)
+}
+
+/// Group entries that start with this prefix are policies, not articles: "doc:privacy".
+pub const DOC_PREFIX: &str = "doc:";
+
 pub struct Article {
     pub slug: &'static str,
     /// Articles shown in the Related Articles card, in order.
@@ -40,8 +65,8 @@ pub const TOPICS: &[Topic] = &[
         icon: "ph-user",
         tone: "text-accent",
         groups: &[
-            Group { id: "profiles", articles: &["profiles-manage", "switch-profile", "profile-pin", "kids-profile"] },
-            Group { id: "account-data", articles: &["need-account", "sign-in", "saved-data", "clear-data", "privacy-data"] },
+            Group { id: "profiles", articles: &["profiles-manage", "switch-profile", "profile-pin", "kids-profile", "profile-icons"] },
+            Group { id: "account-data", articles: &["need-account", "sign-in", "saved-data", "clear-data", "privacy-data", "cookies-explained"] },
             Group { id: "paying", articles: &["free-to-use"] },
         ],
     },
@@ -50,9 +75,9 @@ pub const TOPICS: &[Topic] = &[
         icon: "ph-wrench",
         tone: "text-accent",
         groups: &[
-            Group { id: "playback-issues", articles: &["wont-play", "playback-unavailable", "black-screen", "buffering", "subtitles-missing"] },
-            Group { id: "device-issues", articles: &["supported-browsers", "fix-phone", "fix-tv", "extensions-blockers"] },
-            Group { id: "page-issues", articles: &["rows-wont-load", "list-missing", "forgot-pin", "page-not-found"] },
+            Group { id: "playback-issues", articles: &["wont-play", "playback-unavailable", "black-screen", "buffering", "subtitles-missing", "no-sound", "autoplay-blocked"] },
+            Group { id: "device-issues", articles: &["supported-browsers", "fix-phone", "fix-tv", "extensions-blockers", "vpn-network"] },
+            Group { id: "page-issues", articles: &["rows-wont-load", "list-missing", "forgot-pin", "page-not-found", "stuck-loading", "slow-pages", "is-down"] },
         ],
     },
     Topic {
@@ -60,9 +85,9 @@ pub const TOPICS: &[Topic] = &[
         icon: "ph-devices",
         tone: "text-brand",
         groups: &[
-            Group { id: "features", articles: &["language", "subtitles", "playback-speed", "shortcuts", "skip-intro-next"] },
-            Group { id: "library", articles: &["my-list", "continue-watching", "viewing-history", "notifications"] },
-            Group { id: "finding", articles: &["search-browse", "browse-language", "new-popular", "recommendations", "trailers-clips"] },
+            Group { id: "features", articles: &["language", "subtitles", "playback-speed", "shortcuts", "skip-intro-next", "accessibility", "episodes"] },
+            Group { id: "library", articles: &["my-list", "continue-watching", "viewing-history", "notifications", "share"] },
+            Group { id: "finding", articles: &["search-browse", "browse-language", "new-popular", "recommendations", "trailers-clips", "genres", "top-10", "title-details", "clips"] },
         ],
     },
     Topic {
@@ -70,10 +95,16 @@ pub const TOPICS: &[Topic] = &[
         icon: "ph-rocket-launch",
         tone: "text-brand-deep",
         groups: &[
-            Group { id: "about", articles: &["what-is", "getting-started", "sources", "contribute"] },
+            Group { id: "about", articles: &["what-is", "getting-started", "sources", "contribute", "translate"] },
             Group { id: "setup", articles: &["install-app", "phone-tablet", "watch-on-tv"] },
-            Group { id: "reporting", articles: &["copyright", "title-feedback", "report-bug"] },
+            Group { id: "reporting", articles: &["copyright", "title-feedback", "report-bug", "fake-sites", "security-report"] },
         ],
+    },
+    Topic {
+        id: "legal",
+        icon: "ph-scales",
+        tone: "text-brand",
+        groups: &[Group { id: "policies", articles: &["doc:privacy", "doc:terms", "doc:cookie-policy", "doc:dmca", "doc:disclaimer", "doc:credits"] }],
     },
 ];
 
@@ -125,6 +156,24 @@ pub const ARTICLES: &[Article] = &[
     Article { slug: "copyright", related: &["sources", "what-is", "privacy-data", "title-feedback", "report-bug"] },
     Article { slug: "title-feedback", related: &["report-bug", "contribute", "wont-play", "recommendations", "copyright"] },
     Article { slug: "report-bug", related: &["title-feedback", "contribute", "rows-wont-load", "wont-play", "page-not-found"] },
+    Article { slug: "fake-sites", related: &["free-to-use", "copyright", "security-report", "privacy-data", "what-is"] },
+    Article { slug: "security-report", related: &["fake-sites", "report-bug", "privacy-data", "profile-pin", "contribute"] },
+    Article { slug: "translate", related: &["contribute", "language", "report-bug", "what-is", "getting-started"] },
+    Article { slug: "cookies-explained", related: &["privacy-data", "saved-data", "clear-data", "recommendations", "sources"] },
+    Article { slug: "stuck-loading", related: &["supported-browsers", "extensions-blockers", "clear-data", "rows-wont-load", "page-not-found"] },
+    Article { slug: "slow-pages", related: &["buffering", "supported-browsers", "vpn-network", "trailers-clips", "wont-play"] },
+    Article { slug: "vpn-network", related: &["is-down", "wont-play", "playback-unavailable", "rows-wont-load", "sources"] },
+    Article { slug: "is-down", related: &["vpn-network", "wont-play", "rows-wont-load", "sources", "report-bug"] },
+    Article { slug: "no-sound", related: &["autoplay-blocked", "shortcuts", "subtitles", "wont-play", "black-screen"] },
+    Article { slug: "autoplay-blocked", related: &["no-sound", "trailers-clips", "wont-play", "shortcuts", "playback-speed"] },
+    Article { slug: "clips", related: &["trailers-clips", "my-list", "new-popular", "search-browse", "recommendations"] },
+    Article { slug: "genres", related: &["search-browse", "browse-language", "new-popular", "recommendations", "top-10"] },
+    Article { slug: "top-10", related: &["new-popular", "genres", "recommendations", "search-browse", "trailers-clips"] },
+    Article { slug: "episodes", related: &["skip-intro-next", "continue-watching", "shortcuts", "title-details", "playback-speed"] },
+    Article { slug: "share", related: &["title-details", "my-list", "search-browse", "title-feedback", "new-popular"] },
+    Article { slug: "title-details", related: &["my-list", "episodes", "share", "recommendations", "trailers-clips"] },
+    Article { slug: "accessibility", related: &["subtitles", "shortcuts", "language", "playback-speed", "report-bug"] },
+    Article { slug: "profile-icons", related: &["profiles-manage", "kids-profile", "switch-profile", "profile-pin", "saved-data"] },
 ];
 
 pub fn article(slug: &str) -> Option<&'static Article> {
@@ -149,9 +198,21 @@ mod tests {
         for t in TOPICS {
             for g in t.groups {
                 for s in g.articles {
+                    if let Some(id) = s.strip_prefix(DOC_PREFIX) {
+                        assert!(legal_doc(id).is_some(), "{s} is listed but is not a policy");
+                        continue;
+                    }
                     assert!(article(s).is_some(), "{s} is listed but has no Article entry");
                 }
             }
+        }
+        let ftl = include_str!("../../i18n/en.ftl");
+        for d in LEGAL {
+            assert!(ftl.contains(&format!("\nlegal-{}-title =", d.id)), "policy {} has no title", d.id);
+            for n in 1..=d.sections {
+                assert!(ftl.contains(&format!("\nlegal-{}-{}-title =", d.id, n)), "policy {} lacks section {}", d.id, n);
+            }
+            assert!(!ftl.contains(&format!("\nlegal-{}-{}-title =", d.id, d.sections + 1)), "policy {} has more sections than declared", d.id);
         }
         for a in ARTICLES {
             assert!(locate(a.slug).is_some(), "{} is not listed under any group", a.slug);

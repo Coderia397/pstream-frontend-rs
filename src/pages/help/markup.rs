@@ -228,11 +228,26 @@ fn note_view(n: &str) -> AnyView {
     .into_any()
 }
 
+/// Headings of the top level, in order, as (anchor id, text), for a table of contents.
+pub fn headings(list: &[Block]) -> Vec<(String, String)> {
+    list.iter().filter_map(|b| if let Block::H(t) = b { Some(t.clone()) } else { None }).enumerate().map(|(i, t)| (format!("h-{}", i + 1), t)).collect()
+}
+
 pub fn blocks(list: Vec<Block>) -> Vec<AnyView> {
+    render_blocks(list, true)
+}
+
+/// `anchors` gives the top level headings the ids that `headings` lists; headings inside a collapsible section have none.
+fn render_blocks(list: Vec<Block>, anchors: bool) -> Vec<AnyView> {
+    let mut heading = 0;
     list.into_iter()
         .map(|b| match b {
             Block::P(t) => view! { <p class="mb-5 text-body-md leading-7 text-paper-ink">{render_inline(inline(&t))}</p> }.into_any(),
-            Block::H(t) => view! { <h2 class="mb-3 mt-8 text-title font-bold text-paper-ink">{t}</h2> }.into_any(),
+            Block::H(t) => {
+                heading += 1;
+                let id = anchors.then(|| format!("h-{heading}"));
+                view! { <h2 id=id class="mb-3 mt-8 scroll-mt-6 text-title font-bold text-paper-ink">{t}</h2> }.into_any()
+            }
             Block::Steps(v) => view! {
                 <ol class="mb-5 list-decimal space-y-3 pl-6 text-body-md leading-7 text-paper-ink marker:font-semibold">
                     {v.into_iter().map(|s| view! { <li>{render_inline(inline(&s))}</li> }).collect_view()}
@@ -253,7 +268,7 @@ pub fn blocks(list: Vec<Block>) -> Vec<AnyView> {
                         <i class="ph-bold ph-caret-right text-paper-mute transition-transform duration-(--motion-base) group-open:rotate-90"></i>
                         {title}
                     </summary>
-                    <div class="px-4 pt-2">{blocks(inner)}</div>
+                    <div class="px-4 pt-2">{render_blocks(inner, false)}</div>
                 </details>
             }
             .into_any(),

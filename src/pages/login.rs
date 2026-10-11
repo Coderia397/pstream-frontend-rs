@@ -277,8 +277,8 @@ fn FeatureCard(id: &'static str, #[prop(into)] title: String, #[prop(into)] desc
     view! {
         <div class="bg-gradient-to-br from-[#1A2144] from-40% to-[#30181b] rounded-sheet p-5 md:p-7 flex flex-col justify-between min-h-[175px] md:min-h-[210px] relative overflow-hidden group transition-all duration-(--motion-slow)">
             <div>
-                <h3 class="text-ink text-xl md:text-2xl font-black mb-2.5 leading-tight">{title}</h3>
-                <p class="text-zinc-400 text-sm md:text-base font-normal leading-relaxed">{desc}</p>
+                <h3 class="mb-2.5 text-title font-bold leading-tight text-ink">{title}</h3>
+                <p class="text-body-sm font-normal leading-relaxed text-ink-body">{desc}</p>
             </div>
             <div class="mt-4 self-end opacity-90 transition-transform duration-(--motion-slow) group-hover:scale-110">
                 <FeatureIcon id=id />
@@ -289,353 +289,249 @@ fn FeatureCard(id: &'static str, #[prop(into)] title: String, #[prop(into)] desc
 
 // ── AuthModal ─────────────────────────────────────────────────────────────────
 
-const SIGNUP_AVATARS: &[&str] = &[
-    "https://lh3.googleusercontent.com/d/198aosLkzeCyglhaKy5vPMeWktSJhFui_",
-    "https://lh3.googleusercontent.com/d/1i3UrprAcfhKSNaSwFE1FXwTD6NXOfjaV",
-    "https://lh3.googleusercontent.com/d/1ZYyoo8gUHeugXIa5ciA6pJySe3OPdkNB",
-    "https://lh3.googleusercontent.com/d/1wW1ox6Uc1g368rqZ5CAphVSH84KW711n",
-    "https://lh3.googleusercontent.com/d/1CCWWd9W3ODzxAn1lJ6TsKRYyAxdLxeq8",
-];
 
 #[component]
-fn AuthModal(
-    initial_view: &'static str, // "signin" | "signup"
-    initial_email: ReadSignal<String>,
-    on_close: impl Fn() + 'static + Copy,
-    on_set_view: impl Fn(&'static str) + 'static + Copy,
-) -> impl IntoView {
-    let navigate = use_navigate();
-
-    let (view_mode, set_view_mode) = signal(initial_view);
-    let (email, set_email) = signal(initial_email.get_untracked());
-    let (password, set_password) = signal(String::new());
-    let (display_name, set_display_name) = signal(String::new());
-    let (selected_avatar, set_selected_avatar) = signal(SIGNUP_AVATARS[0]);
-    let (show_password, set_show_password) = signal(false);
-    let (loading, set_loading) = signal(false);
-    let (error, set_error) = signal(String::new());
-    let (success_msg, set_success_msg) = signal(String::new());
-
-    // Sync email when parent updates it
-    Effect::new(move |_| {
-        set_email.set(initial_email.get());
-    });
-
-    let navigate2 = navigate.clone();
-
-    let handle_submit = move |e: leptos::ev::SubmitEvent| {
-        e.prevent_default();
-        // Demo bypass — navigate to /browse
-        navigate("/browse", Default::default());
-        let _ = set_loading;
-        let _ = set_success_msg;
-    };
-
-    view! {
-        <div
-            class="fixed inset-0 z-(--z-modal) flex items-center justify-center p-4 bg-void/70 backdrop-blur-sm"
-            on:click=move |_| on_close()
-        >
-            <div
-                class="w-full max-w-[410px] bg-void/90 border border-ink/10 rounded-modal p-8 shadow-2xl animate-fadeIn"
-                on:click=move |e| e.stop_propagation()
-            >
-                <h2 class="text-2xl font-bold text-ink mb-1">
-                    {move || if view_mode.get() == "signin" { crate::i18n::t("login-sign-in") } else { crate::i18n::t("login-create-account") }}
-                </h2>
-                <p class="text-ink/40 text-sm mb-6">
-                    {move || if view_mode.get() == "signin" { crate::i18n::t_args("login-welcome-back", &[("brand", fluent_bundle::FluentValue::from(crate::brand::NAME))]) } else { crate::i18n::t_args("login-join-today", &[("brand", fluent_bundle::FluentValue::from(crate::brand::NAME))]) }}
-                </p>
-
-                // Google
-                <button
-                    on:click=move |_| navigate2("/browse", Default::default())
-                    disabled=move || loading.get()
-                    class="btn-ink w-full h-12 mb-5 rounded-control flex items-center justify-center gap-3 duration-(--motion-fast) active:scale-95 disabled:opacity-60"
-                >
-                    <i class="ph-bold ph-google-logo text-title" />
-                    {crate::i18n::t("login-continue-with-google")}
-                </button>
-
-                <div class="flex items-center gap-3 mb-5">
-                    <div class="flex-1 h-px bg-ink/10" />
-                    <span class="text-ink/30 text-xs uppercase tracking-widest">"or"</span>
-                    <div class="flex-1 h-px bg-ink/10" />
-                </div>
-
-                {move || {
-                    let msg = success_msg.get();
-                    if msg.is_empty() {
-                        view! { <></> }.into_any()
-                    } else {
-                        view! {
-                            <div class="mb-4 p-3 bg-green-500/20 border border-green-500/30 rounded-control text-green-300 text-sm">{msg}</div>
-                        }.into_any()
-                    }
-                }}
-
-                <form on:submit=handle_submit class="space-y-3">
-                    // Display name — signup only
-                    {move || if view_mode.get() == "signup" {
-                        view! {
-                            <div class="relative">
-                                <i class="ph-bold ph-user absolute left-4 top-1/2 -translate-y-1/2 text-ink/30 pointer-events-none text-body-md" />
-                                <input
-                                    type="text"
-                                    required
-                                    prop:value=display_name
-                                    on:input=move |e| set_display_name.set(event_target_value(&e))
-                                    placeholder=crate::i18n::t("login-display-name")
-                                    class="w-full h-13 bg-menu border border-ink/10 text-ink rounded-card pl-10 pr-4 py-3.5 text-sm focus:outline-none focus:border-danger transition-colors placeholder:text-ink/30"
-                                />
-                            </div>
-                        }.into_any()
-                    } else { view! { <></> }.into_any() }}
-
-                    // Email
-                    <div class="relative">
-                        <i class="ph-bold ph-envelope absolute left-4 top-1/2 -translate-y-1/2 text-ink/30 pointer-events-none text-body-md" />
-                        <input
-                            type="email"
-                            required
-                            autocomplete="email"
-                            prop:value=email
-                            on:input=move |e| set_email.set(event_target_value(&e))
-                            placeholder=crate::i18n::t("login-email-address")
-                            class="w-full h-13 bg-menu border border-ink/10 text-ink rounded-card pl-10 pr-4 py-3.5 text-sm focus:outline-none focus:border-danger transition-colors placeholder:text-ink/30"
-                        />
-                    </div>
-
-                    // Password
-                    <div class="relative">
-                        <i class="ph-bold ph-lock-simple absolute left-4 top-1/2 -translate-y-1/2 text-ink/30 pointer-events-none text-body-md" />
-                        <input
-                            prop:type=move || if show_password.get() { "text" } else { "password" }
-                            required
-                            min-length="6"
-                            prop:value=password
-                            on:input=move |e| set_password.set(event_target_value(&e))
-                            placeholder=crate::i18n::t("login-password")
-                            class="w-full h-13 bg-menu border border-ink/10 text-ink rounded-card pl-10 pr-10 py-3.5 text-sm focus:outline-none focus:border-danger transition-colors placeholder:text-ink/30"
-                        />
-                        <button
-                            type="button"
-                            on:click=move |_| set_show_password.update(|v| *v = !*v)
-                            class="absolute right-3 top-1/2 -translate-y-1/2 text-ink/30 hover:text-ink/60 transition-colors"
-                        >
-                            <i class=move || if show_password.get() { "ph-bold ph-eye-slash text-body-md" } else { "ph-bold ph-eye text-body-md" } />
-                        </button>
-                    </div>
-
-                    // Avatar picker — signup only
-                    {move || if view_mode.get() == "signup" {
-                        let avatars = SIGNUP_AVATARS.iter().map(|url| {
-                            let url = *url;
-                            view! {
-                                <div
-                                    on:click=move |_| set_selected_avatar.set(url)
-                                    class=move || {
-                                        let selected = selected_avatar.get() == url;
-                                        if selected {
-                                            "w-11 h-11 rounded-field overflow-hidden cursor-pointer border-[2px] transition-all border-danger scale-105 shadow-md shadow-danger/20"
-                                        } else {
-                                            "w-11 h-11 rounded-field overflow-hidden cursor-pointer border-[2px] transition-all border-transparent hover:scale-105"
-                                        }
-                                    }
-                                >
-                                    <img src=url class="w-full h-full object-cover" alt="" />
-                                </div>
-                            }
-                        }).collect::<Vec<_>>();
-                        view! {
-                            <div class="space-y-2 pt-1 pb-1">
-                                <span class="text-ink/40 text-xs font-semibold block">{crate::i18n::t("login-choose-icon")}</span>
-                                <div class="flex gap-3 justify-center pb-2">{avatars}</div>
-                            </div>
-                        }.into_any()
-                    } else { view! { <></> }.into_any() }}
-
-                    {move || {
-                        let err = error.get();
-                        if err.is_empty() { view! { <></> }.into_any() }
-                        else { view! { <p class="text-danger-soft text-xs">{err}</p> }.into_any() }
-                    }}
-
-                    <button
-                        type="submit"
-                        disabled=move || loading.get()
-                        class="btn-brand w-full py-3.5 rounded-control text-sm shadow-lg duration-(--motion-fast) active:scale-95 disabled:opacity-50 mt-1"
-                    >
-                        {move || if view_mode.get() == "signup" { crate::i18n::t("login-create-account") } else { crate::i18n::t("login-sign-in") }}
-                    </button>
-                </form>
-
-                <p class="mt-5 text-center text-ink/40 text-sm">
-                    {move || if view_mode.get() == "signin" { crate::i18n::t("login-no-account") } else { crate::i18n::t("login-have-account") }}
-                    <button
-                        on:click=move |_| {
-                            let next = if view_mode.get() == "signin" { "signup" } else { "signin" };
-                            set_view_mode.set(next);
-                            set_error.set(String::new());
-                            set_success_msg.set(String::new());
-                            on_set_view(next);
-                        }
-                        class="text-ink hover:underline font-medium"
-                    >
-                        {move || if view_mode.get() == "signin" { crate::i18n::t("login-sign-up") } else { crate::i18n::t("login-sign-in") }}
-                    </button>
-                </p>
-            </div>
-        </div>
-    }
-}
-
-// ── LoginPage ─────────────────────────────────────────────────────────────────
-
-#[component]
-pub fn LoginPage() -> impl IntoView {
-    let (auth_view, set_auth_view) = signal("none"); // "none" | "signin" | "signup"
+pub fn LandingPage() -> impl IntoView {
     let (hero_email, set_hero_email) = signal(String::new());
 
-    let handle_get_started = move |e: leptos::ev::SubmitEvent| {
+    let navigate = use_navigate();
+    let nav_signup = navigate.clone();
+    let handle_get_started = Callback::new(move |e: leptos::ev::SubmitEvent| {
         e.prevent_default();
-        set_auth_view.set("signup");
-    };
+        nav_signup(&format!("/signup?email={}", js_sys::encode_uri_component(&hero_email.get_untracked())), Default::default());
+    });
+    let nav_login = navigate.clone();
 
+    let faq: [&'static str; 6] = ["what-is", "free-to-use", "need-account", "watch-on-tv", "sources", "kids-profile"];
     view! {
-        <div class="bg-void text-ink font-sans min-h-screen">
+        <MobileWelcome />
+        <div class="hidden min-h-screen bg-void font-sans text-ink sm:block">
 
-            // ── Navbar ──────────────────────────────────────────────────────
-            <nav class="fixed top-0 w-full z-(--z-nav) bg-gradient-to-b from-void/80 to-transparent px-6 md:px-20 lg:px-32 xl:px-44 2xl:px-56 py-4 flex items-center justify-between">
-                <img
-                    src=crate::brand::LOGO_WORDMARK
-                    alt=crate::brand::NAME
-                    class="h-7 md:h-9 w-auto flex-shrink-0 cursor-pointer"
-                />
+            // Header over the picture wall
+            <nav class="fixed top-0 z-(--z-nav) flex w-full items-center justify-between bg-linear-to-b from-void/80 to-transparent px-6 py-4 md:px-12 lg:px-20 xl:px-32">
+                <a href="/" aria-label=crate::brand::NAME><img src=crate::brand::LOGO_WORDMARK alt=crate::brand::NAME class="h-7 w-auto md:h-9" /></a>
                 <button
-                    on:click=move |_| set_auth_view.set("signin")
-                    class="btn-brand px-5 py-2 text-sm rounded-control shadow-lg duration-(--motion-fast) active:scale-95"
+                    on:click=move |_| nav_login("/login", Default::default())
+                    class="rounded-control bg-brand px-4 py-1.5 text-fine font-bold text-ink hover:bg-brand-hover md:px-5 md:py-2 md:text-body-sm"
                 >
                     {crate::i18n::t("login-sign-in")}
                 </button>
             </nav>
 
-            // ── Hero Section ────────────────────────────────────────────────
-            <section class="relative min-h-[60vh] sm:min-h-[65vh] md:min-h-[70vh] pt-32 pb-20 md:pt-44 md:pb-28 flex flex-col items-center justify-center text-center px-6 overflow-hidden">
-                <div class="absolute inset-0 z-0 overflow-hidden">
-                    <img src="/assets/landing-bg.png" class="w-full h-full object-cover opacity-50 scale-105" alt="" />
-                    <div class="absolute inset-0 bg-gradient-to-b from-void/60 via-void/20 to-void" />
-                    <div class="absolute inset-0 bg-[radial-gradient(circle_at_center,transparent_30%,rgba(0,0,0,0.6)_100%)]" />
+            // Hero
+            <section class="relative flex min-h-[70svh] flex-col items-center justify-center overflow-hidden px-6 pb-24 pt-28 text-center md:min-h-[78svh] md:pb-32 md:pt-40">
+                <div class="absolute inset-0 z-0 overflow-hidden" aria-hidden="true">
+                    <img src="/assets/landing-bg.png" class="h-full w-full scale-105 object-cover opacity-50" alt="" />
+                    <div class="absolute inset-0 bg-linear-to-b from-void/60 via-void/20 to-void" />
                 </div>
-
-                <div class="relative z-10 max-w-[720px] mx-auto space-y-6 w-full px-4">
-                    <h1 class="text-4xl sm:text-5xl md:text-7xl font-black leading-tight tracking-tight drop-shadow-2xl">
+                <div class="relative z-10 mx-auto w-full max-w-[720px] space-y-4 px-2 md:space-y-5">
+                    <h1 class="text-heading-xl font-black leading-tight tracking-tight drop-shadow-text sm:text-display-sm md:text-[4rem]">
                         {crate::i18n::t("login-unlimited-films-series-and-more")}
                     </h1>
-                    <p class="text-base sm:text-lg md:text-xl font-normal text-ink/90 max-w-[600px] mx-auto leading-relaxed">
-                        {crate::i18n::t("login-ready-to-watch-enter-your")}
-                    </p>
-
-                    <form
-                        on:submit=handle_get_started
-                        class="flex flex-col sm:flex-row gap-2.5 justify-center mt-8 max-w-[600px] mx-auto w-full"
-                    >
-                        <input
-                            type="email"
-                            prop:value=hero_email
-                            on:input=move |e| set_hero_email.set(event_target_value(&e))
-                            placeholder=crate::i18n::t("login-email-address")
-                            class="w-full sm:w-[65%] h-14 bg-void/50 border border-ink/30 text-ink rounded-control px-4 text-base focus:outline-none focus:border-ink transition-colors placeholder:text-ink/40 backdrop-blur-md"
-                        />
-                        <button
-                            type="submit"
-                            class="btn-brand w-full sm:w-[35%] h-14 text-lg rounded-control flex items-center justify-center gap-2 whitespace-nowrap transition-all duration-(--motion-fast) active:scale-95 shadow-xl"
-                        >
-                            {crate::i18n::t("login-get-started")}
-                            <i class="ph-bold ph-caret-right text-title-md" />
-                        </button>
-                    </form>
+                    <p class="text-body-md font-bold text-ink sm:text-title">{crate::i18n::t("auth-tick-free")}</p>
+                    <p class="mx-auto max-w-[600px] text-body-sm leading-relaxed text-ink/90 sm:text-body-md">{crate::i18n::t("login-ready-to-watch-enter-your")}</p>
+                    <LandingForm email=hero_email set_email=set_hero_email on_submit=handle_get_started />
+                    <a href="/browse" class="inline-block text-body-sm text-ink/80 underline underline-offset-2 hover:text-ink">{crate::i18n::t("landing-browse-guest")}</a>
+                </div>
+                // curved glow at the bottom of the picture wall
+                <div class="pointer-events-none absolute inset-x-0 bottom-0 z-10 h-16 overflow-hidden md:h-24" aria-hidden="true">
+                    <div
+                        class="absolute -inset-x-[15%] top-8 h-[400px] rounded-[50%] border-t-2 border-brand/80 bg-void"
+                        style="box-shadow: 0 -12px 60px color-mix(in srgb, var(--color-brand) 45%, transparent)"
+                    ></div>
                 </div>
             </section>
 
-            // ── Top 10 Trending Row ─────────────────────────────────────────
-            <section class="pt-12 pb-6 bg-void">
+            // Promo band
+            <section class="mx-auto -mt-1 flex max-w-[1100px] flex-col gap-4 px-6 py-8 sm:flex-row sm:items-center md:px-12">
+                <i class="ph-fill ph-gift text-[3.5rem] text-brand-glow" aria-hidden="true"></i>
+                <div class="flex flex-1 flex-col gap-4 rounded-card bg-linear-to-r from-brand-deep/60 to-void/60 p-5 sm:flex-row sm:items-center sm:justify-between">
+                    <div>
+                        <p class="text-body-md font-bold">{crate::pages::help::tr("landing-promo-title")}</p>
+                        <p class="text-body-sm text-ink-body">{crate::i18n::t("landing-promo-body")}</p>
+                    </div>
+                    <a href="/help/article/free-to-use" class="w-fit rounded-control bg-ink/15 px-4 py-2 text-body-sm font-bold hover:bg-ink/25">{crate::i18n::t("landing-learn-more")}</a>
+                </div>
+            </section>
+
+            // Trending
+            <section class="bg-void pb-6 pt-8">
                 <LandingTopTenRow title=crate::i18n::t("media-badge-trending-now") />
             </section>
 
-            // ── More Reasons to Join ────────────────────────────────────────
-            <section class="py-12 md:py-20 px-6 md:px-20 lg:px-32 xl:px-44 2xl:px-56 bg-void">
-                <h2 class="text-ink text-2xl md:text-4xl font-black mb-8 md:mb-12">{crate::i18n::t("login-more-reasons")}</h2>
-                <div class="grid grid-cols-[repeat(auto-fit,minmax(240px,1fr))] gap-4">
-                    <FeatureCard
-                        id="tv"
-                        title=crate::i18n::t("login-reason-screens-title")
-                        desc=crate::i18n::t_args("login-reason-screens-body", &[("brand", fluent_bundle::FluentValue::from(crate::brand::NAME))])
-                    />
-                    <FeatureCard
-                        id="stream"
-                        title=crate::i18n::t("login-reason-hd-title")
-                        desc=crate::i18n::t("login-reason-hd-body")
-                    />
-                    <FeatureCard
-                        id="subtitles"
-                        title=crate::i18n::t("login-reason-subs-title")
-                        desc=crate::i18n::t("login-reason-subs-body")
-                    />
-                    <FeatureCard
-                        id="place"
-                        title=crate::i18n::t("login-reason-place-title")
-                        desc=crate::i18n::t("login-reason-place-body")
-                    />
+            // More reasons to join
+            <section class="bg-void px-6 py-10 md:px-12 md:py-16 lg:px-20 xl:px-32">
+                <h2 class="mb-6 text-title font-bold md:mb-8 md:text-heading">{crate::i18n::t("login-more-reasons")}</h2>
+                <div class="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-4">
+                    <FeatureCard id="tv" title=crate::i18n::t("login-reason-screens-title") desc=crate::i18n::t_args("login-reason-screens-body", &[("brand", fluent_bundle::FluentValue::from(crate::brand::NAME))]) />
+                    <FeatureCard id="stream" title=crate::i18n::t("login-reason-hd-title") desc=crate::i18n::t("login-reason-hd-body") />
+                    <FeatureCard id="subtitles" title=crate::i18n::t("login-reason-subs-title") desc=crate::i18n::t("login-reason-subs-body") />
+                    <FeatureCard id="place" title=crate::i18n::t("login-reason-place-title") desc=crate::i18n::t("login-reason-place-body") />
                 </div>
             </section>
 
-            // ── Bottom CTA ──────────────────────────────────────────────────
-            <section class="py-16 px-6 text-center bg-void flex flex-col items-center w-full">
-                <p class="text-base sm:text-lg md:text-xl font-normal mb-6 max-w-[600px] mx-auto leading-relaxed text-ink/90">
-                    {crate::i18n::t("login-ready")}
-                </p>
-                <form
-                    on:submit=handle_get_started
-                    class="flex flex-col sm:flex-row gap-2.5 justify-center max-w-[600px] mx-auto w-full"
-                >
-                    <input
-                        type="email"
-                        prop:value=hero_email
-                        on:input=move |e| set_hero_email.set(event_target_value(&e))
-                        placeholder=crate::i18n::t("login-email-address")
-                        class="w-full sm:w-[65%] h-14 bg-void/50 border border-ink/30 text-ink rounded-control px-4 text-base focus:outline-none focus:border-ink transition-colors placeholder:text-ink/40 backdrop-blur-md"
-                    />
-                    <button
-                        type="submit"
-                        class="btn-brand w-full sm:w-[35%] h-14 text-lg rounded-control flex items-center justify-center gap-2 whitespace-nowrap transition-all duration-(--motion-fast) active:scale-95 shadow-xl"
-                    >
-                        {crate::i18n::t("login-get-started")}
-                        <i class="ph-bold ph-caret-right text-title-md" />
-                    </button>
-                </form>
+            // Frequently asked questions, answered from the help articles
+            <section class="mx-auto max-w-[1100px] px-6 py-8 md:px-12">
+                <h2 class="mb-6 text-title font-bold md:text-heading">{crate::i18n::t("landing-faq")}</h2>
+                <div class="space-y-2">
+                    {faq.into_iter().map(|slug| view! {
+                        <details class="group bg-panel/60">
+                            <summary class="flex cursor-pointer list-none items-center justify-between gap-4 px-5 py-5 text-body-lg md:px-6 md:text-title">
+                                <span>{crate::pages::help::art(slug, "title")}</span>
+                                <i class="ph-light ph-plus text-heading transition-transform duration-(--motion-base) group-open:rotate-45" aria-hidden="true"></i>
+                            </summary>
+                            <div class="border-t border-void px-5 py-5 text-body-md leading-7 text-ink-soft md:px-6 md:text-body-lg">
+                                <p>{crate::pages::help::art(slug, "summary")}</p>
+                                <a href=format!("/help/article/{slug}") class="mt-3 inline-block font-semibold underline underline-offset-2">{crate::i18n::t("landing-read-more")}</a>
+                            </div>
+                        </details>
+                    }).collect_view()}
+                </div>
             </section>
 
-            // ── Footer ──────────────────────────────────────────────────────
-            <crate::components::layout::footer::Footer />
+            // Bottom prompt
+            <section class="flex w-full flex-col items-center bg-void px-6 py-14 text-center md:py-16">
+                <p class="mx-auto mb-6 max-w-[600px] text-body-sm leading-relaxed text-ink/90 sm:text-body-md">{crate::i18n::t("login-ready")}</p>
+                <LandingForm email=hero_email set_email=set_hero_email on_submit=handle_get_started />
+            </section>
 
-            // ── Auth Modal ──────────────────────────────────────────────────
-            {move || {
-                let v = auth_view.get();
-                if v == "none" {
-                    view! { <></> }.into_any()
-                } else {
-                    let init = if v == "signin" { "signin" } else { "signup" };
-                    view! {
-                        <AuthModal
-                            initial_view=init
-                            initial_email=hero_email
-                            on_close=move || set_auth_view.set("none")
-                            on_set_view=move |next| set_auth_view.set(next)
-                        />
-                    }.into_any()
+            <crate::pages::auth::AuthFooter />
+        </div>
+    }
+}
+
+/// Email field and Get Started button, stacked on a phone and side by side from a small tablet up.
+#[component]
+fn LandingForm(email: ReadSignal<String>, set_email: WriteSignal<String>, on_submit: Callback<leptos::ev::SubmitEvent>) -> impl IntoView {
+    view! {
+        <form on:submit=move |e| on_submit.run(e) class="mx-auto flex w-full max-w-[600px] flex-col justify-center gap-2.5 sm:flex-row">
+            <input
+                type="email"
+                autocomplete="email"
+                prop:value=email
+                on:input=move |e| set_email.set(event_target_value(&e))
+                placeholder=crate::i18n::t("login-email-address")
+                aria-label=crate::i18n::t("auth-email")
+                class="h-12 w-full rounded-control border border-ink/30 bg-void/50 px-4 text-body-md text-ink backdrop-blur-md transition-colors placeholder:text-ink/50 focus:border-ink focus:outline-none sm:h-14 sm:w-[65%]"
+            />
+            <button
+                type="submit"
+                class="flex h-12 w-full items-center justify-center gap-2 whitespace-nowrap rounded-control bg-brand text-body-lg font-bold text-ink transition-all duration-(--motion-fast) hover:bg-brand-hover active:scale-95 sm:h-14 sm:w-[35%] sm:text-title"
+            >
+                {crate::i18n::t("login-get-started")}
+                <i class="ph-bold ph-caret-right" aria-hidden="true"></i>
+            </button>
+        </form>
+    }
+}
+
+/// The phone version of the landing page: four full screen slides (a wall of posters, then three illustrations), dots, and one big
+/// button, like the first screens of the Netflix app. The slides move on by themselves every few seconds; a touch pauses them,
+/// and they stay still for people who ask their device for reduced motion. From a small tablet width up the long page is shown
+/// instead, so the layout follows the width of the window and a touch laptop gets the page that fits its width.
+#[component]
+fn MobileWelcome() -> impl IntoView {
+    let navigate = use_navigate();
+    let nav_login = navigate.clone();
+    let nav_start = navigate.clone();
+    let track = NodeRef::<leptos::html::Div>::new();
+    let (index, set_index) = signal(0usize);
+    // art for each slide: None is the wall of posters
+    let slides: [(Option<&'static str>, &'static str, &'static str); 4] = [
+        (None, "login-unlimited-films-series-and-more", "auth-tick-free"),
+        (Some("/assets/landing/slide-2.svg"), "landing-slide-everyone", "auth-tick-profiles"),
+        (Some("/assets/landing/slide-3.svg"), "login-reason-screens-title", "auth-tick-devices"),
+        (Some("/assets/landing/slide-4.svg"), "login-reason-place-title", "landing-slide-place"),
+    ];
+    let on_scroll = move |_| {
+        if let Some(el) = track.get_untracked() {
+            let width = el.client_width().max(1);
+            set_index.set(((el.scroll_left() as f64) / (width as f64)).round() as usize);
+        }
+    };
+
+    let paused_until = std::rc::Rc::new(std::cell::Cell::new(0.0f64));
+    let reduced = web_sys::window().and_then(|w| w.match_media("(prefers-reduced-motion: reduce)").ok().flatten()).is_some_and(|m| m.matches());
+    if !reduced {
+        let handle = std::rc::Rc::new(std::cell::RefCell::new(None::<IntervalHandle>));
+        let (h, pause) = (handle.clone(), paused_until.clone());
+        let tick = move || {
+            let Some(el) = track.get_untracked() else { return };
+            if !el.is_connected() {
+                // the page was left: stop the timer
+                if let Some(h) = h.borrow_mut().take() {
+                    h.clear();
                 }
-            }}
+                return;
+            }
+            if js_sys::Date::now() < pause.get() {
+                return;
+            }
+            let width = el.client_width().max(1);
+            let next = (((el.scroll_left() as f64) / (width as f64)).round() as i32 + 1) % 4;
+            el.scroll_to_with_x_and_y((next * width) as f64, 0.0);
+        };
+        *handle.borrow_mut() = set_interval_with_handle(tick, std::time::Duration::from_millis(4500)).ok();
+    }
+    let pause_on_touch = {
+        let p = paused_until.clone();
+        move |_: leptos::ev::PointerEvent| p.set(js_sys::Date::now() + 9000.0)
+    };
+
+    view! {
+        <div class="flex h-svh min-h-[560px] flex-col bg-linear-to-b from-brand-deep/35 via-page to-void font-sans text-ink sm:hidden">
+            <header class="relative z-10 flex items-center justify-between px-4 py-3">
+                <a href="/" aria-label=crate::brand::NAME><img src=crate::brand::LOGO_WORDMARK alt=crate::brand::NAME class="h-7 w-auto" /></a>
+                <div class="flex items-center gap-1 text-fine font-bold uppercase tracking-wide">
+                    <a href="/privacy" class="px-3 py-3">{crate::i18n::t("help-ui-legal-privacy")}</a>
+                    <button on:click=move |_| nav_login("/login", Default::default()) class="px-3 py-3">{crate::i18n::t("login-sign-in")}</button>
+                </div>
+            </header>
+            <div
+                node_ref=track
+                on:scroll=on_scroll
+                on:pointerdown=pause_on_touch
+                class="relative flex min-h-0 flex-1 snap-x snap-mandatory scroll-smooth overflow-x-auto overscroll-x-contain [scrollbar-width:none] [&::-webkit-scrollbar]:hidden"
+            >
+                {slides
+                    .into_iter()
+                    .map(|(art, title, body)| view! {
+                        <section class="relative flex h-full w-full shrink-0 snap-center flex-col">
+                            <div class="relative min-h-0 flex-1">
+                                {match art {
+                                    None => view! {
+                                        <img src="/assets/landing-bg.png" class="absolute inset-0 h-full w-full object-cover opacity-50" alt="" aria-hidden="true" />
+                                        <div class="absolute inset-0 bg-linear-to-b from-page/30 via-transparent to-page" aria-hidden="true"></div>
+                                    }
+                                    .into_any(),
+                                    Some(src) => view! { <img src=src class="mx-auto h-full w-full object-contain px-6 pt-2" alt="" /> }.into_any(),
+                                }}
+                            </div>
+                            <div class="px-8 pb-4 text-center">
+                                <h1 class="text-display-sm font-black leading-tight drop-shadow-text">{crate::pages::help::tr(title)}</h1>
+                                <p class="mt-3 text-body-lg font-semibold text-ink-soft">{crate::pages::help::tr(body)}</p>
+                            </div>
+                        </section>
+                    })
+                    .collect_view()}
+            </div>
+            <div class="flex items-center justify-center gap-3 pb-5 pt-2" aria-hidden="true">
+                {(0..4usize).map(|i| view! {
+                    <span
+                        class="h-2.5 w-2.5 rounded-full transition-colors duration-(--motion-base)"
+                        class=("bg-ink", move || index.get() == i)
+                        class=("bg-ink/30", move || index.get() != i)
+                    ></span>
+                }).collect_view()}
+            </div>
+            <div class="px-4 pb-[max(1.25rem,env(safe-area-inset-bottom))]">
+                <button
+                    on:click=move |_| nav_start("/login", Default::default())
+                    class="flex h-12 w-full items-center justify-center rounded-control bg-brand text-body-lg font-bold text-ink active:scale-[0.98]"
+                >
+                    {crate::i18n::t("login-get-started")}
+                </button>
+            </div>
         </div>
     }
 }

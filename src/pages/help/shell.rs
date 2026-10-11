@@ -85,7 +85,7 @@ pub fn HelpShell(children: Children, #[prop(default = Look::Dark)] look: Look, #
             crate::i18n::set_language(&select.value());
         }
     };
-    let legal = [("/terms", "help-ui-legal-terms"), ("/privacy", "help-ui-legal-privacy"), ("/cookies", "help-ui-legal-cookies"), ("/dmca", "help-ui-legal-dmca"), ("/disclaimer", "help-ui-legal-disclaimer")];
+    let legal = [("/terms", "help-ui-legal-terms"), ("/privacy", "help-ui-legal-privacy"), ("/cookies", "help-ui-legal-cookies"), ("/dmca", "help-ui-legal-dmca"), ("/disclaimer", "help-ui-legal-disclaimer"), ("/credits", "help-ui-legal-credits")];
 
     let header_bg = if dark { "bg-void text-ink" } else { "bg-paper text-paper-ink" };
     let logo = if dark { crate::brand::LOGO_WORDMARK } else { crate::brand::LOGO_WORDMARK_PRIMARY };

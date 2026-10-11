@@ -1,4 +1,5 @@
-@import "tailwindcss";
+/* Only the app source is scanned for class names, so scripts and notes cannot add junk classes. */
+@import "tailwindcss" source(none);
 @import "./brand.css";
 @import "./components.css";
 @source "../src/**/*.rs";

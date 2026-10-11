@@ -24,6 +24,10 @@ pub const TMDB_API_URL: &str = setting(option_env!("STREAMS_TMDB_URL"), "https:/
 pub const TMDB_IMAGE_URL: &str = setting(option_env!("STREAMS_TMDB_IMAGE_URL"), "https://image.tmdb.org/t/p");
 pub const TMDB_API_KEY: &str = setting(option_env!("STREAMS_TMDB_KEY"), "fc5fec3b73d8605daaeb1eb3b91157eb");
 
+/// Accounts (Supabase). The key is the project's publishable key, which is meant to be public; the database rules protect the data.
+pub const SUPABASE_URL: &str = setting(option_env!("STREAMS_SUPABASE_URL"), "https://emvyjhleyhimxxdqybsn.supabase.co");
+pub const SUPABASE_KEY: &str = setting(option_env!("STREAMS_SUPABASE_KEY"), "sb_publishable_m286TDvNziieAgk--uDLlQ_MJQHgxNV");
+
 /// Where the cookie banner sits. Set STREAMS_COOKIE_BANNER to top, bottom, bottom-start, bottom-end or center when building,
 /// or add ?cookie_banner=top to the address to try one. Narrow screens always get a full width sheet at the bottom.
 #[derive(Clone, Copy, PartialEq, Eq, Debug)]

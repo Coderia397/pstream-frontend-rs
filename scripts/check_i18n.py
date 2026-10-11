@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 """Checks interface text keys. Fails when a key used in src is missing from i18n/en.ftl, or when en.ftl holds a key nothing uses.
 Prints a coverage line per language file. --prune removes unused keys from en.ftl.
-Help center messages are looked up by id (help-art-<slug>-<part>, help-topic-<id>, help-group-<id>, help-ui-ql-<id>), so a key of
+Genre names (genre-*) and policy text (legal-<id>-*) are looked up at runtime from data. Help center messages are looked up by id (help-art-<slug>-<part>, help-topic-<id>, help-group-<id>, help-ui-ql-<id>), so a key of
 those families counts as used when its id appears as a string in src/data/help.rs."""
 import re, sys, pathlib
 ROOT = pathlib.Path(__file__).resolve().parent.parent
@@ -24,10 +24,18 @@ def family_id(key):
             return key[len(prefix):]
     if key.startswith("help-art-"):
         return key[len("help-art-"):].rsplit("-", 1)[0]
+tool_ids = set(re.findall(r'"([a-z]+)"', (ROOT / "src/pages/help/actions.rs").read_text().split("pub const TOOLS")[1].split("];")[0]))
+legal_ids = {i for i in help_ids if f"legal-{i}-title" in en}
 for k in en:
     fid = family_id(k)
     if fid and fid in help_ids:
         used.add(k)
+    elif k.startswith("help-card-") and any(k.startswith(f"help-card-{t}-") for t in tool_ids):
+        used.add(k)  # tool cards on the help home, by tool id
+    elif k.startswith("genre-"):
+        used.add(k)  # looked up from the genre name at runtime (i18n::genre_label)
+    elif k.startswith("legal-") and any(k.startswith(f"legal-{i}-") for i in legal_ids):
+        used.add(k)  # policy text, looked up by document id and section number
 missing = sorted(used - set(en)); unused = sorted(set(en) - used)
 if "--prune" in sys.argv and unused:
     p = ROOT / "i18n/en.ftl"

@@ -1,7 +1,7 @@
 use leptos::prelude::*;
 use leptos_router::hooks::use_navigate;
 use crate::store::use_profile_store;
-use crate::data::{AVATAR_CATEGORIES, DISPLAY_LANGUAGES, SUBTITLE_LANGUAGES, DEFAULT_AVATAR};
+use crate::data::{AVATAR_CATEGORIES, SUBTITLE_LANGUAGES, DEFAULT_AVATAR};
 
 #[derive(Clone, Copy, PartialEq, Eq)]
 pub enum SettingsView {

@@ -291,7 +291,7 @@ pub fn ContactPage() -> impl IntoView {
                 </div>
                 <section class="space-y-4">
                     <p>"If you have any questions or concerns about our services, please contact us at:"</p>
-                    <a href=format!("mailto:{}", crate::brand::SUPPORT_EMAIL) class="text-danger hover:underline">
+                    <a href=format!("mailto:{}", crate::brand::SUPPORT_EMAIL) class="text-brand hover:underline">
                         {crate::brand::SUPPORT_EMAIL}
                     </a>
                 </section>

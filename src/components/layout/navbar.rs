@@ -89,7 +89,7 @@ pub fn Navbar(
                     <img
                         src=crate::brand::LOGO_WORDMARK
                         alt=crate::brand::NAME
-                        class="h-[20px] cursor-pointer flex-shrink-0"
+                        class="h-[28px] cursor-pointer flex-shrink-0"
                     />
                 </a>
 

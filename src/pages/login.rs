@@ -58,7 +58,7 @@ fn LandingTopTenCard(movie: TopMovie, index: usize) -> impl IntoView {
     let poster_src = if movie.poster_path.starts_with("http") {
         movie.poster_path.clone()
     } else {
-        format!("https://image.tmdb.org/t/p/w780{}", movie.poster_path)
+        format!("{}/w780{}", crate::config::TMDB_IMAGE_URL, movie.poster_path)
     };
     let alt = movie.title.clone();
 
@@ -510,7 +510,7 @@ pub fn LoginPage() -> impl IntoView {
                 <img
                     src=crate::brand::LOGO_WORDMARK
                     alt=crate::brand::NAME
-                    class="h-5 md:h-7 cursor-pointer"
+                    class="h-7 md:h-9 w-auto flex-shrink-0 cursor-pointer"
                 />
                 <button
                     on:click=move |_| set_auth_view.set("signin")

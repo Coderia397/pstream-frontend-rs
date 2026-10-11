@@ -4,11 +4,11 @@
    The product name, logo paths and contact details are in src/brand.rs. */
 @theme {
   /* Brand accent */
-  --color-brand: #e50914;
-  --color-brand-hover: #f40612;
-  --color-brand-active: #b80710;
-  --color-brand-deep: #b81d24;
-  --color-brand-glow: #ff5f6d;
+  --color-brand: #2f6bff;
+  --color-brand-hover: #4a82ff;
+  --color-brand-active: #2358d6;
+  --color-brand-deep: #1d4bbd;
+  --color-brand-glow: #7aa6ff;
   --color-accent: #ff0055;
   --color-accent-alt: #ff007f;
 
@@ -40,6 +40,16 @@
   --color-lift-strong: #404040;
   --color-line: #333333;
   --color-line-strong: #4d4d4d;
+
+  /* Light paper used by the help center (Netflix's help site is a light page under a dark bar) */
+  --color-paper: #ffffff;
+  --color-paper-tint: #f3f4fb;
+  --color-paper-wash: #fafafa;
+  --color-paper-soft: #f3f3f3;
+  --color-paper-line: #e6e6e6;
+  --color-paper-edge: #8c8c8c;
+  --color-paper-ink: #1f1f1f;
+  --color-paper-mute: #5f5f5f;
 
   /* Text and neutral controls */
   --color-ink-soft: #e5e5e5;

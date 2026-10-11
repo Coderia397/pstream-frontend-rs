@@ -4,6 +4,38 @@
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <meta name="theme-color" content="#080b0d" />
+    <meta name="description" content="Streams: find your next film or series." />
+    <link rel="mask-icon" href="/assets/logos/safari-pinned-tab.svg" color="#2f6bff" />
+    <meta name="msapplication-config" content="/assets/logos/browserconfig.xml" />
+    <meta name="msapplication-TileColor" content="#2f6bff" />
+    <link rel="search" type="application/opensearchdescription+xml" title="Streams" href="/opensearch.xml" />
+    <link rel="apple-touch-startup-image" media="(device-width: 430px) and (device-height: 932px) and (-webkit-device-pixel-ratio: 3) and (orientation: portrait)" href="/assets/logos/splash/splash-iphone-15-pro-max.png" />
+    <link rel="apple-touch-startup-image" media="(device-width: 393px) and (device-height: 852px) and (-webkit-device-pixel-ratio: 3) and (orientation: portrait)" href="/assets/logos/splash/splash-iphone-15-pro.png" />
+    <link rel="apple-touch-startup-image" media="(device-width: 390px) and (device-height: 844px) and (-webkit-device-pixel-ratio: 3) and (orientation: portrait)" href="/assets/logos/splash/splash-iphone-14.png" />
+    <link rel="apple-touch-startup-image" media="(device-width: 360px) and (device-height: 780px) and (-webkit-device-pixel-ratio: 3) and (orientation: portrait)" href="/assets/logos/splash/splash-iphone-13-mini.png" />
+    <link rel="apple-touch-startup-image" media="(device-width: 414px) and (device-height: 896px) and (-webkit-device-pixel-ratio: 2) and (orientation: portrait)" href="/assets/logos/splash/splash-iphone-11.png" />
+    <link rel="apple-touch-startup-image" media="(device-width: 375px) and (device-height: 667px) and (-webkit-device-pixel-ratio: 2) and (orientation: portrait)" href="/assets/logos/splash/splash-iphone-se.png" />
+    <link rel="apple-touch-startup-image" media="(device-width: 1024px) and (device-height: 1366px) and (-webkit-device-pixel-ratio: 2) and (orientation: portrait)" href="/assets/logos/splash/splash-ipad-pro-12.9.png" />
+    <link rel="apple-touch-startup-image" media="(device-width: 834px) and (device-height: 1194px) and (-webkit-device-pixel-ratio: 2) and (orientation: portrait)" href="/assets/logos/splash/splash-ipad-pro-11.png" />
+    <link rel="apple-touch-startup-image" media="(device-width: 820px) and (device-height: 1180px) and (-webkit-device-pixel-ratio: 2) and (orientation: portrait)" href="/assets/logos/splash/splash-ipad-10.9.png" />
+    <link rel="apple-touch-startup-image" media="(device-width: 744px) and (device-height: 1133px) and (-webkit-device-pixel-ratio: 2) and (orientation: portrait)" href="/assets/logos/splash/splash-ipad-mini.png" />
+    <style>
+      #boot{position:fixed;inset:0;z-index:2147483000;background:#0b0b0c;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:22px}
+      #boot svg.mark{width:96px;height:96px}
+      #boot .dots{display:flex;gap:10px;height:10px}
+      #boot .dots i{display:block;width:10px;height:10px;background:#2f6bff;opacity:0;animation:bootdot 1.2s infinite}
+      #boot .dots i:nth-child(2){animation-delay:.15s}#boot .dots i:nth-child(3){animation-delay:.3s}#boot .dots i:nth-child(4){animation-delay:.45s}#boot .dots i:nth-child(5){animation-delay:.6s}
+      @keyframes bootdot{0%{opacity:0;transform:translateX(-10px)}30%{opacity:1}70%{opacity:1}100%{opacity:0;transform:translateX(10px)}}
+      @media (prefers-reduced-motion:reduce){#boot .dots i{animation:none;opacity:.6}}
+    </style>
+    <link rel="icon" href="/assets/logos/favicon.svg" type="image/svg+xml" />
+    <link rel="icon" href="/assets/logos/favicon.ico" sizes="48x48" />
+    <link rel="apple-touch-icon" href="/assets/logos/apple-touch-icon.png" />
+    <link rel="manifest" href="/assets/logos/manifest.webmanifest" />
+    <meta property="og:title" content="Streams" />
+    <meta property="og:type" content="website" />
+    <meta property="og:image" content="https://streams.watch/assets/logos/og-image.png" />
+    <meta name="twitter:card" content="summary_large_image" />
     <title>Streams</title>
     <!-- Instant ambient color hydration before first paint (0ms) -->
     <script>
@@ -36,6 +68,11 @@
     <link data-trunk rel="copy-dir" href="fonts" />
     <link data-trunk rel="copy-dir" href="i18n" />
     <link data-trunk rel="copy-dir" href="assets" />
+    <link data-trunk rel="copy-file" href="public/robots.txt" />
+    <link data-trunk rel="copy-file" href="public/sitemap.xml" />
+    <link data-trunk rel="copy-file" href="public/opensearch.xml" />
+    <link data-trunk rel="copy-file" href="public/_headers" />
+    <link data-trunk rel="copy-file" href="public/security.txt" data-target-path=".well-known" />
     <script>
         if (window.location.pathname === "/" || window.location.pathname === "/index.html") {
             window.location.replace("/browse");
@@ -43,6 +80,7 @@
     </script>
   </head>
   <body class="bg-black text-white">
+    <div id="boot" aria-hidden="true"><svg class="mark" viewBox="64 -768 1024 1024" xmlns="http://www.w3.org/2000/svg"><path fill="#ffffff" shape-rendering="crispEdges" d="M576 64L384 64L384 0L320 0L320-64L384-64L384 0L576 0L576-128L640-128L640 0L576 0L576 64M896 256L64 256L64-576L128-576L128-640L192-640L192-704L256-704L256-768L1088-768L1088 64L1024 64L1024 128L960 128L960 192L896 192L896 256M128 192L832 192L832-512L128-512L128 192M384-192L320-192L320-320L384-320L384-384L576-384L576-320L640-320L640-256L576-256L576-320L384-320L384-192M960 128L960 64L1024 64L1024-640L960-640L960-576L896-576L896 128L960 128M896-576L896-640L960-640L960-704L256-704L256-640L192-640L192-576L896-576M576-128L384-128L384-192L576-192"/></svg><div class="dots"><i></i><i></i><i></i><i></i><i></i></div></div>
   </body>
 </html>
 

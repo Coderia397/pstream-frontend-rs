@@ -29,11 +29,16 @@ pub fn Footer() -> impl IntoView {
                     <a href="/disclaimer" class="hover:underline hover:text-ink transition-colors">"Disclaimer"</a>
                     <a href="/cookies" class="hover:underline hover:text-ink transition-colors">"Cookie Policy"</a>
                     <a href="/contact" class="hover:underline hover:text-ink transition-colors">"Contact Us"</a>
+                    <a href="/help" class="hover:underline hover:text-ink transition-colors">"Help Center"</a>
                 </nav>
 
                 // Copyright
                 <div class="text-xs text-ink/30 mt-8">
                     {format!("\u{a9} 2026 {}", crate::brand::COMPANY)}
+                </div>
+                <div class="text-xs text-ink/30 mt-2">
+                    "Logo set in Baby Blocks by "
+                    <a href="http://www.geocities.jp/kitschlabo/" target="_blank" rel="noopener" class="hover:underline hover:text-ink transition-colors">"Colorful Typhoon"</a>
                 </div>
             </div>
         </footer>

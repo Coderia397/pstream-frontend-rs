@@ -99,10 +99,10 @@ pub fn RecCard(
     };
 
     view! {
-        <div class="bg-[#2f2f2f] rounded-[4px] overflow-hidden group">
+        <div class="bg-panel rounded-control overflow-hidden group">
             // Image area - click to play
             <div
-                class="relative aspect-video bg-[#1a1a1a] overflow-hidden cursor-pointer"
+                class="relative aspect-video bg-raised overflow-hidden cursor-pointer"
                 on:click=on_image_click
             >
                 {if let Some(src) = backdrop {
@@ -110,26 +110,26 @@ pub fn RecCard(
                         <img
                             src=src
                             alt=title.clone()
-                            class="w-full h-full object-cover opacity-90 group-hover:opacity-100 transition-opacity duration-200"
+                            class="w-full h-full object-cover opacity-90 group-hover:opacity-100 transition-opacity duration-(--motion-base)"
                             loading="lazy"
                         />
                     }.into_any()
                 } else {
                     view! {
-                        <div class="w-full h-full bg-[#222]" />
+                        <div class="w-full h-full bg-placeholder" />
                     }.into_any()
                 }}
 
                 // Play icon overlay on hover
-                <div class="absolute inset-0 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity duration-200 pointer-events-none">
-                    <div class="w-11 h-11 rounded-full bg-black/50 border border-white/50 flex items-center justify-center">
-                        <i class="ph-fill ph-play text-white ml-0.5 text-lg"></i>
+                <div class="absolute inset-0 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity duration-(--motion-base) pointer-events-none">
+                    <div class="w-11 h-11 rounded-full bg-void/50 border border-ink/50 flex items-center justify-center">
+                        <i class="ph-fill ph-play text-ink ml-0.5 text-lg"></i>
                     </div>
                 </div>
 
                 // Bottom-left title/logo
                 <div class="absolute bottom-2 left-2 right-2 max-w-[78%]">
-                    <Suspense fallback=move || view! { <div class="h-6 w-20 rounded bg-white/10 animate-pulse" /> }>
+                    <Suspense fallback=move || view! { <div class="h-6 w-20 rounded-control bg-ink/10 animate-pulse" /> }>
                         {
                             let tc = title.clone();
                             move || {
@@ -143,7 +143,7 @@ pub fn RecCard(
                                         />
                                     }.into_any(),
                                     _ => view! {
-                                        <p class="text-white font-bold text-sm leading-tight drop-shadow-md line-clamp-2">
+                                        <p class="text-ink font-bold text-sm leading-tight drop-shadow-md line-clamp-2">
                                             {t.clone()}
                                         </p>
                                     }.into_any()
@@ -156,12 +156,12 @@ pub fn RecCard(
 
             // Card body - click opens InfoModal
             <div
-                class="p-4 cursor-pointer hover:bg-[#3a3a3a] transition-colors duration-150"
+                class="p-4 cursor-pointer hover:bg-lift transition-colors duration-(--motion-fast)"
                 on:click=on_body_click
             >
                 <div class="flex items-center justify-between gap-2 mb-2.5">
                     <div class="flex items-center gap-2 flex-wrap">
-                        <span class="text-[#46d369] font-bold text-xs">
+                        <span class="text-success font-bold text-xs">
                             {format!("{}% Match", match_score)}
                         </span>
                         <MaturityBadge
@@ -186,7 +186,7 @@ pub fn RecCard(
                     />
                 </div>
 
-                <p class="text-[#d2d2d2] text-[14px] leading-5 line-clamp-5 min-h-[100px]">
+                <p class="text-ink-light text-body-sm leading-5 line-clamp-5 min-h-[100px]">
                     {overview}
                 </p>
             </div>
@@ -225,10 +225,10 @@ pub fn InfoModalRecommendations(
     view! {
         <Suspense fallback=move || view! {
             <div class="mt-12">
-                <h3 class="text-2xl font-medium text-white mb-5">"More Like This"</h3>
+                <h3 class="text-2xl font-medium text-ink mb-5">"More Like This"</h3>
                 <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
                     {(0..6).map(|_| view! {
-                        <div class="bg-[#2f2f2f] rounded-sm aspect-[4/5] animate-pulse" />
+                        <div class="bg-panel rounded-control aspect-[4/5] animate-pulse" />
                     }).collect_view()}
                 </div>
             </div>
@@ -242,7 +242,7 @@ pub fn InfoModalRecommendations(
 
                     view! {
                         <div class="mt-12">
-                            <h3 class="text-2xl font-medium text-white mb-5">"More Like This"</h3>
+                            <h3 class="text-2xl font-medium text-ink mb-5">"More Like This"</h3>
                             <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
                                 {visible_items.into_iter().map(|item| {
                                     let movie = Movie::from(item);
@@ -272,12 +272,12 @@ pub fn InfoModalRecommendations(
                                                     visible_count.set(BATCH_REC);
                                                 }
                                             }
-                                            class="w-10 h-10 rounded-full border border-white/20 bg-[#2a2a2a] hover:border-white/50 hover:bg-[#3a3a3a] flex items-center justify-center transition-all duration-200 hover:scale-110 active:scale-95 group/btn cursor-pointer"
+                                            class="w-10 h-10 rounded-full border border-ink/20 bg-menu hover:border-ink/50 hover:bg-lift flex items-center justify-center transition-all duration-(--motion-base) hover:scale-110 active:scale-95 group/btn cursor-pointer"
                                         >
                                             <i class=if has_more {
-                                                "ph-bold ph-caret-down text-white/60 group-hover/btn:text-white transition-colors"
+                                                "ph-bold ph-caret-down text-ink/60 group-hover/btn:text-ink transition-colors"
                                             } else {
-                                                "ph-bold ph-caret-up text-white/60 group-hover/btn:text-white transition-colors"
+                                                "ph-bold ph-caret-up text-ink/60 group-hover/btn:text-ink transition-colors"
                                             }></i>
                                         </button>
                                     </div>

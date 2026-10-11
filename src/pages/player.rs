@@ -95,11 +95,11 @@ pub fn PlayerPage() -> impl IntoView {
     });
 
     view! {
-        <div class="w-full h-screen bg-black overflow-hidden select-none">
+        <div class="w-full h-screen bg-void overflow-hidden select-none">
             <Suspense fallback=move || view! {
-                <div class="w-full h-full flex flex-col items-center justify-center bg-black">
-                    <div class="w-16 h-16 rounded-full border-4 border-[#e50914] border-t-transparent animate-spin mb-4 shadow-2xl"></div>
-                    <p class="text-white/80 text-sm font-semibold">"Loading title..."</p>
+                <div class="w-full h-full flex flex-col items-center justify-center bg-void">
+                    <div class="w-16 h-16 rounded-full border-4 border-brand border-t-transparent animate-spin mb-4 shadow-2xl"></div>
+                    <p class="text-ink/80 text-sm font-semibold">"Loading title..."</p>
                 </div>
             }>
                 {move || {
@@ -135,14 +135,14 @@ pub fn PlayerPage() -> impl IntoView {
                             }.into_any()
                         }
                         None => view! {
-                            <div class="w-full h-full flex flex-col items-center justify-center bg-black text-center px-4">
-                                <h2 class="text-xl font-bold text-white mb-2">"Media Not Found"</h2>
-                                <p class="text-white/60 text-sm mb-6">"Unable to locate title information."</p>
+                            <div class="w-full h-full flex flex-col items-center justify-center bg-void text-center px-4">
+                                <h2 class="text-xl font-bold text-ink mb-2">"Media Not Found"</h2>
+                                <p class="text-ink/60 text-sm mb-6">"Unable to locate title information."</p>
                                 <button
                                     on:click=move |_| on_close.run(())
-                                    class="px-6 py-2.5 bg-[#e50914] hover:bg-[#b80710] text-white font-bold rounded-lg text-sm"
+                                    class="btn-brand px-6 py-2.5 rounded-card text-sm"
                                 >
-                                    "Back to Browse"
+                                    {crate::i18n::t("controls-overlay-back-to-browse")}
                                 </button>
                             </div>
                         }.into_any()

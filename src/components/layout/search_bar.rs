@@ -151,10 +151,10 @@ pub fn SearchBar() -> impl IntoView {
         <div node_ref=container_ref class="relative flex items-center">
             <div 
                 // Netflix: closed = 40x40 icon button, open = 400x56 field, radius 28, #161616, 1px grey 70% border
-                class="relative flex items-center transition-all duration-300 ease-out overflow-hidden rounded-full"
-                class=("bg-[#161616]", effective_active)
+                class="relative flex items-center transition-all duration-(--motion-slow) ease-out overflow-hidden rounded-full"
+                class=("bg-raised", effective_active)
                 class=("border", effective_active)
-                class=("border-[#808080]/70", effective_active)
+                class=("border-mute/70", effective_active)
                 class=("w-[220px]", effective_active)
                 class=("min-[960px]:w-[400px]", effective_active)
                 class=("h-14", effective_active)
@@ -168,10 +168,10 @@ pub fn SearchBar() -> impl IntoView {
                 <button
                     on:click=toggle_search
                     class="focus:outline-none flex items-center justify-center z-10 shrink-0 w-6 h-6"
-                    aria-label="Search"
+                    aria-label=crate::i18n::t("search-bar-search")
                 >
-                    <i class="ph ph-magnifying-glass text-[24px] cursor-pointer select-none transition-colors duration-300"
-                       class=("text-white", effective_active)
+                    <i class="ph ph-magnifying-glass text-heading cursor-pointer select-none transition-colors duration-(--motion-slow)"
+                       class=("text-ink", effective_active)
                        class=("hover:text-gray-300", move || !effective_active())>
                     </i>
                 </button>
@@ -179,8 +179,8 @@ pub fn SearchBar() -> impl IntoView {
                 <input
                     node_ref=input_ref
                     type="text"
-                    placeholder="Titles, people, genres"
-                    class="bg-transparent border-none outline-none text-white text-[16px] ml-3 transition-all duration-300 font-sans"
+                    placeholder=crate::i18n::t("search-bar-titles-people-genres")
+                    class="bg-transparent border-none outline-none text-ink text-body-md ml-3 transition-all duration-(--motion-slow) font-sans"
                     class=("w-full", effective_active)
                     class=("opacity-100", effective_active)
                     class=("w-0", move || !effective_active())
@@ -189,16 +189,16 @@ pub fn SearchBar() -> impl IntoView {
                     prop:value=move || input_val.get()
                     on:input=on_input
                     on:keydown=on_keydown
-                    aria-label="Search Input"
+                    aria-label=crate::i18n::t("search-bar-search-input")
                 />
 
                 <Show when=move || effective_active()>
                     <button
                         on:mousedown=clear_search
-                        class="text-white/70 hover:text-white cursor-pointer mx-1 flex-shrink-0 transition-all duration-200 hover:scale-125 active:scale-95"
-                        aria-label="Clear Search"
+                        class="text-ink/70 hover:text-ink cursor-pointer mx-1 flex-shrink-0 transition-all duration-(--motion-base) hover:scale-125 active:scale-95"
+                        aria-label=crate::i18n::t("search-bar-clear-search")
                     >
-                        <i class="ph-bold ph-x text-[20px]"></i>
+                        <i class="ph-bold ph-x text-title"></i>
                     </button>
                 </Show>
             </div>

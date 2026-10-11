@@ -124,31 +124,31 @@ pub fn SpotlightCard(
             // Spotlight card container
             <div
                 on:click=on_card_click
-                class="relative w-full min-h-[440px] flex flex-col bg-[#141414] border border-white/[0.09] rounded-xl overflow-hidden shadow-2xl cursor-pointer select-none"
+                class="relative w-full min-h-[440px] flex flex-col bg-page border border-ink/[0.09] rounded-modal overflow-hidden shadow-2xl cursor-pointer select-none"
             >
                 // Media Area (16:9)
-                <div class="relative w-full aspect-video overflow-hidden bg-black shrink-0">
+                <div class="relative w-full aspect-video overflow-hidden bg-void shrink-0">
                     {if !backdrop_src.is_empty() {
                         view! {
                             <img
                                 src=backdrop_src
                                 alt=title.clone()
-                                class="absolute inset-0 w-full h-full object-cover transition-transform duration-500 hover:scale-105"
+                                class="absolute inset-0 w-full h-full object-cover transition-transform duration-(--motion-slower) hover:scale-105"
                                 loading="lazy"
                             />
                         }.into_any()
                     } else {
                         view! {
-                            <div class="w-full h-full bg-[#222] flex items-center justify-center">
-                                <span class="text-white/40 font-bold">{title.clone()}</span>
+                            <div class="w-full h-full bg-placeholder flex items-center justify-center">
+                                <span class="text-ink/40 font-bold">{title.clone()}</span>
                             </div>
                         }.into_any()
                     }}
 
                     // Play hint overlay
                     <div class="absolute inset-0 flex items-center justify-center pointer-events-none">
-                        <div class="w-[52px] h-[52px] rounded-full bg-black/55 border border-white/25 flex items-center justify-center shadow-2xl">
-                            <i class="ph-fill ph-play text-white text-2xl ml-1"></i>
+                        <div class="w-[52px] h-[52px] rounded-full bg-void/55 border border-ink/25 flex items-center justify-center shadow-2xl">
+                            <i class="ph-fill ph-play text-ink text-2xl ml-1"></i>
                         </div>
                     </div>
 
@@ -164,14 +164,14 @@ pub fn SpotlightCard(
                 // Below-media content area
                 <div class="px-5 pb-6 pt-4 flex flex-col flex-grow gap-3">
                     // Title
-                    <h3 class="text-white font-bold text-[18px] md:text-[20px] leading-snug drop-shadow-sm">
+                    <h3 class="text-ink font-bold text-title-sm md:text-title leading-snug drop-shadow-sm">
                         {title.clone()}
                     </h3>
 
                     // Coming Soon label if applicable
                     {if is_coming_soon && !coming_soon_label.is_empty() {
                         view! {
-                            <p class="text-[#E50914] font-bold text-xs md:text-sm tracking-wider uppercase">
+                            <p class="text-brand font-bold text-xs md:text-sm tracking-wider uppercase">
                                 {format!("Coming {}", coming_soon_label)}
                             </p>
                         }.into_any()
@@ -180,7 +180,7 @@ pub fn SpotlightCard(
                     }}
 
                     // Overview
-                    <p class="text-[14px] md:text-[15px] text-[#e5e5e5] font-normal leading-relaxed line-clamp-3 flex-1">
+                    <p class="text-body-sm md:text-body text-ink-soft font-normal leading-relaxed line-clamp-3 flex-1">
                         {overview}
                     </p>
 
@@ -190,16 +190,16 @@ pub fn SpotlightCard(
                             view! {
                                 <button
                                     on:click=on_toggle_list
-                                    class="flex items-center justify-center h-[48px] px-8 rounded-[4px] bg-[#6d6d6e]/40 hover:bg-[#6d6d6e]/60 text-white font-bold text-base gap-2.5 transition-all active:scale-95 w-full cursor-pointer"
+                                    class="btn-glass flex items-center justify-center h-[48px] px-8 rounded-control text-base gap-2.5 transition-all active:scale-95 w-full"
                                 >
                                     {move || if is_in_my_list() {
                                         view! {
-                                            <i class="ph-bold ph-check text-xl text-white"></i>
+                                            <i class="ph-bold ph-check text-xl text-ink"></i>
                                             <span>"In My List"</span>
                                         }.into_any()
                                     } else {
                                         view! {
-                                            <i class="ph-bold ph-plus text-xl text-white"></i>
+                                            <i class="ph-bold ph-plus text-xl text-ink"></i>
                                             <span>"Add to My List"</span>
                                         }.into_any()
                                     }}
@@ -210,9 +210,9 @@ pub fn SpotlightCard(
                                 <div class="flex items-center gap-3">
                                     <button
                                         on:click=on_play_click
-                                        class="flex-1 flex items-center justify-center h-[48px] rounded-[4px] bg-white hover:bg-neutral-200 text-black font-bold text-base gap-2 transition-all active:scale-95 cursor-pointer shadow"
+                                        class="btn-ink flex-1 flex items-center justify-center h-[48px] rounded-control text-base gap-2 transition-all active:scale-95 shadow"
                                     >
-                                        <i class="ph-fill ph-play text-xl text-black"></i>
+                                        <i class="ph-fill ph-play text-xl text-void"></i>
                                         <span>{move || {
                                             let watch_store = crate::store::use_watch_store();
                                             if let Some(rec) = watch_store.get_record(movie_id, is_tv) {
@@ -225,16 +225,16 @@ pub fn SpotlightCard(
                                     </button>
                                     <button
                                         on:click=on_toggle_list
-                                        class="flex-1 flex items-center justify-center h-[48px] rounded-[4px] bg-[#6d6d6e]/40 hover:bg-[#6d6d6e]/60 text-white font-bold text-base gap-2 transition-all active:scale-95 cursor-pointer"
+                                        class="btn-glass flex-1 flex items-center justify-center h-[48px] rounded-control text-base gap-2 transition-all active:scale-95"
                                     >
                                         {move || if is_in_my_list() {
                                             view! {
-                                                <i class="ph-bold ph-check text-xl text-white"></i>
+                                                <i class="ph-bold ph-check text-xl text-ink"></i>
                                                 <span>"In My List"</span>
                                             }.into_any()
                                         } else {
                                             view! {
-                                                <i class="ph-bold ph-plus text-xl text-white"></i>
+                                                <i class="ph-bold ph-plus text-xl text-ink"></i>
                                                 <span>"My List"</span>
                                             }.into_any()
                                         }}

@@ -1,66 +1,26 @@
 @import "tailwindcss";
+@import "./brand.css";
+@import "./components.css";
 @source "../src/**/*.rs";
 @source "../index.html";
 
-@import url('https://fonts.googleapis.com/css2?family=Carter+One&display=swap');
-
 @font-face {
-  font-family: 'PStream Sans';
-  src: url('/fonts/netflix-sans.woff2') format('woff2');
-  font-weight: 400;
+  font-family: 'Inter Variable';
+  src: url('/fonts/inter/inter-latin-ext-wght-normal.woff2') format('woff2-variations');
+  font-weight: 100 900;
   font-style: normal;
   font-display: swap;
-}
-
-@font-face {
-  font-family: 'PStream Sans';
-  src: url('/fonts/ns-md.woff2') format('woff2');
-  font-weight: 500;
-  font-style: normal;
-  font-display: swap;
+  unicode-range: U+0100-02BA, U+02BD-02C5, U+02C7-02CC, U+02CE-02D7, U+02DD-02FF, U+0304, U+0308, U+0329, U+1D00-1DBF, U+1E00-1E9F, U+1EF2-1EFF, U+2020, U+20A0-20AB, U+20AD-20C0, U+2113, U+2C60-2C7F, U+A720-A7FF;
 }
 
 @font-face {
-  font-family: 'PStream Sans';
-  src: url('/fonts/ns-bd.woff2') format('woff2');
-  font-weight: 700 800;
+  font-family: 'Inter Variable';
+  src: url('/fonts/inter/inter-latin-wght-normal.woff2') format('woff2-variations');
+  font-weight: 100 900;
   font-style: normal;
   font-display: swap;
+  unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+0304, U+0308, U+0329, U+2000-206F, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD;
 }
-
-@font-face {
-  font-family: 'Harmonia Sans W01 Bold';
-  src: url('/fonts/Harmonia Sans W01 Bold.ttf') format('truetype');
-  font-weight: bold;
-  font-style: normal;
-  font-display: swap;
-}
-
-@supports (font-variation-settings: normal) {
-  @font-face {
-    font-family: 'PStream Sans';
-    src: url('/fonts/netflix-sans-core-variable-full.woff2') format('woff2');
-    font-weight: 100 900;
-    font-style: normal;
-    font-display: swap;
-  }
-}
-
-.font-netflix {
-  font-family: 'PStream Sans', sans-serif;
-}
-
-/* Fallback utilities for legacy class names to point to Netflix Sans */
-.font-harmonia,
-.font-harmonia-mono,
-.font-harmonia-condensed,
-.font-leaner {
-  font-family: 'PStream Sans', sans-serif;
-}
-
-@tailwind base;
-@tailwind components;
-@tailwind utilities;
 
 /* Layout tokens measured on Netflix (notes/netflix-reference/00-design-tokens.md).
    Breakpoints 600, 960, 1280, 1600, 1920, 2560. Under 600 the values come from the Android app,
@@ -85,37 +45,37 @@
 
 /* Tile width: whole tiles per row, 2 / 3 / 4 / 5 / 6 / 7 / 8 on the web (slot formula from Netflix:
    (row width - 2 margins - gaps) / tiles). Phones show 3.29 portrait tiles like the app. */
-.netflix-card-width {
+.tile-width {
   width: 28.23cqw;
 }
 @media (min-width: 600px) {
-  .netflix-card-width { width: calc((100cqw - 2 * var(--app-x) - 2 * var(--tile-gap)) / 3); }
+  .tile-width { width: calc((100cqw - 2 * var(--app-x) - 2 * var(--tile-gap)) / 3); }
 }
 @media (min-width: 960px) {
-  .netflix-card-width { width: calc((100cqw - 2 * var(--app-x) - 3 * var(--tile-gap)) / 4); }
+  .tile-width { width: calc((100cqw - 2 * var(--app-x) - 3 * var(--tile-gap)) / 4); }
 }
 @media (min-width: 1280px) {
-  .netflix-card-width { width: calc((100cqw - 2 * var(--app-x) - 4 * var(--tile-gap)) / 5); }
+  .tile-width { width: calc((100cqw - 2 * var(--app-x) - 4 * var(--tile-gap)) / 5); }
 }
 @media (min-width: 1600px) {
-  .netflix-card-width { width: calc((100cqw - 2 * var(--app-x) - 5 * var(--tile-gap)) / 6); }
+  .tile-width { width: calc((100cqw - 2 * var(--app-x) - 5 * var(--tile-gap)) / 6); }
 }
 @media (min-width: 1920px) {
-  .netflix-card-width { width: calc((100cqw - 2 * var(--app-x) - 6 * var(--tile-gap)) / 7); }
+  .tile-width { width: calc((100cqw - 2 * var(--app-x) - 6 * var(--tile-gap)) / 7); }
 }
 @media (min-width: 2560px) {
-  .netflix-card-width { width: calc((100cqw - 2 * var(--app-x) - 7 * var(--tile-gap)) / 8); }
+  .tile-width { width: calc((100cqw - 2 * var(--app-x) - 7 * var(--tile-gap)) / 8); }
 }
 
 /* Ranked (Top 10) card: one slot wide, numeral left half, poster right half. Phones use 47% of the row (about 2 cards). */
 .topten-card { container-type: inline-size; }
 @media (max-width: 599.98px) {
-  .netflix-card-width.topten-card { width: 47cqw; }
+  .tile-width.topten-card { width: 47cqw; }
 }
 
 /* Landscape rows on phones (continue watching) keep 2.15 tiles of 16:9. */
 @media (max-width: 599.98px) {
-  .netflix-card-width.netflix-card-landscape { width: calc((100cqw - var(--app-x) - 2 * var(--tile-gap)) / 2.15); }
+  .tile-width.tile-landscape { width: calc((100cqw - var(--app-x) - 2 * var(--tile-gap)) / 2.15); }
 }
 
 /* Tile shape: 5:7 posters on phones, 1.78125:1 backdrops from 600 up. */
@@ -126,20 +86,21 @@
 
 /* Billboard (inset card): margin top / bottom per breakpoint, synopsis size and width. The nav is 80 high, the
    card starts below it plus the top margin. Netflix: 4/16 under 960, 6/26, 8/36, 8/32, 12/32, 12/36 from 2560. */
+.with-subnav { --billboard-top-extra: calc(var(--subnav-h) - 8px); }
 .billboard-margin {
-  padding: calc(80px + 4px) var(--app-x) 16px;
+  padding: calc(var(--nav-h) + var(--billboard-top-extra, 0px) + 4px) var(--app-x) 16px;
 }
 @media (min-width: 960px) {
-  .billboard-margin { padding-top: calc(80px + 6px); padding-bottom: 26px; }
+  .billboard-margin { padding-top: calc(var(--nav-h) + var(--billboard-top-extra, 0px) + 6px); padding-bottom: 26px; }
 }
 @media (min-width: 1280px) {
-  .billboard-margin { padding-top: calc(80px + 8px); padding-bottom: 36px; }
+  .billboard-margin { padding-top: calc(var(--nav-h) + var(--billboard-top-extra, 0px) + 8px); padding-bottom: 36px; }
 }
 @media (min-width: 1600px) {
   .billboard-margin { padding-bottom: 32px; }
 }
 @media (min-width: 1920px) {
-  .billboard-margin { padding-top: calc(80px + 12px); }
+  .billboard-margin { padding-top: calc(var(--nav-h) + var(--billboard-top-extra, 0px) + 12px); }
 }
 @media (min-width: 2560px) {
   .billboard-margin { padding-bottom: 36px; }
@@ -188,7 +149,7 @@
 html {
   scroll-behavior: smooth;
   scrollbar-width: auto;
-  scrollbar-color: #4e4e4e #141414;
+  scrollbar-color: #4e4e4e var(--color-page);
   -webkit-tap-highlight-color: transparent;
   /* Fix blue highlight on mobile */
   -webkit-text-size-adjust: 100%;
@@ -201,7 +162,7 @@ html {
 }
 
 body {
-  font-family: 'PStream Sans', sans-serif;
+  font-family: var(--font-brand);
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
   background-color: #000000;
@@ -222,7 +183,7 @@ body {
 
 @media (min-width: 768px) {
   body {
-    background-color: #141414;
+    background-color: var(--color-page);
   }
 }
 
@@ -277,13 +238,13 @@ button,
 }
 
 ::-webkit-scrollbar-track {
-  background: #141414;
+  background: var(--color-page);
 }
 
 ::-webkit-scrollbar-thumb {
-  background-color: #3a3a3a;
+  background-color: var(--color-lift);
   border-radius: 10px;
-  border: 2px solid #141414;
+  border: 2px solid var(--color-page);
 }
 
 ::-webkit-scrollbar-thumb:hover {
@@ -291,7 +252,7 @@ button,
 }
 
 ::-webkit-scrollbar-corner {
-  background: #141414;
+  background: var(--color-page);
 }
 
 /* Utilities */
@@ -349,23 +310,23 @@ button,
 }
 
 /* Premium Netflix Red Glow */
-.netflix-red-glow {
-  box-shadow: 0 0 20px rgba(229, 9, 20, 0.4);
+.brand-glow {
+  box-shadow: 0 0 20px color-mix(in srgb, var(--color-brand) 40%, transparent);
 }
 
-.netflix-gradient-red {
-  background: linear-gradient(180deg, #E50914 0%, #B81D24 100%);
+.brand-gradient {
+  background: linear-gradient(180deg, var(--color-brand) 0%, var(--color-brand-deep) 100%);
 }
 
 .glass {
-  background: rgba(20, 20, 20, 0.7);
+  background: color-mix(in srgb, var(--color-page) 70%, transparent);
   backdrop-filter: blur(12px) saturate(180%);
   -webkit-backdrop-filter: blur(12px) saturate(180%);
   border: 1px solid rgba(255, 255, 255, 0.1);
 }
 
-.text-gradient-red {
-  background: linear-gradient(to right, #E50914, #ff5f6d);
+.text-gradient-brand {
+  background: linear-gradient(to right, var(--color-brand), var(--color-brand-glow));
   -webkit-background-clip: text;
   background-clip: text;
   -webkit-text-fill-color: transparent;

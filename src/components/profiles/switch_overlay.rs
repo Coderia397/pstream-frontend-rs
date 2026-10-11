@@ -9,7 +9,7 @@ pub fn ProfileSwitchOverlay(
 ) -> impl IntoView {
     let name = profile.name.clone();
     let avatar = profile.avatar_url.clone().unwrap_or_else(|| {
-        "https://wallpapers.com/images/hd/netflix-profile-pictures-1000-x-1000-88wkdmjrorckekha.jpg".to_string()
+        crate::brand::DEFAULT_AVATAR.to_string()
     });
     let is_kids = profile.is_kids;
 
@@ -25,7 +25,7 @@ pub fn ProfileSwitchOverlay(
     });
 
     view! {
-        <div class="fixed inset-0 z-[300] bg-black flex flex-col items-center justify-center overflow-hidden animate-in fade-in duration-200">
+        <div class="fixed inset-0 z-(--z-takeover) bg-void flex flex-col items-center justify-center overflow-hidden animate-in fade-in duration-(--motion-base)">
             // Kids bloom backdrop
             {if is_kids {
                 view! {
@@ -55,7 +55,7 @@ pub fn ProfileSwitchOverlay(
                         cy="110"
                         r="95"
                         fill="none"
-                        stroke="#e50914"
+                        style="stroke: var(--color-brand)"
                         stroke-width="8"
                         stroke-linecap="round"
                         stroke-dasharray="210 390"
@@ -63,7 +63,7 @@ pub fn ProfileSwitchOverlay(
                 </svg>
 
                 // Profile Avatar
-                <div class="w-24 h-24 sm:w-28 sm:h-28 rounded-md overflow-hidden shadow-2xl ring-2 ring-white/40 z-10">
+                <div class="w-24 h-24 sm:w-28 sm:h-28 rounded-field overflow-hidden shadow-2xl ring-2 ring-ink/40 z-10">
                     {if is_kids && profile.avatar_url.is_none() {
                         view! { <crate::components::profiles::kids_avatar::KidsAvatar size=112.0 /> }.into_any()
                     } else {
@@ -79,7 +79,7 @@ pub fn ProfileSwitchOverlay(
             </div>
 
             // Profile name
-            <h2 class="text-white text-xl sm:text-2xl font-bold mt-8 tracking-wide z-10 animate-pulse">
+            <h2 class="text-ink text-xl sm:text-2xl font-bold mt-8 tracking-wide z-10 animate-pulse">
                 {name}
             </h2>
         </div>

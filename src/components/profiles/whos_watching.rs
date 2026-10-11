@@ -8,10 +8,10 @@ use crate::components::profiles::switch_overlay::ProfileSwitchOverlay;
 fn save_profiles_to_storage(profiles: &[Profile], active_id: Option<&str>) {
     if let Some(storage) = web_sys::window().and_then(|w| w.local_storage().ok().flatten()) {
         if let Ok(json) = serde_json::to_string(profiles) {
-            let _ = storage.set_item("pstream_profiles", &json);
+            let _ = storage.set_item(crate::keys::PROFILES, &json);
         }
         if let Some(id) = active_id {
-            let _ = storage.set_item("pstream_active_profile", id);
+            let _ = storage.set_item(crate::keys::ACTIVE_PROFILE, id);
         }
     }
 }
@@ -102,8 +102,8 @@ pub fn WhosWatchingGate() -> impl IntoView {
     };
 
     view! {
-        <div class="fixed inset-0 z-[9999] bg-[#141414] text-white flex flex-col items-center justify-center animate-in fade-in duration-500 select-none">
-            <h1 class="text-3xl md:text-5xl text-white font-medium mb-12 tracking-wide text-center">
+        <div class="fixed inset-0 z-(--z-screen) bg-page text-ink flex flex-col items-center justify-center animate-in fade-in duration-(--motion-slower) select-none">
+            <h1 class="text-3xl md:text-5xl text-ink font-medium mb-12 tracking-wide text-center">
                 {move || if edit_mode.get() { "Manage Profiles:" } else { "Who's watching?" }}
             </h1>
 
@@ -115,7 +115,7 @@ pub fn WhosWatchingGate() -> impl IntoView {
                     let is_kids = profile.is_kids;
                     let has_pin = profile.pin.is_some();
                     let avatar = profile.avatar_url.clone().unwrap_or_else(|| {
-                        "https://wallpapers.com/images/hd/netflix-profile-pictures-1000-x-1000-88wkdmjrorckekha.jpg".to_string()
+                        crate::brand::DEFAULT_AVATAR.to_string()
                     });
 
                     view! {
@@ -125,7 +125,7 @@ pub fn WhosWatchingGate() -> impl IntoView {
                             class="flex flex-col items-center gap-3 group w-[110px] sm:w-[140px] cursor-pointer focus:outline-none"
                         >
                             // Tile with white hover outline (Task 095)
-                            <div class="relative w-[110px] h-[110px] sm:w-[140px] sm:h-[140px] rounded-md overflow-hidden shadow-lg ring-white transition-all group-hover:ring-[3px] group-active:scale-[0.98]">
+                            <div class="relative w-[110px] h-[110px] sm:w-[140px] sm:h-[140px] rounded-field overflow-hidden shadow-lg ring-ink transition-all group-hover:ring-[3px] group-active:scale-[0.98]">
                                 {if is_kids && p_clone.avatar_url.is_none() {
                                     view! { <crate::components::profiles::kids_avatar::KidsAvatar size=140.0 /> }.into_any()
                                 } else {
@@ -137,8 +137,8 @@ pub fn WhosWatchingGate() -> impl IntoView {
                                         />
                                         {if is_kids {
                                             view! {
-                                                <div class="absolute bottom-1.5 right-1.5 bg-[#E50914] text-white text-[9px] font-black px-1 py-0.5 rounded shadow">
-                                                    "KIDS"
+                                                <div class="absolute bottom-1.5 right-1.5 bg-brand text-ink text-nano font-black px-1 py-0.5 rounded-control shadow">
+                                                    {crate::i18n::t("whos-watching-kids")}
                                                 </div>
                                             }.into_any()
                                         } else {
@@ -150,8 +150,8 @@ pub fn WhosWatchingGate() -> impl IntoView {
                                 // Edit mode pencil overlay
                                 {move || if edit_mode.get() {
                                     view! {
-                                        <div class="absolute inset-0 bg-black/55 flex items-center justify-center">
-                                            <i class="ph-bold ph-pencil-simple text-white text-3xl"></i>
+                                        <div class="absolute inset-0 bg-void/55 flex items-center justify-center">
+                                            <i class="ph-bold ph-pencil-simple text-ink text-3xl"></i>
                                         </div>
                                     }.into_any()
                                 } else {
@@ -162,16 +162,16 @@ pub fn WhosWatchingGate() -> impl IntoView {
                             // Profile name and lock icon (Task 096)
                             <span
                                 class=move || if edit_mode.get() {
-                                    "text-sm sm:text-base font-medium transition-colors text-white/40"
+                                    "text-sm sm:text-base font-medium transition-colors text-ink/40"
                                 } else {
-                                    "text-sm sm:text-base font-medium transition-colors text-[#808080] group-hover:text-white"
+                                    "text-sm sm:text-base font-medium transition-colors text-mute group-hover:text-ink"
                                 }
                             >
                                 {name}
                             </span>
                             {if has_pin && !edit_mode.get() {
                                 view! {
-                                    <i class="ph-bold ph-lock-key text-xs text-[#808080] -mt-1.5"></i>
+                                    <i class="ph-bold ph-lock-key text-xs text-mute -mt-1.5"></i>
                                 }.into_any()
                             } else {
                                 view! { <div /> }.into_any()
@@ -189,11 +189,11 @@ pub fn WhosWatchingGate() -> impl IntoView {
                                 on:click=move |_| set_modal_state.set(Some(("add".to_string(), None)))
                                 class="flex flex-col items-center gap-3 group w-[110px] sm:w-[140px] cursor-pointer focus:outline-none"
                             >
-                                <div class="w-[110px] h-[110px] sm:w-[140px] sm:h-[140px] rounded-full bg-[#2b2b2b] flex items-center justify-center transition-all group-hover:bg-[#404040] group-active:scale-[0.98]">
-                                    <i class="ph-bold ph-plus text-[#808080] group-hover:text-white text-4xl sm:text-5xl transition-colors"></i>
+                                <div class="w-[110px] h-[110px] sm:w-[140px] sm:h-[140px] rounded-full bg-menu flex items-center justify-center transition-all group-hover:bg-lift-strong group-active:scale-[0.98]">
+                                    <i class="ph-bold ph-plus text-mute group-hover:text-ink text-4xl sm:text-5xl transition-colors"></i>
                                 </div>
-                                <span class="text-sm sm:text-base text-[#808080] group-hover:text-white transition-colors font-medium">
-                                    "Add Profile"
+                                <span class="text-sm sm:text-base text-mute group-hover:text-ink transition-colors font-medium">
+                                    {crate::i18n::t("whos-watching-add-profile")}
                                 </span>
                             </button>
                         }.into_any()
@@ -208,9 +208,9 @@ pub fn WhosWatchingGate() -> impl IntoView {
                 <button
                     type="button"
                     on:click=move |_| set_edit_mode.update(|e| *e = !*e)
-                    class="border border-gray-500 text-gray-500 hover:text-white hover:border-white px-6 py-2 text-sm sm:text-base md:text-lg font-medium tracking-[2px] uppercase transition-colors cursor-pointer active:scale-95"
-                    class=("bg-white", move || edit_mode.get())
-                    class=("!text-black", move || edit_mode.get())
+                    class="border border-gray-500 text-gray-500 hover:text-ink hover:border-ink px-6 py-2 text-sm sm:text-base md:text-lg font-medium tracking-[2px] uppercase transition-colors cursor-pointer active:scale-95"
+                    class=("bg-ink", move || edit_mode.get())
+                    class=("!text-void", move || edit_mode.get())
                 >
                     {move || if edit_mode.get() { "Done" } else { "Manage Profiles" }}
                 </button>

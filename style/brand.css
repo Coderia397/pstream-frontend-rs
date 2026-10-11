@@ -1,0 +1,158 @@
+/* Brand and design tokens. Every color, corner radius and brand font used by the app comes from this file.
+   Tailwind v4 turns each token into utilities: --color-brand gives bg-brand, text-brand, border-brand, ring-brand and so on,
+   --radius-card gives rounded-card, --font-brand gives font-brand. Change a value here and the whole app follows.
+   The product name, logo paths and contact details are in src/brand.rs. */
+@theme {
+  /* Brand accent */
+  --color-brand: #e50914;
+  --color-brand-hover: #f40612;
+  --color-brand-active: #b80710;
+  --color-brand-deep: #b81d24;
+  --color-brand-glow: #ff5f6d;
+  --color-accent: #ff0055;
+  --color-accent-alt: #ff007f;
+
+  /* Status */
+  --color-success: #46d369;
+  --color-danger: oklch(0.637 0.237 25.331);
+  --color-danger-soft: oklch(0.704 0.191 22.216);
+  --color-danger-mid: oklch(0.808 0.114 19.571);
+  --color-danger-pale: oklch(0.885 0.062 18.334);
+  --color-danger-strong: oklch(0.505 0.213 27.518);
+  --color-danger-deep: oklch(0.258 0.092 26.042);
+
+  /* Base colors: ink is the foreground (text, hairlines, overlays), void is the background and shading */
+  --color-ink: #ffffff;
+  --color-void: #000000;
+
+  /* Surfaces, darkest to lightest */
+  --color-page: #141414;
+  --color-raised: #181818;
+  --color-placeholder: #222222;
+  --color-card: #1e1e1e;
+  --color-field: #262626;
+  --color-panel: #2f2f2f;
+  --color-menu: #2a2a2a;
+  --color-lift: #3a3a3a;
+  --color-card-alt: #202020;
+  --color-sheet: #1f1f1f;
+  --color-sheet-alt: #1c1c1c;
+  --color-lift-strong: #404040;
+  --color-line: #333333;
+  --color-line-strong: #4d4d4d;
+
+  /* Text and neutral controls */
+  --color-ink-soft: #e5e5e5;
+  --color-ink-dim: #bdbec0;
+  --color-ink-light: #d2d2d2;
+  --color-ink-silver: #bcbcbc;
+  --color-ink-silver-alt: #c0c0c0;
+  --color-ink-body: #b3b3b3;
+  --color-ink-warm: #d4d4d1;
+  --color-ink-ash: #777777;
+  --color-mute: #808080;
+  --color-button-secondary: #6d6d6e;
+
+  /* Corner radii. Tiles follow the responsive --tile-radius set in input.css. */
+  --radius-micro: 1px;
+  --radius-hairline: 2px;
+  --radius-tick: 3px;
+  --radius-control: 0.25rem;
+  --radius-field: 0.375rem;
+  --radius-card: 0.5rem;
+  --radius-modal: 0.75rem;
+  --radius-chip-inner: 10px;
+  --radius-chip: 20px;
+  --radius-poster: 18px;
+  --radius-billboard: 24px;
+  --radius-sheet: 1rem;
+  --radius-tile: var(--tile-radius);
+
+  /* Type scale (font sizes only; line heights stay with the element) */
+  --text-pico: 8px;
+  --text-nano: 9px;
+  --text-micro: 10px;
+  --text-caption: 11px;
+  --text-caption-sm: 11.2px;
+  --text-fine: 12px;
+  --text-label: 13px;
+  --text-body-sm: 14px;
+  --text-body: 15px;
+  --text-body-md: 16px;
+  --text-body-lg: 17px;
+  --text-title-sm: 18px;
+  --text-title: 20px;
+  --text-title-lg: 21px;
+  --text-title-md: 22px;
+  --text-heading: 24px;
+  --text-heading-md: 26px;
+  --text-heading-lg: 28px;
+  --text-heading-xl: 32px;
+  --text-display-sm: 38px;
+  --text-display: 40px;
+
+  /* Shadows */
+  --shadow-popover: 0 8px 30px rgba(0, 0, 0, 0.55);
+  --shadow-chip: 0 3px 10px rgba(0, 0, 0, 0.75);
+  --shadow-card: 0 8px 24px rgba(0, 0, 0, 0.5);
+  --shadow-brand-glow: 0 0 15px color-mix(in srgb, var(--color-brand) 60%, transparent);
+  --shadow-vignette: 0 0 50px rgba(0, 0, 0, 0.8);
+  --shadow-soft: 0 0 15px rgba(0, 0, 0, 0.5);
+  --shadow-raise: 0 4px 12px rgba(0, 0, 0, 0.5);
+  --drop-shadow-title: 0 4px 14px rgba(0, 0, 0, 0.95);
+  --drop-shadow-text-hard: 0 2px 8px rgba(0, 0, 0, 1);
+  --drop-shadow-text: 0 2px 8px rgba(0, 0, 0, 0.8);
+  --drop-shadow-text-soft: 0 2px 6px rgba(0, 0, 0, 0.6);
+  --drop-shadow-text-faint: 0 2px 4px rgba(0, 0, 0, 0.4);
+  --drop-shadow-halo: 0 0 8px rgba(0, 0, 0, 0.8);
+  --drop-shadow-brand-lg: 0 8px 30px color-mix(in srgb, var(--color-brand) 35%, transparent);
+  --drop-shadow-brand-sm: 0 2px 8px color-mix(in srgb, var(--color-brand) 40%, transparent);
+  --drop-shadow-accent-pink: 0 1px 3px rgba(255, 0, 100, 0.5);
+  --drop-shadow-accent-violet: 0 1px 3px rgba(155, 93, 229, 0.5);
+
+  /* Fonts */
+  --font-brand: 'Inter Variable', ui-sans-serif, system-ui, -apple-system, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+}
+
+/* Layout dimensions. Used as h-(--nav-h), top-(--nav-h) and in input.css. */
+:root {
+  --nav-h: 80px;
+  --nav-h-mobile: 52px;
+  --bottom-nav-h: 76px;
+  /* Row with the page title and Genres button above the billboard on Films and Series (Netflix web, measured 2026-10-09). */
+  --subnav-h: 74px;
+}
+
+/* Stacking order, lowest to highest. Used as z-(--z-nav). */
+:root {
+  --z-card-hover: 9;
+  --z-grain: 60;
+  --z-subnav: 79;
+  --z-nav: 80;
+  --z-nav-menu: 85;
+  --z-dialog: 100;
+  --z-tooltip: 110;
+  --z-modal: 200;
+  --z-modal-top: 250;
+  --z-takeover: 300;
+  --z-screen: 9999;
+  --z-info-modal: 10000;
+  --z-bottom-nav: 10020;
+  --z-drawer: 10030;
+  --z-sheet-backdrop: 10040;
+  --z-sheet: 10050;
+  --z-share-backdrop: 10080;
+  --z-share: 10090;
+}
+
+/* Motion. Used as duration-(--motion-base). */
+:root {
+  --motion-instant: 75ms;
+  --motion-quick: 100ms;
+  --motion-fast: 150ms;
+  --motion-base: 200ms;
+  --motion-slow: 300ms;
+  --motion-slower: 500ms;
+  --motion-slowest: 700ms;
+  --motion-glacial: 1000ms;
+}

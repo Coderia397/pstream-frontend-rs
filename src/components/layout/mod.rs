@@ -17,11 +17,11 @@ pub fn Layout(children: Children) -> impl IntoView {
     let is_mobile = false; 
 
     view! {
-        <div class="bg-black md:bg-[#141414] min-h-screen flex flex-col font-sans text-white selection:bg-red-600 selection:text-white">
+        <div class="bg-void md:bg-page min-h-screen flex flex-col font-sans text-ink selection:bg-brand selection:text-ink">
             <Navbar />
             
-            <div class="flex-1 transition-all duration-300"
-                 class=("pb-[calc(76px+env(safe-area-inset-bottom))]", move || is_mobile)
+            <div class="flex-1 transition-all duration-(--motion-slow)"
+                 class=("pb-[calc(var(--bottom-nav-h)+env(safe-area-inset-bottom))]", move || is_mobile)
                  class=("pb-0", move || !is_mobile)>
                 {children()}
             </div>

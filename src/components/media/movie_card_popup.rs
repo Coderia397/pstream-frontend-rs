@@ -267,7 +267,7 @@ pub fn MovieCardPopup(
         <Portal>
             <div
                 data-popup="true"
-                class="absolute z-[9999] pointer-events-auto rounded-[6px] overflow-hidden bg-[#181818] text-white shadow-[0_3px_10px_rgba(0,0,0,0.75)] animate-in fade-in zoom-in-95 duration-200"
+                class="absolute z-(--z-screen) pointer-events-auto rounded-field overflow-hidden bg-raised text-ink shadow-chip animate-in fade-in zoom-in-95 duration-(--motion-base)"
                 style=format!(
                     "width: {}px; top: {}px; left: {}px; transform-origin: {};",
                     popup_w(hovered_rect.width()), top, left, transform_origin
@@ -276,7 +276,7 @@ pub fn MovieCardPopup(
                 on:mouseleave=move |_| on_mouse_leave.run(())
             >
                 // Media / Thumbnail preview
-                <div class="relative w-full aspect-video bg-[#202020] overflow-hidden">
+                <div class="relative w-full aspect-video bg-card-alt overflow-hidden">
                     // Base Image layer (always present so no flash of red play button or black box)
                     {
                         let src_opt = image_url_stored.get_value();
@@ -292,12 +292,12 @@ pub fn MovieCardPopup(
                                 }.into_any()
                             } else {
                                 view! {
-                                    <div class="w-full h-full flex items-center justify-center text-white/30 text-xs">
-                                        "No Image"
+                                    <div class="w-full h-full flex items-center justify-center text-ink/30 text-xs">
+                                        {crate::i18n::t("info-modal-episodes-no-image")}
                                     </div>
                                 }.into_any()
                             }}
-                            <div class="absolute inset-0 bg-gradient-to-t from-[#181818] via-transparent to-transparent opacity-80 pointer-events-none" />
+                            <div class="absolute inset-0 bg-gradient-to-t from-raised via-transparent to-transparent opacity-80 pointer-events-none" />
                             <span class="absolute bottom-2 left-3 font-black text-sm tracking-wide drop-shadow-md line-clamp-1 pointer-events-none">
                                 {t}
                             </span>
@@ -351,8 +351,8 @@ pub fn MovieCardPopup(
                         if rec.percentage > 0.0 {
                             let pct = rec.percentage.clamp(0.0, 100.0);
                             view! {
-                                <div class="h-1 w-full bg-white/20 relative">
-                                    <div class="h-full bg-[#e50914]" style=format!("width: {:.1}%;", pct) />
+                                <div class="h-1 w-full bg-ink/20 relative">
+                                    <div class="h-full bg-brand" style=format!("width: {:.1}%;", pct) />
                                 </div>
                             }.into_any()
                         } else {
@@ -449,8 +449,8 @@ pub fn MovieCardPopup(
                     </div>
 
                     // Badges & Details Row
-                    <div class="flex items-center gap-2 my-[12.8px] min-h-[32px] text-[16px] font-normal text-[#bcbcbc] flex-wrap">
-                        <span class="text-[#46d369] font-bold">
+                    <div class="flex items-center gap-2 my-[12.8px] min-h-[32px] text-body-md font-normal text-ink-silver flex-wrap">
+                        <span class="text-success font-bold">
                             {format!("{}% Match", movie_stored.get_value().match_score())}
                         </span>
                         <MaturityBadge
@@ -462,8 +462,8 @@ pub fn MovieCardPopup(
                         <span>
                             {if is_tv { "Series" } else { "Film" }}
                         </span>
-                        <span class="border border-white/40 rounded-[3px] px-[5.6px] text-[11.2px] leading-[16px] text-white/90">
-                            "HD"
+                        <span class="border border-ink/40 rounded-tick px-[5.6px] text-caption-sm leading-[16px] text-ink/90">
+                            {crate::i18n::t("movie-card-popup-hd")}
                         </span>
                     </div>
 
@@ -476,11 +476,11 @@ pub fn MovieCardPopup(
                             &overview_stored.get_value(),
                         );
                         view! {
-                            <div class="flex items-center text-[16px] leading-[20.8px] font-normal text-white flex-wrap mb-2 min-h-[24px]">
+                            <div class="flex items-center text-body-md leading-[20.8px] font-normal text-ink flex-wrap mb-2 min-h-[24px]">
                                 {vibe_tags.into_iter().enumerate().map(|(idx, tag)| {
                                     view! {
                                         {if idx > 0 {
-                                            view! { <span class="text-white/40 text-[16px] px-[3px]">"•"</span> }.into_any()
+                                            view! { <span class="text-ink/40 text-body-md px-[3px]">"•"</span> }.into_any()
                                         } else {
                                             view! { <span /> }.into_any()
                                         }}

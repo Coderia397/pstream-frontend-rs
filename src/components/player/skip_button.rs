@@ -30,9 +30,9 @@ pub fn SkipButton(
             <Show when=show_skip_intro>
                 <button
                     on:click=move |_| on_skip_intro.run(())
-                    class="flex items-center gap-2.5 px-6 py-3 bg-black/75 hover:bg-black/90 backdrop-blur-md text-white font-bold text-sm rounded-lg border border-white/20 shadow-2xl hover:scale-105 active:scale-95 transition-all duration-150 select-none group"
+                    class="flex items-center gap-2.5 px-6 py-3 bg-void/75 hover:bg-void/90 backdrop-blur-md text-ink font-bold text-sm rounded-card border border-ink/20 shadow-2xl hover:scale-105 active:scale-95 transition-all duration-(--motion-fast) select-none group"
                 >
-                    <i class="ph ph-fast-forward text-lg text-white group-hover:text-[#e50914] transition-colors"></i>
+                    <i class="ph ph-fast-forward text-lg text-ink group-hover:text-brand transition-colors"></i>
                     <span>"Skip Intro"</span>
                 </button>
             </Show>
@@ -40,7 +40,7 @@ pub fn SkipButton(
             <Show when=show_next_episode>
                 <button
                     on:click=move |_| on_next_episode.run(())
-                    class="flex items-center gap-2.5 px-6 py-3 bg-[#e50914] hover:bg-[#b80710] text-white font-bold text-sm rounded-lg shadow-2xl hover:scale-105 active:scale-95 transition-all duration-150 select-none"
+                    class="btn-brand flex items-center gap-2.5 px-6 py-3 text-sm rounded-card shadow-2xl hover:scale-105 active:scale-95 transition-all duration-(--motion-fast) select-none"
                 >
                     <i class="ph ph-skip-forward text-lg"></i>
                     <span>"Next Episode"</span>

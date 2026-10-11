@@ -118,24 +118,24 @@ pub fn NotFoundPage() -> impl IntoView {
     };
 
     view! {
-        <div class="relative min-h-screen bg-[#141414] text-white overflow-x-hidden select-none pb-16">
+        <div class="relative min-h-screen bg-page text-ink overflow-x-hidden select-none pb-16">
             // Primary Navbar
             <Navbar />
 
             // CRT scanlines overlay
-            <div class="fixed inset-0 pointer-events-none z-[60] opacity-[0.25] mix-blend-overlay bg-[linear-gradient(rgba(18,16,16,0)_50%,rgba(0,0,0,0.3)_50%),linear-gradient(90deg,rgba(255,0,0,0.06),rgba(0,255,0,0.02),rgba(0,0,255,0.06))] bg-[size:100%_4px,6px_100%]" />
+            <div class="fixed inset-0 pointer-events-none z-(--z-grain) opacity-[0.25] mix-blend-overlay bg-[linear-gradient(rgba(18,16,16,0)_50%,rgba(0,0,0,0.3)_50%),linear-gradient(90deg,rgba(255,0,0,0.06),rgba(0,255,0,0.02),rgba(0,0,255,0.06))] bg-[size:100%_4px,6px_100%]" />
 
             // SubNav Header: "Alternate Dimensions" + "Glitch Zones ▾"
             <div class="pt-20 px-6 md:px-14 lg:px-16 flex items-center gap-6 z-30 relative">
-                <h1 class="text-3xl md:text-4xl font-bold tracking-tight text-white">
-                    "Alternate Dimensions"
+                <h1 class="text-3xl md:text-4xl font-bold tracking-tight text-ink">
+                    {crate::i18n::t("not-found-alternate-dimensions")}
                 </h1>
 
                 // Glitch Zones dropdown
                 <div class="relative">
                     <button
                         on:click=move |_| set_dropdown_open.update(|o| *o = !*o)
-                        class="flex items-center gap-2 bg-black/80 hover:bg-black border border-white/70 px-4 py-1.5 text-sm font-bold text-white rounded transition-colors"
+                        class="flex items-center gap-2 bg-void/80 hover:bg-void border border-ink/70 px-4 py-1.5 text-sm font-bold text-ink rounded-control transition-colors"
                     >
                         <span>{move || GLITCH_ZONES[active_index.get()]}</span>
                         <i class="ph-bold ph-caret-down text-xs" />
@@ -143,7 +143,7 @@ pub fn NotFoundPage() -> impl IntoView {
 
                     {move || if dropdown_open.get() {
                         view! {
-                            <div class="absolute left-0 top-full mt-2 w-48 bg-black/95 border border-white/20 rounded shadow-2xl py-1 z-50">
+                            <div class="absolute left-0 top-full mt-2 w-48 bg-void/95 border border-ink/20 rounded-control shadow-2xl py-1 z-50">
                                 {GLITCH_ZONES.iter().enumerate().map(|(idx, &name)| {
                                     let is_active = move || active_index.get() == idx;
                                     view! {
@@ -155,9 +155,9 @@ pub fn NotFoundPage() -> impl IntoView {
                                             }
                                             class=move || {
                                                 if is_active() {
-                                                    "w-full text-left px-4 py-2 text-xs font-bold text-white bg-white/20 hover:bg-white/30 transition-colors"
+                                                    "w-full text-left px-4 py-2 text-xs font-bold text-ink bg-ink/20 hover:bg-ink/30 transition-colors"
                                                 } else {
-                                                    "w-full text-left px-4 py-2 text-xs font-medium text-white/80 hover:bg-white/10 hover:text-white transition-colors"
+                                                    "w-full text-left px-4 py-2 text-xs font-medium text-ink/80 hover:bg-ink/10 hover:text-ink transition-colors"
                                                 }
                                             }
                                         >
@@ -174,22 +174,22 @@ pub fn NotFoundPage() -> impl IntoView {
             </div>
 
             // Dynamic Banner Backdrop
-            <div class="relative h-[60vh] sm:h-[70vh] md:h-[80vh] w-full overflow-hidden bg-black mt-4">
-                <div class="absolute inset-0 z-0 pointer-events-none transition-all duration-700">
+            <div class="relative h-[60vh] sm:h-[70vh] md:h-[80vh] w-full overflow-hidden bg-void mt-4">
+                <div class="absolute inset-0 z-0 pointer-events-none transition-all duration-(--motion-slowest)">
                     <img
                         src=move || active().backdrop
-                        class="w-full h-full object-cover opacity-70 scale-105 transition-all duration-1000 ease-out"
-                        alt="Cinematic Background"
+                        class="w-full h-full object-cover opacity-70 scale-105 transition-all duration-(--motion-glacial) ease-out"
+                        alt=crate::i18n::t("not-found-cinematic-background")
                     />
-                    <div class="absolute inset-0 bg-gradient-to-b from-black/80 via-black/15 to-transparent" />
-                    <div class="absolute inset-0 bg-gradient-to-t from-[#141414] via-[#141414]/30 to-transparent" />
+                    <div class="absolute inset-0 bg-gradient-to-b from-void/80 via-void/15 to-transparent" />
+                    <div class="absolute inset-0 bg-gradient-to-t from-page via-page/30 to-transparent" />
                     <div class="absolute inset-0 bg-[radial-gradient(circle_at_center,transparent_20%,#000000_90%)] opacity-65" />
                 </div>
 
                 // Hero Content
                 <div class="absolute top-0 left-0 w-full h-full flex flex-col justify-end z-20 pl-[calc(1.5rem+env(safe-area-inset-left,0px))] md:pl-14 lg:pl-16 pr-4 md:pr-12 pointer-events-none pb-[12%] sm:pb-[9%] md:pb-[6%]">
                     <div class="max-w-[95%] sm:max-w-lg md:max-w-xl lg:max-w-2xl space-y-4 md:space-y-5 pointer-events-auto">
-                        <div class="text-[10px] sm:text-xs font-bold tracking-[0.25em] text-red-500 drop-shadow-[0_2px_8px_rgba(229,9,20,0.4)]">
+                        <div class="text-micro sm:text-xs font-bold tracking-[0.25em] text-danger drop-shadow-brand-sm">
                             {move || active().subtitle}
                         </div>
 
@@ -217,7 +217,7 @@ pub fn NotFoundPage() -> impl IntoView {
                             </div>
                         </div>
 
-                        <p class="text-[12px] sm:text-[13px] md:text-[15px] font-medium text-white/90 line-clamp-3 leading-relaxed max-w-[90%] sm:max-w-lg transition-all duration-700 drop-shadow-md">
+                        <p class="text-fine sm:text-label md:text-body font-medium text-ink/90 line-clamp-3 leading-relaxed max-w-[90%] sm:max-w-lg transition-all duration-(--motion-slowest) drop-shadow-md">
                             {move || active().synopsis}
                         </p>
 
@@ -227,15 +227,15 @@ pub fn NotFoundPage() -> impl IntoView {
                                     let nav = navigate.clone();
                                     move |_| nav("/browse", Default::default())
                                 }
-                                class="flex items-center justify-center bg-white text-black px-6 sm:px-8 h-[36px] md:h-[42px] rounded-[4px] font-bold hover:bg-white/80 transition-colors text-[14px] md:text-[17px] gap-2 active:scale-95 shadow-lg duration-200"
+                                class="btn-ink flex items-center justify-center px-6 sm:px-8 h-[36px] md:h-[42px] rounded-control text-body-sm md:text-body-lg gap-2 active:scale-95 shadow-lg duration-(--motion-base)"
                             >
-                                <i class="ph-fill ph-house text-xl text-black" />
+                                <i class="ph-fill ph-house text-xl text-void" />
                                 <span>"Return to Home"</span>
                             </button>
 
                             <button
                                 on:click=move |_| set_is_drawer_open.set(true)
-                                class="flex items-center justify-center bg-[#6d6d6e]/80 text-white px-5 sm:px-8 h-[36px] md:h-[42px] rounded-[4px] font-bold hover:bg-[#6d6d6e]/60 transition-all text-[14px] md:text-[17px] gap-2 active:scale-95 shadow-lg duration-200"
+                                class="btn-glass flex items-center justify-center px-5 sm:px-8 h-[36px] md:h-[42px] rounded-control transition-all text-body-sm md:text-body-lg gap-2 active:scale-95 shadow-lg duration-(--motion-base)"
                             >
                                 <i class="ph-bold ph-info text-xl" />
                                 <span>"More Info"</span>
@@ -247,8 +247,8 @@ pub fn NotFoundPage() -> impl IntoView {
 
             // Alternate Dimensions Row (Horizontal 16:9 cards)
             <main class="relative z-10 -mt-8 sm:-mt-12 md:-mt-16 space-y-4 md:space-y-6 px-6 md:px-14 lg:px-16">
-                <h2 class="text-white text-xl md:text-2xl font-black mb-4">
-                    "Alternate Dimensions: More Like This"
+                <h2 class="text-ink text-xl md:text-2xl font-black mb-4">
+                    {crate::i18n::t("not-found-alternate-dimensions-more-like-this")}
                 </h2>
                 <div class="flex gap-3 overflow-x-auto pb-4 scrollbar-hide py-2">
                     {DIMENSIONS.iter().enumerate().map(|(idx, dim)| {
@@ -261,8 +261,8 @@ pub fn NotFoundPage() -> impl IntoView {
                                 }
                                 class=move || {
                                     format!(
-                                        "relative flex-none w-[200px] sm:w-[240px] md:w-[280px] aspect-video rounded-md overflow-hidden cursor-pointer transition-all duration-300 transform hover:scale-105 border-2 bg-zinc-900 {}",
-                                        if is_sel() { "border-red-600 shadow-[0_0_15px_rgba(229,9,20,0.6)]" } else { "border-transparent hover:border-white/30" }
+                                        "relative flex-none w-[200px] sm:w-[240px] md:w-[280px] aspect-video rounded-field overflow-hidden cursor-pointer transition-all duration-(--motion-slow) transform hover:scale-105 border-2 bg-zinc-900 {}",
+                                        if is_sel() { "border-brand shadow-brand-glow" } else { "border-transparent hover:border-ink/30" }
                                     )
                                 }
                             >
@@ -272,11 +272,11 @@ pub fn NotFoundPage() -> impl IntoView {
                                     class="w-full h-full object-cover"
                                     loading="lazy"
                                 />
-                                <div class="absolute inset-0 bg-black/20 hover:bg-black/0 transition-colors flex items-center justify-center p-4">
+                                <div class="absolute inset-0 bg-void/20 hover:bg-void/0 transition-colors flex items-center justify-center p-4">
                                     <img
                                         src=dim.title_img
                                         alt=dim.title
-                                        class="max-h-[70%] max-w-[85%] object-contain select-none filter drop-shadow-[0_2px_8px_rgba(0,0,0,0.8)]"
+                                        class="max-h-[70%] max-w-[85%] object-contain select-none filter drop-shadow-text"
                                         style="mix-blend-mode: screen;"
                                     />
                                 </div>
@@ -289,54 +289,54 @@ pub fn NotFoundPage() -> impl IntoView {
             // Technical Details Drawer
             {move || if is_drawer_open.get() {
                 view! {
-                    <div class="fixed inset-0 z-[100] flex items-center justify-end bg-black/60 backdrop-blur-sm">
+                    <div class="fixed inset-0 z-(--z-dialog) flex items-center justify-end bg-void/60 backdrop-blur-sm">
                         <div
                             class="absolute inset-0"
                             on:click=move |_| set_is_drawer_open.set(false)
                         />
-                        <div class="relative w-full max-w-md sm:max-w-lg h-full bg-[#181818]/95 border-l border-white/10 p-6 sm:p-8 flex flex-col justify-between shadow-[0_0_50px_rgba(0,0,0,0.8)] z-10">
+                        <div class="relative w-full max-w-md sm:max-w-lg h-full bg-raised/95 border-l border-ink/10 p-6 sm:p-8 flex flex-col justify-between shadow-vignette z-10">
                             <div class="space-y-6">
-                                <div class="flex items-center justify-between border-b border-white/10 pb-4">
+                                <div class="flex items-center justify-between border-b border-ink/10 pb-4">
                                     <div class="flex items-center gap-3">
-                                        <i class="ph-fill ph-warning text-red-500 text-2xl" />
-                                        <h3 class="text-xl sm:text-2xl font-bold tracking-tight text-white font-sans">
-                                            "Diagnostic Report"
+                                        <i class="ph-fill ph-warning text-danger text-2xl" />
+                                        <h3 class="text-xl sm:text-2xl font-bold tracking-tight text-ink font-sans">
+                                            {crate::i18n::t("not-found-diagnostic-report")}
                                         </h3>
                                     </div>
                                     <button
                                         on:click=move |_| set_is_drawer_open.set(false)
-                                        class="p-1 rounded-full hover:bg-white/10 text-white/60 hover:text-white transition-colors"
+                                        class="p-1 rounded-full hover:bg-ink/10 text-ink/60 hover:text-ink transition-colors"
                                     >
                                         <i class="ph-bold ph-x text-2xl" />
                                     </button>
                                 </div>
 
-                                <div class="space-y-4 text-sm font-sans text-white/80">
+                                <div class="space-y-4 text-sm font-sans text-ink/80">
                                     <div class="space-y-1">
-                                        <span class="text-xs text-white/40 uppercase tracking-wider">"System Code"</span>
-                                        <p class="text-base font-mono text-red-500 font-semibold">{move || active().error_code}</p>
+                                        <span class="text-xs text-ink/40 uppercase tracking-wider">"System Code"</span>
+                                        <p class="text-base font-mono text-danger font-semibold">{move || active().error_code}</p>
                                     </div>
                                     <div class="space-y-1">
-                                        <span class="text-xs text-white/40 uppercase tracking-wider">"Requested Endpoint"</span>
-                                        <p class="text-base font-mono bg-black/40 px-3 py-1.5 rounded border border-white/5 whitespace-nowrap overflow-x-auto select-text">
+                                        <span class="text-xs text-ink/40 uppercase tracking-wider">"Requested Endpoint"</span>
+                                        <p class="text-base font-mono bg-void/40 px-3 py-1.5 rounded-control border border-ink/5 whitespace-nowrap overflow-x-auto select-text">
                                             {current_path()}
                                         </p>
                                     </div>
                                     <div class="space-y-1">
-                                        <span class="text-xs text-white/40 uppercase tracking-wider">"Incident Timestamp"</span>
+                                        <span class="text-xs text-ink/40 uppercase tracking-wider">"Incident Timestamp"</span>
                                         <p class="text-base font-mono">{iso_now()}</p>
                                     </div>
                                     <div class="space-y-1">
-                                        <span class="text-xs text-white/40 uppercase tracking-wider">"Platform Agent"</span>
-                                        <p class="text-xs font-mono text-white/50 bg-black/20 p-2 rounded leading-normal border border-white/5 max-h-24 overflow-y-auto select-text">
+                                        <span class="text-xs text-ink/40 uppercase tracking-wider">"Platform Agent"</span>
+                                        <p class="text-xs font-mono text-ink/50 bg-void/20 p-2 rounded-control leading-normal border border-ink/5 max-h-24 overflow-y-auto select-text">
                                             {user_agent()}
                                         </p>
                                     </div>
                                 </div>
 
-                                <div class="bg-red-500/10 border border-red-500/20 rounded p-4 text-[13px] leading-relaxed text-red-300 font-sans">
+                                <div class="bg-danger/10 border border-danger/20 rounded-control p-4 text-label leading-relaxed text-danger-mid font-sans">
                                     <strong>"System Notice: "</strong>
-                                    "The targeted router endpoint has been de-referenced or has failed to load from our CDN space. Please redirect back to our secure home streaming environment to resume playback."
+                                    {crate::i18n::t("not-found-the-targeted-router-endpoint-has")}
                                 </div>
                             </div>
 
@@ -348,7 +348,7 @@ pub fn NotFoundPage() -> impl IntoView {
                                         nav("/browse", Default::default());
                                     }
                                 }
-                                class="w-full py-3.5 bg-red-600 hover:bg-red-700 text-white font-bold rounded flex items-center justify-center gap-2 transition-colors duration-200 active:scale-[0.98] shadow-lg font-sans text-sm sm:text-base mt-8"
+                                class="w-full py-3.5 bg-brand hover:bg-danger-strong text-ink font-bold rounded-control flex items-center justify-center gap-2 transition-colors duration-(--motion-base) active:scale-[0.98] shadow-lg font-sans text-sm sm:text-base mt-8"
                             >
                                 <i class="ph-bold ph-caret-left text-xl" />
                                 <span>"Return to Home"</span>

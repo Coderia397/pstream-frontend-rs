@@ -128,34 +128,34 @@ pub fn ShareSheet(
                 };
 
                 view! {
-                    <div class="fixed inset-0 z-[10080] flex flex-col justify-end">
+                    <div class="fixed inset-0 z-(--z-share-backdrop) flex flex-col justify-end">
                         // Backdrop
                         <div
-                            class="fixed inset-0 bg-black/60 transition-opacity duration-200"
+                            class="fixed inset-0 bg-void/60 transition-opacity duration-(--motion-base)"
                             on:click=on_close
                         />
 
                         // Sheet content
-                        <div class="relative z-[10090] bg-[#1c1c1c] rounded-t-2xl px-4 pt-2 pb-8 max-w-lg mx-auto w-full shadow-2xl transition-transform duration-300">
-                            <div class="w-10 h-1 rounded-full bg-white/30 mx-auto mb-3" />
+                        <div class="relative z-(--z-share) bg-sheet-alt rounded-t-sheet px-4 pt-2 pb-8 max-w-lg mx-auto w-full shadow-2xl transition-transform duration-(--motion-slow)">
+                            <div class="w-10 h-1 rounded-full bg-ink/30 mx-auto mb-3" />
 
                             <div class="flex items-center gap-3 mb-5">
-                                <div class="w-12 h-12 rounded-md overflow-hidden bg-white/10 shrink-0">
+                                <div class="w-12 h-12 rounded-field overflow-hidden bg-ink/10 shrink-0">
                                     {if let Some(src) = thumb_val {
                                         view! { <img src=src alt="" class="w-full h-full object-cover" /> }.into_any()
                                     } else {
-                                        view! { <div class="w-full h-full bg-white/10" /> }.into_any()
+                                        view! { <div class="w-full h-full bg-ink/10" /> }.into_any()
                                     }}
                                 </div>
                                 <div class="min-w-0 flex-1">
-                                    <p class="text-white font-bold text-[15px] truncate">{t_val}</p>
-                                    <p class="text-white/40 text-[13px] truncate">{display_url}</p>
+                                    <p class="text-ink font-bold text-body truncate">{t_val}</p>
+                                    <p class="text-ink/40 text-label truncate">{display_url}</p>
                                 </div>
                                 <button
                                     type="button"
                                     on:click=on_close
-                                    class="w-9 h-9 rounded-full bg-white/10 flex items-center justify-center text-white shrink-0 hover:bg-white/20 transition-colors cursor-pointer"
-                                    title="Close"
+                                    class="w-9 h-9 rounded-full bg-ink/10 flex items-center justify-center text-ink shrink-0 hover:bg-ink/20 transition-colors cursor-pointer"
+                                    title=crate::i18n::t("action-buttons-close")
                                 >
                                     <i class="ph-bold ph-x text-lg"></i>
                                 </button>
@@ -170,9 +170,9 @@ pub fn ShareSheet(
                                     class="flex flex-col items-center gap-2 active:scale-95 transition-transform cursor-pointer"
                                 >
                                     <div class="w-14 h-14 rounded-full flex items-center justify-center shadow-md bg-[#25D366]">
-                                        <i class="ph-fill ph-whatsapp-logo text-white text-2xl"></i>
+                                        <i class="ph-fill ph-whatsapp-logo text-ink text-2xl"></i>
                                     </div>
-                                    <span class="text-white/85 text-[11px] text-center leading-tight">"WhatsApp"</span>
+                                    <span class="text-ink/85 text-caption text-center leading-tight">"WhatsApp"</span>
                                 </button>
 
                                 // Messages
@@ -182,9 +182,9 @@ pub fn ShareSheet(
                                     class="flex flex-col items-center gap-2 active:scale-95 transition-transform cursor-pointer"
                                 >
                                     <div class="w-14 h-14 rounded-full flex items-center justify-center shadow-md bg-[#2f8ff0]">
-                                        <i class="ph-fill ph-chat-teardrop-dots text-white text-2xl"></i>
+                                        <i class="ph-fill ph-chat-teardrop-dots text-ink text-2xl"></i>
                                     </div>
-                                    <span class="text-white/85 text-[11px] text-center leading-tight">"Messages"</span>
+                                    <span class="text-ink/85 text-caption text-center leading-tight">"Messages"</span>
                                 </button>
 
                                 // Instagram Stories
@@ -194,9 +194,9 @@ pub fn ShareSheet(
                                     class="flex flex-col items-center gap-2 active:scale-95 transition-transform cursor-pointer"
                                 >
                                     <div class="w-14 h-14 rounded-full flex items-center justify-center shadow-md bg-gradient-to-tr from-[#f9ce34] via-[#ee2a7b] to-[#6228d7]">
-                                        <i class="ph ph-instagram-logo text-white text-2xl"></i>
+                                        <i class="ph ph-instagram-logo text-ink text-2xl"></i>
                                     </div>
-                                    <span class="text-white/85 text-[11px] text-center leading-tight">"Instagram"</span>
+                                    <span class="text-ink/85 text-caption text-center leading-tight">"Instagram"</span>
                                 </button>
 
                                 // Snapchat
@@ -206,9 +206,9 @@ pub fn ShareSheet(
                                     class="flex flex-col items-center gap-2 active:scale-95 transition-transform cursor-pointer"
                                 >
                                     <div class="w-14 h-14 rounded-full flex items-center justify-center shadow-md bg-[#FFFC00]">
-                                        <i class="ph-fill ph-snapchat-logo text-black text-2xl"></i>
+                                        <i class="ph-fill ph-snapchat-logo text-void text-2xl"></i>
                                     </div>
-                                    <span class="text-white/85 text-[11px] text-center leading-tight">"Snapchat"</span>
+                                    <span class="text-ink/85 text-caption text-center leading-tight">"Snapchat"</span>
                                 </button>
 
                                 // X (Twitter)
@@ -217,10 +217,10 @@ pub fn ShareSheet(
                                     on:click=handle_x
                                     class="flex flex-col items-center gap-2 active:scale-95 transition-transform cursor-pointer"
                                 >
-                                    <div class="w-14 h-14 rounded-full flex items-center justify-center shadow-md bg-black border border-white/20">
-                                        <i class="ph-bold ph-x-logo text-white text-xl"></i>
+                                    <div class="w-14 h-14 rounded-full flex items-center justify-center shadow-md bg-void border border-ink/20">
+                                        <i class="ph-bold ph-x-logo text-ink text-xl"></i>
                                     </div>
-                                    <span class="text-white/85 text-[11px] text-center leading-tight">"X"</span>
+                                    <span class="text-ink/85 text-caption text-center leading-tight">"X"</span>
                                 </button>
 
                                 // Copy Link
@@ -229,16 +229,16 @@ pub fn ShareSheet(
                                     on:click=handle_copy_link
                                     class="flex flex-col items-center gap-2 active:scale-95 transition-transform cursor-pointer"
                                 >
-                                    <div class="w-14 h-14 rounded-full bg-[#3a3a3a] flex items-center justify-center shadow-md hover:bg-[#4a4a4a] transition-colors">
-                                        <i class="ph-bold ph-link text-white text-xl"></i>
+                                    <div class="w-14 h-14 rounded-full bg-lift flex items-center justify-center shadow-md hover:bg-line-strong transition-colors">
+                                        <i class="ph-bold ph-link text-ink text-xl"></i>
                                     </div>
-                                    <span class="text-white/85 text-[11px] text-center leading-tight">"Copy link"</span>
+                                    <span class="text-ink/85 text-caption text-center leading-tight">"Copy link"</span>
                                 </button>
                             </div>
 
                             // Toast notification
                             {move || toast.get().map(|msg| view! {
-                                <div class="mt-5 flex items-center justify-center gap-2 text-white/90 text-[13px] font-medium animate-fadeIn">
+                                <div class="mt-5 flex items-center justify-center gap-2 text-ink/90 text-label font-medium animate-fadeIn">
                                     <i class="ph-bold ph-check text-green-400"></i>
                                     <span>{msg}</span>
                                 </div>

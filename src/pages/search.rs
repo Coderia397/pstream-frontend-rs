@@ -22,7 +22,7 @@ pub fn SearchPage() -> impl IntoView {
 
     view! {
         <Layout>
-            <div class="pt-[calc(5rem+env(safe-area-inset-top))] md:pt-28 px-[var(--app-x,56px)] pb-12 min-h-screen bg-black md:bg-[#141414]">
+            <div class="pt-[calc(5rem+env(safe-area-inset-top))] md:pt-28 px-[var(--app-x,56px)] pb-12 min-h-screen bg-void md:bg-page">
                 <div class="mb-8">
                     <h1 class="text-gray-400 text-lg">
                         {move || if !q().is_empty() { format!("Results for \"{}\"", q()) } else { "Search".to_string() }}
@@ -32,7 +32,7 @@ pub fn SearchPage() -> impl IntoView {
                 <Suspense fallback=move || view! {
                     <div class="grid grid-cols-2 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-x-2.5 gap-y-6 animate-pulse">
                         {(0..10).map(|_| view! {
-                            <div class="aspect-video bg-[#1e1e1e] rounded-sm"></div>
+                            <div class="aspect-video bg-card rounded-control"></div>
                         }).collect::<Vec<_>>()}
                     </div>
                 }>
@@ -40,7 +40,7 @@ pub fn SearchPage() -> impl IntoView {
                         if media.is_empty() && !q().is_empty() {
                             return view! {
                                 <div class="flex flex-col items-center justify-center mt-20 text-center">
-                                    <div class="text-xl text-white mb-2">"No matches found"</div>
+                                    <div class="text-xl text-ink mb-2">"No matches found"</div>
                                     <div class="text-gray-400 text-sm">"Try a different keyword."</div>
                                 </div>
                             }.into_any();
@@ -49,7 +49,7 @@ pub fn SearchPage() -> impl IntoView {
                         if media.is_empty() {
                             return view! {
                                 <div class="flex flex-col items-center justify-center mt-20 text-center">
-                                    <div class="text-xl text-white mb-2">"Explore titles"</div>
+                                    <div class="text-xl text-ink mb-2">"Explore titles"</div>
                                     <div class="text-gray-400 text-sm">"Type in the search bar above to find movies, shows, or people."</div>
                                 </div>
                             }.into_any();

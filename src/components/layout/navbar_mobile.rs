@@ -44,7 +44,7 @@ pub fn NavbarMobile(
     let current_avatar = move || {
         profile_store.profiles.get().first()
             .and_then(|p| p.avatar_url.clone())
-            .unwrap_or_else(|| "https://wallpapers.com/images/hd/netflix-profile-pictures-1000-x-1000-88wkdmjrorckekha.jpg".to_string())
+            .unwrap_or_else(|| crate::brand::DEFAULT_AVATAR.to_string())
     };
 
     let nav_to_browse = navigate.clone();
@@ -55,7 +55,7 @@ pub fn NavbarMobile(
     let bottom_nav_items = vec![
         BottomNavItem {
             id: "home",
-            icon: view! { <i class="ph-bold ph-house text-[24px]"></i> }.into_any(),
+            icon: view! { <i class="ph-bold ph-house text-heading"></i> }.into_any(),
             label: "Home",
             on_click: Callback::new(move |_| {
                 set_active_bottom_nav.set("home");
@@ -64,7 +64,7 @@ pub fn NavbarMobile(
         },
         BottomNavItem {
             id: "clips",
-            icon: view! { <i class="ph-bold ph-play-circle text-[24px]"></i> }.into_any(),
+            icon: view! { <i class="ph-bold ph-play-circle text-heading"></i> }.into_any(),
             label: "Clips",
             on_click: Callback::new(move |_| {
                 set_active_bottom_nav.set("clips");
@@ -73,7 +73,7 @@ pub fn NavbarMobile(
         },
         BottomNavItem {
             id: "search",
-            icon: view! { <i class="ph-bold ph-magnifying-glass text-[24px]"></i> }.into_any(),
+            icon: view! { <i class="ph-bold ph-magnifying-glass text-heading"></i> }.into_any(),
             label: "Search",
             on_click: Callback::new(move |_| {
                 set_active_bottom_nav.set("search");
@@ -83,8 +83,8 @@ pub fn NavbarMobile(
         BottomNavItem {
             id: "settings",
             icon: view! { 
-                <div class="w-6 h-6 rounded overflow-hidden flex items-center justify-center bg-[#E50914] text-white font-bold text-[10px]">
-                    <img src=move || current_avatar() alt="Profile" class="w-full h-full object-cover" />
+                <div class="w-6 h-6 rounded-control overflow-hidden flex items-center justify-center bg-brand text-ink font-bold text-micro">
+                    <img src=move || current_avatar() alt=crate::i18n::t("navbar-mobile-profile") class="w-full h-full object-cover" />
                 </div>
             }.into_any(),
             label: "My List",
@@ -100,42 +100,42 @@ pub fn NavbarMobile(
         <div class="sm:hidden select-none">
             // ── Top Brand Header ───────────────────────────────────────────────
             <header
-                class="fixed top-0 left-0 right-0 z-[80] pl-1 pr-1 pt-[env(safe-area-inset-top)] h-[calc(52px+env(safe-area-inset-top))] box-content flex items-center justify-between pointer-events-auto transition-colors duration-200"
+                class="fixed top-0 left-0 right-0 z-(--z-nav) pl-1 pr-1 pt-[env(safe-area-inset-top)] h-[calc(var(--nav-h-mobile)+env(safe-area-inset-top))] box-content flex items-center justify-between pointer-events-auto transition-colors duration-(--motion-base)"
                 style=scroll_style
             >
                 // Logo mark (48 x 44 box) and page title, as in the app header
                 <div class="flex items-center min-w-0">
                     <a href="/browse" class="flex-shrink-0 flex items-center justify-center w-12 h-11">
                         <img
-                            src="/assets/logos/p-pstream-logo.svg"
-                            alt="Pstream Emblem Logo"
+                            src=crate::brand::LOGO_EMBLEM
+                            alt=format!("{} emblem", crate::brand::NAME)
                             class="h-[34px] w-auto cursor-pointer select-none transition-transform active:scale-95"
                         />
                     </a>
-                    <span class="text-[26px] leading-none font-bold text-white truncate">{page_title}</span>
+                    <span class="text-heading-md leading-none font-bold text-ink truncate">{page_title}</span>
                 </div>
 
                 // Action buttons: Cast & Profile Avatar
                 <div class="flex items-center">
                     // Screencast icon (Task 087)
                     <button
-                        class="w-11 h-11 flex items-center justify-center text-white hover:text-gray-300 transition-colors cursor-pointer"
-                        aria-label="Cast to TV"
-                        title="Cast"
+                        class="w-11 h-11 flex items-center justify-center text-ink hover:text-gray-300 transition-colors cursor-pointer"
+                        aria-label=crate::i18n::t("navbar-mobile-cast-to-tv")
+                        title=crate::i18n::t("navbar-mobile-cast")
                     >
-                        <i class="ph-bold ph-screencast text-[24px]"></i>
+                        <i class="ph-bold ph-screencast text-heading"></i>
                     </button>
 
                     // Profile avatar button (Task 087)
                     <button
                         on:click=move |_| set_profile_sheet_open.update(|o| *o = !*o)
                         class="w-11 h-11 flex items-center justify-center active:scale-95 transition-transform cursor-pointer"
-                        aria-label="Profile menu"
+                        aria-label=crate::i18n::t("navbar-mobile-profile-menu")
                     >
                         <img
                             src=current_avatar
-                            alt="Avatar"
-                            class="w-8 h-8 rounded object-cover"
+                            alt=crate::i18n::t("navbar-mobile-avatar")
+                            class="w-8 h-8 rounded-control object-cover"
                         />
                     </button>
                 </div>
@@ -146,18 +146,18 @@ pub fn NavbarMobile(
 
             // ── Profile Bottom Sheet Modal ───────────────────────────────────
             <Show when=move || profile_sheet_open.get()>
-                <div class="fixed inset-0 z-[10030]">
+                <div class="fixed inset-0 z-(--z-drawer)">
                     <div
                         on:click=move |_| set_profile_sheet_open.set(false)
-                        class="absolute inset-0 bg-black/70 backdrop-blur-sm"
+                        class="absolute inset-0 bg-void/70 backdrop-blur-sm"
                     ></div>
 
-                    <div class="absolute bottom-0 inset-x-0 bg-[#141414] border-t border-white/10 rounded-t-2xl max-h-[80vh] flex flex-col z-10 shadow-2xl animate-in slide-in-from-bottom duration-200">
-                        <div class="flex items-center justify-between p-4 border-b border-white/10">
-                            <span class="text-[18px] font-bold text-white">"Profiles & More"</span>
+                    <div class="absolute bottom-0 inset-x-0 bg-page border-t border-ink/10 rounded-t-sheet max-h-[80vh] flex flex-col z-10 shadow-2xl animate-in slide-in-from-bottom duration-(--motion-base)">
+                        <div class="flex items-center justify-between p-4 border-b border-ink/10">
+                            <span class="text-title-sm font-bold text-ink">"Profiles & More"</span>
                             <button
                                 on:click=move |_| set_profile_sheet_open.set(false)
-                                class="w-8 h-8 rounded-full bg-white/10 flex items-center justify-center text-white/70 hover:text-white"
+                                class="w-8 h-8 rounded-full bg-ink/10 flex items-center justify-center text-ink/70 hover:text-ink"
                             >
                                 <i class="ph-bold ph-x text-base"></i>
                             </button>
@@ -169,7 +169,7 @@ pub fn NavbarMobile(
                                 let pid = p.id.clone();
                                 let is_active = profile_store.active_profile_id.get() == Some(pid.clone());
                                 let p_name = p.name.clone();
-                                let av = p.avatar_url.unwrap_or_else(|| "https://wallpapers.com/images/hd/netflix-profile-pictures-1000-x-1000-88wkdmjrorckekha.jpg".to_string());
+                                let av = p.avatar_url.unwrap_or_else(|| crate::brand::DEFAULT_AVATAR.to_string());
 
                                 view! {
                                     <button
@@ -177,19 +177,19 @@ pub fn NavbarMobile(
                                             profile_store.active_profile_id.set(Some(pid.clone()));
                                             set_profile_sheet_open.set(false);
                                         }
-                                        class="flex items-center gap-3 p-2 rounded-lg hover:bg-white/5 transition-colors text-left w-full cursor-pointer"
+                                        class="flex items-center gap-3 p-2 rounded-card hover:bg-ink/5 transition-colors text-left w-full cursor-pointer"
                                     >
                                         <div
                                             class=if is_active {
-                                                "w-10 h-10 rounded overflow-hidden shrink-0 border border-white ring-2 ring-white/50"
+                                                "w-10 h-10 rounded-control overflow-hidden shrink-0 border border-ink ring-2 ring-ink/50"
                                             } else {
-                                                "w-10 h-10 rounded overflow-hidden shrink-0 border border-transparent"
+                                                "w-10 h-10 rounded-control overflow-hidden shrink-0 border border-transparent"
                                             }
                                         >
                                             <img src=av alt=p_name.clone() class="w-full h-full object-cover" />
                                         </div>
                                         <div class="flex-1 min-w-0">
-                                            <span class="text-white text-[15px] font-medium">{p_name}</span>
+                                            <span class="text-ink text-body font-medium">{p_name}</span>
                                         </div>
                                         {if is_active {
                                             view! { <i class="ph-bold ph-check text-green-500 text-lg"></i> }.into_any()
@@ -200,12 +200,12 @@ pub fn NavbarMobile(
                                 }
                             }).collect::<Vec<_>>()}
 
-                            <div class="border-t border-white/10 my-2"></div>
+                            <div class="border-t border-ink/10 my-2"></div>
 
                             // Quick settings links
                             <a
                                 href="/browse/my-list"
-                                class="flex items-center gap-3 p-2 text-white/80 hover:text-white transition-colors text-[15px]"
+                                class="flex items-center gap-3 p-2 text-ink/80 hover:text-ink transition-colors text-body"
                                 on:click=move |_| set_profile_sheet_open.set(false)
                             >
                                 <i class="ph-bold ph-list-plus text-xl"></i>
@@ -213,7 +213,7 @@ pub fn NavbarMobile(
                             </a>
                             <a
                                 href="/browse"
-                                class="flex items-center gap-3 p-2 text-white/80 hover:text-white transition-colors text-[15px]"
+                                class="flex items-center gap-3 p-2 text-ink/80 hover:text-ink transition-colors text-body"
                                 on:click=move |_| set_profile_sheet_open.set(false)
                             >
                                 <i class="ph-bold ph-gear text-xl"></i>

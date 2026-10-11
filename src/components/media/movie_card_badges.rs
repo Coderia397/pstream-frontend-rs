@@ -94,7 +94,7 @@ pub fn MaturityBadge(
                 <rect x="3" y="3" width="94" height="94" rx="18" ry="18" fill="black" />
                 // White margin ring
                 <rect x="5" y="5" width="90" height="90" rx="16" ry="16" fill="white" />
-                // Official BBFC blue rounded rect
+                // Official BBFC blue rounded-control rect
                 <rect x="13" y="13" width="74" height="74" rx="11" ry="11" fill=fill />
                 <text
                     x="50"

@@ -27,7 +27,7 @@ pub fn ProfilePinPrompt(
     let profile_pin = profile.pin.clone().unwrap_or_default();
     let profile_name = profile.name.clone();
     let profile_avatar = profile.avatar_url.clone().unwrap_or_else(|| {
-        "https://wallpapers.com/images/hd/netflix-profile-pictures-1000-x-1000-88wkdmjrorckekha.jpg".to_string()
+        crate::brand::DEFAULT_AVATAR.to_string()
     });
 
     let focus_input = move |idx: usize| {
@@ -94,18 +94,18 @@ pub fn ProfilePinPrompt(
     let stored_keydown_digit = StoredValue::new(on_keydown_digit);
 
     view! {
-        <div class="fixed inset-0 z-[200] bg-black/90 backdrop-blur-sm flex flex-col items-center justify-center px-6 animate-in fade-in duration-200">
+        <div class="fixed inset-0 z-(--z-modal) bg-void/90 backdrop-blur-sm flex flex-col items-center justify-center px-6 animate-in fade-in duration-(--motion-base)">
             // Close button
             <button
                 on:click=move |_| on_cancel.run(())
-                class="absolute top-6 right-6 w-9 h-9 rounded-full flex items-center justify-center text-white/60 hover:text-white hover:bg-white/10 transition-colors cursor-pointer"
-                aria-label="Close"
+                class="absolute top-6 right-6 w-9 h-9 rounded-full flex items-center justify-center text-ink/60 hover:text-ink hover:bg-ink/10 transition-colors cursor-pointer"
+                aria-label=crate::i18n::t("action-buttons-close")
             >
                 <i class="ph-bold ph-x text-2xl"></i>
             </button>
 
             // Profile Avatar
-            <div class="w-20 h-20 rounded-md overflow-hidden mb-6 shadow-xl ring-2 ring-white/30">
+            <div class="w-20 h-20 rounded-field overflow-hidden mb-6 shadow-xl ring-2 ring-ink/30">
                 <img
                     src=profile_avatar
                     alt=profile_name.clone()
@@ -113,17 +113,17 @@ pub fn ProfilePinPrompt(
                 />
             </div>
 
-            <p class="text-white/50 text-sm mb-1 font-medium">
-                "Profile Lock is currently on."
+            <p class="text-ink/50 text-sm mb-1 font-medium">
+                {crate::i18n::t("pin-prompt-profile-lock-is-currently-on")}
             </p>
-            <h1 class="text-white text-xl sm:text-2xl font-bold mb-8 text-center max-w-md">
+            <h1 class="text-ink text-xl sm:text-2xl font-bold mb-8 text-center max-w-md">
                 {format!("Enter your PIN to access {}'s profile.", profile_name)}
             </h1>
 
             // 4-box PIN inputs with shake animation (Task 098)
             <div
                 class=move || if shake.get() {
-                    "flex items-center gap-3.5 mb-8 animate-bounce duration-100"
+                    "flex items-center gap-3.5 mb-8 animate-bounce duration-(--motion-quick)"
                 } else {
                     "flex items-center gap-3.5 mb-8"
                 }
@@ -136,8 +136,8 @@ pub fn ProfilePinPrompt(
                     prop:value=move || digits.get().get(0).cloned().unwrap_or_default()
                     on:input=move |e| stored_input_digit.with_value(|f| f(0, event_target_value(&e)))
                     on:keydown=move |e| stored_keydown_digit.with_value(|f| f(0, e))
-                    class="w-12 h-14 sm:w-14 sm:h-16 bg-[#333] border-2 border-white/20 focus:border-white rounded-md text-center text-white text-2xl font-bold outline-none transition-all caret-transparent select-none"
-                    class=("!border-red-500", move || shake.get())
+                    class="w-12 h-14 sm:w-14 sm:h-16 bg-line border-2 border-ink/20 focus:border-ink rounded-field text-center text-ink text-2xl font-bold outline-none transition-all caret-transparent select-none"
+                    class=("!border-danger", move || shake.get())
                 />
                 <input
                     node_ref=input_ref_1
@@ -147,8 +147,8 @@ pub fn ProfilePinPrompt(
                     prop:value=move || digits.get().get(1).cloned().unwrap_or_default()
                     on:input=move |e| stored_input_digit.with_value(|f| f(1, event_target_value(&e)))
                     on:keydown=move |e| stored_keydown_digit.with_value(|f| f(1, e))
-                    class="w-12 h-14 sm:w-14 sm:h-16 bg-[#333] border-2 border-white/20 focus:border-white rounded-md text-center text-white text-2xl font-bold outline-none transition-all caret-transparent select-none"
-                    class=("!border-red-500", move || shake.get())
+                    class="w-12 h-14 sm:w-14 sm:h-16 bg-line border-2 border-ink/20 focus:border-ink rounded-field text-center text-ink text-2xl font-bold outline-none transition-all caret-transparent select-none"
+                    class=("!border-danger", move || shake.get())
                 />
                 <input
                     node_ref=input_ref_2
@@ -158,8 +158,8 @@ pub fn ProfilePinPrompt(
                     prop:value=move || digits.get().get(2).cloned().unwrap_or_default()
                     on:input=move |e| stored_input_digit.with_value(|f| f(2, event_target_value(&e)))
                     on:keydown=move |e| stored_keydown_digit.with_value(|f| f(2, e))
-                    class="w-12 h-14 sm:w-14 sm:h-16 bg-[#333] border-2 border-white/20 focus:border-white rounded-md text-center text-white text-2xl font-bold outline-none transition-all caret-transparent select-none"
-                    class=("!border-red-500", move || shake.get())
+                    class="w-12 h-14 sm:w-14 sm:h-16 bg-line border-2 border-ink/20 focus:border-ink rounded-field text-center text-ink text-2xl font-bold outline-none transition-all caret-transparent select-none"
+                    class=("!border-danger", move || shake.get())
                 />
                 <input
                     node_ref=input_ref_3
@@ -169,17 +169,17 @@ pub fn ProfilePinPrompt(
                     prop:value=move || digits.get().get(3).cloned().unwrap_or_default()
                     on:input=move |e| stored_input_digit.with_value(|f| f(3, event_target_value(&e)))
                     on:keydown=move |e| stored_keydown_digit.with_value(|f| f(3, e))
-                    class="w-12 h-14 sm:w-14 sm:h-16 bg-[#333] border-2 border-white/20 focus:border-white rounded-md text-center text-white text-2xl font-bold outline-none transition-all caret-transparent select-none"
-                    class=("!border-red-500", move || shake.get())
+                    class="w-12 h-14 sm:w-14 sm:h-16 bg-line border-2 border-ink/20 focus:border-ink rounded-field text-center text-ink text-2xl font-bold outline-none transition-all caret-transparent select-none"
+                    class=("!border-danger", move || shake.get())
                 />
             </div>
 
             // Cancel action button
             <button
                 on:click=move |_| on_cancel.run(())
-                class="px-6 py-2 border border-white/30 text-white/70 hover:text-white hover:border-white rounded text-sm font-semibold tracking-wider uppercase transition-colors cursor-pointer active:scale-95"
+                class="px-6 py-2 border border-ink/30 text-ink/70 hover:text-ink hover:border-ink rounded-control text-sm font-semibold tracking-wider uppercase transition-colors cursor-pointer active:scale-95"
             >
-                "Cancel"
+                {crate::i18n::t("continue-watching-options-sheet-cancel")}
             </button>
         </div>
     }

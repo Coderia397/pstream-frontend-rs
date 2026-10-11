@@ -73,7 +73,7 @@ pub fn ClipCard(
     view! {
         <section
             on:click=on_card_tap
-            class="h-screen w-full snap-start relative flex flex-col justify-between overflow-hidden bg-black select-none"
+            class="h-screen w-full snap-start relative flex flex-col justify-between overflow-hidden bg-void select-none"
         >
             // Full-screen backdrop
             {if !backdrop.is_empty() {
@@ -86,22 +86,22 @@ pub fn ClipCard(
                     />
                 }.into_any()
             } else {
-                view! { <div class="absolute inset-0 bg-[#141414]" /> }.into_any()
+                view! { <div class="absolute inset-0 bg-page" /> }.into_any()
             }}
 
             // Gradient scrims
-            <div class="absolute inset-0 bg-gradient-to-b from-black/60 via-transparent to-black/80 pointer-events-none" />
+            <div class="absolute inset-0 bg-gradient-to-b from-void/60 via-transparent to-void/80 pointer-events-none" />
 
             // Top Header: Back to browse
             <div class="relative z-20 pt-4 px-4 flex items-center justify-between">
                 <a
                     href="/browse"
-                    class="w-10 h-10 rounded-full bg-black/40 backdrop-blur-md flex items-center justify-center text-white cursor-pointer"
+                    class="w-10 h-10 rounded-full bg-void/40 backdrop-blur-md flex items-center justify-center text-ink cursor-pointer"
                 >
                     <i class="ph-bold ph-arrow-left text-xl"></i>
                 </a>
-                <span class="text-white font-bold text-sm tracking-wider uppercase drop-shadow">
-                    "Clips"
+                <span class="text-ink font-bold text-sm tracking-wider uppercase drop-shadow">
+                    {crate::i18n::t("clips-clips")}
                 </span>
                 <div class="w-10" />
             </div>
@@ -114,16 +114,16 @@ pub fn ClipCard(
                         e.stop_propagation();
                         set_is_muted.update(|m| *m = !*m);
                     }
-                    class="flex flex-col items-center gap-1 text-white cursor-pointer group"
+                    class="flex flex-col items-center gap-1 text-ink cursor-pointer group"
                 >
-                    <div class="w-11 h-11 rounded-full bg-black/50 backdrop-blur-md flex items-center justify-center border border-white/20 group-active:scale-90 transition-transform">
+                    <div class="w-11 h-11 rounded-full bg-void/50 backdrop-blur-md flex items-center justify-center border border-ink/20 group-active:scale-90 transition-transform">
                         {move || if is_muted.get() {
-                            view! { <i class="ph-fill ph-speaker-simple-slash text-xl text-white"></i> }.into_any()
+                            view! { <i class="ph-fill ph-speaker-simple-slash text-xl text-ink"></i> }.into_any()
                         } else {
-                            view! { <i class="ph-fill ph-speaker-simple-high text-xl text-white"></i> }.into_any()
+                            view! { <i class="ph-fill ph-speaker-simple-high text-xl text-ink"></i> }.into_any()
                         }}
                     </div>
-                    <span class="text-[11px] font-semibold drop-shadow">
+                    <span class="text-caption font-semibold drop-shadow">
                         {move || if is_muted.get() { "Muted" } else { "Sound" }}
                     </span>
                 </button>
@@ -131,27 +131,27 @@ pub fn ClipCard(
                 // My List toggle
                 <button
                     on:click=on_toggle_list
-                    class="flex flex-col items-center gap-1 text-white cursor-pointer group"
+                    class="flex flex-col items-center gap-1 text-ink cursor-pointer group"
                 >
-                    <div class="w-11 h-11 rounded-full bg-black/50 backdrop-blur-md flex items-center justify-center border border-white/20 group-active:scale-90 transition-transform">
+                    <div class="w-11 h-11 rounded-full bg-void/50 backdrop-blur-md flex items-center justify-center border border-ink/20 group-active:scale-90 transition-transform">
                         {move || if is_in_my_list() {
-                            view! { <i class="ph-bold ph-check text-xl text-white"></i> }.into_any()
+                            view! { <i class="ph-bold ph-check text-xl text-ink"></i> }.into_any()
                         } else {
-                            view! { <i class="ph-bold ph-plus text-xl text-white"></i> }.into_any()
+                            view! { <i class="ph-bold ph-plus text-xl text-ink"></i> }.into_any()
                         }}
                     </div>
-                    <span class="text-[11px] font-semibold drop-shadow">"My List"</span>
+                    <span class="text-caption font-semibold drop-shadow">"My List"</span>
                 </button>
 
                 // Play Button
                 <button
                     on:click=on_play
-                    class="flex flex-col items-center gap-1 text-white cursor-pointer group"
+                    class="flex flex-col items-center gap-1 text-ink cursor-pointer group"
                 >
-                    <div class="w-11 h-11 rounded-full bg-white text-black flex items-center justify-center group-active:scale-90 transition-transform shadow-xl">
-                        <i class="ph-fill ph-play text-xl ml-0.5 text-black"></i>
+                    <div class="w-11 h-11 rounded-full bg-ink text-void flex items-center justify-center group-active:scale-90 transition-transform shadow-xl">
+                        <i class="ph-fill ph-play text-xl ml-0.5 text-void"></i>
                     </div>
-                    <span class="text-[11px] font-semibold drop-shadow">{move || {
+                    <span class="text-caption font-semibold drop-shadow">{move || {
                         let watch_store = crate::store::use_watch_store();
                         if let Some(rec) = watch_store.get_record(movie_id, is_tv) {
                             if rec.percentage > 0.0 {
@@ -165,12 +165,12 @@ pub fn ClipCard(
                 // Info Button
                 <button
                     on:click=on_info_click
-                    class="flex flex-col items-center gap-1 text-white cursor-pointer group"
+                    class="flex flex-col items-center gap-1 text-ink cursor-pointer group"
                 >
-                    <div class="w-11 h-11 rounded-full bg-black/50 backdrop-blur-md flex items-center justify-center border border-white/20 group-active:scale-90 transition-transform">
-                        <i class="ph-bold ph-info text-xl text-white"></i>
+                    <div class="w-11 h-11 rounded-full bg-void/50 backdrop-blur-md flex items-center justify-center border border-ink/20 group-active:scale-90 transition-transform">
+                        <i class="ph-bold ph-info text-xl text-ink"></i>
                     </div>
-                    <span class="text-[11px] font-semibold drop-shadow">"Info"</span>
+                    <span class="text-caption font-semibold drop-shadow">"Info"</span>
                 </button>
             </div>
 
@@ -179,10 +179,10 @@ pub fn ClipCard(
                 <div class="flex items-center gap-2 mb-1">
                     <MaturityBadge certification="16+".to_string() size="xs".to_string() />
                 </div>
-                <h2 class="text-white font-black text-2xl md:text-3xl leading-tight drop-shadow-lg">
+                <h2 class="text-ink font-black text-2xl md:text-3xl leading-tight drop-shadow-lg">
                     {title}
                 </h2>
-                <p class="text-white/80 text-sm line-clamp-2 leading-relaxed font-normal drop-shadow">
+                <p class="text-ink/80 text-sm line-clamp-2 leading-relaxed font-normal drop-shadow">
                     {overview}
                 </p>
             </div>
@@ -197,10 +197,10 @@ pub fn ClipsPage() -> impl IntoView {
     });
 
     view! {
-        <div class="fixed inset-0 bg-black overflow-y-scroll snap-y snap-mandatory scrollbar-hide z-50">
+        <div class="fixed inset-0 bg-void overflow-y-scroll snap-y snap-mandatory scrollbar-hide z-50">
             <Suspense fallback=move || view! {
-                <div class="fixed inset-0 bg-black flex items-center justify-center">
-                    <div class="w-10 h-10 border-2 border-white/20 border-t-white rounded-full animate-spin"></div>
+                <div class="fixed inset-0 bg-void flex items-center justify-center">
+                    <div class="w-10 h-10 border-2 border-ink/20 border-t-ink rounded-full animate-spin"></div>
                 </div>
             }>
                 {move || feed_resource.get().map(|items| {

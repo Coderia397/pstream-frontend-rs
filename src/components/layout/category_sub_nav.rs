@@ -32,7 +32,7 @@ pub fn CategorySubNav(
 
     view! {
         // Mobile layout: render in-flow
-        <div class="block sm:hidden pt-[calc(52px+env(safe-area-inset-top))]">
+        <div class="block sm:hidden pt-[calc(var(--nav-h-mobile)+env(safe-area-inset-top))]">
             {if let Some(lbl) = mobile_dropdown_label {
                 view! {
                     <CategorySubNavMobile
@@ -158,12 +158,12 @@ fn CategorySubNavDesktop(
 
     view! {
         <div
-            class="fixed inset-x-0 top-[88px] z-[79] pointer-events-none transition-colors duration-200"
+            class="fixed inset-x-0 top-(--nav-h) z-(--z-subnav) pointer-events-none transition-colors duration-(--motion-base)"
             style=scroll_bg_style
         >
-            <div class="pointer-events-none relative z-30 flex items-center justify-between pl-[calc(var(--app-x)+36px)] pr-[calc(var(--app-x)+36px)] py-5 select-none w-full">
+            <div class="pointer-events-none relative z-30 flex items-center justify-between px-(--app-x) h-(--subnav-h) select-none w-full">
                 <div node_ref=container_ref class="pointer-events-auto flex items-center gap-4">
-                <h1 class="text-[28px] md:text-[38px] font-bold tracking-[-0.5px] text-white leading-none flex items-center">
+                <h1 class="text-heading-lg md:text-display-sm font-bold tracking-[-0.5px] text-ink leading-none flex items-center">
                     {
                         let t_c = title_clone.clone();
                         move || {
@@ -173,11 +173,11 @@ fn CategorySubNavDesktop(
                                     <>
                                         <span
                                             on:click=move |_| on_genre_click_reset.run(None)
-                                            class="cursor-pointer hover:underline text-white/40 hover:text-white/80 transition-colors whitespace-nowrap text-[15px] md:text-[21px] font-normal"
+                                            class="cursor-pointer hover:underline text-ink/40 hover:text-ink/80 transition-colors whitespace-nowrap text-body md:text-title-lg font-normal"
                                         >
                                             {t_c.clone()}
                                         </span>
-                                        <span class="text-white/20 font-normal text-xs md:text-[16px] mx-1.5 md:mx-2.5 whitespace-nowrap">
+                                        <span class="text-ink/20 font-normal text-xs md:text-body-md mx-1.5 md:mx-2.5 whitespace-nowrap">
                                             ">"
                                         </span>
                                         <span class="whitespace-nowrap">
@@ -209,14 +209,14 @@ fn CategorySubNavDesktop(
                                 <div class="relative ml-3 md:ml-5">
                                     <button
                                         on:click=toggle_menu
-                                        class="flex items-center justify-between min-w-[100px] md:min-w-[125px] px-4 py-2 leading-none text-[13px] md:text-[14px] font-semibold tracking-[-0.2px] text-white bg-white/10 hover:bg-white/20 border border-white/20 backdrop-blur-md transition-all rounded-full active:scale-95 gap-x-2.5 cursor-pointer shadow-sm"
-                                        class=("!bg-white/25 !border-white/40", move || genre_menu_open.get())
+                                        class="flex items-center justify-between min-w-[100px] md:min-w-[125px] px-4 py-2 leading-none text-label md:text-body-sm font-semibold tracking-[-0.2px] text-ink bg-ink/10 hover:bg-ink/20 border border-ink/20 backdrop-blur-md transition-all rounded-full active:scale-95 gap-x-2.5 cursor-pointer shadow-sm"
+                                        class=("!bg-ink/25 !border-ink/40", move || genre_menu_open.get())
                                         aria-haspopup="listbox"
                                         aria-expanded=move || genre_menu_open.get()
                                     >
                                         <span>{label}</span>
                                         <i
-                                            class="ph-fill ph-caret-down text-[12px] text-white/80 transition-transform duration-200 shrink-0"
+                                            class="ph-fill ph-caret-down text-fine text-ink/80 transition-transform duration-(--motion-base) shrink-0"
                                             class=("rotate-180", move || genre_menu_open.get())
                                         ></i>
                                     </button>
@@ -224,13 +224,13 @@ fn CategorySubNavDesktop(
                                     // Dropdown popup
                                     <div
                                         class=move || if genre_menu_open.get() {
-                                            "absolute top-[calc(100%+8px)] left-0 z-50 transition-all duration-200 translate-x-0 opacity-100 translate-y-0 pointer-events-auto"
+                                            "absolute top-[calc(100%+8px)] left-0 z-50 transition-all duration-(--motion-base) translate-x-0 opacity-100 translate-y-0 pointer-events-auto"
                                         } else {
-                                            "absolute top-[calc(100%+8px)] left-0 z-50 transition-all duration-200 translate-x-0 opacity-0 -translate-y-2 pointer-events-none"
+                                            "absolute top-[calc(100%+8px)] left-0 z-50 transition-all duration-(--motion-base) translate-x-0 opacity-0 -translate-y-2 pointer-events-none"
                                         }
                                         role="listbox"
                                     >
-                                        <div class="w-max max-w-[90vw] md:max-w-none max-h-[65vh] md:max-h-[460px] overflow-y-auto bg-[#141414]/95 backdrop-blur-2xl border border-white/15 rounded-2xl p-4 md:p-6 scrollbar-hide shadow-2xl">
+                                        <div class="w-max max-w-[90vw] md:max-w-none max-h-[65vh] md:max-h-[460px] overflow-y-auto bg-page/95 backdrop-blur-2xl border border-ink/15 rounded-sheet p-4 md:p-6 scrollbar-hide shadow-2xl">
                                             <div class="grid grid-cols-[repeat(3,max-content)] gap-x-6 md:gap-x-10 gap-y-1">
                                                 {transposed.into_iter().enumerate().map(|(_idx, opt)| {
                                                     if let Some(genre) = opt {
@@ -243,7 +243,7 @@ fn CategorySubNavDesktop(
                                                                 }
                                                                 role="option"
                                                                 aria-selected="false"
-                                                                class="text-left text-[14px] md:text-[15px] font-medium transition-all px-3 py-1.5 rounded-lg hover:bg-white/15 whitespace-nowrap text-white/80 hover:text-white cursor-pointer"
+                                                                class="text-left text-body-sm md:text-body font-medium transition-all px-3 py-1.5 rounded-card hover:bg-ink/15 whitespace-nowrap text-ink/80 hover:text-ink cursor-pointer"
                                                             >
                                                                 {genre.name}
                                                             </button>

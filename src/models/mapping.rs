@@ -10,8 +10,8 @@ pub struct CategoryContext {
 }
 
 /// Maps Netflix's internal UI routing IDs to TMDB API parameters.
-pub fn map_netflix_id_to_tmdb(netflix_id: &str) -> Option<CategoryContext> {
-    match netflix_id {
+pub fn map_genre_key_to_tmdb(genre_key: &str) -> Option<CategoryContext> {
+    match genre_key {
         // Core Types
         "34" => Some(CategoryContext {
             kind: MediaKind::Movie,

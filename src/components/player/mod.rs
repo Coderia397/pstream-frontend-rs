@@ -430,37 +430,37 @@ pub fn NetflixVideoPlayer(
         <div
             node_ref=player_container_ref
             on:mousemove=on_mouse_move
-            class="relative w-full h-screen bg-black overflow-hidden select-none"
+            class="relative w-full h-screen bg-void overflow-hidden select-none"
         >
             {move || match player_state.get() {
                 PlayerState::Resolving => view! {
-                    <div class="absolute inset-0 flex flex-col items-center justify-center bg-black z-30">
-                        <div class="w-16 h-16 rounded-full border-4 border-[#e50914] border-t-transparent animate-spin mb-4 shadow-2xl"></div>
-                        <p class="text-white/90 text-sm font-semibold tracking-wide animate-pulse">
-                            "Finding optimal stream..."
+                    <div class="absolute inset-0 flex flex-col items-center justify-center bg-void z-30">
+                        <div class="w-16 h-16 rounded-full border-4 border-brand border-t-transparent animate-spin mb-4 shadow-2xl"></div>
+                        <p class="text-ink/90 text-sm font-semibold tracking-wide animate-pulse">
+                            {crate::i18n::t("mod-finding-optimal-stream")}
                         </p>
                     </div>
                 }.into_any(),
 
                 PlayerState::Error(err_msg) => view! {
-                    <div class="absolute inset-0 flex flex-col items-center justify-center bg-black z-30 text-center px-6">
-                        <div class="w-16 h-16 rounded-2xl bg-white/10 flex items-center justify-center mb-4 text-[#e50914] text-3xl">
+                    <div class="absolute inset-0 flex flex-col items-center justify-center bg-void z-30 text-center px-6">
+                        <div class="w-16 h-16 rounded-sheet bg-ink/10 flex items-center justify-center mb-4 text-brand text-3xl">
                             <i class="ph ph-warning-circle"></i>
                         </div>
-                        <h3 class="text-xl font-bold text-white mb-2">"Playback Unavailable"</h3>
-                        <p class="text-white/60 text-sm max-w-md mb-6">{err_msg}</p>
+                        <h3 class="text-xl font-bold text-ink mb-2">"Playback Unavailable"</h3>
+                        <p class="text-ink/60 text-sm max-w-md mb-6">{err_msg}</p>
                         <div class="flex items-center gap-4">
                             <button
                                 on:click=move |_| do_resolve.run(true)
-                                class="px-6 py-2.5 bg-[#e50914] hover:bg-[#b80710] text-white font-bold rounded-lg transition-colors text-sm"
+                                class="btn-brand px-6 py-2.5 rounded-card text-sm"
                             >
-                                "Retry"
+                                {crate::i18n::t("mod-retry")}
                             </button>
                             <button
                                 on:click=move |_| on_close.run(())
-                                class="px-6 py-2.5 bg-white/15 hover:bg-white/25 text-white font-semibold rounded-lg transition-colors text-sm"
+                                class="px-6 py-2.5 bg-ink/15 hover:bg-ink/25 text-ink font-semibold rounded-card transition-colors text-sm"
                             >
-                                "Back to Browse"
+                                {crate::i18n::t("controls-overlay-back-to-browse")}
                             </button>
                         </div>
                     </div>
@@ -486,7 +486,7 @@ pub fn NetflixVideoPlayer(
                                         <div class="absolute top-4 left-4 z-30">
                                             <button
                                                 on:click=move |_| on_close.run(())
-                                                class="flex items-center gap-2 px-4 py-2 rounded-full bg-black/80 hover:bg-black text-white text-sm font-semibold backdrop-blur-md shadow-lg"
+                                                class="flex items-center gap-2 px-4 py-2 rounded-full bg-void/80 hover:bg-void text-ink text-sm font-semibold backdrop-blur-md shadow-lg"
                                             >
                                                 <i class="ph ph-arrow-left text-lg"></i>
                                                 <span>"Back"</span>
@@ -496,10 +496,10 @@ pub fn NetflixVideoPlayer(
                                 }.into_any()
                             } else {
                                 view! {
-                                    <div class="relative w-full h-full flex items-center justify-center bg-black">
+                                    <div class="relative w-full h-full flex items-center justify-center bg-void">
                                         <video
                                             node_ref=video_ref
-                                            id="pstream-video"
+                                            id=crate::keys::VIDEO_ELEMENT_ID
                                             on:timeupdate=on_time_update
                                             on:waiting=on_waiting
                                             on:canplay=on_canplay

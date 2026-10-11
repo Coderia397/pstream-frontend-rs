@@ -19,7 +19,7 @@ pub struct AppNotification {
 fn load_read_ids() -> HashSet<String> {
     let mut set = HashSet::new();
     if let Some(storage) = web_sys::window().and_then(|w| w.local_storage().ok().flatten()) {
-        if let Ok(Some(raw)) = storage.get_item("pstream-notifications-read:default") {
+        if let Ok(Some(raw)) = storage.get_item(crate::keys::NOTIFICATIONS_READ) {
             if let Ok(parsed) = serde_json::from_str::<Vec<String>>(&raw) {
                 for id in parsed {
                     set.insert(id);
@@ -34,7 +34,7 @@ fn save_read_ids(ids: &HashSet<String>) {
     if let Some(storage) = web_sys::window().and_then(|w| w.local_storage().ok().flatten()) {
         let vec: Vec<&String> = ids.iter().collect();
         if let Ok(json) = serde_json::to_string(&vec) {
-            let _ = storage.set_item("pstream-notifications-read:default", &json);
+            let _ = storage.set_item(crate::keys::NOTIFICATIONS_READ, &json);
         }
     }
 }
@@ -82,7 +82,7 @@ pub fn NotificationsDropdown() -> impl IntoView {
                             4 => "A must-watch".to_string(),
                             5 => "Top 10 in the UK".to_string(),
                             6 => "Critics' choice".to_string(),
-                            _ => "New on PStream".to_string(),
+                            _ => format!("New on {}", crate::brand::NAME),
                         },
                         body: m.title.clone().unwrap_or_default(),
                         backdrop,
@@ -115,7 +115,7 @@ pub fn NotificationsDropdown() -> impl IntoView {
                             4 => "Binge-worthy".to_string(),
                             5 => "Top 10 series in the UK".to_string(),
                             6 => "New arrival".to_string(),
-                            _ => "New on PStream".to_string(),
+                            _ => format!("New on {}", crate::brand::NAME),
                         },
                         body: s.title.clone().unwrap_or_default(),
                         backdrop,
@@ -186,13 +186,13 @@ pub fn NotificationsDropdown() -> impl IntoView {
             // Bell trigger button
             <button
                 on:click=toggle_open
-                class="relative w-10 h-10 flex items-center justify-center rounded-full text-white hover:bg-[#808080]/40 active:scale-95 transition-colors cursor-pointer"
-                title="Notifications"
-                aria-label="Notifications"
+                class="relative w-10 h-10 flex items-center justify-center rounded-full text-ink hover:bg-mute/40 active:scale-95 transition-colors cursor-pointer"
+                title=crate::i18n::t("notifications-dropdown-notifications")
+                aria-label=crate::i18n::t("notifications-dropdown-notifications")
             >
-                <i class="ph ph-bell text-[24px]"></i>
+                <i class="ph ph-bell text-heading"></i>
                 <Show when=has_unread>
-                    <span class="absolute top-[2px] right-[2px] min-w-[16px] h-[16px] px-1 rounded-full bg-[#E50914] text-white text-[10px] font-medium flex items-center justify-center leading-none">
+                    <span class="absolute top-[2px] right-[2px] min-w-[16px] h-[16px] px-1 rounded-full bg-brand text-ink text-micro font-medium flex items-center justify-center leading-none">
                         {move || {
                             let c = unread_count();
                             if c > 99 { "99+".to_string() } else { c.to_string() }
@@ -203,24 +203,24 @@ pub fn NotificationsDropdown() -> impl IntoView {
 
             // Dropdown panel
             <Show when=move || open.get()>
-                <div class="absolute right-0 top-[calc(100%+8px)] w-[360px] sm:w-[420px] max-h-[560px] overflow-y-auto bg-[#2a2a2a] rounded-xl shadow-2xl z-50 scrollbar-hide">
+                <div class="absolute right-0 top-[calc(100%+8px)] w-[360px] sm:w-[420px] max-h-[560px] overflow-y-auto bg-menu rounded-modal shadow-2xl z-50 scrollbar-hide">
                     // Header
                     <div class="px-4 py-3">
-                        <p class="text-white font-bold text-[15px]">"Notifications"</p>
+                        <p class="text-ink font-bold text-body">"Notifications"</p>
                     </div>
                     <Show
                         when=move || !is_loading.get()
                         fallback=move || view! {
                             <div class="flex justify-center py-10">
-                                <div class="w-6 h-6 border-2 border-white/20 border-t-white rounded-full animate-spin"></div>
+                                <div class="w-6 h-6 border-2 border-ink/20 border-t-ink rounded-full animate-spin"></div>
                             </div>
                         }
                     >
                         <Show
                             when=move || !items.get().is_empty()
                             fallback=move || view! {
-                                <p class="text-white/40 text-center text-[13px] py-10 px-6">
-                                    "You're all caught up — new arrivals will show up here."
+                                <p class="text-ink/40 text-center text-label py-10 px-6">
+                                    {crate::i18n::t("notifications-dropdown-youre-all-caught-up-new")}
                                 </p>
                             }
                         >
@@ -232,23 +232,23 @@ pub fn NotificationsDropdown() -> impl IntoView {
                                     view! {
                                         <button
                                             on:click=move |_| on_select(on_click_notif.clone())
-                                            class="w-full flex items-start gap-3 px-3 py-3 text-left hover:bg-white/[0.08] rounded-lg mx-1 transition-colors cursor-pointer group"
+                                            class="w-full flex items-start gap-3 px-3 py-3 text-left hover:bg-ink/[0.08] rounded-card mx-1 transition-colors cursor-pointer group"
                                         >
                                             // Backdrop thumbnail (16:9)
-                                            <div class="w-[112px] h-[63px] rounded-md overflow-hidden bg-zinc-800 shrink-0">
+                                            <div class="w-[112px] h-[63px] rounded-field overflow-hidden bg-zinc-800 shrink-0">
                                                 <img
                                                     src=n.backdrop.clone()
                                                     alt=n.body.clone()
-                                                    class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"
+                                                    class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-(--motion-slow)"
                                                     loading="lazy"
                                                 />
                                             </div>
 
                                             // Text: headline big+bold, body smaller/muted, time tiny gray
                                             <div class="flex-1 min-w-0 pt-0.5">
-                                                <p class="text-white text-[15px] font-bold leading-snug mb-0.5">{n.headline}</p>
-                                                <p class="text-white/60 text-[13px] leading-snug line-clamp-2">{n.body}</p>
-                                                <p class="text-white/40 text-[12px] mt-1">{n.relative_time}</p>
+                                                <p class="text-ink text-body font-bold leading-snug mb-0.5">{n.headline}</p>
+                                                <p class="text-ink/60 text-label leading-snug line-clamp-2">{n.body}</p>
+                                                <p class="text-ink/40 text-fine mt-1">{n.relative_time}</p>
                                             </div>
                                         </button>
                                     }

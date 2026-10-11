@@ -101,17 +101,17 @@ pub fn NotificationsPage() -> impl IntoView {
 
     view! {
         <Layout>
-            <div class="pt-[calc(5.5rem+env(safe-area-inset-top))] md:pt-32 px-4 sm:px-8 md:px-[var(--app-x,56px)] pb-16 min-h-screen bg-black md:bg-[#141414] text-white">
+            <div class="pt-[calc(5.5rem+env(safe-area-inset-top))] md:pt-32 px-4 sm:px-8 md:px-[var(--app-x,56px)] pb-16 min-h-screen bg-void md:bg-page text-ink">
                 <div class="max-w-4xl mx-auto">
                     // ── Header ───────────────────────────────────────────────
-                    <div class="flex items-center justify-between mb-8 border-b border-white/10 pb-4">
+                    <div class="flex items-center justify-between mb-8 border-b border-ink/10 pb-4">
                         <div>
-                            <h1 class="text-2xl md:text-3xl font-bold tracking-tight text-white flex items-center gap-3">
-                                <i class="ph-fill ph-bell-ringing text-[#E50914] text-3xl"></i>
-                                "Notifications & Arrivals"
+                            <h1 class="text-2xl md:text-3xl font-bold tracking-tight text-ink flex items-center gap-3">
+                                <i class="ph-fill ph-bell-ringing text-brand text-3xl"></i>
+                                {crate::i18n::t("notifications-notifications-arrivals")}
                             </h1>
-                            <p class="text-white/50 text-sm mt-1">
-                                "Stay up to date with new releases, trending hits, and recommendations."
+                            <p class="text-ink/50 text-sm mt-1">
+                                {crate::i18n::t("notifications-stay-up-to-date-with")}
                             </p>
                         </div>
                     </div>
@@ -120,7 +120,7 @@ pub fn NotificationsPage() -> impl IntoView {
                     <Suspense fallback=move || view! {
                         <div class="space-y-4 animate-pulse">
                             {(0..6).map(|_| view! {
-                                <div class="h-28 bg-[#1e1e1e] rounded-xl border border-white/5"></div>
+                                <div class="h-28 bg-card rounded-modal border border-ink/5"></div>
                             }).collect::<Vec<_>>()}
                         </div>
                     }>
@@ -128,11 +128,11 @@ pub fn NotificationsPage() -> impl IntoView {
                             if items.is_empty() {
                                 return view! {
                                     <div class="flex flex-col items-center justify-center mt-20 text-center select-none">
-                                        <div class="w-16 h-16 rounded-full bg-white/5 flex items-center justify-center mb-4 text-white/40">
+                                        <div class="w-16 h-16 rounded-full bg-ink/5 flex items-center justify-center mb-4 text-ink/40">
                                             <i class="ph-bold ph-bell text-3xl"></i>
                                         </div>
-                                        <div class="text-xl text-white font-semibold mb-1">"You're all caught up"</div>
-                                        <div class="text-white/40 text-sm">"New notifications and arrivals will appear here."</div>
+                                        <div class="text-xl text-ink font-semibold mb-1">"You're all caught up"</div>
+                                        <div class="text-ink/40 text-sm">"New notifications and arrivals will appear here."</div>
                                     </div>
                                 }.into_any();
                             }
@@ -148,43 +148,43 @@ pub fn NotificationsPage() -> impl IntoView {
                                         view! {
                                             <div
                                                 on:click=move |_| cb.run(item_clone.clone())
-                                                class="group relative flex flex-col sm:flex-row items-start sm:items-center justify-between p-4 bg-[#181818] hover:bg-[#222222] border border-white/10 hover:border-white/30 rounded-xl transition-all duration-200 cursor-pointer shadow-lg gap-4"
+                                                class="group relative flex flex-col sm:flex-row items-start sm:items-center justify-between p-4 bg-raised hover:bg-placeholder border border-ink/10 hover:border-ink/30 rounded-modal transition-all duration-(--motion-base) cursor-pointer shadow-lg gap-4"
                                             >
                                                 // Unread Indicator Dot
                                                 <div class="flex items-center gap-4 w-full sm:w-auto">
                                                     <div class="w-2.5 h-2.5 rounded-full shrink-0"
-                                                        class=("bg-[#E50914]", !is_read)
+                                                        class=("bg-brand", !is_read)
                                                         class=("bg-transparent", is_read)
                                                     />
 
                                                     // Media Thumbnail
-                                                    <div class="w-24 sm:w-32 aspect-video bg-zinc-900 rounded-lg overflow-hidden shrink-0 border border-white/10 group-hover:scale-105 transition-transform duration-200">
+                                                    <div class="w-24 sm:w-32 aspect-video bg-zinc-900 rounded-card overflow-hidden shrink-0 border border-ink/10 group-hover:scale-105 transition-transform duration-(--motion-base)">
                                                         {if let Some(src) = item.backdrop {
                                                             view! { <img src=src alt="" class="w-full h-full object-cover" loading="lazy" /> }.into_any()
                                                         } else {
-                                                            view! { <div class="w-full h-full flex items-center justify-center text-white/20"><i class="ph-bold ph-film-strip text-2xl" /></div> }.into_any()
+                                                            view! { <div class="w-full h-full flex items-center justify-center text-ink/20"><i class="ph-bold ph-film-strip text-2xl" /></div> }.into_any()
                                                         }}
                                                     </div>
 
                                                     // Text Content
                                                     <div class="flex-1 min-w-0 pr-2">
                                                         <div class="flex items-center gap-2 mb-1">
-                                                            <span class="px-2 py-0.5 rounded text-[11px] font-bold uppercase tracking-wider bg-white/10 text-white/90">
+                                                            <span class="px-2 py-0.5 rounded-control text-caption font-bold uppercase tracking-wider bg-ink/10 text-ink/90">
                                                                 {item.badge}
                                                             </span>
-                                                            <span class="text-white/40 text-xs">{item.time_label}</span>
+                                                            <span class="text-ink/40 text-xs">{item.time_label}</span>
                                                         </div>
-                                                        <h3 class="text-white font-bold text-base sm:text-lg truncate group-hover:text-[#E50914] transition-colors">
+                                                        <h3 class="text-ink font-bold text-base sm:text-lg truncate group-hover:text-brand transition-colors">
                                                             {item.title}
                                                         </h3>
-                                                        <p class="text-white/60 text-xs sm:text-sm line-clamp-2 mt-0.5">
+                                                        <p class="text-ink/60 text-xs sm:text-sm line-clamp-2 mt-0.5">
                                                             {item.description}
                                                         </p>
                                                     </div>
                                                 </div>
 
                                                 // Action Icon
-                                                <div class="hidden sm:flex items-center text-white/30 group-hover:text-white group-hover:translate-x-1 transition-all pr-2 shrink-0">
+                                                <div class="hidden sm:flex items-center text-ink/30 group-hover:text-ink group-hover:translate-x-1 transition-all pr-2 shrink-0">
                                                     <i class="ph-bold ph-caret-right text-xl"></i>
                                                 </div>
                                             </div>

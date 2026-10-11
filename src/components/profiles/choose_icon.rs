@@ -10,28 +10,28 @@ pub fn ChooseIconModal(
     let current_url = current_avatar_url.unwrap_or_default();
 
     view! {
-        <div class="fixed inset-0 z-[250] bg-[#141414] overflow-y-auto animate-in fade-in duration-200">
+        <div class="fixed inset-0 z-(--z-modal-top) bg-page overflow-y-auto animate-in fade-in duration-(--motion-base)">
             // ── Sticky Header ───────────────────────────────────────────────
-            <header class="sticky top-0 z-20 bg-[#141414]/90 backdrop-blur-md border-b border-white/10 px-6 sm:px-12 py-4 flex items-center justify-between">
+            <header class="sticky top-0 z-20 bg-page/90 backdrop-blur-md border-b border-ink/10 px-6 sm:px-12 py-4 flex items-center justify-between">
                 <div class="flex items-center gap-4">
                     <button
                         on:click=move |_| on_cancel.run(())
-                        class="p-2 rounded-full hover:bg-white/10 text-white/80 hover:text-white transition-colors cursor-pointer"
-                        aria-label="Back"
+                        class="p-2 rounded-full hover:bg-ink/10 text-ink/80 hover:text-ink transition-colors cursor-pointer"
+                        aria-label=crate::i18n::t("choose-icon-back")
                     >
                         <i class="ph-bold ph-arrow-left text-2xl"></i>
                     </button>
                     <div>
-                        <h1 class="text-xl sm:text-2xl font-bold text-white">"Choose an Icon"</h1>
-                        <p class="text-xs sm:text-sm text-white/50">"Select an avatar for your profile"</p>
+                        <h1 class="text-xl sm:text-2xl font-bold text-ink">"Choose an Icon"</h1>
+                        <p class="text-xs sm:text-sm text-ink/50">"Select an avatar for your profile"</p>
                     </div>
                 </div>
 
                 <button
                     on:click=move |_| on_cancel.run(())
-                    class="px-5 py-1.5 border border-white/30 rounded text-white text-sm font-semibold hover:border-white transition-colors cursor-pointer"
+                    class="px-5 py-1.5 border border-ink/30 rounded-control text-ink text-sm font-semibold hover:border-ink transition-colors cursor-pointer"
                 >
-                    "Cancel"
+                    {crate::i18n::t("continue-watching-options-sheet-cancel")}
                 </button>
             </header>
 
@@ -43,7 +43,7 @@ pub fn ChooseIconModal(
 
                     view! {
                         <div class="space-y-4">
-                            <h2 class="text-lg sm:text-xl font-bold text-white tracking-wide">
+                            <h2 class="text-lg sm:text-xl font-bold text-ink tracking-wide">
                                 {cat_name}
                             </h2>
                             <div class="grid grid-cols-3 sm:grid-cols-4 md:grid-cols-6 lg:grid-cols-7 gap-3 sm:gap-4">
@@ -62,9 +62,9 @@ pub fn ChooseIconModal(
                                         >
                                             <div
                                                 class=if is_current {
-                                                    "relative aspect-square w-full rounded-md overflow-hidden bg-[#262626] transition-all duration-200 group-hover:scale-105 group-active:scale-95 ring-4 ring-white shadow-xl scale-105"
+                                                    "relative aspect-square w-full rounded-field overflow-hidden bg-field transition-all duration-(--motion-base) group-hover:scale-105 group-active:scale-95 ring-4 ring-ink shadow-xl scale-105"
                                                 } else {
-                                                    "relative aspect-square w-full rounded-md overflow-hidden bg-[#262626] transition-all duration-200 group-hover:scale-105 group-active:scale-95 shadow-md hover:ring-2 hover:ring-white/60"
+                                                    "relative aspect-square w-full rounded-field overflow-hidden bg-field transition-all duration-(--motion-base) group-hover:scale-105 group-active:scale-95 shadow-md hover:ring-2 hover:ring-ink/60"
                                                 }
                                             >
                                                 <img
@@ -74,7 +74,7 @@ pub fn ChooseIconModal(
                                                     loading="lazy"
                                                 />
                                             </div>
-                                            <span class="text-[11px] sm:text-xs text-white/60 group-hover:text-white transition-colors text-center truncate w-full">
+                                            <span class="text-caption sm:text-xs text-ink/60 group-hover:text-ink transition-colors text-center truncate w-full">
                                                 {name}
                                             </span>
                                         </button>

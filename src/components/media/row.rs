@@ -163,14 +163,14 @@ pub fn Row(
         }
     };
 
-    let card_width_class = "netflix-card-width";
+    let card_width_class = "tile-width";
 
     view! {
         <div class="group relative row-block z-10">
             <div class="flex items-center justify-between px-[var(--app-x,56px)]">
                 <h2 class="row-title cursor-pointer flex items-center group/title w-fit">
                     {title}
-                    <span class="text-xs text-cyan-500 ml-2 opacity-0 group-hover/title:opacity-100 transition-opacity duration-300 flex items-center font-semibold">
+                    <span class="text-xs text-cyan-500 ml-2 opacity-0 group-hover/title:opacity-100 transition-opacity duration-(--motion-slow) flex items-center font-semibold">
                         "Explore All ›"
                     </span>
                 </h2>
@@ -182,15 +182,15 @@ pub fn Row(
                         let pages = (count / 4).clamp(2, 6);
                         let current = page_index.get();
                         view! {
-                            <div class="hidden md:flex items-center gap-[3px] opacity-0 group-hover:opacity-100 transition-opacity duration-300">
+                            <div class="hidden md:flex items-center gap-[3px] opacity-0 group-hover:opacity-100 transition-opacity duration-(--motion-slow)">
                                 {(0..pages).map(|i| {
                                     let is_active = i == current;
                                     view! {
                                         <div
                                             class=if is_active {
-                                                "h-[2px] w-3 rounded-full bg-white transition-colors duration-200"
+                                                "h-[2px] w-3 rounded-full bg-ink transition-colors duration-(--motion-base)"
                                             } else {
-                                                "h-[2px] w-3 rounded-full bg-white/20 transition-colors duration-200"
+                                                "h-[2px] w-3 rounded-full bg-ink/20 transition-colors duration-(--motion-base)"
                                             }
                                         />
                                     }
@@ -212,13 +212,13 @@ pub fn Row(
                                 <div class="flex-none h-full pointer-events-none" style="width: var(--app-x, 56px);" />
                                 {(0..6).map(|_| view! {
                                     <div
-                                        class=format!("movie-card-container relative flex-none {} aspect-video bg-[#1e1e1e] rounded-[var(--tile-radius)] overflow-hidden border border-white/[0.04] pointer-events-auto", card_width_class)
+                                        class=format!("movie-card-container relative flex-none {} aspect-video bg-card rounded-tile overflow-hidden border border-ink/[0.04] pointer-events-auto", card_width_class)
                                     >
-                                        <div class="absolute inset-0 -translate-x-full animate-[shimmer_1.8s_ease-in-out_infinite] bg-gradient-to-r from-transparent via-white/[0.05] to-transparent" />
-                                        <div class="absolute inset-0 bg-gradient-to-b from-[#252525] via-[#1e1e1e] to-[#181818]" />
+                                        <div class="absolute inset-0 -translate-x-full animate-[shimmer_1.8s_ease-in-out_infinite] bg-gradient-to-r from-transparent via-ink/[0.05] to-transparent" />
+                                        <div class="absolute inset-0 bg-gradient-to-b from-field via-card to-raised" />
                                         <div class="absolute bottom-4 left-3 space-y-2">
-                                            <div class="h-2.5 bg-white/[0.08] rounded-full w-16" />
-                                            <div class="h-1.5 bg-white/[0.05] rounded-full w-10" />
+                                            <div class="h-2.5 bg-ink/[0.08] rounded-full w-16" />
+                                            <div class="h-1.5 bg-ink/[0.05] rounded-full w-10" />
                                         </div>
                                     </div>
                                 }).collect::<Vec<_>>()}
@@ -250,7 +250,7 @@ pub fn Row(
                                         
                                         view! {
                                             <div 
-                                                class=format!("movie-card-container relative flex-none pointer-events-auto overflow-visible rounded-[var(--tile-radius)] {} aspect-video", card_width_class)
+                                                class=format!("movie-card-container relative flex-none pointer-events-auto overflow-visible rounded-tile {} aspect-video", card_width_class)
                                                 style="z-index: auto;"
                                             >
                                                 <MovieCard
@@ -271,7 +271,7 @@ pub fn Row(
                                     {move || if is_fetching.get() {
                                         view! {
                                             <div class=format!("movie-card-container relative flex-none {} aspect-video flex items-center justify-center", card_width_class)>
-                                                <div class="w-8 h-8 rounded-full border-2 border-transparent border-t-white/60 animate-spin" />
+                                                <div class="w-8 h-8 rounded-full border-2 border-transparent border-t-ink/60 animate-spin" />
                                             </div>
                                         }.into_any()
                                     } else {
@@ -285,30 +285,30 @@ pub fn Row(
                                 <button
                                     type="button"
                                     class=move || if can_scroll_left.get() {
-                                        "hidden md:flex absolute top-2 bottom-6 left-0 z-30 items-center justify-center cursor-pointer bg-transparent hover:bg-black/70 transition-all duration-200 opacity-0 group-hover/row:opacity-100 group-hover/row:pointer-events-auto select-none border-none outline-none"
+                                        "hidden md:flex absolute top-2 bottom-6 left-0 z-30 items-center justify-center cursor-pointer bg-transparent hover:bg-void/70 transition-all duration-(--motion-base) opacity-0 group-hover/row:opacity-100 group-hover/row:pointer-events-auto select-none border-none outline-none"
                                     } else {
                                         "hidden !pointer-events-none !opacity-0"
                                     }
                                     style="width: var(--app-x, 56px);"
                                     on:click=move |_| scroll_left("left")
-                                    aria-label="Scroll Left"
+                                    aria-label=crate::i18n::t("continue-watching-row-scroll-left")
                                 >
-                                    <i class="ph-bold ph-caret-left text-white text-3xl sm:text-4xl drop-shadow-lg transition-transform hover:scale-125"></i>
+                                    <i class="ph-bold ph-caret-left text-ink text-3xl sm:text-4xl drop-shadow-lg transition-transform hover:scale-125"></i>
                                 </button>
 
                                 // Right Chevron Handle: sits inside right margin gutter, exactly var(--app-x) wide
                                 <button
                                     type="button"
                                     class=move || if can_scroll_right.get() {
-                                        "hidden md:flex absolute top-2 bottom-6 right-0 z-30 items-center justify-center cursor-pointer bg-transparent hover:bg-black/70 transition-all duration-200 opacity-0 group-hover/row:opacity-100 group-hover/row:pointer-events-auto select-none border-none outline-none"
+                                        "hidden md:flex absolute top-2 bottom-6 right-0 z-30 items-center justify-center cursor-pointer bg-transparent hover:bg-void/70 transition-all duration-(--motion-base) opacity-0 group-hover/row:opacity-100 group-hover/row:pointer-events-auto select-none border-none outline-none"
                                     } else {
                                         "hidden !pointer-events-none !opacity-0"
                                     }
                                     style="width: var(--app-x, 56px);"
                                     on:click=move |_| scroll_right("right")
-                                    aria-label="Scroll Right"
+                                    aria-label=crate::i18n::t("continue-watching-row-scroll-right")
                                 >
-                                    <i class="ph-bold ph-caret-right text-white text-3xl sm:text-4xl drop-shadow-lg transition-transform hover:scale-125"></i>
+                                    <i class="ph-bold ph-caret-right text-ink text-3xl sm:text-4xl drop-shadow-lg transition-transform hover:scale-125"></i>
                                 </button>
                             </>
                         }.into_any()

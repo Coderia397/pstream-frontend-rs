@@ -562,7 +562,7 @@ pub fn TrailerPlayer(
 
     view! {
         <div
-            class=format!("absolute inset-0 overflow-hidden pointer-events-none transition-opacity duration-700 ease-in-out {}", extra_class)
+            class=format!("absolute inset-0 overflow-hidden pointer-events-none transition-opacity duration-(--motion-slowest) ease-in-out {}", extra_class)
             class:opacity-100=move || is_frame_ready.get() && is_playing.get()
             class:opacity-0=move || !is_frame_ready.get() || !is_playing.get()
         >

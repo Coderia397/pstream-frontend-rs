@@ -32,11 +32,11 @@ pub fn NewPopularSubNavMobile(
                         let is_active = move || active_tab.get() == tab;
                         let on_change = on_tab_change;
                         let corner_class = if idx == 0 {
-                            "rounded-l-[20px] rounded-r-[10px]"
+                            "rounded-l-chip rounded-r-chip-inner"
                         } else if idx == total - 1 {
-                            "rounded-l-[10px] rounded-r-[20px]"
+                            "rounded-l-chip-inner rounded-r-chip"
                         } else {
-                            "rounded-[10px]"
+                            "rounded-chip-inner"
                         };
 
                         view! {
@@ -44,12 +44,12 @@ pub fn NewPopularSubNavMobile(
                                 on:click=move |_| on_change.run(tab)
                                 class=move || {
                                     let active_cls = if is_active() {
-                                        "bg-white/[0.18] backdrop-blur-md text-white border-[1.6px] border-white/40"
+                                        "bg-ink/[0.18] backdrop-blur-md text-ink border-[1.6px] border-ink/40"
                                     } else {
-                                        "bg-white/[0.06] backdrop-blur-md text-[#e5e5e5] border-[1.6px] border-white/15"
+                                        "bg-ink/[0.06] backdrop-blur-md text-ink-soft border-[1.6px] border-ink/15"
                                     };
                                     format!(
-                                        "flex items-center justify-center h-[38px] px-4 {} text-[14px] font-semibold whitespace-nowrap active:scale-95 transition-all leading-none shrink-0 cursor-pointer {}",
+                                        "flex items-center justify-center h-[38px] px-4 {} text-body-sm font-semibold whitespace-nowrap active:scale-95 transition-all leading-none shrink-0 cursor-pointer {}",
                                         corner_class, active_cls
                                     )
                                 }

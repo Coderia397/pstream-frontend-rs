@@ -28,11 +28,11 @@ pub fn get_session_preview_muted(profile_id: Option<&str>, is_kids: bool) -> boo
     let storage = web_sys::window().and_then(|w| w.session_storage().ok().flatten());
     if let Some(ref s) = storage {
         if let Some(pid) = profile_id {
-            if let Ok(Some(val)) = s.get_item(&format!("pstream_preview_muted_{}", pid)) {
+            if let Ok(Some(val)) = s.get_item(&crate::keys::preview_muted_for(&pid)) {
                 return val == "1" || val == "true";
             }
         }
-        if let Ok(Some(val)) = s.get_item("pstream_preview_muted") {
+        if let Ok(Some(val)) = s.get_item(crate::keys::PREVIEW_MUTED) {
             return val == "1" || val == "true";
         }
     }
@@ -42,9 +42,9 @@ pub fn get_session_preview_muted(profile_id: Option<&str>, is_kids: bool) -> boo
 pub fn save_session_preview_muted(muted: bool, profile_id: Option<&str>) {
     if let Some(storage) = web_sys::window().and_then(|w| w.session_storage().ok().flatten()) {
         let val = if muted { "1" } else { "0" };
-        let _ = storage.set_item("pstream_preview_muted", val);
+        let _ = storage.set_item(crate::keys::PREVIEW_MUTED, val);
         if let Some(pid) = profile_id {
-            let _ = storage.set_item(&format!("pstream_preview_muted_{}", pid), val);
+            let _ = storage.set_item(&crate::keys::preview_muted_for(&pid), val);
         }
     }
 }
@@ -97,18 +97,18 @@ pub fn provide_profile_store() {
     let storage = web_sys::window().and_then(|w| w.local_storage().ok().flatten());
     let initial_profile = storage
         .as_ref()
-        .and_then(|s| s.get_item("pstream_active_profile").ok().flatten())
+        .and_then(|s| s.get_item(crate::keys::ACTIVE_PROFILE).ok().flatten())
         .or_else(|| Some("p1".to_string()));
 
     let initial_profiles = storage
         .as_ref()
-        .and_then(|s| s.get_item("pstream_profiles").ok().flatten())
+        .and_then(|s| s.get_item(crate::keys::PROFILES).ok().flatten())
         .and_then(|raw| serde_json::from_str::<Vec<crate::models::profile::Profile>>(&raw).ok())
         .unwrap_or_else(|| vec![
             crate::models::profile::Profile {
                 id: "p1".to_string(),
                 name: "Main".to_string(),
-                avatar_url: Some("https://wallpapers.com/images/hd/netflix-profile-pictures-1000-x-1000-88wkdmjrorckekha.jpg".to_string()),
+                avatar_url: Some(crate::brand::DEFAULT_AVATAR.to_string()),
                 is_kids: false,
                 is_default: Some(true),
                 pin: None,

@@ -1,6 +1,6 @@
 use gloo_net::http::Request;
 use serde::{Deserialize, Serialize};
-use crate::models::mapping::{map_netflix_id_to_tmdb, MediaKind};
+use crate::models::mapping::{map_genre_key_to_tmdb, MediaKind};
 
 const TMDB_BASE_URL: &str = "https://api.themoviedb.org/3";
 
@@ -149,18 +149,18 @@ pub async fn fetch_british_tv() -> Result<Vec<MediaItem>, gloo_net::Error> {
 
 /// Primary entry point: given a Netflix-style genre ID from the URL,
 /// resolve the correct TMDB query and return its results.
-pub async fn fetch_for_genre_route(netflix_id: &str) -> Result<Vec<MediaItem>, gloo_net::Error> {
-    let kind = if let Some(ctx) = map_netflix_id_to_tmdb(netflix_id) {
+pub async fn fetch_for_genre_route(genre_key: &str) -> Result<Vec<MediaItem>, gloo_net::Error> {
+    let kind = if let Some(ctx) = map_genre_key_to_tmdb(genre_key) {
         match ctx.kind {
             MediaKind::Tv => "tv",
             MediaKind::Movie => "movie",
         }
-    } else if netflix_id == "british" || netflix_id == "binge" || netflix_id == "52117" || netflix_id == "1191605" {
+    } else if genre_key == "british" || genre_key == "binge" || genre_key == "52117" || genre_key == "1191605" {
         "tv"
     } else {
         "movie"
     };
-    fetch_row_content(kind, Some(netflix_id), None, None, None, 1).await
+    fetch_row_content(kind, Some(genre_key), None, None, None, 1).await
 }
 
 #[derive(Clone, Debug, Deserialize, Serialize)]
@@ -797,8 +797,8 @@ pub async fn fetch_row_content(
     fetch_trending_page(safe_kind, page).await
 }
 
-pub async fn fetch_for_genre_route_page(netflix_id: &str, page: u32) -> Result<Vec<MediaItem>, gloo_net::Error> {
-    fetch_row_content("movie", Some(netflix_id), None, None, None, page).await
+pub async fn fetch_for_genre_route_page(genre_key: &str, page: u32) -> Result<Vec<MediaItem>, gloo_net::Error> {
+    fetch_row_content("movie", Some(genre_key), None, None, None, page).await
 }
 
 pub async fn fetch_by_language(lang: &str, page: u32) -> Result<Vec<MediaItem>, gloo_net::Error> {

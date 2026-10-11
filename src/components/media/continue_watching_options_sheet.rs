@@ -45,19 +45,19 @@ pub fn ContinueWatchingOptionsSheet(
                 };
 
                 view! {
-                    <div class="fixed inset-0 z-[10040] flex flex-col justify-end">
+                    <div class="fixed inset-0 z-(--z-sheet-backdrop) flex flex-col justify-end">
                         // Backdrop
                         <div
-                            class="fixed inset-0 bg-black/60 transition-opacity duration-200"
+                            class="fixed inset-0 bg-void/60 transition-opacity duration-(--motion-base)"
                             on:click=handle_close
                         />
 
                         // Sheet content
-                        <div class="relative z-[10050] bg-[#1f1f1f] rounded-t-2xl px-4 pt-2 pb-8 max-w-lg mx-auto w-full shadow-2xl transition-transform duration-300">
-                            <div class="w-10 h-1 rounded-full bg-white/30 mx-auto mb-4" />
+                        <div class="relative z-(--z-sheet) bg-sheet rounded-t-sheet px-4 pt-2 pb-8 max-w-lg mx-auto w-full shadow-2xl transition-transform duration-(--motion-slow)">
+                            <div class="w-10 h-1 rounded-full bg-ink/30 mx-auto mb-4" />
 
                             <div class="px-1 mb-4">
-                                <span class="text-white text-[17px] font-bold truncate block">
+                                <span class="text-ink text-body-lg font-bold truncate block">
                                     {title}
                                 </span>
                             </div>
@@ -65,20 +65,20 @@ pub fn ContinueWatchingOptionsSheet(
                             <button
                                 type="button"
                                 on:click=handle_remove
-                                class="w-full flex items-center gap-4 bg-[#2a2a2a] rounded-xl px-4 py-4 active:scale-[0.99] active:bg-[#333] transition-all cursor-pointer"
+                                class="w-full flex items-center gap-4 bg-menu rounded-modal px-4 py-4 active:scale-[0.99] active:bg-line transition-all cursor-pointer"
                             >
-                                <i class="ph-bold ph-x-circle text-white text-2xl shrink-0"></i>
-                                <span class="text-white text-[16px] font-medium">
-                                    "Remove from Continue Watching"
+                                <i class="ph-bold ph-x-circle text-ink text-2xl shrink-0"></i>
+                                <span class="text-ink text-body-md font-medium">
+                                    {crate::i18n::t("continue-watching-options-sheet-remove-from-continue-watching")}
                                 </span>
                             </button>
 
                             <button
                                 type="button"
                                 on:click=handle_close
-                                class="w-full text-center text-white/60 text-[15px] font-medium py-4 mt-1 active:text-white/90 cursor-pointer"
+                                class="w-full text-center text-ink/60 text-body font-medium py-4 mt-1 active:text-ink/90 cursor-pointer"
                             >
-                                "Cancel"
+                                {crate::i18n::t("continue-watching-options-sheet-cancel")}
                             </button>
                         </div>
                     </div>

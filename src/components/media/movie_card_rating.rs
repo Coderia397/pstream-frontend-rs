@@ -10,7 +10,7 @@ pub enum MovieRating {
 #[component]
 pub fn DoubleThumbsUpIcon(
     #[prop(default = 22)] size: u32,
-    #[prop(default = "#2f2f2f".to_string())] mask_color: String,
+    #[prop(default = "var(--color-panel)".to_string())] mask_color: String,
 ) -> impl IntoView {
     let offset_x = (size as f64 * 0.38).round() as i32;
     let offset_y = (size as f64 * 0.32).round() as i32;
@@ -41,7 +41,7 @@ pub fn DoubleThumbsUpIcon(
 pub fn RatingIcon(
     rating: Option<MovieRating>,
     #[prop(default = 22)] size: u32,
-    #[prop(default = "#2f2f2f".to_string())] mask_color: String,
+    #[prop(default = "var(--color-panel)".to_string())] mask_color: String,
 ) -> impl IntoView {
     view! {
         {match rating {

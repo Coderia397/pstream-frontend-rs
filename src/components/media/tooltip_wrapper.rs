@@ -43,14 +43,14 @@ pub fn TooltipWrapper(
             on:mouseleave=handle_mouse_leave
         >
             <div
-                class="absolute bottom-full left-1/2 mb-3 flex flex-col items-center z-[110] pointer-events-none transition-all duration-100"
+                class="absolute bottom-full left-1/2 mb-3 flex flex-col items-center z-(--z-tooltip) pointer-events-none transition-all duration-(--motion-quick)"
                 style=move || if show.get() {
                     "transform: translateX(-50%) translateY(0px) scale(1); opacity: 1; visibility: visible;"
                 } else {
                     "transform: translateX(-50%) translateY(4px) scale(0.9); opacity: 0; visibility: hidden;"
                 }
             >
-                <div class="bg-[#e6e6e6] text-[#141414] text-[15px] font-extrabold px-5 py-3 rounded-[1px] shadow-[0_8px_24px_rgba(0,0,0,0.5)] whitespace-nowrap leading-none select-none">
+                <div class="bg-ink-soft text-page text-body font-extrabold px-5 py-3 rounded-micro shadow-card whitespace-nowrap leading-none select-none">
                     {label_stored.get_value()}
                 </div>
                 <div class="w-0 h-0 border-l-[6px] border-l-transparent border-r-[6px] border-r-transparent border-t-[6px] border-t-[#e6e6e6] -mt-[1px]" />

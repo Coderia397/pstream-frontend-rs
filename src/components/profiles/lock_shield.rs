@@ -10,7 +10,7 @@ pub fn LockShield(
             width=width
             height=height
             viewBox="0 0 120 140"
-            class="drop-shadow-[0_8px_30px_rgba(229,9,20,0.35)] select-none"
+            class="drop-shadow-brand-lg select-none"
         >
             <defs>
                 <linearGradient id="pl-shield-fill" x1="0%" y1="0%" x2="100%" y2="100%">

@@ -90,7 +90,7 @@ pub fn ContinueWatchingRow() -> impl IntoView {
         }
     };
 
-    let card_width_class = "netflix-card-width netflix-card-landscape";
+    let card_width_class = "tile-width tile-landscape";
 
     view! {
         {move || {
@@ -105,8 +105,8 @@ pub fn ContinueWatchingRow() -> impl IntoView {
                     <div class="group relative row-block z-10">
                         <div class="flex items-center justify-between px-[var(--app-x,56px)]">
                             <h2 class="row-title cursor-pointer flex items-center group/title w-fit">
-                                "Continue Watching"
-                                <span class="text-xs text-red-500 ml-2 opacity-0 group-hover/title:opacity-100 transition-opacity duration-300 flex items-center font-semibold">
+                                {crate::i18n::t("continue-watching-row-continue-watching")}
+                                <span class="text-xs text-danger ml-2 opacity-0 group-hover/title:opacity-100 transition-opacity duration-(--motion-slow) flex items-center font-semibold">
                                     "Jump Back In ›"
                                 </span>
                             </h2>
@@ -174,22 +174,22 @@ pub fn ContinueWatchingRow() -> impl IntoView {
 
                                     view! {
                                         <div
-                                            class=format!("relative flex-none {} bg-[#181818] rounded-[var(--tile-radius)] overflow-hidden border border-white/10 hover:border-white/30 transition-all duration-300 shadow-lg hover:shadow-2xl group/card cursor-pointer", card_width_class)
+                                            class=format!("relative flex-none {} bg-raised rounded-tile overflow-hidden border border-ink/10 hover:border-ink/30 transition-all duration-(--motion-slow) shadow-lg hover:shadow-2xl group/card cursor-pointer", card_width_class)
                                             on:click=handle_play
                                         >
                                             // Thumbnail image with play overlay
-                                            <div class="relative w-full aspect-video bg-[#202020] overflow-hidden">
+                                            <div class="relative w-full aspect-video bg-card-alt overflow-hidden">
                                                 <img
                                                     src=backdrop
                                                     alt=title.clone()
-                                                    class="w-full h-full object-cover object-center group-hover/card:scale-105 transition-transform duration-500"
+                                                    class="w-full h-full object-cover object-center group-hover/card:scale-105 transition-transform duration-(--motion-slower)"
                                                     loading="lazy"
                                                 />
-                                                <div class="absolute inset-0 bg-gradient-to-t from-black/80 via-transparent to-black/20" />
+                                                <div class="absolute inset-0 bg-gradient-to-t from-void/80 via-transparent to-void/20" />
 
                                                 // Centered play button icon
-                                                <div class="absolute inset-0 flex items-center justify-center opacity-80 group-hover/card:opacity-100 group-hover/card:scale-110 transition-all duration-300">
-                                                    <div class="w-11 h-11 sm:w-12 sm:h-12 rounded-full bg-white/20 backdrop-blur-md border border-white/40 flex items-center justify-center text-white shadow-xl hover:bg-white/40">
+                                                <div class="absolute inset-0 flex items-center justify-center opacity-80 group-hover/card:opacity-100 group-hover/card:scale-110 transition-all duration-(--motion-slow)">
+                                                    <div class="w-11 h-11 sm:w-12 sm:h-12 rounded-full bg-ink/20 backdrop-blur-md border border-ink/40 flex items-center justify-center text-ink shadow-xl hover:bg-ink/40">
                                                         <i class="ph-fill ph-play text-xl translate-x-0.5"></i>
                                                     </div>
                                                 </div>
@@ -198,44 +198,44 @@ pub fn ContinueWatchingRow() -> impl IntoView {
                                                 <button
                                                     type="button"
                                                     on:click=handle_remove
-                                                    class="absolute top-2 right-2 w-7 h-7 rounded-full bg-black/60 hover:bg-black/90 text-white/70 hover:text-white flex items-center justify-center opacity-0 group-hover/card:opacity-100 transition-opacity duration-200 z-20 backdrop-blur-sm"
-                                                    title="Remove from Continue Watching"
+                                                    class="absolute top-2 right-2 w-7 h-7 rounded-full bg-void/60 hover:bg-void/90 text-ink/70 hover:text-ink flex items-center justify-center opacity-0 group-hover/card:opacity-100 transition-opacity duration-(--motion-base) z-20 backdrop-blur-sm"
+                                                    title=crate::i18n::t("continue-watching-options-sheet-remove-from-continue-watching")
                                                 >
                                                     <i class="ph-bold ph-x text-xs"></i>
                                                 </button>
 
                                                 // Top Left Episode Badge (if TV)
                                                 {ep_badge.map(|badge| view! {
-                                                    <div class="absolute top-2 left-2 px-2 py-0.5 rounded bg-black/70 backdrop-blur-md text-white/90 text-[11px] font-bold tracking-wider uppercase border border-white/10">
+                                                    <div class="absolute top-2 left-2 px-2 py-0.5 rounded-control bg-void/70 backdrop-blur-md text-ink/90 text-caption font-bold tracking-wider uppercase border border-ink/10">
                                                         {badge}
                                                     </div>
                                                 })}
                                             </div>
 
                                             // Progress Bar
-                                            <div class="h-1.5 w-full bg-white/20 relative">
+                                            <div class="h-1.5 w-full bg-ink/20 relative">
                                                 <div
-                                                    class="h-full bg-[#e50914] transition-all duration-300"
+                                                    class="h-full bg-brand transition-all duration-(--motion-slow)"
                                                     style=format!("width: {:.1}%;", percentage)
                                                 />
                                             </div>
 
                                             // Card Metadata & Actions footer
-                                            <div class="p-3 flex items-center justify-between bg-[#141414]">
+                                            <div class="p-3 flex items-center justify-between bg-page">
                                                 <div class="min-w-0 flex-1 pr-2">
-                                                    <p class="text-white text-xs sm:text-sm font-semibold truncate leading-tight">
+                                                    <p class="text-ink text-xs sm:text-sm font-semibold truncate leading-tight">
                                                         {title}
                                                     </p>
                                                     {if let Some(ep_t) = episode_title {
                                                         view! {
-                                                            <p class="text-white/50 text-[11px] truncate mt-0.5">
+                                                            <p class="text-ink/50 text-caption truncate mt-0.5">
                                                                 {ep_t}
                                                             </p>
                                                         }.into_any()
                                                     } else {
                                                         let pct_str = format!("{:.0}% watched", percentage);
                                                         view! {
-                                                            <p class="text-white/40 text-[11px] truncate mt-0.5">
+                                                            <p class="text-ink/40 text-caption truncate mt-0.5">
                                                                 {pct_str}
                                                             </p>
                                                         }.into_any()
@@ -247,8 +247,8 @@ pub fn ContinueWatchingRow() -> impl IntoView {
                                                     <button
                                                         type="button"
                                                         on:click=handle_open_info
-                                                        class="w-7 h-7 rounded-full border border-white/30 hover:border-white text-white flex items-center justify-center hover:bg-white/10 transition-all"
-                                                        title="More Info"
+                                                        class="w-7 h-7 rounded-full border border-ink/30 hover:border-ink text-ink flex items-center justify-center hover:bg-ink/10 transition-all"
+                                                        title=crate::i18n::t("action-buttons-more-info")
                                                     >
                                                         <i class="ph-bold ph-info text-xs"></i>
                                                     </button>
@@ -265,30 +265,30 @@ pub fn ContinueWatchingRow() -> impl IntoView {
                             <button
                                 type="button"
                                 class=move || if can_scroll_left.get() {
-                                    "hidden md:flex absolute top-0 bottom-4 left-0 z-30 items-center justify-center cursor-pointer bg-transparent hover:bg-black/70 transition-all duration-200 opacity-0 group-hover/row:opacity-100 group-hover/row:pointer-events-auto select-none border-none outline-none"
+                                    "hidden md:flex absolute top-0 bottom-4 left-0 z-30 items-center justify-center cursor-pointer bg-transparent hover:bg-void/70 transition-all duration-(--motion-base) opacity-0 group-hover/row:opacity-100 group-hover/row:pointer-events-auto select-none border-none outline-none"
                                 } else {
                                     "hidden !pointer-events-none !opacity-0"
                                 }
                                 style="width: var(--app-x, 56px);"
                                 on:click=move |_| scroll_left("left")
-                                aria-label="Scroll Left"
+                                aria-label=crate::i18n::t("continue-watching-row-scroll-left")
                             >
-                                <i class="ph-bold ph-caret-left text-white text-3xl sm:text-4xl drop-shadow-lg transition-transform hover:scale-125"></i>
+                                <i class="ph-bold ph-caret-left text-ink text-3xl sm:text-4xl drop-shadow-lg transition-transform hover:scale-125"></i>
                             </button>
 
                             // Right Chevron
                             <button
                                 type="button"
                                 class=move || if can_scroll_right.get() {
-                                    "hidden md:flex absolute top-0 bottom-4 right-0 z-30 items-center justify-center cursor-pointer bg-transparent hover:bg-black/70 transition-all duration-200 opacity-0 group-hover/row:opacity-100 group-hover/row:pointer-events-auto select-none border-none outline-none"
+                                    "hidden md:flex absolute top-0 bottom-4 right-0 z-30 items-center justify-center cursor-pointer bg-transparent hover:bg-void/70 transition-all duration-(--motion-base) opacity-0 group-hover/row:opacity-100 group-hover/row:pointer-events-auto select-none border-none outline-none"
                                 } else {
                                     "hidden !pointer-events-none !opacity-0"
                                 }
                                 style="width: var(--app-x, 56px);"
                                 on:click=move |_| scroll_right("right")
-                                aria-label="Scroll Right"
+                                aria-label=crate::i18n::t("continue-watching-row-scroll-right")
                             >
-                                <i class="ph-bold ph-caret-right text-white text-3xl sm:text-4xl drop-shadow-lg transition-transform hover:scale-125"></i>
+                                <i class="ph-bold ph-caret-right text-ink text-3xl sm:text-4xl drop-shadow-lg transition-transform hover:scale-125"></i>
                             </button>
                         </div>
                     </div>

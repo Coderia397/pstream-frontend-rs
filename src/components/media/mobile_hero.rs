@@ -112,17 +112,17 @@ pub fn MobileHero(
     };
 
     view! {
-        <div class="relative z-0 overflow-visible w-full px-5 pt-0 pb-5 flex flex-col items-center justify-center transition-all duration-700 ease-in-out md:hidden">
+        <div class="relative z-0 overflow-visible w-full px-5 pt-0 pb-5 flex flex-col items-center justify-center transition-all duration-(--motion-slowest) ease-in-out md:hidden">
             // Ambient gradient glow (fades after 50% of hero height)
             <div
-                class="absolute inset-x-0 top-0 h-[520px] pointer-events-none -z-10 transition-all duration-700 ease-out"
+                class="absolute inset-x-0 top-0 h-[520px] pointer-events-none -z-10 transition-all duration-(--motion-slowest) ease-out"
                 style=mobile_ambient_style
             />
 
             // Floating Centered Card
             <div
                 on:click=handle_card_click
-                class="w-full max-w-[560px] aspect-[5/7] relative rounded-[18px] overflow-hidden border border-white/20 cursor-pointer active:scale-[0.98] transition-all duration-200"
+                class="w-full max-w-[560px] aspect-[5/7] relative rounded-poster overflow-hidden border border-ink/20 cursor-pointer active:scale-[0.98] transition-all duration-(--motion-base)"
             >
                 <img
                     src=poster_url
@@ -132,14 +132,14 @@ pub fn MobileHero(
                 />
 
                 // Vignette overlays (Tuned down for backdrop vibrancy)
-                <div class="absolute inset-0 bg-gradient-to-t from-black/80 via-black/45 to-transparent pointer-events-none" />
-                <div class="absolute inset-0 bg-gradient-to-r from-black/65 via-black/20 to-transparent pointer-events-none" />
+                <div class="absolute inset-0 bg-gradient-to-t from-void/80 via-void/45 to-transparent pointer-events-none" />
+                <div class="absolute inset-0 bg-gradient-to-r from-void/65 via-void/20 to-transparent pointer-events-none" />
 
                 // Details Container
                 <div class="absolute inset-x-0 bottom-0 px-4 pb-3.5 pt-12 flex flex-col items-center text-center z-10 w-full">
                     // Logo or Title
                     <div class="relative inline-flex items-end mb-4 max-w-[71%] max-h-[108px] w-full justify-center">
-                        <Suspense fallback=move || view! { <div class="h-10 w-32 bg-white/10 animate-pulse rounded" /> }>
+                        <Suspense fallback=move || view! { <div class="h-10 w-32 bg-ink/10 animate-pulse rounded-control" /> }>
                             {
                                 let tc = title.clone();
                                 move || {
@@ -153,7 +153,7 @@ pub fn MobileHero(
                                             />
                                         }.into_any(),
                                         _ => view! {
-                                            <h2 class="text-xl font-black font-leaner drop-shadow-xl leading-tight text-white tracking-wide uppercase line-clamp-2">
+                                            <h2 class="text-xl font-black font-brand drop-shadow-xl leading-tight text-ink tracking-wide uppercase line-clamp-2">
                                                 {t.clone()}
                                             </h2>
                                         }.into_any()
@@ -164,11 +164,11 @@ pub fn MobileHero(
                     </div>
 
                     // Genre / category chips
-                    <div class="flex items-center justify-center flex-wrap gap-x-2 gap-y-1 mb-3.5 text-[14px] font-medium text-[#d4d4d1] select-none">
+                    <div class="flex items-center justify-center flex-wrap gap-x-2 gap-y-1 mb-3.5 text-body-sm font-medium text-ink-warm select-none">
                         <span>"Trending"</span>
-                        <span class="text-white/30">"•"</span>
+                        <span class="text-ink/30">"•"</span>
                         <span>"Popular"</span>
-                        <span class="text-white/30">"•"</span>
+                        <span class="text-ink/30">"•"</span>
                         <span>{if is_tv { "Series" } else { "Film" }}</span>
                     </div>
 
@@ -178,7 +178,7 @@ pub fn MobileHero(
                         <button
                             type="button"
                             on:click=handle_play
-                            class="flex-1 flex items-center justify-center h-12 rounded-full bg-white hover:bg-neutral-200 text-black font-bold text-lg gap-2 transition-all active:scale-95 cursor-pointer"
+                            class="btn-ink flex-1 flex items-center justify-center h-12 rounded-full text-lg gap-2 transition-all active:scale-95"
                         >
                             <i class="ph-fill ph-play text-2xl"></i>
                             <span>{move || {
@@ -196,7 +196,7 @@ pub fn MobileHero(
                         <button
                             type="button"
                             on:click=toggle_my_list
-                            class="flex-1 flex items-center justify-center h-12 rounded-full bg-[#6d6d6e]/40 hover:bg-[#6d6d6e]/25 text-white font-bold text-lg gap-2 transition-all active:scale-95 cursor-pointer"
+                            class="btn-glass flex-1 flex items-center justify-center h-12 rounded-full text-lg gap-2 transition-all active:scale-95"
                         >
                             <i class=move || if is_added.get() { "ph-bold ph-check text-2xl" } else { "ph-bold ph-plus text-2xl" }></i>
                             <span>"My List"</span>

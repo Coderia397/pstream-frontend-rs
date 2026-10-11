@@ -142,12 +142,12 @@ pub fn VideoPlayer(
     view! {
         <div
             node_ref=container_ref
-            class="fixed inset-0 bg-black z-[200] flex flex-col group"
+            class="fixed inset-0 bg-void z-(--z-modal) flex flex-col group"
             on:mousemove=reset_idle
         >
             <video
                 node_ref=video_ref
-                id="pstream-main-player"
+                id=crate::keys::PLAYER_CONTAINER_ID
                 class="w-full h-full object-contain cursor-default"
                 controls=false
                 autoplay=true
@@ -158,17 +158,17 @@ pub fn VideoPlayer(
             ></video>
             
             <div 
-                class="absolute inset-0 flex flex-col justify-between p-8 transition-opacity duration-500 bg-gradient-to-t from-black/80 via-transparent to-black/60 pointer-events-none"
+                class="absolute inset-0 flex flex-col justify-between p-8 transition-opacity duration-(--motion-slower) bg-gradient-to-t from-void/80 via-transparent to-void/60 pointer-events-none"
                 class=("opacity-0", move || is_idle.get())
                 class=("opacity-100", move || !is_idle.get())
                 class=("group-hover:opacity-100", move || true)
             >
                 <div class="flex justify-between items-start pointer-events-auto">
-                    <button on:click=close_player class="text-white text-3xl hover:scale-110 transition-transform drop-shadow-md">
+                    <button on:click=close_player class="text-ink text-3xl hover:scale-110 transition-transform drop-shadow-md">
                         <i class="ph-bold ph-arrow-left"></i>
                     </button>
-                    <div class="text-white text-xl font-bold drop-shadow-md">{title}</div>
-                    <button class="text-white text-3xl hover:scale-110 transition-transform drop-shadow-md">
+                    <div class="text-ink text-xl font-bold drop-shadow-md">{title}</div>
+                    <button class="text-ink text-3xl hover:scale-110 transition-transform drop-shadow-md">
                         <i class="ph-bold ph-flag"></i>
                     </button>
                 </div>
@@ -180,24 +180,24 @@ pub fn VideoPlayer(
                         on:click=seek
                     >
                         <div 
-                            class="h-full bg-red-600 rounded-full transition-all duration-100"
+                            class="h-full bg-brand rounded-full transition-all duration-(--motion-quick)"
                             style=move || format!("width: {}%", if duration.get() > 0.0 { (progress.get() / duration.get()) * 100.0 } else { 0.0 })
                         ></div>
                         <div 
-                            class="absolute top-1/2 w-4 h-4 bg-red-600 rounded-full transform -translate-y-1/2 -translate-x-1/2 scale-0 group-hover/progress:scale-100 transition-transform duration-200"
+                            class="absolute top-1/2 w-4 h-4 bg-brand rounded-full transform -translate-y-1/2 -translate-x-1/2 scale-0 group-hover/progress:scale-100 transition-transform duration-(--motion-base)"
                             style=move || format!("left: {}%", if duration.get() > 0.0 { (progress.get() / duration.get()) * 100.0 } else { 0.0 })
                         ></div>
                     </div>
                     
-                    <div class="flex justify-between items-center text-white">
+                    <div class="flex justify-between items-center text-ink">
                         <div class="flex items-center gap-8">
-                            <button on:click=move |_| do_toggle_play() class="text-[40px] hover:scale-110 transition-transform">
+                            <button on:click=move |_| do_toggle_play() class="text-display hover:scale-110 transition-transform">
                                 {move || if is_playing.get() { view!{<i class="ph-fill ph-pause"></i>} } else { view!{<i class="ph-fill ph-play"></i>} }}
                             </button>
-                            <button on:click=move |_| do_skip_backward() class="text-3xl hover:scale-110 transition-transform" title="Rewind 10s">
+                            <button on:click=move |_| do_skip_backward() class="text-3xl hover:scale-110 transition-transform" title=crate::i18n::t("video-player-rewind-10s")>
                                 <i class="ph-bold ph-clock-counter-clockwise"></i>
                             </button>
-                            <button on:click=move |_| do_skip_forward() class="text-3xl hover:scale-110 transition-transform" title="Forward 10s">
+                            <button on:click=move |_| do_skip_forward() class="text-3xl hover:scale-110 transition-transform" title=crate::i18n::t("video-player-forward-10s")>
                                 <i class="ph-bold ph-clock-clockwise"></i>
                             </button>
                             <button on:click=move |_| do_toggle_mute() class="text-3xl hover:scale-110 transition-transform">
@@ -214,7 +214,7 @@ pub fn VideoPlayer(
                                 }}
                             </span>
                             <button class="hover:scale-110 transition-transform"><i class="ph-bold ph-closed-captioning"></i></button>
-                            <button on:click=move |_| do_toggle_fullscreen() class="hover:scale-110 transition-transform" title="Fullscreen">
+                            <button on:click=move |_| do_toggle_fullscreen() class="hover:scale-110 transition-transform" title=crate::i18n::t("video-player-fullscreen")>
                                 <i class="ph-bold ph-corners-out"></i>
                             </button>
                         </div>

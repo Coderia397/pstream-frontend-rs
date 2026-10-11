@@ -84,17 +84,17 @@ pub fn BrowseHome() -> impl IntoView {
 
     view! {
         <Layout>
-            <div class="w-full pb-20 bg-black md:bg-[#141414] min-h-screen relative overflow-x-hidden">
+            <div class="w-full pb-20 bg-void md:bg-page min-h-screen relative overflow-x-hidden">
                 // Ambient Atmospheric Glow behind navbar and hero billboard (fades after 50% of hero height)
                 <div
-                    class="absolute inset-x-0 top-0 h-[580px] md:h-[660px] lg:h-[720px] pointer-events-none -z-0 transition-all duration-700 ease-out"
+                    class="absolute inset-x-0 top-0 h-[580px] md:h-[660px] lg:h-[720px] pointer-events-none -z-0 transition-all duration-(--motion-slowest) ease-out"
                     style=ambient_bg_style
                 />
 
                 // Genre picker, mobile only
                 <div class="sm:hidden">
                     <CategorySubNav
-                        title="Home".to_string()
+                        title=crate::i18n::t("browse-home").to_string()
                         genres=genres
                         selected_genre=selected_genre
                         on_genre_select=on_genre_select_cb
@@ -108,7 +108,7 @@ pub fn BrowseHome() -> impl IntoView {
                     {move || hero.get().map(|result| {
                         let movies = result;
                         if movies.is_empty() {
-                            view! { <div class="h-[500px] bg-black"></div> }.into_any()
+                            view! { <div class="h-[500px] bg-void"></div> }.into_any()
                         } else {
                             view! {
                                 <HeroSection movies=movies />
@@ -122,17 +122,17 @@ pub fn BrowseHome() -> impl IntoView {
 
                     <Suspense fallback=move || view! {
                         <div class="space-y-6">
-                            <div class="h-40 bg-white/[0.02] rounded-lg animate-pulse mx-[var(--app-x,56px)]" />
-                            <div class="h-40 bg-white/[0.02] rounded-lg animate-pulse mx-[var(--app-x,56px)]" />
+                            <div class="h-40 bg-ink/[0.02] rounded-card animate-pulse mx-[var(--app-x,56px)]" />
+                            <div class="h-40 bg-ink/[0.02] rounded-card animate-pulse mx-[var(--app-x,56px)]" />
                         </div>
                     }>
                         {move || feed.get().map(|rows| {
                             if rows.is_empty() {
                                 view! {
-                                    <TopTenRow title="Top 10 in the UK Today" kind="all" />
-                                    <Row title="Action & Adventure" genre_id="1365" kind="movie" />
-                                    <Row title="Comedies" genre_id="6548" kind="movie" />
-                                    <Row title="Sci-Fi & Fantasy" genre_id="1492" kind="movie" />
+                                    <TopTenRow title=crate::i18n::t("browse-top-10-in-the-uk") kind="all" />
+                                    <Row title=crate::i18n::t("browse-action-adventure") genre_id="1365" kind="movie" />
+                                    <Row title=crate::i18n::t("browse-comedies") genre_id="6548" kind="movie" />
+                                    <Row title=crate::i18n::t("browse-scifi-fantasy") genre_id="1492" kind="movie" />
                                 }.into_any()
                             } else {
                                 rows.into_iter().map(|r| {

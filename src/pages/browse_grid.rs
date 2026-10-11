@@ -2,7 +2,7 @@ use leptos::prelude::*;
 use leptos_router::hooks::{use_navigate, use_params_map, use_query_map};
 use crate::components::layout::Layout;
 use crate::components::media::movie_card::MovieCard;
-use crate::models::mapping::map_netflix_id_to_tmdb;
+use crate::models::mapping::map_genre_key_to_tmdb;
 
 #[component]
 pub fn BrowseGridPage() -> impl IntoView {
@@ -18,7 +18,7 @@ pub fn BrowseGridPage() -> impl IntoView {
             return t;
         }
         let key = row_key();
-        if let Some(ctx) = map_netflix_id_to_tmdb(&key) {
+        if let Some(ctx) = map_genre_key_to_tmdb(&key) {
             return ctx.title.to_string();
         }
         key.split('-')
@@ -55,18 +55,18 @@ pub fn BrowseGridPage() -> impl IntoView {
 
     view! {
         <Layout>
-            <div class="bg-black md:bg-[#141414] min-h-screen pb-16 pt-[calc(4.5rem+env(safe-area-inset-top))] md:pt-24">
+            <div class="bg-void md:bg-page min-h-screen pb-16 pt-[calc(4.5rem+env(safe-area-inset-top))] md:pt-24">
                 <div class="px-6 md:px-14">
                     // Header with back button
                     <div class="flex items-center gap-3.5 mb-8 md:mb-12">
                         <button
                             on:click=on_back
-                            class="flex items-center justify-center text-white p-1.5 rounded-full hover:bg-white/10 transition-colors shrink-0 cursor-pointer"
-                            aria-label="Go back"
+                            class="flex items-center justify-center text-ink p-1.5 rounded-full hover:bg-ink/10 transition-colors shrink-0 cursor-pointer"
+                            aria-label=crate::i18n::t("browse-grid-go-back")
                         >
-                            <i class="ph-bold ph-arrow-left text-2xl md:text-3xl text-white"></i>
+                            <i class="ph-bold ph-arrow-left text-2xl md:text-3xl text-ink"></i>
                         </button>
-                        <h1 class="text-white font-bold text-2xl md:text-4xl tracking-tight">
+                        <h1 class="text-ink font-bold text-2xl md:text-4xl tracking-tight">
                             {move || display_title()}
                         </h1>
                     </div>
@@ -75,7 +75,7 @@ pub fn BrowseGridPage() -> impl IntoView {
                     <Suspense fallback=move || view! {
                         <div class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 xl:grid-cols-6 gap-x-1.5 md:gap-x-2 gap-y-10 md:gap-y-12 animate-pulse">
                             {(0..18).map(|_| view! {
-                                <div class="aspect-video bg-[#1e1e1e] rounded-[4px] border border-white/[0.04]"></div>
+                                <div class="aspect-video bg-card rounded-control border border-ink/[0.04]"></div>
                             }).collect::<Vec<_>>()}
                         </div>
                     }>
@@ -83,8 +83,8 @@ pub fn BrowseGridPage() -> impl IntoView {
                             if items.is_empty() {
                                 view! {
                                     <div class="flex flex-col items-center justify-center mt-24 text-center">
-                                        <i class="ph ph-film-slate text-5xl text-white/30 mb-3"></i>
-                                        <p class="text-white/50 text-lg">"Nothing to show here yet."</p>
+                                        <i class="ph ph-film-slate text-5xl text-ink/30 mb-3"></i>
+                                        <p class="text-ink/50 text-lg">"Nothing to show here yet."</p>
                                     </div>
                                 }.into_any()
                             } else {

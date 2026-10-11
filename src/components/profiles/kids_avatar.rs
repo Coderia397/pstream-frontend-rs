@@ -44,8 +44,7 @@ pub fn KidsBadge(
                     y="52%"
                     text-anchor="middle"
                     dominant-baseline="central"
-                    fill="#e50914"
-                    stroke="#e50914"
+                    style="fill: var(--color-brand); stroke: var(--color-brand)"
                     stroke-width=format!("{fg_stroke_width}")
                     stroke-linejoin="round"
                     stroke-linecap="round"

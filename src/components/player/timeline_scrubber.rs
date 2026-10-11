@@ -101,22 +101,22 @@ pub fn TimelineScrubber(
             class="relative w-full h-5 flex items-center cursor-pointer group select-none py-1"
         >
             // Background Track
-            <div class="relative w-full h-1 group-hover:h-2 bg-white/25 rounded-full transition-all duration-150 overflow-hidden pointer-events-none">
+            <div class="relative w-full h-1 group-hover:h-2 bg-ink/25 rounded-full transition-all duration-(--motion-fast) overflow-hidden pointer-events-none">
                 // Buffered Range
                 <div
-                    class="absolute top-0 bottom-0 left-0 bg-white/40 rounded-full transition-all duration-300"
+                    class="absolute top-0 bottom-0 left-0 bg-ink/40 rounded-full transition-all duration-(--motion-slow)"
                     style=move || format!("width: {}%;", buffer_pct())
                 />
                 // Played Progress Bar (Netflix Red)
                 <div
-                    class="absolute top-0 bottom-0 left-0 bg-[#e50914] rounded-full transition-all duration-75"
+                    class="absolute top-0 bottom-0 left-0 bg-brand rounded-full transition-all duration-(--motion-instant)"
                     style=move || format!("width: {}%;", progress_pct())
                 />
             </div>
 
             // Scrubber Knob (Thumb)
             <div
-                class="absolute top-1/2 -translate-y-1/2 w-4 h-4 bg-[#e50914] rounded-full shadow-lg transition-transform duration-150 scale-0 group-hover:scale-100 pointer-events-none -ml-2"
+                class="absolute top-1/2 -translate-y-1/2 w-4 h-4 bg-brand rounded-full shadow-lg transition-transform duration-(--motion-fast) scale-0 group-hover:scale-100 pointer-events-none -ml-2"
                 style=move || format!("left: {}%;", progress_pct())
             />
 
@@ -125,7 +125,7 @@ pub fn TimelineScrubber(
                 if is_hovering.get() && duration.get() > 0.0 {
                     view! {
                         <div
-                            class="absolute bottom-6 px-2 py-1 bg-[#181818]/90 backdrop-blur-md text-white text-xs font-semibold rounded shadow-lg border border-white/10 pointer-events-none -translate-x-1/2"
+                            class="absolute bottom-6 px-2 py-1 bg-raised/90 backdrop-blur-md text-ink text-xs font-semibold rounded-control shadow-lg border border-ink/10 pointer-events-none -translate-x-1/2"
                             style=move || format!("left: {}%;", hover_pct.get())
                         >
                             {hover_time_str.get()}

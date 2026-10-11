@@ -175,20 +175,20 @@ pub fn MovieCard(
             data-card="true"
             data-card-id=my_card_id.clone()
             class=card_class
-            class=("z-[9]", move || is_hovered.get())
+            class=("z-(--z-card-hover)", move || is_hovered.get())
             class=("z-10", move || !is_hovered.get())
             on:mouseenter=move |_| mouse_enter_cb.run(())
             on:mouseleave=move |_| mouse_leave_cb.run(())
             on:click=open_modal
         >
-            <div class="w-full h-full relative rounded-[var(--tile-radius)] overflow-hidden movie-card-glow">
+            <div class="w-full h-full relative rounded-tile overflow-hidden movie-card-glow">
                 // Phones show 5:7 posters like the Netflix app, wider screens show the backdrop.
                 <picture class="block w-full h-full">
                     {phone_poster.clone().map(|ps| view! { <source media="(max-width: 599px)" srcset=ps /> })}
                     <img
                         src=img_src
                         alt=title_stored.with_value(|t| t.clone())
-                        class="w-full h-full object-cover object-center rounded-[var(--tile-radius)] backdrop-pop"
+                        class="w-full h-full object-cover object-center rounded-tile backdrop-pop"
                         loading="lazy"
                         decoding="async"
                         draggable="false"
@@ -202,8 +202,8 @@ pub fn MovieCard(
                         if rec.percentage > 0.0 {
                             let pct = rec.percentage.clamp(0.0, 100.0);
                             view! {
-                                <div class="absolute bottom-0 inset-x-0 h-1 bg-white/20 z-10 pointer-events-none">
-                                    <div class="h-full bg-[#e50914]" style=format!("width: {:.1}%;", pct) />
+                                <div class="absolute bottom-0 inset-x-0 h-1 bg-ink/20 z-10 pointer-events-none">
+                                    <div class="h-full bg-brand" style=format!("width: {:.1}%;", pct) />
                                 </div>
                             }.into_any()
                         } else {
@@ -218,11 +218,11 @@ pub fn MovieCard(
                     if !is_hovered.get() {
                         let _t = title_stored.with_value(|t| t.clone());
                         view! {
-                            <div class="absolute inset-x-0 bottom-0 flex items-end justify-center pb-2 px-2 transition-opacity duration-200 pointer-events-none">
+                            <div class="absolute inset-x-0 bottom-0 flex items-end justify-center pb-2 px-2 transition-opacity duration-(--motion-base) pointer-events-none">
                                 <Suspense fallback=move || {
                                     let t = title_stored.with_value(|t| t.clone());
                                     view! {
-                                        <h3 class="text-white font-bold text-center tracking-wide leading-tight drop-shadow-[0_2px_8px_rgba(0,0,0,1)] line-clamp-2 w-full px-1 text-[15px]">
+                                        <h3 class="text-ink font-bold text-center tracking-wide leading-tight drop-shadow-text-hard line-clamp-2 w-full px-1 text-body">
                                             {t}
                                         </h3>
                                     }
@@ -234,13 +234,13 @@ pub fn MovieCard(
                                                 <img
                                                     src=url
                                                     alt=t
-                                                    class="w-auto max-w-[80%] max-h-[44px] object-contain origin-bottom drop-shadow-[0_2px_6px_rgba(0,0,0,0.6)]"
+                                                    class="w-auto max-w-[80%] max-h-[44px] object-contain origin-bottom drop-shadow-text-soft"
                                                     decoding="async"
                                                     draggable="false"
                                                 />
                                             }.into_any(),
                                             _ => view! {
-                                                <h3 class="text-white font-bold text-center tracking-wide leading-tight drop-shadow-[0_2px_8px_rgba(0,0,0,1)] line-clamp-2 w-full px-1 text-[15px]">
+                                                <h3 class="text-ink font-bold text-center tracking-wide leading-tight drop-shadow-text-hard line-clamp-2 w-full px-1 text-body">
                                                     {t}
                                                 </h3>
                                             }.into_any(),

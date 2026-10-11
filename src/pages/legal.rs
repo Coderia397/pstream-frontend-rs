@@ -6,8 +6,8 @@ use leptos::prelude::*;
 #[component]
 fn LegalWrapper(children: Children) -> impl IntoView {
     view! {
-        <div class="pt-20 md:pt-24 flex-1 bg-black md:bg-[#141414] text-white font-sans transition-colors duration-200">
-            <main class="max-w-4xl mx-auto px-6 py-16 md:py-24 text-[#e5e5e5] space-y-10 md:space-y-12">
+        <div class="pt-20 md:pt-24 flex-1 bg-void md:bg-page text-ink font-sans transition-colors duration-(--motion-base)">
+            <main class="max-w-4xl mx-auto px-6 py-16 md:py-24 text-ink-soft space-y-10 md:space-y-12">
                 {children()}
             </main>
         </div>
@@ -19,8 +19,8 @@ fn LegalWrapper(children: Children) -> impl IntoView {
 fn LegalHeader(title: &'static str, last_updated: &'static str) -> impl IntoView {
     view! {
         <div>
-            <h1 class="text-4xl md:text-5xl font-bold text-white tracking-tight mb-2">{title}</h1>
-            <p class="text-base text-[#808080] font-semibold mt-4 mb-10 block">{last_updated}</p>
+            <h1 class="text-4xl md:text-5xl font-bold text-ink tracking-tight mb-2">{title}</h1>
+            <p class="text-base text-mute font-semibold mt-4 mb-10 block">{last_updated}</p>
         </div>
     }
 }
@@ -33,15 +33,17 @@ fn LegalSection(
     body: &'static str,
     #[prop(default = &[])] bullets: &'static [&'static str],
 ) -> impl IntoView {
+    let title = crate::brand::fill(title);
+    let body = crate::brand::fill(body);
     view! {
         <section class="space-y-5">
-            <h2 class="text-2xl md:text-3xl font-bold text-white tracking-tight mb-4">{title}</h2>
-            <p class="text-base md:text-[17px] leading-8 text-[#b3b3b3]">{body}</p>
+            <h2 class="text-2xl md:text-3xl font-bold text-ink tracking-tight mb-4">{title}</h2>
+            <p class="text-base md:text-body-lg leading-8 text-ink-body">{body}</p>
             {if !bullets.is_empty() {
                 view! {
-                    <ul class="list-disc pl-8 space-y-3 text-base md:text-[17px] leading-8 text-[#b3b3b3] marker:text-[#808080]">
+                    <ul class="list-disc pl-8 space-y-3 text-base md:text-body-lg leading-8 text-ink-body marker:text-mute">
                         {bullets.iter().map(|b| view! {
-                            <li inner_html=*b />
+                            <li inner_html=crate::brand::fill(b) />
                         }).collect::<Vec<_>>()}
                     </ul>
                 }.into_any()
@@ -62,7 +64,7 @@ pub fn PrivacyPage() -> impl IntoView {
 
             <LegalSection
                 title="1. Introduction"
-                body="Pstream is a link aggregator and search engine. This Privacy Policy explains how we collect, use, and protect your personal information when you use our service."
+                body="{brand} is a link aggregator and search engine. This Privacy Policy explains how we collect, use, and protect your personal information when you use our service."
             />
 
             <LegalSection
@@ -117,7 +119,7 @@ pub fn PrivacyPage() -> impl IntoView {
 
             <LegalSection
                 title="8. Contact"
-                body="If you have questions about this Privacy Policy or wish to exercise your data rights, please contact the repository maintainer at support@pstream.watch."
+                body="If you have questions about this Privacy Policy or wish to exercise your data rights, please contact the repository maintainer at {support_email}."
             />
         </LegalWrapper>
     }
@@ -133,11 +135,11 @@ pub fn TermsPage() -> impl IntoView {
 
             <LegalSection
                 title="1. Acceptance of Terms"
-                body="By accessing or using Pstream, you agree to be bound by these Terms of Service and our Privacy Policy. If you do not agree, do not use the service."
+                body="By accessing or using {brand}, you agree to be bound by these Terms of Service and our Privacy Policy. If you do not agree, do not use the service."
             />
             <LegalSection
                 title="2. Nature of the Service"
-                body="Pstream is a link aggregator and search engine. We do not host, upload, transmit, or control any video content on our servers. All media is sourced from third-party platforms."
+                body="{brand} is a link aggregator and search engine. We do not host, upload, transmit, or control any video content on our servers. All media is sourced from third-party platforms."
             />
             <LegalSection
                 title="3. User Accounts"
@@ -155,15 +157,15 @@ pub fn TermsPage() -> impl IntoView {
             />
             <LegalSection
                 title="5. Intellectual Property"
-                body="The Pstream brand, interface design, and original software code are protected by copyright. All media content accessible via Pstream remains the property of its respective rights holders."
+                body="The {brand} brand, interface design, and original software code are protected by copyright. All media content accessible via {brand} remains the property of its respective rights holders."
             />
             <LegalSection
                 title="6. Disclaimers and Limitation of Liability"
-                body="The service is provided \"as is\" and \"as available\" without any warranty of any kind. Pstream does not guarantee continuous availability and is not liable for any indirect or consequential damages."
+                body="The service is provided \"as is\" and \"as available\" without any warranty of any kind. {brand} does not guarantee continuous availability and is not liable for any indirect or consequential damages."
             />
             <LegalSection
                 title="7. Third-Party Content"
-                body="Pstream provides access to links pointing to content hosted on independent third-party servers. We have no control over, and assume no responsibility for, the content, privacy policies, or practices of any third-party sites."
+                body="{brand} provides access to links pointing to content hosted on independent third-party servers. We have no control over, and assume no responsibility for, the content, privacy policies, or practices of any third-party sites."
             />
             <LegalSection
                 title="8. Termination"
@@ -206,15 +208,15 @@ pub fn DmcaPage() -> impl IntoView {
 
             <LegalSection
                 title="1. Our Role — Link Aggregator, Not a Host"
-                body="Pstream is a link aggregator and search engine. We do not host, upload, store, transmit, or control any video or media content. All content is served from third-party servers that are entirely outside of our control."
+                body="{brand} is a link aggregator and search engine. We do not host, upload, store, transmit, or control any video or media content. All content is served from third-party servers that are entirely outside of our control."
             />
             <LegalSection
                 title="2. Notice-and-Takedown Procedure"
-                body="If you are a copyright owner, or an agent authorised to act on behalf of a copyright owner, and you believe that a link in our index infringes your copyright, please send a written notice to support@pstream.watch containing:"
+                body="If you are a copyright owner, or an agent authorised to act on behalf of a copyright owner, and you believe that a link in our index infringes your copyright, please send a written notice to {support_email} containing:"
                 bullets=&[
                     "<strong>Physical or electronic signature</strong> of the copyright owner or their authorised agent.",
                     "<strong>Identification of the copyrighted work</strong> you claim has been infringed, or if multiple works are covered by a single notice, a representative list of such works.",
-                    "<strong>Identification of the material</strong> (i.e. the specific Pstream link or URL) that you claim is infringing, with sufficient information to permit us to locate it.",
+                    "<strong>Identification of the material</strong> (i.e. the specific {brand} link or URL) that you claim is infringing, with sufficient information to permit us to locate it.",
                 ]
             />
             <LegalSection
@@ -224,22 +226,22 @@ pub fn DmcaPage() -> impl IntoView {
                     "<strong>Your contact information</strong> — name, address, telephone number, and email address.",
                     "<strong>A statement of good faith</strong> — that you have a good faith belief that the use of the material in the manner complained of is not authorised by the copyright owner, its agent, or the law.",
                     "<strong>A statement of accuracy</strong> — that the information in the notice is accurate and, under penalty of perjury, that you are authorised to act on behalf of the copyright owner.",
-                    "<strong>Send notices to:</strong> support@pstream.watch",
+                    "<strong>Send notices to:</strong> {support_email}",
                     "We will review all notices and remove links from our index that satisfy the above statutory requirements.",
                     "<strong>Counter-Notification:</strong> If you believe your link was removed in error, you may submit a counter-notification under 17 U.S.C. § 512(g).",
                 ]
             />
             <LegalSection
                 title="4. Important Limitation — We Can Only Remove Links"
-                body="Because Pstream does not host any media files, we are only able to remove the link from our search index. We cannot remove the underlying content from the server on which it is hosted."
+                body="Because {brand} does not host any media files, we are only able to remove the link from our search index. We cannot remove the underlying content from the server on which it is hosted."
             />
             <LegalSection
                 title="5. Repeat Infringer Policy"
-                body="In appropriate circumstances, and at our sole discretion, Pstream will disable or terminate access for users or accounts that are repeat infringers."
+                body="In appropriate circumstances, and at our sole discretion, {brand} will disable or terminate access for users or accounts that are repeat infringers."
             />
             <LegalSection
                 title="6. No Admission of Liability"
-                body="Removal of a link from our index in response to a DMCA notice does not constitute an admission by Pstream that any infringement has occurred."
+                body="Removal of a link from our index in response to a DMCA notice does not constitute an admission by {brand} that any infringement has occurred."
             />
         </LegalWrapper>
     }
@@ -255,23 +257,23 @@ pub fn DisclaimerPage() -> impl IntoView {
 
             <LegalSection
                 title="1. No Content Hosting"
-                body="Pstream is a link aggregator and search engine for publicly available embedded media links. We do not host, upload, store, transmit, or control any video, audio, or media content on our servers."
+                body="{brand} is a link aggregator and search engine for publicly available embedded media links. We do not host, upload, store, transmit, or control any video, audio, or media content on our servers."
             />
             <LegalSection
                 title="2. Third-Party Content — No Liability"
-                body="All content accessible via links indexed by Pstream originates from external, independent third-party sources. Pstream has no control over, and assumes no responsibility for, the legality, accuracy, quality, or availability of such content."
+                body="All content accessible via links indexed by {brand} originates from external, independent third-party sources. {brand} has no control over, and assumes no responsibility for, the legality, accuracy, quality, or availability of such content."
             />
             <LegalSection
                 title="3. User Assumption of Risk"
-                body="You acknowledge and agree that your use of Pstream and your access to any content via external embedded links is entirely at your own risk. Pstream expressly disclaims all warranties, express or implied."
+                body="You acknowledge and agree that your use of {brand} and your access to any content via external embedded links is entirely at your own risk. {brand} expressly disclaims all warranties, express or implied."
             />
             <LegalSection
                 title="4. Link Availability"
-                body="Embedded links indexed by Pstream point to resources on third-party servers. We cannot guarantee the ongoing availability, quality, or completeness of any linked content, and links may break or become unavailable without notice."
+                body="Embedded links indexed by {brand} point to resources on third-party servers. We cannot guarantee the ongoing availability, quality, or completeness of any linked content, and links may break or become unavailable without notice."
             />
             <LegalSection
                 title="5. Accuracy of Information"
-                body="Metadata displayed on Pstream (including titles, descriptions, ratings, and images) is sourced from third-party data providers such as TMDB. We do not guarantee the accuracy or completeness of this metadata."
+                body="Metadata displayed on {brand} (including titles, descriptions, ratings, and images) is sourced from third-party data providers such as TMDB. We do not guarantee the accuracy or completeness of this metadata."
             />
         </LegalWrapper>
     }
@@ -282,15 +284,15 @@ pub fn DisclaimerPage() -> impl IntoView {
 #[component]
 pub fn ContactPage() -> impl IntoView {
     view! {
-        <div class="pt-20 md:pt-24 flex-1 bg-black md:bg-[#141414] text-white font-sans transition-colors duration-200">
+        <div class="pt-20 md:pt-24 flex-1 bg-void md:bg-page text-ink font-sans transition-colors duration-(--motion-base)">
             <main class="max-w-3xl mx-auto px-6 py-12 md:py-20 text-gray-300 space-y-8">
                 <div>
-                    <h1 class="text-3xl md:text-5xl font-black text-white mb-4">"Contact Us"</h1>
+                    <h1 class="text-3xl md:text-5xl font-black text-ink mb-4">"Contact Us"</h1>
                 </div>
                 <section class="space-y-4">
                     <p>"If you have any questions or concerns about our services, please contact us at:"</p>
-                    <a href="mailto:support@pstream.watch" class="text-red-500 hover:underline">
-                        "support@pstream.watch"
+                    <a href=format!("mailto:{}", crate::brand::SUPPORT_EMAIL) class="text-danger hover:underline">
+                        {crate::brand::SUPPORT_EMAIL}
                     </a>
                 </section>
             </main>

@@ -32,11 +32,11 @@ fn RankNumber(index: usize) -> impl IntoView {
     let letter_spacing = "-1.7cqw";
     let squeeze = if is_ten { "transform: scaleX(0.56); transform-origin: right center;" } else { "" };
     let stroke_style = format!(
-        "line-height: 0.75; letter-spacing: {}; -webkit-text-stroke: 3.3cqw #595959; font-family: 'PStream Sans', sans-serif; {}",
+        "line-height: 0.75; letter-spacing: {}; -webkit-text-stroke: 3.3cqw #595959; font-family: var(--font-brand); {}",
         letter_spacing, squeeze
     );
     let fill_style = format!(
-        "line-height: 0.75; letter-spacing: {}; font-family: 'PStream Sans', sans-serif; {}",
+        "line-height: 0.75; letter-spacing: {}; font-family: var(--font-brand); {}",
         letter_spacing, squeeze
     );
     let num_str = (index + 1).to_string();
@@ -202,7 +202,7 @@ fn TopTenCard(
         <div
             data-card="true"
             data-card-id=my_card_id
-            class="relative flex-none flex items-end netflix-card-width topten-card cursor-pointer"
+            class="relative flex-none flex items-end tile-width topten-card cursor-pointer"
             on:mouseenter=move |_| mouse_enter_cb.run(())
             on:mouseleave=move |_| mouse_leave_cb.run(())
             on:click=open_modal
@@ -213,11 +213,11 @@ fn TopTenCard(
             // not the outer div (which includes the wide number padding-left).
             <div
                 node_ref=card_ref
-                class="relative flex-none ml-auto w-1/2 aspect-[145/207] z-10 rounded-[4px] overflow-hidden">
+                class="relative flex-none ml-auto w-1/2 aspect-[145/207] z-10 rounded-control overflow-hidden">
                 <img
                     src=poster_src
                     alt=title_for_img.clone()
-                    class="w-full h-full object-cover object-top rounded-[4px]"
+                    class="w-full h-full object-cover object-top rounded-control"
                     loading="lazy"
                     draggable="false"
                 />
@@ -229,8 +229,8 @@ fn TopTenCard(
                         if rec.percentage > 0.0 {
                             let pct = rec.percentage.clamp(0.0, 100.0);
                             view! {
-                                <div class="absolute bottom-0 inset-x-0 h-1 bg-white/20 z-10 pointer-events-none">
-                                    <div class="h-full bg-[#e50914]" style=format!("width: {:.1}%;", pct) />
+                                <div class="absolute bottom-0 inset-x-0 h-1 bg-ink/20 z-10 pointer-events-none">
+                                    <div class="h-full bg-brand" style=format!("width: {:.1}%;", pct) />
                                 </div>
                             }.into_any()
                         } else {
@@ -395,7 +395,7 @@ pub fn TopTenRow(
         <div class="group relative row-block z-10">
             <h2 class="px-[var(--app-x,56px)] row-title cursor-pointer flex items-center group/title w-fit">
                 {title}
-                <span class="text-xs text-cyan-500 ml-2 opacity-0 group-hover/title:opacity-100 transition-opacity duration-300 flex items-center font-semibold">
+                <span class="text-xs text-cyan-500 ml-2 opacity-0 group-hover/title:opacity-100 transition-opacity duration-(--motion-slow) flex items-center font-semibold">
                     "Explore All ›"
                 </span>
             </h2>
@@ -413,10 +413,10 @@ pub fn TopTenRow(
                         { (0..6).map(|_| view! {
                             <div class="relative flex-none flex items-end pl-[75px] sm:pl-[85px] md:pl-[95px] lg:pl-[125px] pr-1 md:pr-1.5 lg:pr-2">
                                 <div class="absolute left-0 top-0 bottom-0 h-full w-[95px] sm:w-[105px] md:w-[115px] lg:w-[145px] flex justify-end items-center pointer-events-none z-0">
-                                    <div class="h-[85%] w-[80%] bg-[#222] rounded-sm opacity-40 skew-x-[-6deg]" />
+                                    <div class="h-[85%] w-[80%] bg-placeholder rounded-control opacity-40 skew-x-[-6deg]" />
                                 </div>
-                                <div class="relative flex-none h-[128px] w-[89px] sm:h-[138px] sm:w-[96px] md:h-[148px] md:w-[103px] lg:h-[195px] lg:w-[135px] z-10 bg-[#222] rounded-[var(--tile-radius)] border border-white/5 overflow-hidden mb-1 sm:mb-1.5 md:mb-2">
-                                    <div class="absolute inset-0 bg-gradient-to-r from-transparent via-white/5 to-transparent -translate-x-full animate-[shimmer_1.5s_infinite]" />
+                                <div class="relative flex-none h-[128px] w-[89px] sm:h-[138px] sm:w-[96px] md:h-[148px] md:w-[103px] lg:h-[195px] lg:w-[135px] z-10 bg-placeholder rounded-tile border border-ink/5 overflow-hidden mb-1 sm:mb-1.5 md:mb-2">
+                                    <div class="absolute inset-0 bg-gradient-to-r from-transparent via-ink/5 to-transparent -translate-x-full animate-[shimmer_1.5s_infinite]" />
                                 </div>
                             </div>
                         }).collect::<Vec<_>>() }
@@ -437,7 +437,7 @@ pub fn TopTenRow(
                 <button
                     type="button"
                     class=move || if can_scroll_left.get() {
-                        "hidden md:flex absolute top-2 bottom-0 left-0 z-30 items-center justify-center cursor-pointer bg-transparent hover:bg-black/70 transition-all duration-200 opacity-0 group-hover/row:opacity-100 group-hover/row:pointer-events-auto select-none border-none outline-none"
+                        "hidden md:flex absolute top-2 bottom-0 left-0 z-30 items-center justify-center cursor-pointer bg-transparent hover:bg-void/70 transition-all duration-(--motion-base) opacity-0 group-hover/row:opacity-100 group-hover/row:pointer-events-auto select-none border-none outline-none"
                     } else {
                         "hidden !pointer-events-none !opacity-0"
                     }
@@ -446,16 +446,16 @@ pub fn TopTenRow(
                         let scroll_left = scroll.clone();
                         move |_| scroll_left("left")
                     }
-                    aria-label="Scroll Left"
+                    aria-label=crate::i18n::t("continue-watching-row-scroll-left")
                 >
-                    <i class="ph-bold ph-caret-left text-white text-3xl sm:text-4xl drop-shadow-lg transition-transform hover:scale-125"></i>
+                    <i class="ph-bold ph-caret-left text-ink text-3xl sm:text-4xl drop-shadow-lg transition-transform hover:scale-125"></i>
                 </button>
 
                 // Right arrow — hidden when at end
                 <button
                     type="button"
                     class=move || if can_scroll_right.get() {
-                        "hidden md:flex absolute top-2 bottom-0 right-0 z-30 items-center justify-center cursor-pointer bg-transparent hover:bg-black/70 transition-all duration-200 opacity-0 group-hover/row:opacity-100 group-hover/row:pointer-events-auto select-none border-none outline-none"
+                        "hidden md:flex absolute top-2 bottom-0 right-0 z-30 items-center justify-center cursor-pointer bg-transparent hover:bg-void/70 transition-all duration-(--motion-base) opacity-0 group-hover/row:opacity-100 group-hover/row:pointer-events-auto select-none border-none outline-none"
                     } else {
                         "hidden !pointer-events-none !opacity-0"
                     }
@@ -464,9 +464,9 @@ pub fn TopTenRow(
                         let scroll_right = scroll.clone();
                         move |_| scroll_right("right")
                     }
-                    aria-label="Scroll Right"
+                    aria-label=crate::i18n::t("continue-watching-row-scroll-right")
                 >
-                    <i class="ph-bold ph-caret-right text-white text-3xl sm:text-4xl drop-shadow-lg transition-transform hover:scale-125"></i>
+                    <i class="ph-bold ph-caret-right text-ink text-3xl sm:text-4xl drop-shadow-lg transition-transform hover:scale-125"></i>
                 </button>
             </div>
         </div>

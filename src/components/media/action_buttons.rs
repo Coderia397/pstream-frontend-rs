@@ -3,7 +3,7 @@ use crate::components::media::movie_card_rating::{RatingIcon, MovieRating};
 use crate::components::media::tooltip_wrapper::TooltipWrapper;
 
 // ── Pill Play Button ──────────────────────────────────────────────────────────
-// Used in Hero (pill: rounded-full) and InfoModal (shape="rounded": rounded-[6px]).
+// Used in Hero (pill: rounded-full) and InfoModal (shape="rounded-control": rounded-field).
 #[component]
 pub fn PlayPillButton(
     #[prop(optional, into)] href: Option<Signal<String>>,
@@ -15,15 +15,15 @@ pub fn PlayPillButton(
 ) -> impl IntoView {
     let (pad_classes, text_classes, icon_classes) = match size.as_str() {
         "sm" => ("px-3.5 py-1", "text-xs", "text-sm"),
-        "lg" => ("px-5 h-12", "text-[18px] leading-[18px]", "text-[24px]"),
-        _ => ("px-4 sm:px-5 py-1.5 sm:py-2", "text-[13px] sm:text-sm", "text-base sm:text-lg"),
+        "lg" => ("px-5 h-12", "text-title-sm leading-[18px]", "text-heading"),
+        _ => ("px-4 sm:px-5 py-1.5 sm:py-2", "text-label sm:text-sm", "text-base sm:text-lg"),
     };
 
     let radius_classes = match shape.as_str() {
-        "rounded" | "rect" => match size.as_str() {
-            "sm" => "rounded-[4px]",
-            "lg" => "rounded-[8px]",
-            _ => "rounded-[6px]",
+        "rounded-control" | "rect" => match size.as_str() {
+            "sm" => "rounded-control",
+            "lg" => "rounded-card",
+            _ => "rounded-field",
         },
         _ => "rounded-full",
     };
@@ -31,7 +31,7 @@ pub fn PlayPillButton(
     let extra_class = class.unwrap_or_default();
     let is_link = href.is_some();
     let base_classes = format!(
-        "bg-white text-black font-medium flex items-center justify-center gap-2 hover:bg-white/70 active:scale-95 transition-all cursor-pointer select-none {} {} {} {} {}",
+        "bg-ink text-void font-medium flex items-center justify-center gap-2 hover:bg-ink/70 active:scale-95 transition-all cursor-pointer select-none {} {} {} {} {}",
         pad_classes, text_classes, radius_classes, extra_class,
         if is_link { "no-underline" } else { "" }
     );
@@ -77,21 +77,21 @@ pub fn MoreInfoPillButton(
 ) -> impl IntoView {
     let (pad_classes, text_classes, icon_classes) = match size.as_str() {
         "sm" => ("px-3.5 py-1", "text-xs", "text-sm"),
-        "lg" => ("px-5 h-12", "text-[18px] leading-[18px]", "text-[24px]"),
-        _ => ("px-4 sm:px-5 py-1.5 sm:py-2", "text-[13px] sm:text-sm", "text-base sm:text-lg"),
+        "lg" => ("px-5 h-12", "text-title-sm leading-[18px]", "text-heading"),
+        _ => ("px-4 sm:px-5 py-1.5 sm:py-2", "text-label sm:text-sm", "text-base sm:text-lg"),
     };
 
     let (bg_classes, radius_classes) = match shape.as_str() {
-        "rounded" | "rect" => (
-            "bg-white/20 hover:bg-white/30 backdrop-blur-md",
+        "rounded-control" | "rect" => (
+            "bg-ink/20 hover:bg-ink/30 backdrop-blur-md",
             match size.as_str() {
-                "sm" => "rounded-[4px]",
-                "lg" => "rounded-[8px]",
-                _ => "rounded-[6px]",
+                "sm" => "rounded-control",
+                "lg" => "rounded-card",
+                _ => "rounded-field",
             },
         ),
         _ => (
-            "bg-[#808080]/40 hover:bg-[#808080]/30",
+            "bg-mute/40 hover:bg-mute/30",
             "rounded-full",
         ),
     };
@@ -99,7 +99,7 @@ pub fn MoreInfoPillButton(
     let extra_class = class.unwrap_or_default();
     let label_title = label.clone();
     let base_classes = format!(
-        "{} text-white font-medium flex items-center justify-center gap-2 active:scale-95 transition-all cursor-pointer select-none {} {} {} {} {}",
+        "{} text-ink font-medium flex items-center justify-center gap-2 active:scale-95 transition-all cursor-pointer select-none {} {} {} {} {}",
         bg_classes, pad_classes, text_classes, radius_classes, extra_class, ""
     );
 
@@ -137,7 +137,7 @@ pub fn PlayCircleButton(
                 on_click.run(());
             }
             class=format!(
-                "rounded-full bg-white text-black flex items-center justify-center hover:bg-white/80 active:scale-95 transition-all shadow-md cursor-pointer select-none shrink-0 {} {}",
+                "rounded-full bg-ink text-void flex items-center justify-center hover:bg-ink/80 active:scale-95 transition-all shadow-md cursor-pointer select-none shrink-0 {} {}",
                 dim_classes, extra_class
             )
             title=move || if is_resume.get() { "Resume" } else { "Play" }
@@ -154,13 +154,13 @@ fn circular_button_specs(size: &str) -> (&'static str, &'static str, u32) {
     match size {
         "xs" | "sm" => ("w-7 h-7", "text-xs", 12),
         "lg" => ("w-11 h-11 md:w-12 md:h-12", "text-xl md:text-2xl", 22),
-        _ => ("w-[38px] h-[38px]", "text-[18px]", 18),
+        _ => ("w-[38px] h-[38px]", "text-title-sm", 18),
     }
 }
 
 fn circular_button_classes(dim_classes: &str, extra_class: &str) -> String {
     format!(
-        "rounded-full border-[1.8px] border-white/50 bg-[#2a2a2a]/60 hover:bg-white/15 hover:border-white text-white flex items-center justify-center transition-all duration-150 active:scale-95 cursor-pointer select-none shrink-0 {} {}",
+        "rounded-full border-[1.8px] border-ink/50 bg-menu/60 hover:bg-ink/15 hover:border-ink text-ink flex items-center justify-center transition-all duration-(--motion-fast) active:scale-95 cursor-pointer select-none shrink-0 {} {}",
         dim_classes, extra_class
     )
 }
@@ -202,7 +202,7 @@ pub fn MyListButton(
     view! {
         {if show_tooltip {
             view! {
-                <TooltipWrapper label="Add to My List".to_string()>
+                <TooltipWrapper label=crate::i18n::t("action-buttons-add-to-my-list").to_string()>
                     {btn}
                 </TooltipWrapper>
             }.into_any()
@@ -234,7 +234,7 @@ pub fn RatingButton(
                 on_rate.run(());
             }
             class=btn_classes.clone()
-            title="Rate"
+            title=crate::i18n::t("action-buttons-rate")
         >
             <RatingIcon rating=rating.get() size=icon_pixel_size />
         </button>
@@ -243,7 +243,7 @@ pub fn RatingButton(
     view! {
         {if show_tooltip {
             view! {
-                <TooltipWrapper label="I like this".to_string()>
+                <TooltipWrapper label=crate::i18n::t("action-buttons-i-like-this").to_string()>
                     {btn}
                 </TooltipWrapper>
             }.into_any()
@@ -271,11 +271,11 @@ pub fn MuteReplayButton(
 
     let title_text = move || {
         if is_ended.get() {
-            "Replay trailer"
+            crate::i18n::t("action-buttons-replay-trailer")
         } else if is_muted.get() {
-            "Unmute trailer"
+            crate::i18n::t("action-buttons-unmute-trailer")
         } else {
-            "Mute trailer"
+            crate::i18n::t("action-buttons-mute-trailer")
         }
     };
 
@@ -298,11 +298,11 @@ pub fn MuteReplayButton(
         >
             {move || {
                 if is_ended.get() {
-                    view! { <i class=format!("ph ph-arrow-counter-clockwise text-white {}", icon_classes)></i> }.into_any()
+                    view! { <i class=format!("ph ph-arrow-counter-clockwise text-ink {}", icon_classes)></i> }.into_any()
                 } else if is_muted.get() {
-                    view! { <i class=format!("ph ph-speaker-slash text-white {}", icon_classes)></i> }.into_any()
+                    view! { <i class=format!("ph ph-speaker-slash text-ink {}", icon_classes)></i> }.into_any()
                 } else {
-                    view! { <i class=format!("ph ph-speaker-high text-white {}", icon_classes)></i> }.into_any()
+                    view! { <i class=format!("ph ph-speaker-high text-ink {}", icon_classes)></i> }.into_any()
                 }
             }}
         </button>
@@ -329,8 +329,8 @@ pub fn CloseButton(
                 on_close.run(());
             }
             class=btn_classes
-            title="Close"
-            aria-label="Close"
+            title=crate::i18n::t("action-buttons-close")
+            aria-label=crate::i18n::t("action-buttons-close")
         >
             <i class=format!("ph-bold ph-x {}", icon_classes)></i>
         </button>
@@ -357,8 +357,8 @@ pub fn MoreInfoCaretButton(
                 on_open.run(());
             }
             class=btn_classes
-            title="More Info"
-            aria-label="More Info"
+            title=crate::i18n::t("action-buttons-more-info")
+            aria-label=crate::i18n::t("action-buttons-more-info")
         >
             <i class=format!("ph-bold ph-caret-down {}", icon_classes)></i>
         </button>

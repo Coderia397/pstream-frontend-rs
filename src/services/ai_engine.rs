@@ -103,13 +103,13 @@ pub struct FeedResponse {
 
 fn get_or_create_session_id() -> String {
     if let Some(storage) = web_sys::window().and_then(|w| w.local_storage().ok().flatten()) {
-        if let Ok(Some(sid)) = storage.get_item("pstream_session_id") {
+        if let Ok(Some(sid)) = storage.get_item(crate::keys::SESSION_ID) {
             if !sid.is_empty() {
                 return sid;
             }
         }
         let new_sid = format!("sess_{}_{}", (js_sys::Math::random() * 1_000_000.0) as u32, js_sys::Date::now() as u64);
-        let _ = storage.set_item("pstream_session_id", &new_sid);
+        let _ = storage.set_item(crate::keys::SESSION_ID, &new_sid);
         return new_sid;
     }
     format!("sess_anon_{}", js_sys::Date::now() as u64)
@@ -117,7 +117,7 @@ fn get_or_create_session_id() -> String {
 
 fn get_user_taste_affinity() -> Option<String> {
     let storage = web_sys::window().and_then(|w| w.local_storage().ok().flatten())?;
-    storage.get_item("pstream_user_affinity").ok().flatten()
+    storage.get_item(crate::keys::USER_AFFINITY).ok().flatten()
 }
 
 /// Fetches dynamic feed rows composed by the backend intelligence server

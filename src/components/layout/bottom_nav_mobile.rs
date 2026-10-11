@@ -14,10 +14,10 @@ pub fn BottomNavMobile(
     active_id: ReadSignal<&'static str>,
 ) -> impl IntoView {
     view! {
-        <div class="fixed bottom-[calc(8px+env(safe-area-inset-bottom))] left-1/2 -translate-x-1/2 z-[10020]
+        <div class="fixed bottom-[calc(8px+env(safe-area-inset-bottom))] left-1/2 -translate-x-1/2 z-(--z-bottom-nav)
                     w-auto max-w-[calc(100%-2rem)]
-                    bg-[#2d2d2d] border border-white/[0.08] rounded-full
-                    px-2.5 py-[7px] shadow-[0_8px_30px_rgba(0,0,0,0.55)]">
+                    bg-menu border border-ink/[0.08] rounded-full
+                    px-2.5 py-[7px] shadow-popover">
             <div class="flex items-center">
                 {items.into_iter().map(|item| {
                     let id = item.id;
@@ -30,17 +30,17 @@ pub fn BottomNavMobile(
                     view! {
                         <button
                             on:click=move |_| on_click.run(())
-                            class="relative flex flex-col items-center justify-center gap-0.5 rounded-full w-[76px] h-12 select-none transition-colors duration-200 active:scale-95"
-                            class=("bg-[#383838]", move || is_active())
-                            class=("text-white", move || is_active())
-                            class=("text-[#c0c0c0]", move || !is_active())
-                            class=("hover:text-white/80", move || !is_active())
+                            class="relative flex flex-col items-center justify-center gap-0.5 rounded-full w-[76px] h-12 select-none transition-colors duration-(--motion-base) active:scale-95"
+                            class=("bg-lift", move || is_active())
+                            class=("text-ink", move || is_active())
+                            class=("text-ink-silver-alt", move || !is_active())
+                            class=("hover:text-ink/80", move || !is_active())
                         >
                             <span class="flex items-center justify-center h-6">
                                 {icon}
                             </span>
                             <span 
-                                class="text-[11px] whitespace-nowrap"
+                                class="text-caption whitespace-nowrap"
                                 class=("font-medium", move || is_active())
                                 class=("font-normal", move || !is_active())
                             >

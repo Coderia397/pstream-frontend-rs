@@ -1,0 +1,18 @@
+//! Storage keys and DOM ids shared between Rust and the TypeScript bridge. The values are frozen: existing browsers hold
+//! data under these names, so renaming one needs a migration that copies the old value to the new key first.
+
+pub const ACTIVE_PROFILE: &str = "pstream_active_profile";
+pub const PROFILES: &str = "pstream_profiles";
+pub const PREVIEW_MUTED: &str = "pstream_preview_muted";
+pub const SESSION_ID: &str = "pstream_session_id";
+pub const USER_AFFINITY: &str = "pstream_user_affinity";
+pub const LANGUAGE: &str = "pstream_language";
+pub const NOTIFICATIONS_READ: &str = "pstream-notifications-read:default";
+pub const AMBIENT_LAST: &str = "pstream-ambient:last";
+
+pub const VIDEO_ELEMENT_ID: &str = "pstream-video";
+pub const PLAYER_CONTAINER_ID: &str = "pstream-main-player";
+
+pub fn preview_muted_for(profile_id: &str) -> String {
+    format!("{PREVIEW_MUTED}_{profile_id}")
+}

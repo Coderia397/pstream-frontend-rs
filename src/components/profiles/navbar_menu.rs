@@ -23,7 +23,7 @@ pub fn NavbarProfileMenu() -> impl IntoView {
     let logout = move |_| {
         active_profile_id.set(None);
         if let Some(storage) = web_sys::window().and_then(|w| w.local_storage().ok().flatten()) {
-            let _ = storage.remove_item("pstream_active_profile");
+            let _ = storage.remove_item(crate::keys::ACTIVE_PROFILE);
         }
         set_is_open.set(false);
     };
@@ -43,32 +43,32 @@ pub fn NavbarProfileMenu() -> impl IntoView {
 
     view! {
         <div 
-            class="relative flex items-center group/menu cursor-pointer select-none p-0.5 rounded-md hover:bg-[#808080]/40"
+            class="relative flex items-center group/menu cursor-pointer select-none p-0.5 rounded-field hover:bg-mute/40"
             on:mouseenter=move |_| set_is_open.set(true)
             on:mouseleave=move |_| set_is_open.set(false)
         >
             <div class="flex items-center">
-                <div class="w-8 h-8 rounded-[4px] overflow-hidden">
+                <div class="w-8 h-8 rounded-control overflow-hidden">
                     {move || {
                         let p = active_profile();
                         if p.as_ref().map(|p| p.is_kids && p.avatar_url.is_none()).unwrap_or(false) {
                             view! { <crate::components::profiles::kids_avatar::KidsAvatar size=32.0 /> }.into_any()
                         } else {
-                            let url = p.and_then(|p| p.avatar_url).unwrap_or_else(|| "https://wallpapers.com/images/hd/netflix-profile-pictures-1000-x-1000-88wkdmjrorckekha.jpg".to_string());
-                            view! { <img src=url class="w-full h-full object-cover" alt="Current Profile" /> }.into_any()
+                            let url = p.and_then(|p| p.avatar_url).unwrap_or_else(|| crate::brand::DEFAULT_AVATAR.to_string());
+                            view! { <img src=url class="w-full h-full object-cover" alt=crate::i18n::t("navbar-menu-current-profile") /> }.into_any()
                         }
                     }}
                 </div>
-                <i class="ph-fill ph-caret-down text-white text-base mx-2 transition-transform duration-200"
+                <i class="ph-fill ph-caret-down text-ink text-base mx-2 transition-transform duration-(--motion-base)"
                    class=("rotate-180", move || is_open.get())></i>
             </div>
 
             // Dropdown menu (Task 104)
             <div 
                 class=move || if is_open.get() {
-                    "absolute top-[120%] right-0 w-[220px] bg-black/95 border border-[#333] rounded-sm py-2 shadow-2xl transition-all duration-200 origin-top-right z-50 divide-y divide-[#333] opacity-100 scale-100 pointer-events-auto"
+                    "absolute top-[120%] right-0 w-[220px] bg-void/95 border border-line rounded-control py-2 shadow-2xl transition-all duration-(--motion-base) origin-top-right z-50 divide-y divide-line opacity-100 scale-100 pointer-events-auto"
                 } else {
-                    "absolute top-[120%] right-0 w-[220px] bg-black/95 border border-[#333] rounded-sm py-2 shadow-2xl transition-all duration-200 origin-top-right z-50 divide-y divide-[#333] opacity-0 scale-95 pointer-events-none"
+                    "absolute top-[120%] right-0 w-[220px] bg-void/95 border border-line rounded-control py-2 shadow-2xl transition-all duration-(--motion-base) origin-top-right z-50 divide-y divide-line opacity-0 scale-95 pointer-events-none"
                 }
             >
                 <div class="flex flex-col gap-3 px-3 pb-3">
@@ -78,21 +78,21 @@ pub fn NavbarProfileMenu() -> impl IntoView {
                         let name = p.name.clone();
                         let is_kids = p.is_kids;
                         let has_custom_avatar = p.avatar_url.is_some();
-                        let avatar = p.avatar_url.clone().unwrap_or_else(|| "https://wallpapers.com/images/hd/netflix-profile-pictures-1000-x-1000-88wkdmjrorckekha.jpg".to_string());
+                        let avatar = p.avatar_url.clone().unwrap_or_else(|| crate::brand::DEFAULT_AVATAR.to_string());
                         
                         view! {
                             <div 
                                 class="flex items-center gap-3 hover:underline cursor-pointer group"
                                 on:click=move |_| switch_profile(id.clone())
                             >
-                                <div class="w-8 h-8 rounded-sm overflow-hidden shrink-0">
+                                <div class="w-8 h-8 rounded-control overflow-hidden shrink-0">
                                     {if is_kids && !has_custom_avatar {
                                         view! { <crate::components::profiles::kids_avatar::KidsAvatar size=32.0 /> }.into_any()
                                     } else {
                                         view! { <img src=avatar class="w-full h-full object-cover" alt=name.clone() /> }.into_any()
                                     }}
                                 </div>
-                                <span class="text-white text-sm font-medium group-hover:underline truncate">{name}</span>
+                                <span class="text-ink text-sm font-medium group-hover:underline truncate">{name}</span>
                             </div>
                         }
                     }).collect::<Vec<_>>()}
@@ -100,14 +100,14 @@ pub fn NavbarProfileMenu() -> impl IntoView {
                     // Manage Profiles button
                     <div
                         on:click=manage_profiles
-                        class="flex items-center gap-3 hover:underline cursor-pointer mt-1 text-white/80 hover:text-white"
+                        class="flex items-center gap-3 hover:underline cursor-pointer mt-1 text-ink/80 hover:text-ink"
                     >
                         <i class="ph-bold ph-pencil-simple text-gray-400 text-xl w-8 text-center"></i>
                         <span class="text-sm font-medium">"Manage Profiles"</span>
                     </div>
 
                     // Transfer Profile
-                    <div class="flex items-center gap-3 hover:underline cursor-pointer text-white/80 hover:text-white">
+                    <div class="flex items-center gap-3 hover:underline cursor-pointer text-ink/80 hover:text-ink">
                         <i class="ph-bold ph-user-focus text-gray-400 text-xl w-8 text-center"></i>
                         <span class="text-sm font-medium">"Transfer Profile"</span>
                     </div>
@@ -118,7 +118,7 @@ pub fn NavbarProfileMenu() -> impl IntoView {
                             set_is_open.set(false);
                             nav_to_account("/browse/my-list", Default::default());
                         }
-                        class="flex items-center gap-3 hover:underline cursor-pointer text-white/80 hover:text-white"
+                        class="flex items-center gap-3 hover:underline cursor-pointer text-ink/80 hover:text-ink"
                     >
                         <i class="ph-bold ph-user text-gray-400 text-xl w-8 text-center"></i>
                         <span class="text-sm font-medium">"Account"</span>
@@ -130,7 +130,7 @@ pub fn NavbarProfileMenu() -> impl IntoView {
                             set_is_open.set(false);
                             nav_to_help("/browse", Default::default());
                         }
-                        class="flex items-center gap-3 hover:underline cursor-pointer text-white/80 hover:text-white"
+                        class="flex items-center gap-3 hover:underline cursor-pointer text-ink/80 hover:text-ink"
                     >
                         <i class="ph-bold ph-question text-gray-400 text-xl w-8 text-center"></i>
                         <span class="text-sm font-medium">"Help Center"</span>
@@ -141,9 +141,9 @@ pub fn NavbarProfileMenu() -> impl IntoView {
                 <div class="pt-3 px-3 text-center">
                     <button 
                         on:click=logout
-                        class="text-white text-sm font-bold hover:underline cursor-pointer"
+                        class="text-ink text-sm font-bold hover:underline cursor-pointer"
                     >
-                        "Sign out of Pstream"
+                        format!("Sign out of {}", crate::brand::NAME)
                     </button>
                 </div>
             </div>

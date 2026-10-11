@@ -87,7 +87,7 @@ pub fn VibeRow(
         }
     };
 
-    let card_width_class = "netflix-card-width";
+    let card_width_class = "tile-width";
 
     view! {
         <div class="group relative row-block z-10">
@@ -95,7 +95,7 @@ pub fn VibeRow(
             <div class="flex items-center justify-between px-[var(--app-x,56px)]">
                 <h2 class="row-title cursor-pointer flex items-center group/title w-fit">
                     {title.clone()}
-                    <span class="text-xs text-cyan-500 ml-2 opacity-0 group-hover/title:opacity-100 transition-opacity duration-300 flex items-center font-semibold">
+                    <span class="text-xs text-cyan-500 ml-2 opacity-0 group-hover/title:opacity-100 transition-opacity duration-(--motion-slow) flex items-center font-semibold">
                         "Explore Vibe ›"
                     </span>
                 </h2>
@@ -107,15 +107,15 @@ pub fn VibeRow(
                         let pages = (count / 4).clamp(2, 6);
                         let current = page_index.get();
                         view! {
-                            <div class="hidden md:flex items-center gap-[3px] opacity-0 group-hover:opacity-100 transition-opacity duration-300">
+                            <div class="hidden md:flex items-center gap-[3px] opacity-0 group-hover:opacity-100 transition-opacity duration-(--motion-slow)">
                                 {(0..pages).map(|i| {
                                     let is_active = i == current;
                                     view! {
                                         <div
                                             class=if is_active {
-                                                "h-[2px] w-3 rounded-full bg-white transition-colors duration-200"
+                                                "h-[2px] w-3 rounded-full bg-ink transition-colors duration-(--motion-base)"
                                             } else {
-                                                "h-[2px] w-3 rounded-full bg-white/20 transition-colors duration-200"
+                                                "h-[2px] w-3 rounded-full bg-ink/20 transition-colors duration-(--motion-base)"
                                             }
                                         />
                                     }
@@ -162,7 +162,7 @@ pub fn VibeRow(
                                         
                                         view! {
                                             <div 
-                                                class=format!("movie-card-container relative flex-none pointer-events-auto overflow-visible rounded-[var(--tile-radius)] {} aspect-video", card_width_class)
+                                                class=format!("movie-card-container relative flex-none pointer-events-auto overflow-visible rounded-tile {} aspect-video", card_width_class)
                                                 style="z-index: auto;"
                                             >
                                                 <MovieCard
@@ -194,12 +194,12 @@ pub fn VibeRow(
                                         }
                                     }
                                     class=move || format!(
-                                        "absolute left-0 top-2 bottom-6 w-[var(--app-x,56px)] z-30 flex items-center justify-center bg-black/40 hover:bg-black/70 text-white transition-all duration-300 pointer-events-auto rounded-r-[4px] backdrop-blur-[2px] cursor-pointer group/btn {}",
+                                        "absolute left-0 top-2 bottom-6 w-[var(--app-x,56px)] z-30 flex items-center justify-center bg-void/40 hover:bg-void/70 text-ink transition-all duration-(--motion-slow) pointer-events-auto rounded-r-control backdrop-blur-[2px] cursor-pointer group/btn {}",
                                         if can_scroll_left.get() { "opacity-0 group-hover/row:opacity-100" } else { "opacity-0 pointer-events-none" }
                                     )
-                                    aria-label="Scroll left"
+                                    aria-label=crate::i18n::t("vibe-row-scroll-left")
                                 >
-                                    <svg class="w-6 h-6 md:w-8 md:h-8 transition-transform duration-200 group-hover/btn:scale-125" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <svg class="w-6 h-6 md:w-8 md:h-8 transition-transform duration-(--motion-base) group-hover/btn:scale-125" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M15 19l-7-7 7-7" />
                                     </svg>
                                 </button>
@@ -214,12 +214,12 @@ pub fn VibeRow(
                                         }
                                     }
                                     class=move || format!(
-                                        "absolute right-0 top-2 bottom-6 w-[var(--app-x,56px)] z-30 flex items-center justify-center bg-black/40 hover:bg-black/70 text-white transition-all duration-300 pointer-events-auto rounded-l-[4px] backdrop-blur-[2px] cursor-pointer group/btn {}",
+                                        "absolute right-0 top-2 bottom-6 w-[var(--app-x,56px)] z-30 flex items-center justify-center bg-void/40 hover:bg-void/70 text-ink transition-all duration-(--motion-slow) pointer-events-auto rounded-l-control backdrop-blur-[2px] cursor-pointer group/btn {}",
                                         if can_scroll_right.get() { "opacity-0 group-hover/row:opacity-100" } else { "opacity-0 pointer-events-none" }
                                     )
-                                    aria-label="Scroll right"
+                                    aria-label=crate::i18n::t("vibe-row-scroll-right")
                                 >
-                                    <svg class="w-6 h-6 md:w-8 md:h-8 transition-transform duration-200 group-hover/btn:scale-125" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <svg class="w-6 h-6 md:w-8 md:h-8 transition-transform duration-(--motion-base) group-hover/btn:scale-125" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M9 5l7 7-7 7" />
                                     </svg>
                                 </button>

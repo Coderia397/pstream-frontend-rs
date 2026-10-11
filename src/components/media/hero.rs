@@ -28,14 +28,14 @@ fn clear_timeout_id(id: Option<i32>) {
 fn MegaphoneBadgeIcon() -> impl IntoView {
     view! {
         <svg
-            class="w-[15px] h-[15px] flex-shrink-0 drop-shadow-[0_1px_3px_rgba(255,0,100,0.5)]"
+            class="w-[15px] h-[15px] flex-shrink-0 drop-shadow-accent-pink"
             viewBox="0 0 20 20"
             fill="none"
             xmlns="http://www.w3.org/2000/svg"
         >
             <defs>
                 <linearGradient id="megaGrad" x1="0%" y1="0%" x2="100%" y2="100%">
-                    <stop offset="0%" stop-color="#ff007f" />
+                    <stop offset="0%" style="stop-color: var(--color-accent-alt)" />
                     <stop offset="60%" stop-color="#ff1a40" />
                     <stop offset="100%" stop-color="#ff6b00" />
                 </linearGradient>
@@ -62,14 +62,14 @@ fn MegaphoneBadgeIcon() -> impl IntoView {
 fn ClapperboardBadgeIcon() -> impl IntoView {
     view! {
         <svg
-            class="w-[15px] h-[15px] flex-shrink-0 drop-shadow-[0_1px_3px_rgba(155,93,229,0.5)]"
+            class="w-[15px] h-[15px] flex-shrink-0 drop-shadow-accent-violet"
             viewBox="0 0 20 20"
             fill="none"
             xmlns="http://www.w3.org/2000/svg"
         >
             <defs>
                 <linearGradient id="clapGrad" x1="0%" y1="0%" x2="100%" y2="100%">
-                    <stop offset="0%" stop-color="#ff007f" />
+                    <stop offset="0%" style="stop-color: var(--color-accent-alt)" />
                     <stop offset="50%" stop-color="#9b5de5" />
                     <stop offset="100%" stop-color="#7209b7" />
                 </linearGradient>
@@ -587,7 +587,7 @@ pub fn HeroSection(
             node_ref=hero_container_ref
             class="hidden md:block w-full billboard-margin"
         >
-            <div class="relative w-full aspect-[2.18/1] rounded-[24px] overflow-hidden bg-[#181818] border border-white/[0.04] group">
+            <div class="relative w-full aspect-[2.18/1] rounded-billboard overflow-hidden bg-raised border border-ink/[0.04] group">
                 // ── Background Video Layer ──────────────────────────────────────
                 <TrailerPlayer
                     video_key=Signal::derive(move || trailer_key())
@@ -623,20 +623,20 @@ pub fn HeroSection(
                     fetchpriority="high"
                     loading="eager"
                     alt=move || current_title()
-                    class="absolute inset-0 w-full h-full object-cover object-[50%_20%] transition-opacity duration-700 ease-in-out z-0"
+                    class="absolute inset-0 w-full h-full object-cover object-[50%_20%] transition-opacity duration-(--motion-slowest) ease-in-out z-0"
                     class=("opacity-0", move || is_video_visible())
                     class=("opacity-100", move || !is_video_visible())
                 />
 
                 // ── Vignettes (Tuned down so backdrop image is clear & vibrant) ──
                 <div
-                    class="absolute inset-0 z-10 pointer-events-none bg-gradient-to-r from-black/70 via-black/25 to-transparent"
+                    class="absolute inset-0 z-10 pointer-events-none bg-gradient-to-r from-void/70 via-void/25 to-transparent"
                 />
                 <div
-                    class="absolute inset-x-0 bottom-0 h-44 z-10 pointer-events-none bg-gradient-to-t from-black/80 via-black/25 to-transparent"
+                    class="absolute inset-x-0 bottom-0 h-44 z-10 pointer-events-none bg-gradient-to-t from-void/80 via-void/25 to-transparent"
                 />
                 <div
-                    class="absolute inset-x-0 top-0 h-20 z-10 pointer-events-none bg-gradient-to-b from-black/35 to-transparent"
+                    class="absolute inset-x-0 top-0 h-20 z-10 pointer-events-none bg-gradient-to-b from-void/35 to-transparent"
                 />
 
                 // ── Top-right reload/replay button ──────────────────────────────
@@ -672,15 +672,15 @@ pub fn HeroSection(
                         // Logo / Title with scale transition
                         <div
                             class=move || if is_video_visible() {
-                                "relative flex items-end transition-transform duration-700 origin-bottom-left scale-[0.93] sm:scale-[0.96]"
+                                "relative flex items-end transition-transform duration-(--motion-slowest) origin-bottom-left scale-[0.93] sm:scale-[0.96]"
                             } else {
-                                "relative flex items-end transition-transform duration-700 origin-bottom-left"
+                                "relative flex items-end transition-transform duration-(--motion-slowest) origin-bottom-left"
                             }
                         >
                             <Suspense fallback=move || {
                                 let t = current_title();
                                 view! {
-                                    <h1 class="text-4xl sm:text-6xl md:text-7xl lg:text-8xl font-black drop-shadow-[0_4px_14px_rgba(0,0,0,0.95)] leading-none text-white tracking-tight uppercase mb-1.5">
+                                    <h1 class="text-4xl sm:text-6xl md:text-7xl lg:text-8xl font-black drop-shadow-title leading-none text-ink tracking-tight uppercase mb-1.5">
                                         {t}
                                     </h1>
                                 }
@@ -692,12 +692,12 @@ pub fn HeroSection(
                                             <img
                                                 src=url
                                                 alt=t.clone()
-                                                class="object-contain object-bottom drop-shadow-[0_4px_14px_rgba(0,0,0,0.95)] mb-1.5"
+                                                class="object-contain object-bottom drop-shadow-title mb-1.5"
                                                 style="max-height: calc((100vw - 2 * var(--app-x)) * 0.12); max-width: calc((100vw - 2 * var(--app-x)) * 0.33);"
                                             />
                                         }.into_any(),
                                         _ => view! {
-                                            <h1 class="text-4xl sm:text-6xl md:text-7xl lg:text-8xl font-black drop-shadow-[0_4px_14px_rgba(0,0,0,0.95)] leading-none text-white tracking-tight uppercase mb-1.5">
+                                            <h1 class="text-4xl sm:text-6xl md:text-7xl lg:text-8xl font-black drop-shadow-title leading-none text-ink tracking-tight uppercase mb-1.5">
                                                 {t}
                                             </h1>
                                         }.into_any(),
@@ -707,15 +707,15 @@ pub fn HeroSection(
                         </div>
 
                         // Metadata line: Series • Action • 2017 • 5 Seasons • [15]
-                        <div class="flex items-center flex-wrap gap-2 mt-4 text-[16px] text-white font-medium select-none">
+                        <div class="flex items-center flex-wrap gap-2 mt-4 text-body-md text-ink font-medium select-none">
                             <span>{media_type_label}</span>
-                            <span class="text-white/40 text-[16px]">"•"</span>
+                            <span class="text-ink/40 text-body-md">"•"</span>
                             <span>{genre_label}</span>
-                            <span class="text-white/40 text-[16px]">"•"</span>
+                            <span class="text-ink/40 text-body-md">"•"</span>
                             <span>{year_label}</span>
-                            <span class="text-white/40 text-[16px]">"•"</span>
+                            <span class="text-ink/40 text-body-md">"•"</span>
                             <span>{duration_or_seasons_label}</span>
-                            <span class="text-white/40 text-[16px]">"•"</span>
+                            <span class="text-ink/40 text-body-md">"•"</span>
                             <div class="inline-flex items-center">
                                 {move || {
                                     let cert = maturity_rating_label();
@@ -730,8 +730,8 @@ pub fn HeroSection(
                         </div>
 
                         // Overview / Synopsis
-                        <div class="overflow-hidden transition-opacity duration-300 mt-2">
-                            <p class="billboard-synopsis text-white font-normal line-clamp-3 select-none">
+                        <div class="overflow-hidden transition-opacity duration-(--motion-slow) mt-2">
+                            <p class="billboard-synopsis text-ink font-normal line-clamp-3 select-none">
                                 {move || current_overview()}
                             </p>
                         </div>
@@ -776,7 +776,7 @@ pub fn HeroSection(
                     <div class="hidden lg:flex items-center gap-2 flex-shrink-0 pointer-events-auto select-none">
                         {move || {
                             badge_left().map(|(icon_type, text)| view! {
-                                <div class="flex items-center gap-1.5 text-[13px] font-medium text-white bg-black/50 p-2 rounded-lg">
+                                <div class="flex items-center gap-1.5 text-label font-medium text-ink bg-void/50 p-2 rounded-card">
                                     {match icon_type.as_str() {
                                         "megaphone" => view! { <MegaphoneBadgeIcon /> }.into_any(),
                                         _ => view! { <ClapperboardBadgeIcon /> }.into_any(),
@@ -788,7 +788,7 @@ pub fn HeroSection(
 
                         {move || {
                             badge_right().map(|(icon_type, text)| view! {
-                                <div class="flex items-center gap-1.5 text-[13px] font-medium text-white bg-black/50 p-2 rounded-lg">
+                                <div class="flex items-center gap-1.5 text-label font-medium text-ink bg-void/50 p-2 rounded-card">
                                     {match icon_type.as_str() {
                                         "megaphone" => view! { <MegaphoneBadgeIcon /> }.into_any(),
                                         _ => view! { <ClapperboardBadgeIcon /> }.into_any(),

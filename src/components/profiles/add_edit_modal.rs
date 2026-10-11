@@ -20,7 +20,7 @@ pub fn AddEditProfileModal(
 ) -> impl IntoView {
     let initial_name = initial.as_ref().map(|p| p.name.clone()).unwrap_or_default();
     let initial_avatar = initial.as_ref().and_then(|p| p.avatar_url.clone()).unwrap_or_else(|| {
-        "https://wallpapers.com/images/hd/netflix-profile-pictures-1000-x-1000-88wkdmjrorckekha.jpg".to_string()
+        crate::brand::DEFAULT_AVATAR.to_string()
     });
     let initial_kids = initial.as_ref().map(|p| p.is_kids).unwrap_or(false);
     let initial_pin = initial.as_ref().and_then(|p| p.pin.clone());
@@ -63,24 +63,24 @@ pub fn AddEditProfileModal(
     };
 
     view! {
-        <div class="fixed inset-0 z-[200] flex items-center justify-center bg-black/80 backdrop-blur-sm px-4 animate-in fade-in duration-200">
+        <div class="fixed inset-0 z-(--z-modal) flex items-center justify-center bg-void/80 backdrop-blur-sm px-4 animate-in fade-in duration-(--motion-base)">
             <div
-                class="relative w-full max-w-[560px] max-h-[90vh] overflow-y-auto bg-[#181818] rounded-md shadow-2xl border border-white/10 p-6 sm:p-10 text-white"
+                class="relative w-full max-w-[560px] max-h-[90vh] overflow-y-auto bg-raised rounded-field shadow-2xl border border-ink/10 p-6 sm:p-10 text-ink"
             >
                 // Close button
                 <button
                     on:click=move |_| on_cancel.run(())
-                    class="absolute top-5 right-5 w-8 h-8 rounded-full flex items-center justify-center text-white/50 hover:text-white hover:bg-white/10 transition-colors cursor-pointer"
-                    aria-label="Close"
+                    class="absolute top-5 right-5 w-8 h-8 rounded-full flex items-center justify-center text-ink/50 hover:text-ink hover:bg-ink/10 transition-colors cursor-pointer"
+                    aria-label=crate::i18n::t("action-buttons-close")
                 >
                     <i class="ph-bold ph-x text-xl"></i>
                 </button>
 
-                <h2 class="text-2xl sm:text-3xl font-bold text-white text-center mb-1">
+                <h2 class="text-2xl sm:text-3xl font-bold text-ink text-center mb-1">
                     {modal_title}
                 </h2>
-                <p class="text-white/40 text-sm text-center mb-8">
-                    {if is_edit { "Update this profile's name, icon, and lock." } else { "Add a profile for another person watching Pstream." }}
+                <p class="text-ink/40 text-sm text-center mb-8">
+                    {if is_edit { "Update this profile's name, icon, and lock.".to_string() } else { format!("Add a profile for another person watching {}.", crate::brand::NAME) }}
                 </p>
 
                 // Avatar + Name Input (Task 100)
@@ -89,15 +89,15 @@ pub fn AddEditProfileModal(
                     <button
                         type="button"
                         on:click=move |_| set_picking_avatar.set(true)
-                        class="relative w-24 h-24 sm:w-28 sm:h-28 rounded-md overflow-hidden bg-white/10 shrink-0 shadow-md group hover:ring-4 hover:ring-white/20 transition-all active:scale-95 cursor-pointer"
+                        class="relative w-24 h-24 sm:w-28 sm:h-28 rounded-field overflow-hidden bg-ink/10 shrink-0 shadow-md group hover:ring-4 hover:ring-ink/20 transition-all active:scale-95 cursor-pointer"
                     >
                         <img
                             src=avatar_url
-                            alt="Avatar"
+                            alt=crate::i18n::t("navbar-mobile-avatar")
                             class="w-full h-full object-cover block"
                         />
-                        <div class="absolute inset-0 bg-black/50 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity">
-                            <i class="ph-bold ph-pencil-simple text-white text-2xl"></i>
+                        <div class="absolute inset-0 bg-void/50 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity">
+                            <i class="ph-bold ph-pencil-simple text-ink text-2xl"></i>
                         </div>
                     </button>
 
@@ -107,45 +107,45 @@ pub fn AddEditProfileModal(
                             type="text"
                             prop:value=move || name.get()
                             on:input=move |e| set_name.set(event_target_value(&e))
-                            placeholder="Name"
+                            placeholder=crate::i18n::t("add-edit-modal-name")
                             maxlength="30"
-                            class="w-full bg-[#262626] border border-white/20 rounded px-4 py-3 text-white text-base placeholder:text-white/30 outline-none focus:border-white transition-colors"
+                            class="w-full bg-field border border-ink/20 rounded-control px-4 py-3 text-ink text-base placeholder:text-ink/30 outline-none focus:border-ink transition-colors"
                         />
                     </div>
                 </div>
 
                 // Kids Mode Toggle
-                <div class="border-t border-white/10 py-5">
+                <div class="border-t border-ink/10 py-5">
                     <label class="flex items-center justify-between gap-4 cursor-pointer">
                         <div>
-                            <span class="text-white font-semibold text-[15px]">"Kids Profile"</span>
-                            <p class="text-white/40 text-[13px] mt-0.5">
-                                "Only see child-friendly series and films"
+                            <span class="text-ink font-semibold text-body">"Kids Profile"</span>
+                            <p class="text-ink/40 text-label mt-0.5">
+                                {crate::i18n::t("add-edit-modal-only-see-childfriendly-series-and")}
                             </p>
                         </div>
                         <input
                             type="checkbox"
                             prop:checked=move || is_kids.get()
                             on:change=move |e| set_kids.set(event_target_checked(&e))
-                            class="w-5 h-5 accent-[#E50914] rounded cursor-pointer"
+                            class="w-5 h-5 accent-brand rounded-control cursor-pointer"
                         />
                     </label>
                 </div>
 
                 // Profile Lock PIN Toggle
-                <div class="border-t border-white/10 py-5 space-y-3">
+                <div class="border-t border-ink/10 py-5 space-y-3">
                     <label class="flex items-center justify-between gap-4 cursor-pointer">
                         <div>
-                            <span class="text-white font-semibold text-[15px]">"Profile Lock"</span>
-                            <p class="text-white/40 text-[13px] mt-0.5">
-                                "Require a 4-digit PIN to access this profile"
+                            <span class="text-ink font-semibold text-body">"Profile Lock"</span>
+                            <p class="text-ink/40 text-label mt-0.5">
+                                {crate::i18n::t("add-edit-modal-require-a-4digit-pin-to")}
                             </p>
                         </div>
                         <input
                             type="checkbox"
                             prop:checked=move || pin_enabled.get()
                             on:change=move |e| set_pin_enabled.set(event_target_checked(&e))
-                            class="w-5 h-5 accent-[#E50914] rounded cursor-pointer"
+                            class="w-5 h-5 accent-brand rounded-control cursor-pointer"
                         />
                     </label>
 
@@ -156,17 +156,17 @@ pub fn AddEditProfileModal(
                                     <input
                                         type="password"
                                         maxlength="4"
-                                        placeholder="Enter 4-digit PIN"
+                                        placeholder=crate::i18n::t("add-edit-modal-enter-4digit-pin")
                                         prop:value=move || pin_val.get()
                                         on:input=move |e| {
                                             let v = event_target_value(&e);
                                             let clean: String = v.chars().filter(|c| c.is_ascii_digit()).take(4).collect();
                                             set_pin_val.set(clean);
                                         }
-                                        class="w-48 bg-[#262626] border border-white/20 rounded px-4 py-2 text-white text-base tracking-widest placeholder:tracking-normal placeholder:text-white/30 outline-none focus:border-white transition-colors"
+                                        class="w-48 bg-field border border-ink/20 rounded-control px-4 py-2 text-ink text-base tracking-widest placeholder:tracking-normal placeholder:text-ink/30 outline-none focus:border-ink transition-colors"
                                     />
                                     <Show when=move || !is_pin_valid()>
-                                        <p class="text-red-400 text-xs mt-1">"PIN must be exactly 4 numeric digits."</p>
+                                        <p class="text-danger-soft text-xs mt-1">"PIN must be exactly 4 numeric digits."</p>
                                     </Show>
                                 </div>
                             }.into_any()
@@ -181,27 +181,27 @@ pub fn AddEditProfileModal(
                     if is_edit && on_delete.is_some() {
                         let on_del = on_delete.unwrap();
                         view! {
-                            <div class="border-t border-white/10 py-5">
+                            <div class="border-t border-ink/10 py-5">
                                 {if confirm_delete.get() {
                                     view! {
-                                        <div class="bg-red-950/40 border border-red-500/30 rounded-lg p-4 space-y-3">
-                                            <p class="text-sm text-red-200">
-                                                "Delete this profile? All viewing history and My List items will be permanently removed."
+                                        <div class="bg-danger-deep/40 border border-danger/30 rounded-card p-4 space-y-3">
+                                            <p class="text-sm text-danger-pale">
+                                                {crate::i18n::t("add-edit-modal-delete-this-profile-all-viewing")}
                                             </p>
                                             <div class="flex items-center gap-3">
                                                 <button
                                                     type="button"
                                                     on:click=move |_| on_del.run(())
-                                                    class="px-4 py-1.5 bg-[#E50914] hover:bg-[#f40612] text-white text-xs font-bold rounded transition-colors cursor-pointer active:scale-95"
+                                                    class="btn-brand px-4 py-1.5 text-xs rounded-control active:scale-95"
                                                 >
-                                                    "Yes, Delete"
+                                                    {crate::i18n::t("add-edit-modal-yes-delete")}
                                                 </button>
                                                 <button
                                                     type="button"
                                                     on:click=move |_| set_confirm_delete.set(false)
-                                                    class="px-4 py-1.5 border border-white/30 text-white/70 hover:text-white rounded text-xs transition-colors cursor-pointer"
+                                                    class="px-4 py-1.5 border border-ink/30 text-ink/70 hover:text-ink rounded-control text-xs transition-colors cursor-pointer"
                                                 >
-                                                    "Cancel"
+                                                    {crate::i18n::t("continue-watching-options-sheet-cancel")}
                                                 </button>
                                             </div>
                                         </div>
@@ -211,9 +211,9 @@ pub fn AddEditProfileModal(
                                         <button
                                             type="button"
                                             on:click=move |_| set_confirm_delete.set(true)
-                                            class="border border-white/20 hover:border-red-500 text-white/60 hover:text-red-400 px-4 py-2 rounded text-sm font-semibold transition-colors cursor-pointer"
+                                            class="border border-ink/20 hover:border-danger text-ink/60 hover:text-danger-soft px-4 py-2 rounded-control text-sm font-semibold transition-colors cursor-pointer"
                                         >
-                                            "Delete Profile"
+                                            {crate::i18n::t("add-edit-modal-delete-profile")}
                                         </button>
                                     }.into_any()
                                 }}
@@ -225,24 +225,24 @@ pub fn AddEditProfileModal(
                 }}
 
                 // Actions: Save & Cancel
-                <div class="flex items-center justify-end gap-3 pt-6 border-t border-white/10">
+                <div class="flex items-center justify-end gap-3 pt-6 border-t border-ink/10">
                     <button
                         type="button"
                         on:click=move |_| on_cancel.run(())
-                        class="px-6 py-2 border border-white/30 text-white/70 hover:text-white hover:border-white rounded text-sm font-semibold transition-colors cursor-pointer active:scale-95"
+                        class="px-6 py-2 border border-ink/30 text-ink/70 hover:text-ink hover:border-ink rounded-control text-sm font-semibold transition-colors cursor-pointer active:scale-95"
                     >
-                        "Cancel"
+                        {crate::i18n::t("continue-watching-options-sheet-cancel")}
                     </button>
                     <button
                         type="button"
                         on:click=handle_save
                         class=move || if can_save() {
-                            "px-8 py-2 rounded text-sm font-bold transition-colors cursor-pointer active:scale-95 bg-[#E50914] text-white hover:bg-[#f40612]"
+                            "px-8 py-2 rounded-control text-sm font-bold transition-colors cursor-pointer active:scale-95 bg-brand text-ink hover:bg-brand-hover"
                         } else {
-                            "px-8 py-2 rounded text-sm font-bold transition-colors cursor-pointer active:scale-95 bg-white/20 text-white/40 pointer-events-none"
+                            "px-8 py-2 rounded-control text-sm font-bold transition-colors cursor-pointer active:scale-95 bg-ink/20 text-ink/40 pointer-events-none"
                         }
                     >
-                        "Save"
+                        {crate::i18n::t("add-edit-modal-save")}
                     </button>
                 </div>
             </div>

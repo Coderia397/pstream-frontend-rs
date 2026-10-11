@@ -1,12 +1,14 @@
+pub mod brand;
 pub mod components;
 pub mod data;
+pub mod i18n;
+pub mod keys;
 pub mod models;
 pub mod pages;
 pub mod services;
 pub mod store;
 pub mod utils;
 
-rust_i18n::i18n!("locales", fallback = "en");
 
 use leptos::prelude::*;
 use leptos_router::{
@@ -75,7 +77,7 @@ mod tests {
     #[test]
     fn test_library_target_linkage() {
         // Confirms host rlib target linkage and basic mapping resolution
-        let result = models::mapping::map_netflix_id_to_tmdb("1365");
+        let result = models::mapping::map_genre_key_to_tmdb("1365");
         assert!(result.is_some());
         let ctx = result.unwrap();
         assert_eq!(ctx.title, "Action & Adventure");

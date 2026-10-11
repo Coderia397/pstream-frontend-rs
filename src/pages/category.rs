@@ -110,10 +110,10 @@ pub fn CategoryPage(
 
     view! {
         <Layout>
-            <div class="w-full pb-20 bg-black md:bg-[#141414] min-h-screen relative overflow-x-hidden">
+            <div class="with-subnav w-full pb-20 bg-void md:bg-page min-h-screen relative overflow-x-hidden">
                 // Ambient Atmospheric Glow behind navbar, category sub-nav, and hero billboard (fades after 50% of hero height)
                 <div
-                    class="absolute inset-x-0 top-0 h-[580px] md:h-[660px] lg:h-[720px] pointer-events-none -z-0 transition-all duration-700 ease-out"
+                    class="absolute inset-x-0 top-0 h-[580px] md:h-[660px] lg:h-[720px] pointer-events-none -z-0 transition-all duration-(--motion-slowest) ease-out"
                     style=ambient_bg_style
                 />
                 // Category Sub-Navigation bar (teleports to fixed header below navbar on desktop)
@@ -130,7 +130,7 @@ pub fn CategoryPage(
                     {move || hero.get().map(|result| {
                         let movies = result;
                         if movies.is_empty() {
-                            view! { <div class="h-[500px] bg-black"></div> }.into_any()
+                            view! { <div class="h-[500px] bg-void"></div> }.into_any()
                         } else {
                             view! {
                                 <HeroSection movies=movies />
@@ -142,8 +142,8 @@ pub fn CategoryPage(
                 <div class="relative z-30 rows-stack">
                     <Suspense fallback=move || view! {
                         <div class="space-y-6">
-                            <div class="h-40 bg-white/[0.02] rounded-lg animate-pulse mx-[var(--app-x,56px)]" />
-                            <div class="h-40 bg-white/[0.02] rounded-lg animate-pulse mx-[var(--app-x,56px)]" />
+                            <div class="h-40 bg-ink/[0.02] rounded-card animate-pulse mx-[var(--app-x,56px)]" />
+                            <div class="h-40 bg-ink/[0.02] rounded-card animate-pulse mx-[var(--app-x,56px)]" />
                         </div>
                     }>
                         {move || feed.get().map(|rows| {
@@ -151,9 +151,9 @@ pub fn CategoryPage(
                                 let default_top10_title = if kind == "movie" { "Top 10 Movies Today" } else { "Top 10 TV Shows Today" };
                                 view! {
                                     <TopTenRow title=default_top10_title.to_string() kind=kind.to_string() />
-                                    <Row title="Action & Adventure" genre_id="1365" kind=kind.to_string() />
-                                    <Row title="Comedies" genre_id="6548" kind=kind.to_string() />
-                                    <Row title="Sci-Fi & Fantasy" genre_id="1492" kind=kind.to_string() />
+                                    <Row title=crate::i18n::t("browse-action-adventure") genre_id="1365" kind=kind.to_string() />
+                                    <Row title=crate::i18n::t("browse-comedies") genre_id="6548" kind=kind.to_string() />
+                                    <Row title=crate::i18n::t("browse-scifi-fantasy") genre_id="1492" kind=kind.to_string() />
                                 }.into_any()
                             } else {
                                 rows.into_iter().map(|r| {

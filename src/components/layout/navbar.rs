@@ -81,28 +81,28 @@ pub fn Navbar(
         <>
             // ── Desktop Primary Nav (Task 085 & 086) ──────────────────────────
             <nav
-                class="fixed inset-x-0 top-0 z-[80] h-[80px] hidden sm:flex items-center px-[var(--app-x)] transition-colors duration-200"
+                class="fixed inset-x-0 top-0 z-(--z-nav) h-(--nav-h) hidden sm:flex items-center px-[var(--app-x)] transition-colors duration-(--motion-base)"
                 style=scroll_style
             >
-                // Logo — exact pstream-logo.svg matching React source
+                // Logo
                 <a href="/browse" class="flex-shrink-0">
                     <img
-                        src="/assets/logos/pstream-logo.svg"
-                        alt="Pstream"
+                        src=crate::brand::LOGO_WORDMARK
+                        alt=crate::brand::NAME
                         class="h-[20px] cursor-pointer flex-shrink-0"
                     />
                 </a>
 
                 // Nav links — exact spacing and typography (Task 086)
-                <ul class="flex items-center gap-[6px] ml-6 text-[16px] font-normal text-white">
+                <ul class="flex items-center gap-[6px] ml-6 text-body-md font-normal text-ink">
                     {nav_items.into_iter().map(|(id, label, href)| {
                         let is_active = move || active_tab() == id;
                         view! {
                             <li
                                 class=move || if is_active() {
-                                    "cursor-pointer transition-all duration-200 whitespace-nowrap text-white font-medium text-[16px] rounded-full bg-white/20 h-[40px] px-4 inline-flex items-center justify-center"
+                                    "cursor-pointer transition-all duration-(--motion-base) whitespace-nowrap text-ink font-medium text-body-md rounded-full bg-ink/20 h-[40px] px-4 inline-flex items-center justify-center"
                                 } else {
-                                    "cursor-pointer transition-all duration-200 whitespace-nowrap text-white/70 hover:text-white text-[16px] rounded-full bg-transparent hover:bg-[#808080]/40 h-[40px] px-4 font-normal inline-flex items-center justify-center"
+                                    "cursor-pointer transition-all duration-(--motion-base) whitespace-nowrap text-ink/70 hover:text-ink text-body-md rounded-full bg-transparent hover:bg-mute/40 h-[40px] px-4 font-normal inline-flex items-center justify-center"
                                 }
                             >
                                 <a href=href class="no-underline text-inherit flex items-center justify-center w-full h-full">{label}</a>
@@ -113,7 +113,7 @@ pub fn Navbar(
             </nav>
 
             // ── Secondary nav: search + notifications + kids + profile ─────
-            <div class="fixed top-0 right-[var(--app-x)] z-[85] h-[80px] hidden sm:flex items-center gap-3">
+            <div class="fixed top-0 right-[var(--app-x)] z-(--z-nav-menu) h-(--nav-h) hidden sm:flex items-center gap-3">
                 // Expandable Search Bar (Task 089 & 090)
                 <SearchBar />
 
@@ -132,13 +132,13 @@ pub fn Navbar(
                                     if let Some(main) = p_store.profiles.get().into_iter().find(|p| !p.is_kids) {
                                         p_store.active_profile_id.set(Some(main.id.clone()));
                                         if let Some(storage) = web_sys::window().and_then(|w| w.local_storage().ok().flatten()) {
-                                            let _ = storage.set_item("pstream_active_profile", &main.id);
+                                            let _ = storage.set_item(crate::keys::ACTIVE_PROFILE, &main.id);
                                         }
                                     }
                                 }
-                                class="px-3 py-1 rounded bg-[#e50914] hover:bg-[#f40612] text-white text-[12px] font-bold transition-colors select-none cursor-pointer"
+                                class="btn-brand px-3 py-1 rounded-control text-fine select-none"
                             >
-                                "Exit Kids"
+                                {crate::i18n::t("navbar-exit-kids")}
                             </button>
                         }.into_any()
                     } else {
@@ -148,17 +148,17 @@ pub fn Navbar(
                                     if let Some(kids) = p_store.profiles.get().into_iter().find(|p| p.is_kids) {
                                         p_store.active_profile_id.set(Some(kids.id.clone()));
                                         if let Some(storage) = web_sys::window().and_then(|w| w.local_storage().ok().flatten()) {
-                                            let _ = storage.set_item("pstream_active_profile", &kids.id);
+                                            let _ = storage.set_item(crate::keys::ACTIVE_PROFILE, &kids.id);
                                         }
                                     }
                                 }
-                                class="flex items-center gap-2 text-white hover:text-white transition-all select-none cursor-pointer group h-9 pl-0.5 pr-2 ml-1.5 rounded-md hover:bg-[#808080]/40"
-                                title="Switch to Kids Profile"
+                                class="flex items-center gap-2 text-ink hover:text-ink transition-all select-none cursor-pointer group h-9 pl-0.5 pr-2 ml-1.5 rounded-field hover:bg-mute/40"
+                                title=crate::i18n::t("navbar-switch-to-kids-profile")
                             >
-                                <div class="w-8 h-8 rounded-[4px] overflow-hidden flex items-center justify-center">
+                                <div class="w-8 h-8 rounded-control overflow-hidden flex items-center justify-center">
                                     <crate::components::profiles::kids_avatar::KidsAvatar size=32.0 />
                                 </div>
-                                <span class="text-[13px] leading-[13px] font-normal text-white">"Kids"</span>
+                                <span class="text-label leading-[13px] font-normal text-ink">"Kids"</span>
                             </button>
                         }.into_any()
                     }

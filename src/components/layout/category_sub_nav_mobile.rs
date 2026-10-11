@@ -65,36 +65,36 @@ pub fn CategorySubNavMobile(
                     <button
                         on:click=on_series
                         class=move || if is_tv_active() {
-                            "flex items-center justify-center h-12 px-4 rounded-[12px] text-[17px] font-medium whitespace-nowrap active:scale-95 transition-all leading-none shrink-0 cursor-pointer bg-white text-black border border-white"
+                            "flex items-center justify-center h-12 px-4 rounded-modal text-body-lg font-medium whitespace-nowrap active:scale-95 transition-all leading-none shrink-0 cursor-pointer bg-ink text-void border border-ink"
                         } else {
-                            "flex items-center justify-center h-12 px-4 rounded-[12px] text-[17px] font-medium whitespace-nowrap active:scale-95 transition-all leading-none shrink-0 cursor-pointer bg-white/[0.08] text-[#bdbec0] border border-white/15"
+                            "flex items-center justify-center h-12 px-4 rounded-modal text-body-lg font-medium whitespace-nowrap active:scale-95 transition-all leading-none shrink-0 cursor-pointer bg-ink/[0.08] text-ink-dim border border-ink/15"
                         }
                     >
-                        "Series"
+                        {crate::i18n::t("category-sub-nav-mobile-series")}
                     </button>
 
                     // Movies pill
                     <button
                         on:click=on_films
                         class=move || if is_movie_active() {
-                            "flex items-center justify-center h-12 px-4 rounded-[12px] text-[17px] font-medium whitespace-nowrap active:scale-95 transition-all leading-none shrink-0 cursor-pointer bg-white text-black border border-white"
+                            "flex items-center justify-center h-12 px-4 rounded-modal text-body-lg font-medium whitespace-nowrap active:scale-95 transition-all leading-none shrink-0 cursor-pointer bg-ink text-void border border-ink"
                         } else {
-                            "flex items-center justify-center h-12 px-4 rounded-[12px] text-[17px] font-medium whitespace-nowrap active:scale-95 transition-all leading-none shrink-0 cursor-pointer bg-white/[0.08] text-[#bdbec0] border border-white/15"
+                            "flex items-center justify-center h-12 px-4 rounded-modal text-body-lg font-medium whitespace-nowrap active:scale-95 transition-all leading-none shrink-0 cursor-pointer bg-ink/[0.08] text-ink-dim border border-ink/15"
                         }
                     >
-                        "Films"
+                        {crate::i18n::t("category-sub-nav-mobile-films")}
                     </button>
 
                     // New & Hot pill
                     <button
                         on:click=on_latest
                         class=move || if is_new_active() {
-                            "flex items-center justify-center h-12 px-4 rounded-[12px] text-[17px] font-medium whitespace-nowrap active:scale-95 transition-all leading-none shrink-0 cursor-pointer bg-white text-black border border-white"
+                            "flex items-center justify-center h-12 px-4 rounded-modal text-body-lg font-medium whitespace-nowrap active:scale-95 transition-all leading-none shrink-0 cursor-pointer bg-ink text-void border border-ink"
                         } else {
-                            "flex items-center justify-center h-12 px-4 rounded-[12px] text-[17px] font-medium whitespace-nowrap active:scale-95 transition-all leading-none shrink-0 cursor-pointer bg-white/[0.08] text-[#bdbec0] border border-white/15"
+                            "flex items-center justify-center h-12 px-4 rounded-modal text-body-lg font-medium whitespace-nowrap active:scale-95 transition-all leading-none shrink-0 cursor-pointer bg-ink/[0.08] text-ink-dim border border-ink/15"
                         }
                     >
-                        "New & Hot"
+                        {crate::i18n::t("category-sub-nav-mobile-new-hot")}
                     </button>
 
                     // Categories / Genre Pill
@@ -107,9 +107,9 @@ pub fn CategorySubNavMobile(
                             }
                         }
                         class=move || if selected_genre.get().is_some() {
-                            "flex items-center justify-center space-x-1 h-12 px-4 rounded-[12px] text-[17px] font-medium whitespace-nowrap active:scale-95 leading-none shrink-0 cursor-pointer bg-white text-black border border-white"
+                            "flex items-center justify-center space-x-1 h-12 px-4 rounded-modal text-body-lg font-medium whitespace-nowrap active:scale-95 leading-none shrink-0 cursor-pointer bg-ink text-void border border-ink"
                         } else {
-                            "flex items-center justify-center space-x-1 h-12 px-4 rounded-[12px] text-[17px] font-medium whitespace-nowrap active:scale-95 leading-none shrink-0 cursor-pointer bg-white/[0.08] text-[#bdbec0] border border-white/15"
+                            "flex items-center justify-center space-x-1 h-12 px-4 rounded-modal text-body-lg font-medium whitespace-nowrap active:scale-95 leading-none shrink-0 cursor-pointer bg-ink/[0.08] text-ink-dim border border-ink/15"
                         }
                     >
                         <span>{active_genre_label}</span>
@@ -130,20 +130,20 @@ pub fn CategorySubNavMobile(
 
             // Mobile Genre Sheet Modal
             <Show when=move || genre_menu_open.get()>
-                <div class="fixed inset-0 z-[10030]">
+                <div class="fixed inset-0 z-(--z-drawer)">
                     // Backdrop
                     <div
                         on:click=move |_| set_genre_menu_open.set(false)
-                        class="absolute inset-0 bg-black/70 backdrop-blur-sm"
+                        class="absolute inset-0 bg-void/70 backdrop-blur-sm"
                     ></div>
 
                     // Sheet content
-                    <div class="absolute bottom-0 inset-x-0 bg-[#141414] border-t border-white/10 rounded-t-2xl max-h-[75vh] flex flex-col z-10 shadow-2xl animate-in slide-in-from-bottom duration-200">
-                        <div class="flex items-center justify-between p-4 border-b border-white/10">
-                            <span class="text-[17px] font-bold text-white">"Categories"</span>
+                    <div class="absolute bottom-0 inset-x-0 bg-page border-t border-ink/10 rounded-t-sheet max-h-[75vh] flex flex-col z-10 shadow-2xl animate-in slide-in-from-bottom duration-(--motion-base)">
+                        <div class="flex items-center justify-between p-4 border-b border-ink/10">
+                            <span class="text-body-lg font-bold text-ink">"Categories"</span>
                             <button
                                 on:click=move |_| set_genre_menu_open.set(false)
-                                class="w-8 h-8 rounded-full bg-white/10 flex items-center justify-center text-white/70 hover:text-white"
+                                class="w-8 h-8 rounded-full bg-ink/10 flex items-center justify-center text-ink/70 hover:text-ink"
                             >
                                 <i class="ph-bold ph-x text-base"></i>
                             </button>
@@ -159,7 +159,7 @@ pub fn CategorySubNavMobile(
                                                 set_genre_menu_open.set(false);
                                                 on_sel.run(Some(g_clone.clone()));
                                             }
-                                            class="text-left text-[16px] font-medium py-2.5 px-3 rounded hover:bg-white/10 text-white transition-colors cursor-pointer"
+                                            class="text-left text-body-md font-medium py-2.5 px-3 rounded-control hover:bg-ink/10 text-ink transition-colors cursor-pointer"
                                         >
                                             {genre.name.clone()}
                                         </button>

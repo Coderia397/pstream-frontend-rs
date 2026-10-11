@@ -40,7 +40,7 @@ pub fn InfoModalEpisodes(
         <div class="mt-8">
             // Header: "Episodes" title and Season dropdown
             <div class="flex items-center justify-between mb-4">
-                <h3 class="text-2xl font-medium text-white">"Episodes"</h3>
+                <h3 class="text-2xl font-medium text-ink">"Episodes"</h3>
 
                 {if total_seasons > 0 {
                     view! {
@@ -48,7 +48,7 @@ pub fn InfoModalEpisodes(
                             <button
                                 type="button"
                                 on:click=toggle_dropdown
-                                class="flex items-center bg-transparent border border-white/30 hover:border-white/70 rounded px-4 py-1.5 text-sm font-bold transition min-w-[130px] justify-between text-white cursor-pointer"
+                                class="flex items-center bg-transparent border border-ink/30 hover:border-ink/70 rounded-control px-4 py-1.5 text-sm font-bold transition min-w-[130px] justify-between text-ink cursor-pointer"
                             >
                                 <span>{move || format!("Season {}", selected_season.get())}</span>
                                 <i class=move || if dropdown_open.get() { "ph-bold ph-caret-up ml-2 text-xs" } else { "ph-bold ph-caret-down ml-2 text-xs" }></i>
@@ -56,7 +56,7 @@ pub fn InfoModalEpisodes(
 
                             {move || if dropdown_open.get() {
                                 view! {
-                                    <div class="absolute right-0 top-full mt-1 w-32 bg-[#242424] border border-gray-700 rounded shadow-xl z-50 max-h-60 overflow-y-auto scrollbar-hide">
+                                    <div class="absolute right-0 top-full mt-1 w-32 bg-field border border-gray-700 rounded-control shadow-xl z-50 max-h-60 overflow-y-auto scrollbar-hide">
                                         {(1..=total_seasons).map(|s| {
                                             let is_selected = move || selected_season.get() == s;
                                             view! {
@@ -66,10 +66,10 @@ pub fn InfoModalEpisodes(
                                                         selected_season.set(s);
                                                         dropdown_open.set(false);
                                                     }
-                                                    class="px-4 py-2 text-sm cursor-pointer hover:bg-[#404040] transition-colors"
-                                                    class=("bg-[#333]", is_selected)
+                                                    class="px-4 py-2 text-sm cursor-pointer hover:bg-lift-strong transition-colors"
+                                                    class=("bg-line", is_selected)
                                                     class=("font-bold", is_selected)
-                                                    class=("text-white", is_selected)
+                                                    class=("text-ink", is_selected)
                                                     class=("text-gray-300", move || !is_selected())
                                                 >
                                                     {format!("Season {}", s)}
@@ -93,13 +93,13 @@ pub fn InfoModalEpisodes(
                 <Suspense fallback=move || view! {
                     <div class="space-y-2">
                         {(0..4).map(|_| view! {
-                            <div class="flex items-start p-4 rounded-sm border-b border-white/5 gap-4">
-                                <div class="w-8 h-5 bg-white/[0.06] rounded animate-pulse shrink-0" />
-                                <div class="w-28 md:w-36 h-16 md:h-20 bg-white/[0.06] rounded-sm animate-pulse shrink-0" />
+                            <div class="flex items-start p-4 rounded-control border-b border-ink/5 gap-4">
+                                <div class="w-8 h-5 bg-ink/[0.06] rounded-control animate-pulse shrink-0" />
+                                <div class="w-28 md:w-36 h-16 md:h-20 bg-ink/[0.06] rounded-control animate-pulse shrink-0" />
                                 <div class="flex-1 space-y-2 py-1">
-                                    <div class="h-3 bg-white/[0.08] rounded-full w-2/3 animate-pulse" />
-                                    <div class="h-2.5 bg-white/[0.05] rounded-full w-full animate-pulse" />
-                                    <div class="h-2.5 bg-white/[0.05] rounded-full w-4/5 animate-pulse" />
+                                    <div class="h-3 bg-ink/[0.08] rounded-full w-2/3 animate-pulse" />
+                                    <div class="h-2.5 bg-ink/[0.05] rounded-full w-full animate-pulse" />
+                                    <div class="h-2.5 bg-ink/[0.05] rounded-full w-4/5 animate-pulse" />
                                 </div>
                             </div>
                         }).collect_view()}
@@ -141,20 +141,20 @@ pub fn InfoModalEpisodes(
                                         view! {
                                             <div
                                                 on:click=on_click_ep
-                                                class="flex items-center group cursor-pointer p-4 rounded-[4px] hover:bg-[#333] transition"
+                                                class="flex items-center group cursor-pointer p-4 rounded-control hover:bg-line transition"
                                             >
                                                 // Episode number
-                                                <div class="text-[#d2d2d2] text-2xl font-normal w-[51px] text-center shrink-0">
+                                                <div class="text-ink-light text-2xl font-normal w-[51px] text-center shrink-0">
                                                     {ep_num}
                                                 </div>
 
                                                 // Thumbnail + play icon overlay
-                                                <div class="relative w-[130px] h-[73px] bg-gray-800 shrink-0 rounded-[4px] overflow-hidden mr-4">
+                                                <div class="relative w-[130px] h-[73px] bg-gray-800 shrink-0 rounded-control overflow-hidden mr-4">
                                                     {if let Some(url) = still_url {
                                                         view! {
                                                             <img
                                                                 src=url
-                                                                class="w-full h-full object-cover group-hover:brightness-50 transition duration-200"
+                                                                class="w-full h-full object-cover group-hover:brightness-50 transition duration-(--motion-base)"
                                                                 alt=ep_name.clone()
                                                                 loading="lazy"
                                                             />
@@ -162,13 +162,13 @@ pub fn InfoModalEpisodes(
                                                     } else {
                                                         view! {
                                                             <div class="w-full h-full flex items-center justify-center text-gray-600 text-xs">
-                                                                "No Image"
+                                                                {crate::i18n::t("info-modal-episodes-no-image")}
                                                             </div>
                                                         }.into_any()
                                                     }}
                                                     <div class="absolute inset-0 flex items-center justify-center">
-                                                        <div class="w-9 h-9 rounded-full bg-black/30 border border-white/60 flex items-center justify-center group-hover:bg-white/20 group-hover:scale-110 transition-all duration-200 shadow">
-                                                            <div class="w-0 h-0 ml-0.5 border-t-[6px] border-t-transparent border-b-[6px] border-b-transparent border-l-[10px] border-l-white" />
+                                                        <div class="w-9 h-9 rounded-full bg-void/30 border border-ink/60 flex items-center justify-center group-hover:bg-ink/20 group-hover:scale-110 transition-all duration-(--motion-base) shadow">
+                                                            <div class="w-0 h-0 ml-0.5 border-t-[6px] border-t-transparent border-b-[6px] border-b-transparent border-l-[10px] border-l-ink" />
                                                         </div>
                                                     </div>
                                                 </div>
@@ -176,10 +176,10 @@ pub fn InfoModalEpisodes(
                                                 // Episode info
                                                 <div class="flex-1 min-w-0 py-0.5">
                                                     <div class="flex items-center justify-between mb-1">
-                                                        <h4 class="text-white font-medium text-[16px] truncate pr-4">{ep_name}</h4>
-                                                        <span class="text-white text-[16px] whitespace-nowrap shrink-0">{runtime_str}</span>
+                                                        <h4 class="text-ink font-medium text-body-md truncate pr-4">{ep_name}</h4>
+                                                        <span class="text-ink text-body-md whitespace-nowrap shrink-0">{runtime_str}</span>
                                                     </div>
-                                                    <p class="text-[#d2d2d2] text-[14px] leading-5 line-clamp-3">
+                                                    <p class="text-ink-light text-body-sm leading-5 line-clamp-3">
                                                         {ep_overview}
                                                     </p>
                                                 </div>
@@ -201,12 +201,12 @@ pub fn InfoModalEpisodes(
                                                             visible_count.set(BATCH_SIZE);
                                                         }
                                                     }
-                                                    class="w-10 h-10 rounded-full border border-white/20 bg-[#2a2a2a] hover:border-white/50 hover:bg-[#3a3a3a] flex items-center justify-center transition-all duration-200 hover:scale-110 active:scale-95 group/btn cursor-pointer"
+                                                    class="w-10 h-10 rounded-full border border-ink/20 bg-menu hover:border-ink/50 hover:bg-lift flex items-center justify-center transition-all duration-(--motion-base) hover:scale-110 active:scale-95 group/btn cursor-pointer"
                                                 >
                                                     <i class=if has_more {
-                                                        "ph-bold ph-caret-down text-white/60 group-hover/btn:text-white transition-colors"
+                                                        "ph-bold ph-caret-down text-ink/60 group-hover/btn:text-ink transition-colors"
                                                     } else {
-                                                        "ph-bold ph-caret-up text-white/60 group-hover/btn:text-white transition-colors"
+                                                        "ph-bold ph-caret-up text-ink/60 group-hover/btn:text-ink transition-colors"
                                                     }></i>
                                                 </button>
                                             </div>

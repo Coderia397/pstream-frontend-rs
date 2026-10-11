@@ -1,0 +1,29 @@
+/* Component classes built from the tokens in brand.css. Sizes, padding and radius stay on each element. */
+@layer components {
+  .btn-brand {
+    background-color: var(--color-brand);
+    color: var(--color-ink);
+    font-weight: 700;
+    cursor: pointer;
+    transition: background-color var(--motion-base);
+  }
+  .btn-brand:hover { background-color: var(--color-brand-active); }
+
+  .btn-ink {
+    background-color: var(--color-ink);
+    color: var(--color-void);
+    font-weight: 700;
+    cursor: pointer;
+    transition: background-color var(--motion-base);
+  }
+  .btn-ink:hover { background-color: color-mix(in srgb, var(--color-ink) 90%, transparent); }
+
+  .btn-glass {
+    background-color: color-mix(in srgb, var(--color-button-secondary) 40%, transparent);
+    color: var(--color-ink);
+    font-weight: 700;
+    cursor: pointer;
+    transition: background-color var(--motion-base);
+  }
+  .btn-glass:hover { background-color: color-mix(in srgb, var(--color-button-secondary) 60%, transparent); }
+}

@@ -26,7 +26,7 @@ pub fn NewPopularPage() -> impl IntoView {
 
     view! {
         <Layout>
-            <div class="relative min-h-screen bg-black md:bg-[#141414]">
+            <div class="relative min-h-screen bg-void md:bg-page">
                 // Top spacing under fixed navbar
                 <div class="h-16 sm:h-20 md:h-28" />
 
@@ -43,7 +43,7 @@ pub fn NewPopularPage() -> impl IntoView {
                         <Suspense fallback=move || view! {
                             <div class="space-y-4 animate-pulse">
                                 {(0..3).map(|_| view! {
-                                    <div class="w-full aspect-video bg-[#1e1e1e] rounded-xl"></div>
+                                    <div class="w-full aspect-video bg-card rounded-modal"></div>
                                 }).collect::<Vec<_>>()}
                             </div>
                         }>
@@ -81,19 +81,19 @@ pub fn NewPopularPage() -> impl IntoView {
 
                 // ── DESKTOP DYNAMIC ROWS (>= md) ──────────────────────────
                 <main class="hidden md:block relative z-10 pb-16 rows-stack">
-                    <TopTenRow title="Top 10 Films in the UK Today" kind="movie" />
-                    <TopTenRow title="Top 10 Series in the UK Today" kind="tv" />
-                    <Row title="Newly Added to the Collection" endpoint="/movie/now_playing" kind="movie" />
-                    <Row title="Worth the Wait" sort_by="vote_average.desc" extra_params="&vote_count.gte=1000" kind="movie" />
-                    <Row title="Rising Stars: Under the Radar" sort_by="popularity.desc" extra_params="&vote_count.lte=2500&vote_count.gte=150&vote_average.gte=7.0" kind="movie" />
-                    <Row title="The Best of 2026 So Far" sort_by="vote_average.desc" extra_params="&primary_release_date.gte=2025-01-01&vote_count.gte=80" kind="movie" />
-                    <Row title="New Series Everyone Is Watching" endpoint="/trending/tv/week" kind="tv" />
-                    <Row title="The Shows the Internet Can't Stop Talking About" genre_id="18" kind="tv" sort_by="popularity.desc" />
-                    <Row title="The Films Everyone Is Discussing" endpoint="/trending/movie/week" kind="movie" />
-                    <Row title="Coming to the Collection Soon" endpoint="/movie/upcoming" kind="movie" />
-                    <Row title="New and Acclaimed" sort_by="vote_average.desc" extra_params="&vote_count.gte=400&primary_release_date.gte=2024-01-01" kind="movie" />
-                    <Row title="Series Picking Up Steam" genre_id="10765" kind="tv" sort_by="popularity.desc" />
-                    <Row title="International Discoveries" genre_id="international" kind="tv" />
+                    <TopTenRow title=crate::i18n::t("new-popular-top-10-films-in-the") kind="movie" />
+                    <TopTenRow title=crate::i18n::t("new-popular-top-10-series-in-the") kind="tv" />
+                    <Row title=crate::i18n::t("new-popular-newly-added-to-the-collection") endpoint="/movie/now_playing" kind="movie" />
+                    <Row title=crate::i18n::t("new-popular-worth-the-wait") sort_by="vote_average.desc" extra_params="&vote_count.gte=1000" kind="movie" />
+                    <Row title=crate::i18n::t("new-popular-rising-stars-under-the-radar") sort_by="popularity.desc" extra_params="&vote_count.lte=2500&vote_count.gte=150&vote_average.gte=7.0" kind="movie" />
+                    <Row title=crate::i18n::t("new-popular-the-best-of-2026-so") sort_by="vote_average.desc" extra_params="&primary_release_date.gte=2025-01-01&vote_count.gte=80" kind="movie" />
+                    <Row title=crate::i18n::t("new-popular-new-series-everyone-is-watching") endpoint="/trending/tv/week" kind="tv" />
+                    <Row title=crate::i18n::t("new-popular-the-shows-the-internet-cant") genre_id="18" kind="tv" sort_by="popularity.desc" />
+                    <Row title=crate::i18n::t("new-popular-the-films-everyone-is-discussing") endpoint="/trending/movie/week" kind="movie" />
+                    <Row title=crate::i18n::t("new-popular-coming-to-the-collection-soon") endpoint="/movie/upcoming" kind="movie" />
+                    <Row title=crate::i18n::t("new-popular-new-and-acclaimed") sort_by="vote_average.desc" extra_params="&vote_count.gte=400&primary_release_date.gte=2024-01-01" kind="movie" />
+                    <Row title=crate::i18n::t("new-popular-series-picking-up-steam") genre_id="10765" kind="tv" sort_by="popularity.desc" />
+                    <Row title=crate::i18n::t("new-popular-international-discoveries") genre_id="international" kind="tv" />
                 </main>
             </div>
         </Layout>

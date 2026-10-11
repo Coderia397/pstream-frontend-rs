@@ -1,4 +1,4 @@
-//! Static Data Dictionaries for PStream Frontend.
+//! Static data dictionaries for the frontend.
 //!
 //! Zero-cost compile-time static slices for avatars, languages, genres, page genres, and themes.
 

@@ -1,16 +1,16 @@
 //! Subtitle appearance: the same six choices as the Netflix app, with a preview that follows them.
 use super::prefs::{use_prefs, SubtitleStyle};
-use crate::data::settings::{SUBTITLE_COLORS, SUBTITLE_EDGES, SUBTITLE_SIZES};
+use crate::data::settings::{PREVIEW_PAD_X_PX, PREVIEW_PAD_Y_PX, PREVIEW_RADIUS_PX, PREVIEW_WINDOW_PX, SUBTITLE_COLORS, SUBTITLE_EDGES, SUBTITLE_SIZES};
 use super::widgets::{Section, SwitchRow};
 use crate::i18n::t;
 use leptos::prelude::*;
 
 fn hex(name: &str) -> &'static str {
-    SUBTITLE_COLORS.iter().find(|(n, _)| *n == name).map(|(_, h)| *h).unwrap_or("#ffffff")
+    SUBTITLE_COLORS.iter().find(|(n, _)| *n == name).map(|(_, h)| *h).unwrap_or(SUBTITLE_COLORS[0].1)
 }
 
 fn size_px(size: u8) -> u32 {
-    SUBTITLE_SIZES.iter().find(|(v, _, _)| *v == size).map(|(_, _, px)| *px).unwrap_or(22)
+    SUBTITLE_SIZES.iter().find(|(v, _, _)| *v == size).map(|(_, _, px)| *px).unwrap_or(SUBTITLE_SIZES[1].2)
 }
 
 fn edge_css(edge: &str, color: &str) -> String {
@@ -41,7 +41,7 @@ fn Pick(label_key: &'static str, value: Signal<String>, options: Vec<(String, St
             <select
                 on:change=move |ev| on_pick.run(event_target_value(&ev))
                 prop:value=move || value.get()
-                class="max-w-[50%] rounded-control border border-ink/20 bg-ink/10 px-3 py-2 text-body-md text-ink focus:border-ink focus:outline-none"
+                class="max-w-1/2 rounded-control border border-ink/20 bg-ink/10 px-3 py-2 text-body-md text-ink focus:border-ink focus:outline-none"
             >
                 {options.into_iter().map(|(v, l)| view! { <option value=v class="bg-page text-ink">{l}</option> }).collect_view()}
             </select>
@@ -72,7 +72,7 @@ pub fn Subtitles(id: String) -> impl IntoView {
                     style=move || {
                         let s = style.get();
                         let window = paint(&s.window, s.window_clear);
-                        format!("font-size:{}px;color:{};text-shadow:{};background:{};box-shadow:0 0 0 8px {window};border-radius:4px;padding:2px 8px", size_px(s.size), hex(&s.color), edge_css(&s.edge, &s.edge_color), paint(&s.background, s.background_clear))
+                        format!("font-size:{}px;color:{};text-shadow:{};background:{};box-shadow:0 0 0 {}px {window};border-radius:{}px;padding:{}px {}px", size_px(s.size), hex(&s.color), edge_css(&s.edge, &s.edge_color), paint(&s.background, s.background_clear), PREVIEW_WINDOW_PX, PREVIEW_RADIUS_PX, PREVIEW_PAD_Y_PX, PREVIEW_PAD_X_PX)
                     }
                 >
                     {t("set-sub-preview")}

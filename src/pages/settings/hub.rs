@@ -28,7 +28,7 @@ pub fn sign_out_now() {
         if let Some(storage) = window.local_storage().ok().flatten() {
             let _ = storage.remove_item(crate::keys::ACTIVE_PROFILE);
         }
-        let _ = window.location().set_href("/");
+        let _ = window.location().set_href(crate::config::routes::HOME);
     }
 }
 
@@ -90,7 +90,7 @@ pub fn Hub() -> impl IntoView {
             <Section>
                 <LinkRow icon="gear-six" title=t("set-nav-app") href="/settings/app" />
                 <LinkRow icon="user" title=t("set-nav-account") href="/settings/account" />
-                <LinkRow icon="question" title=t("set-nav-help") href="/help" />
+                <LinkRow icon="question" title=t("set-nav-help") href=crate::config::routes::HELP />
                 <ActionRow icon="sign-out" title=t("set-sign-out") on_click=Callback::new(move |_| if let Some(s) = signout { s.0.set(true) }) />
             </Section>
         </div>

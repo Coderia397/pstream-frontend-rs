@@ -39,6 +39,22 @@ pub const RECENT_SIGN_IN_SECONDS: u64 = 300;
 pub const PHONE_DIGITS: std::ops::RangeInclusive<usize> = 6..=15;
 pub const BLOCKED_TITLE_MAX: usize = 100;
 pub const BLOCKED_TITLES_MAX: usize = 200;
+/// Longest first or last name (account_details allows 60).
+pub const NAME_MAX: usize = 60;
+/// How many security events the Access and devices screen lists.
+pub const SECURITY_EVENTS_SHOWN: u32 = 10;
+
+/// Addresses of pages other code links to, so a page is never written as a literal path inside a screen.
+pub mod routes {
+    pub const HOME: &str = "/";
+    pub const BROWSE: &str = "/browse";
+    pub const LOGIN: &str = "/login";
+    pub const HELP: &str = "/help";
+    pub const PRIVACY: &str = "/privacy";
+    pub const TERMS: &str = "/terms";
+    pub const DMCA: &str = "/dmca";
+    pub const DISCLAIMER: &str = "/disclaimer";
+}
 
 /// Where the cookie banner sits. Set STREAMS_COOKIE_BANNER to top, bottom, bottom-start, bottom-end or center when building,
 /// or add ?cookie_banner=top to the address to try one. Narrow screens always get a full width sheet at the bottom.

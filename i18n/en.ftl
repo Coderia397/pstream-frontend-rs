@@ -1998,3 +1998,6 @@ set-profiles-parental = Parental controls and permissions
 set-profiles-parental-hint = Set the maturity level, block titles
 set-profiles-settings = Profile settings
 set-now-watching = Now watching
+set-activity-episode = S{ $season }:E{ $episode }
+set-activity-title = { $title } · { $episode }
+set-device-line = { $platform } · { $browser }

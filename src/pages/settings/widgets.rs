@@ -2,25 +2,29 @@
 use crate::i18n::t;
 use leptos::prelude::*;
 
+/// Row classes shared by every row of a card: the divider sits inside the card edge and the last row has none.
+const ROW: &str = "flex min-h-settings-row w-full items-center border-b border-set-line px-1 py-3 text-start last:border-b-0 hover:bg-ink/5 focus-visible:bg-ink/5 focus-visible:outline-none";
+const CARD: &str = "rounded-card border border-set-edge bg-set-card px-4";
+
 #[component]
 pub fn Section(#[prop(optional, into)] title: Option<String>, children: Children) -> impl IntoView {
     view! {
         <section class="mb-8">
-            {title.map(|t| view! { <h2 class="mb-3 ms-1 text-label font-bold uppercase tracking-wider text-ink/50">{t}</h2> })}
-            <div class="overflow-hidden rounded-card border border-ink/10 bg-ink/5 divide-y divide-ink/10">{children()}</div>
+            {title.map(|t| view! { <h2 class="mb-4 text-title-sm leading-row text-ink/85">{t}</h2> })}
+            <div class=CARD>{children()}</div>
         </section>
     }
 }
 
 fn row_body(icon: &'static str, title: String, hint: Option<String>, value: Option<Signal<String>>, chevron: bool) -> impl IntoView {
     view! {
-        <i class=format!("ph-bold ph-{icon} me-4 text-2xl text-ink/70") aria-hidden="true"></i>
+        <i class=format!("ph-bold ph-{icon} me-3 text-2xl text-ink/70") aria-hidden="true"></i>
         <span class="min-w-0 flex-1">
-            <span class="block text-body-md font-bold text-ink">{title}</span>
-            {hint.map(|h| view! { <span class="mt-0.5 block text-label text-ink/50">{h}</span> })}
+            <span class="block text-title-sm font-semibold leading-row text-ink">{title}</span>
+            {hint.map(|h| view! { <span class="block pt-1 text-body-sm leading-normal text-ink/70">{h}</span> })}
         </span>
-        {value.map(|v| view! { <span class="ms-3 max-w-[40%] truncate text-label text-ink/50">{move || v.get()}</span> })}
-        {chevron.then(|| view! { <i class="ph-bold ph-caret-right ms-3 text-xl text-ink/40 rtl:-scale-x-100" aria-hidden="true"></i> })}
+        {value.map(|v| view! { <span class="ms-3 max-w-2/5 truncate text-body-sm text-ink/70">{move || v.get()}</span> })}
+        {chevron.then(|| view! { <i class="ph-bold ph-caret-right ms-3 text-2xl text-ink/70 rtl:-scale-x-100" aria-hidden="true"></i> })}
     }
 }
 
@@ -34,7 +38,7 @@ pub fn LinkRow(
     #[prop(optional)] value: Option<Signal<String>>,
 ) -> impl IntoView {
     view! {
-        <a href=href class="group flex items-center px-5 py-4 hover:bg-ink/10 focus-visible:bg-ink/10 focus-visible:outline-none">
+        <a href=href class=ROW>
             {row_body(icon, title, hint, value, true)}
         </a>
     }
@@ -51,7 +55,7 @@ pub fn ActionRow(
     #[prop(optional)] chevron: bool,
 ) -> impl IntoView {
     view! {
-        <button type="button" on:click=move |_| on_click.run(()) class="group flex w-full items-center px-5 py-4 text-start hover:bg-ink/10 focus-visible:bg-ink/10 focus-visible:outline-none">
+        <button type="button" on:click=move |_| on_click.run(()) class=ROW>
             {row_body(icon, title, hint, value, chevron)}
         </button>
     }
@@ -67,7 +71,7 @@ pub fn SwitchRow(
     on_change: Callback<bool>,
 ) -> impl IntoView {
     view! {
-        <div class="flex items-center px-5 py-4">
+        <div class=ROW>
             {row_body(icon, title.clone(), hint, None, false)}
             <button
                 type="button"
@@ -95,7 +99,7 @@ pub fn SwitchRow(
 #[component]
 pub fn ChoiceList(options: Vec<(String, String)>, selected: Signal<String>, on_pick: Callback<String>) -> impl IntoView {
     view! {
-        <div role="radiogroup" class="overflow-hidden rounded-card border border-ink/10 bg-ink/5 divide-y divide-ink/10">
+        <div role="radiogroup" class=CARD>
             {options
                 .into_iter()
                 .map(|(value, label)| {
@@ -107,9 +111,9 @@ pub fn ChoiceList(options: Vec<(String, String)>, selected: Signal<String>, on_p
                             role="radio"
                             aria-checked=move || (selected.get() == v).to_string()
                             on:click=move |_| on_pick.run(v2.clone())
-                            class="flex w-full items-center px-5 py-4 text-start hover:bg-ink/10 focus-visible:bg-ink/10 focus-visible:outline-none"
+                            class=ROW
                         >
-                            <span class="flex-1 text-body-md text-ink">{label}</span>
+                            <span class="flex-1 text-title-sm leading-row text-ink">{label}</span>
                             <i class="ph-bold ph-check text-xl text-brand" class=("invisible", { let s = value.clone(); move || selected.get() != s }) aria-hidden="true"></i>
                         </button>
                     }
@@ -123,7 +127,7 @@ pub fn ChoiceList(options: Vec<(String, String)>, selected: Signal<String>, on_p
 #[component]
 pub fn CheckList(options: Vec<(String, String)>, selected: Signal<Vec<String>>, on_toggle: Callback<String>) -> impl IntoView {
     view! {
-        <div class="overflow-hidden rounded-card border border-ink/10 bg-ink/5 divide-y divide-ink/10">
+        <div class=CARD>
             {options
                 .into_iter()
                 .map(|(value, label)| {
@@ -135,9 +139,9 @@ pub fn CheckList(options: Vec<(String, String)>, selected: Signal<Vec<String>>, 
                             role="checkbox"
                             aria-checked=move || selected.with(|s| s.contains(&v)).to_string()
                             on:click=move |_| on_toggle.run(v2.clone())
-                            class="flex w-full items-center px-5 py-4 text-start hover:bg-ink/10 focus-visible:bg-ink/10 focus-visible:outline-none"
+                            class=ROW
                         >
-                            <span class="flex-1 text-body-md text-ink">{label}</span>
+                            <span class="flex-1 text-title-sm leading-row text-ink">{label}</span>
                             <i class="ph-bold ph-check text-xl text-brand" class=("invisible", { let s = value.clone(); move || !selected.with(|l| l.contains(&s)) }) aria-hidden="true"></i>
                         </button>
                     }

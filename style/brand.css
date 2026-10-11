@@ -50,6 +50,26 @@
   --color-paper-edge: #8c8c8c;
   --color-paper-ink: #1f1f1f;
   --color-paper-mute: #5f5f5f;
+  --color-paper-card-edge: #cccccc;
+
+  /* Settings screens. Values measured on the Netflix account pages (notes/netflix-reference/09 and 08). The set-* colors follow
+     --color-ink, so they flip with the light scope in components.css. chrome is for bars that stay black on a white page. */
+  --color-set-card: color-mix(in srgb, var(--color-ink) 5%, transparent);
+  --color-set-edge: color-mix(in srgb, var(--color-ink) 10%, transparent);
+  --color-set-line: color-mix(in srgb, var(--color-ink) 10%, transparent);
+  --color-chrome: #000000;
+  --color-chrome-ink: #ffffff;
+  --color-badge: #bcd8ff;
+  --text-account-title: 40px;
+  --text-account-title-sm: 32px;
+  --leading-row: 1.5;
+  --container-settings: 66.125rem;
+  --container-settings-main: 46.25rem;
+  --spacing-settings-nav: 17.8125rem;
+  --spacing-settings-gap: 2.0625rem;
+  --spacing-settings-row: 3.5rem;
+  --spacing-settings-header: 4rem;
+  --spacing-settings-menu-item: 2.5rem;
 
   /* Text and neutral controls */
   --color-ink-soft: #e5e5e5;

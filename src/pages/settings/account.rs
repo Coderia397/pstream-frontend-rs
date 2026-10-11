@@ -4,14 +4,11 @@ use super::hub::{persist_profiles, sign_out_now};
 use super::prefs::use_prefs;
 use super::widgets::{ActionRow, ConfirmDialog, Field, FormButtons, LinkRow, Message, OutlineButton, Section, SwitchRow, Tone};
 use super::Screen;
-use crate::config::{MIN_PASSWORD_LENGTH, PHONE_DIGITS};
+use crate::config::{routes, MIN_PASSWORD_LENGTH, NAME_MAX, PHONE_DIGITS, SECURITY_EVENTS_SHOWN};
 use crate::i18n::t;
 use crate::services::account::{self, AuthError};
 use crate::store::use_profile_store;
 use leptos::prelude::*;
-
-/// How many security events the Access and devices screen lists.
-const SECURITY_EVENTS_SHOWN: u32 = 10;
 
 fn error_text(e: &AuthError) -> String {
     t(match e {
@@ -44,7 +41,7 @@ fn save_as_file(name: &str, text: &str) {
     use wasm_bindgen::JsCast;
     let Some(doc) = web_sys::window().and_then(|w| w.document()) else { return };
     let Ok(a) = doc.create_element("a") else { return };
-    let href = format!("data:application/json;charset=utf-8,{}", js_sys::encode_uri_component(text));
+    let href = format!("data:{};charset=utf-8,{}", crate::data::settings::EXPORT_MIME, js_sys::encode_uri_component(text));
     let _ = a.set_attribute("href", &href);
     let _ = a.set_attribute("download", name);
     if let Some(el) = a.dyn_ref::<web_sys::HtmlElement>() {
@@ -88,7 +85,7 @@ pub fn Gate(account: bool, children: ChildrenFn) -> impl IntoView {
                 view! {
                     <div class="text-center">
                         <p class="mb-6 text-body-md text-ink/70">{t("set-signin-needed")}</p>
-                        <a href="/login" class="btn-ink inline-block rounded-control px-8 py-3">{t("help-ui-signin")}</a>
+                        <a href=routes::LOGIN class="btn-ink inline-block rounded-control px-8 py-3">{t("help-ui-signin")}</a>
                     </div>
                 }
                 .into_any()
@@ -123,7 +120,7 @@ fn SignInBanner() -> impl IntoView {
     account::session().is_none().then(|| view! {
         <div class="mb-8 rounded-card border border-ink/10 bg-ink/5 p-5 text-center">
             <p class="mb-4 text-body-md text-ink/70">{t("set-signin-needed")}</p>
-            <a href="/login" class="btn-ink inline-block rounded-control px-8 py-3">{t("help-ui-signin")}</a>
+            <a href=routes::LOGIN class="btn-ink inline-block rounded-control px-8 py-3">{t("help-ui-signin")}</a>
         </div>
     })
 }
@@ -288,8 +285,8 @@ pub fn Name() -> impl IntoView {
         <div class="max-w-md">
             <p class="mb-6 text-body-md text-ink/60">{t("set-name-hint")}</p>
             <Message text=note />
-            <Field label=t("set-name-first") value=first autocomplete="given-name" maxlength=60 />
-            <Field label=t("set-name-last") value=last autocomplete="family-name" maxlength=60 />
+            <Field label=t("set-name-first") value=first autocomplete="given-name" maxlength=NAME_MAX as u32 />
+            <Field label=t("set-name-last") value=last autocomplete="family-name" maxlength=NAME_MAX as u32 />
             <FormButtons save_label=t("set-save") on_save=save cancel_href=Screen::Account.path() busy=busy />
         </div>
     }
@@ -319,7 +316,7 @@ pub fn Password() -> impl IntoView {
             match account::change_password(&value).await {
                 Ok(()) if everywhere => {
                     let _ = account::sign_out_everywhere().await;
-                    go("/login");
+                    go(routes::LOGIN);
                 }
                 Ok(()) => {
                     new_password.set(String::new());
@@ -418,7 +415,7 @@ pub fn Access() -> impl IntoView {
     let sign_out_all = Callback::new(move |_| {
         leptos::task::spawn_local(async move {
             match account::sign_out_everywhere().await {
-                Ok(()) => go("/login"),
+                Ok(()) => go(routes::LOGIN),
                 Err(e) => note.set(Some((Tone::Error, error_text(&e)))),
             }
         });
@@ -467,7 +464,7 @@ pub fn Privacy() -> impl IntoView {
         note.set(None);
         leptos::task::spawn_local(async move {
             match account::export_data().await {
-                Ok(text) => save_as_file("my-data.json", &text),
+                Ok(text) => save_as_file(&crate::data::settings::export_file_name(), &text),
                 Err(e) => note.set(Some((Tone::Error, error_text(&e)))),
             }
         });
@@ -518,13 +515,13 @@ pub fn Activity() -> impl IntoView {
                             let (id, tv) = (r.media_id, r.is_tv);
                             let date = js_sys::Date::new(&wasm_bindgen::JsValue::from_f64(r.updated_at as f64)).to_locale_date_string(&crate::i18n::language(), &wasm_bindgen::JsValue::UNDEFINED).as_string().unwrap_or_default();
                             let episode = match (r.season, r.episode) {
-                                (Some(s), Some(e)) => format!(" · S{s}:E{e}"),
+                                (Some(s), Some(e)) => crate::i18n::t_args("set-activity-episode", &[("season", s.into()), ("episode", e.into())]),
                                 _ => String::new(),
                             };
                             view! {
                                 <li class="flex items-center gap-4 px-5 py-3">
                                     <span class="min-w-0 flex-1">
-                                        <span class="block truncate text-body-md font-bold">{format!("{}{episode}", r.title)}</span>
+                                        <span class="block truncate text-body-md font-bold">{if episode.is_empty() { r.title.clone() } else { crate::i18n::t_args("set-activity-title", &[("title", r.title.clone().into()), ("episode", episode.into())]) }}</span>
                                         <span class="block text-label text-ink/50">{date}</span>
                                     </span>
                                     <button type="button" aria-label=t("set-remove") on:click=move |_| watch.remove_record(id, tv) class="flex h-9 w-9 items-center justify-center rounded-full text-ink/70 hover:bg-ink/10">

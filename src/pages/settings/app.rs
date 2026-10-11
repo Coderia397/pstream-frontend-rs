@@ -2,7 +2,7 @@
 //! the tests read the browser itself.
 use super::prefs::use_prefs;
 use super::widgets::{ActionRow, ChoiceList, LinkRow, Section, SwitchRow};
-use crate::data::settings::{CODEC_PROBES, DATA_USAGE, LEGAL_LINKS, LICENCES};
+use crate::data::settings::{CODEC_PROBES, DATA_USAGE, DRM_INIT_DATA, DRM_KEY_SYSTEM, DRM_LEVELS, DRM_NAME, DRM_PROBE_MIME, LEGAL_LINKS, LICENCES};
 use crate::i18n::t;
 use gloo_net::http::Request;
 use js_sys::{Function, Reflect};
@@ -48,16 +48,16 @@ async fn widevine_level() -> Option<&'static str> {
     let codecs = js_sys::Array::new();
     let make = |robustness: &str| {
         let c = js_sys::Object::new();
-        let _ = Reflect::set(&c, &"contentType".into(), &"video/mp4; codecs=\"avc1.640028\"".into());
+        let _ = Reflect::set(&c, &"contentType".into(), &DRM_PROBE_MIME.into());
         let _ = Reflect::set(&c, &"robustness".into(), &robustness.into());
         c
     };
-    for (robustness, label) in [("HW_SECURE_ALL", "L1"), ("SW_SECURE_DECODE", "L3")] {
+    for (robustness, label) in DRM_LEVELS.iter().copied() {
         codecs.set(0, make(robustness).into());
         let _ = Reflect::set(&config, &"videoCapabilities".into(), &codecs);
-        let _ = Reflect::set(&config, &"initDataTypes".into(), &js_sys::Array::of1(&"cenc".into()));
+        let _ = Reflect::set(&config, &"initDataTypes".into(), &js_sys::Array::of1(&DRM_INIT_DATA.into()));
         let list = js_sys::Array::of1(&config);
-        if let Some(promise) = call(&navigator, "requestMediaKeySystemAccess", &["com.widevine.alpha".into(), list.into()]) {
+        if let Some(promise) = call(&navigator, "requestMediaKeySystemAccess", &[DRM_KEY_SYSTEM.into(), list.into()]) {
             if let Ok(p) = promise.dyn_into::<js_sys::Promise>() {
                 if wasm_bindgen_futures::JsFuture::from(p).await.is_ok() {
                     return Some(label);
@@ -160,7 +160,7 @@ pub fn AppSettings() -> impl IntoView {
             <Section title=t("set-app-about")>
                 <div class="px-5 py-4">
                     <p class="text-body-md font-bold">{t("set-app-device")}</p>
-                    <p class="mt-1 break-words text-label text-ink/60">{format!("{} · {}", platform(), browser_name())}</p>
+                    <p class="mt-1 break-words text-label text-ink/60">{crate::i18n::t_args("set-device-line", &[("platform", platform().into()), ("browser", browser_name().into())])}</p>
                 </div>
                 <div class="px-5 py-4">
                     <p class="text-body-md font-bold">{t("set-app-version")}</p>
@@ -177,7 +177,7 @@ pub fn AppSettings() -> impl IntoView {
                         {move || match spec.get() {
                             None => view! { <p class="text-ink/60">{t("set-check-running")}</p> }.into_any(),
                             Some(s) => view! {
-                                <p><span class="font-bold">{t("set-spec-drm")}</span>" "{s.widevine.map(|l| format!("Widevine {l}")).unwrap_or_else(|| t("set-spec-none"))}</p>
+                                <p><span class="font-bold">{t("set-spec-drm")}</span>" "{s.widevine.map(|l| format!("{DRM_NAME} {l}")).unwrap_or_else(|| t("set-spec-none"))}</p>
                                 <p><span class="font-bold">{t("set-spec-codecs")}</span>" "{if s.codecs.is_empty() { t("set-spec-none") } else { s.codecs.join(", ") }}</p>
                                 <p><span class="font-bold">{t("set-spec-hdr")}</span>" "{if s.hdr { t("set-spec-yes") } else { t("set-spec-no") }}</p>
                                 <p><span class="font-bold">{t("set-spec-screen")}</span>" "{s.screen}</p>

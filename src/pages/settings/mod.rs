@@ -14,6 +14,7 @@ mod widgets;
 
 pub use prefs::{provide_prefs, use_prefs};
 
+use crate::config::routes;
 use crate::i18n::t;
 use crate::store::use_profile_store;
 use leptos::prelude::*;
@@ -140,7 +141,7 @@ impl Screen {
     /// The screen one level up on a phone or tablet. The back arrow goes here, so back always lands inside the tree.
     pub fn parent(&self) -> String {
         match self {
-            Screen::Hub => "/browse".into(),
+            Screen::Hub => routes::BROWSE.into(),
             Screen::Profiles | Screen::App | Screen::Account | Screen::Profile(_) | Screen::AccountSecurity | Screen::AccountDevices | Screen::AccountProfiles => Screen::Hub.path(),
             Screen::Avatar(id) | Screen::Restrictions(id) | Screen::Lock(id) | Screen::MainProfile(id) | Screen::Language(id) | Screen::AudioSubtitles(id) | Screen::Subtitles(id) | Screen::Playback(id) | Screen::Notifications(id) => Screen::Profile(id.clone()).path(),
             Screen::Ratings(id) | Screen::Blocked(id) => Screen::Restrictions(id.clone()).path(),
@@ -158,7 +159,7 @@ impl Screen {
             Screen::Access => Screen::AccountDevices.path(),
             Screen::Profiles | Screen::Profile(_) => Screen::AccountProfiles.path(),
             Screen::AccountSecurity | Screen::AccountDevices | Screen::AccountProfiles | Screen::App => Screen::Account.path(),
-            Screen::Account => "/browse".into(),
+            Screen::Account => routes::BROWSE.into(),
             other => other.parent(),
         }
     }
@@ -250,66 +251,69 @@ pub fn SettingsPage() -> impl IntoView {
     let signout_open = RwSignal::new(false);
     provide_context(hub::SignOutOpen(signout_open));
 
+    let avatar = Memo::new(move |_| profiles.profiles.with(|l| profiles.active_profile_id.with(|id| l.iter().find(|p| Some(&p.id) == id.as_ref()).or(l.first()).and_then(|p| p.avatar_url.clone()))).unwrap_or_else(|| crate::data::DEFAULT_AVATAR.to_string()));
+    let light_phone = move || screen.get().light_on_phone();
+
     view! {
-        <div
-            class="theme-paper-wide min-h-screen bg-void font-sans text-ink selection:bg-brand selection:text-ink"
-            class=("theme-paper", move || screen.get().light_on_phone())
-        >
+        <div class="theme-paper-wide min-h-screen bg-void font-sans text-ink selection:bg-brand selection:text-ink" class=("theme-paper", light_phone)>
             // a phone shows the account pages under a black bar with the logo, like the Netflix app
-            <Show when=move || screen.get().light_on_phone()>
-                <div class="relative flex h-14 items-center bg-[#000] px-2 lg:hidden">
-                    <a href=move || screen.get().parent() aria-label=move || t("set-back") class="flex h-10 w-10 items-center justify-center text-[#fff]">
+            <Show when=light_phone>
+                <div class="relative flex h-settings-header items-center bg-chrome px-2 lg:hidden">
+                    <a href=move || screen.get().parent() aria-label=move || t("set-back") class="flex h-10 w-10 items-center justify-center text-chrome-ink">
                         <i class="ph-bold ph-arrow-left text-2xl rtl:-scale-x-100" aria-hidden="true"></i>
                     </a>
                     <img src=crate::brand::LOGO_WORDMARK alt=crate::brand::NAME class="absolute inset-x-0 mx-auto h-6 w-auto" />
                 </div>
             </Show>
-            <div class="mx-auto flex max-w-[1100px] gap-12 px-4 pb-16 pt-4 sm:px-8 lg:px-12 lg:pt-10">
-                <aside class="hidden w-60 shrink-0 lg:block">
-                    <a href="/browse" class="mb-6 flex items-center" aria-label=crate::brand::NAME>
-                        <img src=crate::brand::LOGO_WORDMARK_PRIMARY alt=crate::brand::NAME class="h-7 w-auto" />
-                    </a>
-                    <a href="/browse" class="mb-4 flex items-center gap-2 rounded-control border border-ink/30 px-4 py-2 text-body-sm font-semibold hover:bg-ink/10">
-                        <i class="ph-bold ph-arrow-left text-lg rtl:-scale-x-100" aria-hidden="true"></i>
+            // the website's top bar: logo on the left, the profile on the right
+            <header class="mx-auto hidden h-settings-header max-w-settings items-center justify-between lg:flex">
+                <a href=routes::BROWSE aria-label=crate::brand::NAME><img src=crate::brand::LOGO_WORDMARK_PRIMARY alt=crate::brand::NAME class="h-7 w-auto" /></a>
+                <a href=Screen::AccountProfiles.path() aria-label=move || t("set-nav-profile") class="flex items-center gap-2">
+                    <img src=move || avatar.get() alt="" class="h-8 w-8 rounded-control object-cover" />
+                    <i class="ph-fill ph-caret-down text-fine" aria-hidden="true"></i>
+                </a>
+            </header>
+            <div class="mx-auto flex max-w-settings gap-settings-gap px-4 pb-16 pt-4 sm:px-8 lg:px-0 lg:pt-6">
+                <aside class="hidden w-settings-nav shrink-0 lg:block">
+                    <a href=routes::BROWSE class="mb-6 flex h-settings-menu-item items-center gap-2 rounded-control px-4 text-body-sm hover:bg-ink/5">
+                        <i class="ph-bold ph-arrow-left text-xl rtl:-scale-x-100" aria-hidden="true"></i>
                         {move || crate::i18n::t_args("set-back-to-app", &[("brand", crate::brand::NAME.into())])}
                     </a>
-                    <nav class="flex flex-col gap-1" aria-label=move || t("set-title")>
+                    <nav class="flex flex-col gap-2" aria-label=move || t("set-title")>
                         {sidebar()
                             .into_iter()
                             .map(|(icon, key, target, section)| view! {
                                 <a
                                     href=target.path()
-                                    class="flex items-center gap-3 rounded-control px-4 py-3 text-[0.9375rem] hover:bg-ink/10"
-                                    class=("bg-ink/10", move || screen.get().section() == section)
-                                    class=("font-semibold", move || screen.get().section() == section)
+                                    class="flex h-settings-menu-item items-center gap-3 rounded-control px-3 text-body-md font-medium hover:bg-ink/5"
                                     class=("text-ink", move || screen.get().section() == section)
                                     class=("text-ink/70", move || screen.get().section() != section)
                                     aria-current=move || (screen.get().section() == section).then_some("page")
                                 >
-                                    <i class=format!("ph-bold ph-{icon} text-xl") aria-hidden="true"></i>
+                                    <i class=move || format!("{} ph-{icon} text-2xl", if screen.get().section() == section { "ph-fill" } else { "ph-bold" }) aria-hidden="true"></i>
                                     {move || t(key)}
                                 </a>
                             })
                             .collect_view()}
-                        <a href="/help" class="flex items-center gap-3 rounded-control px-4 py-3 text-body-md font-semibold text-ink/70 hover:bg-ink/10">
-                            <i class="ph-bold ph-question text-xl" aria-hidden="true"></i>
+                        <a href=routes::HELP class="flex h-settings-menu-item items-center gap-3 rounded-control px-3 text-body-md font-medium text-ink/70 hover:bg-ink/5">
+                            <i class="ph-bold ph-question text-2xl" aria-hidden="true"></i>
                             {move || t("set-nav-help")}
                         </a>
-                        <button type="button" on:click=move |_| signout_open.set(true) class="flex items-center gap-3 rounded-control px-4 py-3 text-start text-body-md font-semibold text-ink/70 hover:bg-ink/10">
-                            <i class="ph-bold ph-sign-out text-xl" aria-hidden="true"></i>
+                        <button type="button" on:click=move |_| signout_open.set(true) class="flex h-settings-menu-item items-center gap-3 rounded-control px-3 text-start text-body-md font-medium text-ink/70 hover:bg-ink/5">
+                            <i class="ph-bold ph-sign-out text-2xl" aria-hidden="true"></i>
                             {move || t("set-sign-out")}
                         </button>
                     </nav>
                 </aside>
 
-                <main class="mx-auto w-full min-w-0 max-w-[720px] flex-1 lg:mx-0">
-                    <header class="mb-6 flex items-center gap-3 lg:mb-8">
+                <main class="mx-auto w-full min-w-0 max-w-settings-main flex-1 lg:mx-0">
+                    <header class="mb-6 flex items-center gap-3 lg:mb-4">
                         // phones and tablets go up one level in the phone tree; from 1024 px the website's tree is used
                         <a
                             href=move || screen.get().parent()
                             aria-label=move || t("set-back")
                             class="flex h-10 w-10 shrink-0 items-center justify-center rounded-full text-ink hover:bg-ink/10 lg:hidden"
-                            class=("max-lg:hidden", move || screen.get().light_on_phone())
+                            class=("max-lg:hidden", light_phone)
                         >
                             <i class="ph-bold ph-arrow-left text-2xl rtl:-scale-x-100" aria-hidden="true"></i>
                         </a>
@@ -321,7 +325,7 @@ pub fn SettingsPage() -> impl IntoView {
                         >
                             <i class="ph-bold ph-arrow-left text-2xl rtl:-scale-x-100" aria-hidden="true"></i>
                         </a>
-                        <h1 class="truncate text-heading font-bold lg:text-[2.5rem] lg:leading-tight" class=("max-lg:text-[2rem]", move || screen.get().light_on_phone()) class=("max-lg:font-black", move || screen.get().light_on_phone())>
+                        <h1 class="truncate text-heading font-bold lg:text-account-title lg:leading-tight" class=("max-lg:text-account-title-sm", light_phone)>
                             <span class=("lg:hidden", move || screen.get() == Screen::Hub)>{move || t(screen.get().title_key())}</span>
                             <span class="hidden" class=("lg:inline", move || screen.get() == Screen::Hub)>{move || t(Screen::Account.title_key())}</span>
                         </h1>
@@ -450,7 +454,7 @@ mod tests {
             }
             assert_eq!(at, Screen::Account, "{:?} never reaches the overview on a wide screen", s);
         }
-        assert_eq!(Screen::Hub.parent(), "/browse");
+        assert_eq!(Screen::Hub.parent(), routes::BROWSE);
         assert_eq!(Screen::Ratings("p1".into()).parent(), "/settings/profile/p1/restrictions");
     }
 

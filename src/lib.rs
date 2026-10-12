@@ -28,6 +28,8 @@ pub fn App() -> impl IntoView {
     crate::store::provide_watch_store();
     crate::consent::provide_ui();
     crate::pages::settings::provide_prefs();
+    // a browser that starts already signed in tells the account it is still here
+    crate::services::device::register_in_background();
 
     // On help.<domain> the front door is the help center
     let on_help_host = web_sys::window().and_then(|w| w.location().hostname().ok()).map(|h| h.starts_with("help.")).unwrap_or(false);

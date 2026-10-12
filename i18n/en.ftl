@@ -2149,3 +2149,18 @@ auth-confirm-working-body = One moment while we check your link.
 auth-confirm-failed-title = This link did not work
 auth-confirm-failed-body = The link may have expired or already been used. Sign in, or ask for a new link.
 auth-confirm-new-link = Send me a new link
+
+# Device signature
+set-device-kind = Device type
+set-device-type-desktop = Computer
+set-device-type-mobile = Phone
+set-device-type-tablet = Tablet
+set-device-type-tv = TV
+set-device-first-seen = First signed in
+set-device-timezone = Time zone
+set-device-screen = Screen
+set-device-language = Language
+set-device-countries-note = This device has connected from more than one country: { $countries }. A VPN or travel can cause this. A device is recognised by its browser, not by where it connects from, so it is still the same device.
+set-event-new_device = New device signed in
+set-event-device_new_country = A device connected from a new country
+set-event-session_revoked = A device was signed out

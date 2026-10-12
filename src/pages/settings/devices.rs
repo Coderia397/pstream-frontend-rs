@@ -7,6 +7,7 @@ use crate::config::{routes, DEVICES_SHOWN, SECURITY_EVENTS_SHOWN};
 use crate::data::settings::{BROWSERS, SYSTEMS};
 use crate::i18n::{t, t_args};
 use crate::services::account::{self, DeviceSession};
+use crate::services::device;
 use leptos::prelude::*;
 
 /// "Chrome on Mac" from a user agent text, or a general name when nothing is recognised.
@@ -83,7 +84,7 @@ pub fn Access() -> impl IntoView {
                 let cards = match sessions {
                     Some(l) => l,
                     // not set up yet, or not reachable: the current browser on its own
-                    None if failed.get() => vec![DeviceSession { id: String::new(), created_at: String::new(), last_seen: String::new(), user_agent: Some(current_agent()), is_current: true }],
+                    None if failed.get() => vec![DeviceSession { user_agent: Some(current_agent()), is_current: true, ..Default::default() }],
                     None => return view! { <p class="mb-6 text-body-md text-ink/60">{t("set-check-running")}</p> }.into_any(),
                 };
                 let total = cards.len();
@@ -91,14 +92,43 @@ pub fn Access() -> impl IntoView {
                     <div class="mb-6 space-y-3">
                         {cards.into_iter().take(shown.get()).map(|d| {
                             let agent = d.user_agent.clone().unwrap_or_default();
-                            let name = describe_agent(&agent);
+                            // the name comes from what the browser reported; a session with no report falls back to its user agent text
+                            let name = match (d.browser.as_deref(), d.os.as_deref()) {
+                                (Some(b), Some(o)) => t_args("set-device-name", &[("browser", match d.browser_major { Some(v) => format!("{b} {v}"), None => b.to_string() }.into()), ("system", o.into())]),
+                                _ => describe_agent(&agent),
+                            };
                             let id = d.id.clone();
                             let current = d.is_current;
+                            let country = d.country.as_deref().map(device::region_name);
                             let last = if d.last_seen.is_empty() { None } else { Some(t_args("set-device-last", &[("time", local_time(&d.last_seen).into())])) };
+                            let meta = match (last, country.clone()) {
+                                (Some(l), Some(c)) => format!("{l} · {c}"),
+                                (Some(l), None) => l,
+                                (None, Some(c)) => c,
+                                (None, None) => String::new(),
+                            };
+                            let kind = d.device_type.clone().filter(|k| k != "other");
+                            let icon = match kind.as_deref() { Some("mobile") => "device-mobile", Some("tablet") => "device-tablet", _ => "desktop" };
+                            let several = d.countries.as_ref().is_some_and(|c| c.len() > 1);
+                            let seen_in = d.countries.clone().unwrap_or_default().iter().map(|c| device::region_name(c)).collect::<Vec<_>>().join(", ");
+                            let rows: Vec<(String, String)> = [
+                                (t("set-device-kind"), kind.as_ref().map(|k| t(&format!("set-device-type-{k}")))),
+                                (t("set-device-first-seen"), d.device_first_seen.as_deref().or(Some(d.created_at.as_str())).filter(|s| !s.is_empty()).map(local_time)),
+                                (t("set-device-timezone"), d.timezone.clone()),
+                                (t("set-device-screen"), d.screen.clone()),
+                                (t("set-device-language"), d.language.clone()),
+                            ]
+                            .into_iter()
+                            .filter_map(|(label, value)| value.map(|v| (label, v)))
+                            .collect();
+                            let rows = StoredValue::new(rows);
                             view! {
-                                <Expandable icon="desktop" title=name meta=last.unwrap_or_default() badge=if current { t("set-devices-current") } else { String::new() }>
-                                    <p class="mb-1">{if d.created_at.is_empty() { String::new() } else { t_args("set-device-signed-in", &[("time", local_time(&d.created_at).into())]) }}</p>
-                                    <p class="mb-3 break-words text-ink/60">{agent.clone()}</p>
+                                <Expandable icon=icon title=name meta=meta badge=if current { t("set-devices-current") } else { String::new() }>
+                                    <dl class="mb-3 grid grid-cols-[auto_1fr] gap-x-4 gap-y-1">
+                                        {rows.get_value().into_iter().map(|(label, value)| view! { <dt class="text-ink/60">{label}</dt><dd class="break-words">{value}</dd> }).collect_view()}
+                                    </dl>
+                                    {several.then(|| view! { <p class="mb-3 rounded-control bg-ink/5 p-3">{t_args("set-device-countries-note", &[("countries", seen_in.clone().into())])}</p> })}
+                                    <p class="mb-3 break-words text-ink/50">{agent.clone()}</p>
                                     {(!current && !id.is_empty()).then(|| { let id = id.clone(); view! { <OutlineButton label=t("set-device-sign-out") danger=true on_click=Callback::new(move |_| { revoke_target.set(Some(id.clone())); confirm_one.set(true); }) /> } })}
                                 </Expandable>
                             }

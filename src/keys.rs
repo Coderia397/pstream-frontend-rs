@@ -19,6 +19,8 @@ pub const PROFILE_PREFS: &str = "pstream_profile_prefs";
 pub const APP_PREFS: &str = "pstream_app_prefs";
 pub const ACCOUNT_PREFS: &str = "pstream_account_prefs";
 /// When the app last started in this browser (milliseconds); index.html reads it to decide whether to show the start animation.
+/// Random id this browser keeps so an account can recognise it again (see services/device.rs).
+pub const DEVICE_KEY: &str = "pstream_device_key";
 pub const BOOT_SEEN: &str = "pstream_boot_seen";
 
 pub const VIDEO_ELEMENT_ID: &str = "pstream-video";

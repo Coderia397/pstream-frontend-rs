@@ -136,6 +136,7 @@ pub async fn sign_in(email: &str, password: &str, remember: bool) -> Result<Sess
         if let Some(old) = previous {
             end_old_session(&old).await;
         }
+        crate::services::device::register_in_background();
         return Ok(session);
     }
     Err(classify(status, &body))
@@ -217,6 +218,7 @@ pub async fn verify_password(password: &str) -> Result<(), AuthError> {
         if let Some(fresh) = session_from(&body) {
             save(&fresh, remember);
             end_old_session(&current.access_token).await;
+            crate::services::device::register_in_background();
         }
         return Ok(());
     }
@@ -264,7 +266,7 @@ pub async fn sign_out_everywhere() -> Result<(), AuthError> {
     Ok(())
 }
 
-async fn rpc(name: &str, args: &Value) -> Result<Value, AuthError> {
+pub(crate) async fn rpc(name: &str, args: &Value) -> Result<Value, AuthError> {
     let t = token()?;
     let resp = Request::post(&url(&format!("/rest/v1/rpc/{name}")))
         .header("apikey", crate::config::SUPABASE_KEY)
@@ -315,6 +317,7 @@ pub async fn verify_code(code: &str) -> Result<(), AuthError> {
         if let Some(fresh) = session_from(&body) {
             save(&fresh, remember);
             end_old_session(&current.access_token).await;
+            crate::services::device::register_in_background();
         }
         return Ok(());
     }
@@ -322,7 +325,7 @@ pub async fn verify_code(code: &str) -> Result<(), AuthError> {
 }
 
 /// One signed in browser of the account (`list_my_sessions`).
-#[derive(Clone, Debug, PartialEq, Deserialize)]
+#[derive(Clone, Debug, Default, PartialEq, Deserialize)]
 pub struct DeviceSession {
     pub id: String,
     pub created_at: String,
@@ -330,6 +333,29 @@ pub struct DeviceSession {
     #[serde(default)]
     pub user_agent: Option<String>,
     pub is_current: bool,
+    // what the device signature added (empty for a session that signed in before it existed)
+    #[serde(default)]
+    pub device_id: Option<String>,
+    #[serde(default)]
+    pub browser: Option<String>,
+    #[serde(default)]
+    pub browser_major: Option<u32>,
+    #[serde(default)]
+    pub os: Option<String>,
+    #[serde(default)]
+    pub device_type: Option<String>,
+    #[serde(default)]
+    pub language: Option<String>,
+    #[serde(default)]
+    pub timezone: Option<String>,
+    #[serde(default)]
+    pub screen: Option<String>,
+    #[serde(default)]
+    pub country: Option<String>,
+    #[serde(default)]
+    pub countries: Option<Vec<String>>,
+    #[serde(default)]
+    pub device_first_seen: Option<String>,
 }
 
 pub async fn sessions() -> Result<Vec<DeviceSession>, AuthError> {
@@ -349,6 +375,7 @@ pub async fn confirm_token(kind: &str, token_hash: &str) -> Result<Session, Auth
     if status == 200 {
         let session = session_from(&body).ok_or_else(|| AuthError::Other("unexpected answer".into()))?;
         save(&session, true);
+        crate::services::device::register_in_background();
         return Ok(session);
     }
     Err(classify(status, &body))
@@ -373,6 +400,7 @@ pub async fn session_from_fragment(fragment: &str) -> Option<Result<(Session, St
         let value = json!({ "access_token": access, "refresh_token": get("refresh_token").unwrap_or_default(), "expires_in": expires_in, "user": user });
         let session = session_from(&value).ok_or_else(|| AuthError::Other("unexpected answer".into()))?;
         save(&session, true);
+        crate::services::device::register_in_background();
         Ok((session, kind))
     };
     Some(result.await)

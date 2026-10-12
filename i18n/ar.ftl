@@ -824,13 +824,13 @@ cookie-essential =
 
     مدة الصلاحية: تبقى حتى تمسح بيانات هذا الموقع.
 cookie-essential-list =
-    - <b>pstream_profiles</b> و<b>pstream_active_profile</b>: ملفاتك الشخصية والملف المستخدم حاليًا.
-    - <b>pstream_watch_progress_v1</b>: مدى تقدمك في مشاهدة كل عنوان.
-    - <b>pstream_session</b>: تسجيل دخولك، إذا كان لديك جلسة نشطة.
-    - <b>pstream_language</b>: اللغة التي اخترتها.
-    - <b>pstream_consent</b>: الاختيارات التي تتخذها في هذه النافذة.
-    - <b>pstream_help_votes</b>: إجاباتك على سؤال "هل كانت هذه المقالة مفيدة؟"
-    - <b>pstream-notifications-read:default</b>: الإشعارات التي فتحتها.
+    - <b>streams_profiles</b> و<b>streams_active_profile</b>: ملفاتك الشخصية والملف المستخدم حاليًا.
+    - <b>streams_watch_progress_v1</b>: مدى تقدمك في مشاهدة كل عنوان.
+    - <b>streams_session</b>: تسجيل دخولك، إذا كان لديك جلسة نشطة.
+    - <b>streams_language</b>: اللغة التي اخترتها.
+    - <b>streams_consent</b>: الاختيارات التي تتخذها في هذه النافذة.
+    - <b>streams_help_votes</b>: إجاباتك على سؤال "هل كانت هذه المقالة مفيدة؟"
+    - <b>streams-notifications-read:default</b>: الإشعارات التي فتحتها.
 cookie-personal =
     تتيح هذه العناصر لـ { $brand } تكييف الصفوف حسب ذوقك. عند بدء مشاهدة عنوان، ترسل التطبيق العنوان ورقم جلسة عشوائي إلى خدمة التوصيات لدينا. تحتفظ الخدمة بملف ذوق صغير لمدة يوم تقريبًا ثم تتخلص منه.
 
@@ -838,8 +838,8 @@ cookie-personal =
 
     مدة الصلاحية: حتى تمسح بيانات هذا الموقع أو توقف هذا الخيار.
 cookie-personal-list =
-    - <b>pstream_session_id</b>: رقم عشوائي غير مرتبط باسمك.
-    - <b>pstream_user_affinity</b>: الأنواع التي اخترتها.
+    - <b>streams_session_id</b>: رقم عشوائي غير مرتبط باسمك.
+    - <b>streams_user_affinity</b>: الأنواع التي اخترتها.
 cookie-third =
     تأتي الملصقات والتفاصيل من فهرس أفلام عام، وتأتي البثوث من مصادر مستقلة. تتلقى هذه المواقع عنوان IP الخاص بك عند تحميل متصفحك منها، وقد تضبط ملفات تعريف ارتباط خاصة بها. لا يمكننا إيقافها من هنا.
 

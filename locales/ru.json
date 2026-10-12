@@ -439,7 +439,7 @@
         "opacity": "Прозрачность",
         "blur": "Размытие",
         "fonts": {
-            "brand": "Pstream Sans",
+            "brand": "Streams Sans",
             "monospace": "Консольный",
             "typewriter": "Печатная машинка",
             "print": "Печать",
@@ -1104,7 +1104,7 @@
             "ChloeDecker": "Chloe Decker",
             "Mazikeen": "Mazikeen",
             "Amenadiel": "Amenadiel",
-            "PStreamClassics": "P-Stream Classics",
+            "StreamsClassics": "P-Stream Classics",
             "BlueFluffball": "Blue Fluffball",
             "GrayFluffball": "Gray Fluffball",
             "OrangeFluffball": "Orange Fluffball",
@@ -1121,7 +1121,7 @@
             "OnePiece": "One Piece",
             "PeakyBlinders": "Peaky Blinders",
             "Lucifer": "Lucifer",
-            "PStreamClassics": "P-Stream Classics"
+            "StreamsClassics": "P-Stream Classics"
         }
     }
 }

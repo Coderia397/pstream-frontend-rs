@@ -832,13 +832,13 @@ cookie-essential =
 
     有效期：直到您清除此站点的数据。
 cookie-essential-list =
-    - <b>pstream_profiles</b> 和 <b>pstream_active_profile</b>：您的个人资料及当前使用的资料。
-    - <b>pstream_watch_progress_v1</b>：您观看每个标题的进度。
-    - <b>pstream_session</b>：您的登录状态（如有）。
-    - <b>pstream_language</b>：您选择的语言。
-    - <b>pstream_consent</b>：您在此窗口中做出的选择。
-    - <b>pstream_help_votes</b>：您对“这篇文章有帮助吗？”的回答。
-    - <b>pstream-notifications-read:default</b>：您已打开的通知。
+    - <b>streams_profiles</b> 和 <b>streams_active_profile</b>：您的个人资料及当前使用的资料。
+    - <b>streams_watch_progress_v1</b>：您观看每个标题的进度。
+    - <b>streams_session</b>：您的登录状态（如有）。
+    - <b>streams_language</b>：您选择的语言。
+    - <b>streams_consent</b>：您在此窗口中做出的选择。
+    - <b>streams_help_votes</b>：您对“这篇文章有帮助吗？”的回答。
+    - <b>streams-notifications-read:default</b>：您已打开的通知。
 cookie-personal =
     这些项目让 { $brand } 根据您的喜好调整内容行。当您开始观看某个标题时，应用会将该标题和一个随机会话编号发送到我们的推荐服务。该服务会保留一个小型口味档案约一天，然后将其丢弃。
 
@@ -846,8 +846,8 @@ cookie-personal =
 
     有效期：直到您清除此站点的数据或关闭此功能。
 cookie-personal-list =
-    - <b>pstream_session_id</b>：一个与您的姓名无关的随机编号。
-    - <b>pstream_user_affinity</b>：您选择的类型。
+    - <b>streams_session_id</b>：一个与您的姓名无关的随机编号。
+    - <b>streams_user_affinity</b>：您选择的类型。
 cookie-third =
     海报和详情来自公共电影目录，流媒体来自独立来源。当浏览器从这些网站加载内容时，它们会收到你的 IP 地址，并可能设置自己的 Cookie。我们无法在此处关闭它们。
 

@@ -1,5 +1,5 @@
 [package]
-name = "pstream-frontend-rs"
+name = "streams-frontend-rs"
 version = "0.1.0"
 edition = "2024"
 
@@ -8,7 +8,7 @@ crate-type = ["rlib"]
 path = "src/lib.rs"
 
 [[bin]]
-name = "pstream-frontend-rs"
+name = "streams-frontend-rs"
 path = "src/main.rs"
 
 [dependencies]

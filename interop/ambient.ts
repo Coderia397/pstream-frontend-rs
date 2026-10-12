@@ -5,8 +5,8 @@ export interface AmbientRGB {
 }
 
 const cache = new Map<string, AmbientRGB>();
-const STORAGE_PREFIX = 'pstream-ambient:';
-const LAST_KEY = 'pstream-ambient:last';
+const STORAGE_PREFIX = 'streams-ambient:';
+const LAST_KEY = 'streams-ambient:last';
 
 export function getCachedAmbientColor(imageUrl: string): AmbientRGB | null {
   if (!imageUrl) return null;

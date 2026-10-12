@@ -1,6 +1,6 @@
 //! Sign up, sign in, password reset and sign out against Supabase Auth over its HTTP interface. The session is kept in the
 //! browser (local storage when the person asks to stay signed in, session storage otherwise) and is counted as essential in the
-//! cookie manager. Profiles still live in this browser; the database side is in pstream-backend-rs/supabase.
+//! cookie manager. Profiles still live in this browser; the database side is in streams-backend-rs/supabase.
 use gloo_net::http::Request;
 use serde::{Deserialize, Serialize};
 use serde_json::{json, Value};

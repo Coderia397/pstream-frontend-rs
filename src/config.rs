@@ -13,11 +13,11 @@ const fn setting(value: Option<&'static str>, default: &'static str) -> &'static
 /// The public address of the site, used for canonical links and sharing.
 pub const SITE_URL: &str = setting(option_env!("STREAMS_SITE_URL"), "https://streams.watch");
 
-/// Stream resolver. It runs on a phone behind a Cloudflare tunnel (see pstream-resolver-rs/deploy).
+/// Stream resolver. It runs on a phone behind a Cloudflare tunnel (see streams-resolver-rs/deploy).
 pub const RESOLVER_URL: &str = setting(option_env!("STREAMS_RESOLVER_URL"), "https://resolver.streams.watch");
 
 /// Recommendation engine. The old variable name still works so existing build scripts keep working.
-pub const ENGINE_URL: &str = setting(option_env!("STREAMS_ENGINE_URL"), setting(option_env!("PSTREAM_ENGINE_URL"), "http://127.0.0.1:8088"));
+pub const ENGINE_URL: &str = setting(option_env!("STREAMS_ENGINE_URL"), setting(option_env!("STREAMS_ENGINE_URL"), "http://127.0.0.1:8088"));
 
 /// Film and series catalog. The key is visible in the browser, as TMDB keys always are, and is free to replace.
 pub const TMDB_API_URL: &str = setting(option_env!("STREAMS_TMDB_URL"), "https://api.themoviedb.org/3");
@@ -28,7 +28,7 @@ pub const TMDB_API_KEY: &str = setting(option_env!("STREAMS_TMDB_KEY"), "fc5fec3
 pub const SUPABASE_URL: &str = setting(option_env!("STREAMS_SUPABASE_URL"), "https://emvyjhleyhimxxdqybsn.supabase.co");
 pub const SUPABASE_KEY: &str = setting(option_env!("STREAMS_SUPABASE_KEY"), "sb_publishable_m286TDvNziieAgk--uDLlQ_MJQHgxNV");
 
-/// Account and settings limits. They mirror the database rules in pstream-backend-rs/supabase (five profiles not counting the
+/// Account and settings limits. They mirror the database rules in streams-backend-rs/supabase (five profiles not counting the
 /// automatic Kids profile, 4 digit PINs, a password check no older than five minutes), so a change there is made here too.
 pub const MAX_PROFILES: usize = 5;
 pub const PROFILE_NAME_MAX: usize = 30;

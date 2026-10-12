@@ -1,7 +1,7 @@
 //! Page-level Genre Dictionaries and Cross-Media ID Resolution.
 //!
 //! Zero-cost compile-time static slices (`&'static [PageGenre]`) and `const fn` functions.
-//! Ported directly from `pstream-frontend/data/pageGenres.ts` and `pstream-frontend/hooks/kidsManifestBuilder.ts`.
+//! Ported directly from `streams-frontend/data/pageGenres.ts` and `streams-frontend/hooks/kidsManifestBuilder.ts`.
 
 use super::genres::{Genre, MediaType};
 

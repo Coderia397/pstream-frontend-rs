@@ -2,7 +2,7 @@
 //! id the browser creates and keeps for itself (not by where it connects from), plus the browser, system, kind of device,
 //! language, time zone and screen size it reports. The country comes from our own edge (/cdn-cgi/trace on the site's address,
 //! two letters, no connection address is read or kept). A VPN or travel changes the country only; the id stays, so it is still
-//! the same device. Everything is sent to `register_device` (see pstream-backend-rs/supabase/migrations/20261012200000_*).
+//! the same device. Everything is sent to `register_device` (see streams-backend-rs/supabase/migrations/20261012200000_*).
 use crate::data::settings::{BROWSERS, SYSTEMS};
 use crate::services::account::{self, AuthError};
 use gloo_net::http::Request;

@@ -149,7 +149,7 @@ async fn run_checks() -> Vec<Row> {
     });
 
     // storage
-    let stored = storage().is_some_and(|s| s.set_item("pstream_probe", "1").is_ok() && s.get_item("pstream_probe").ok().flatten().is_some() && s.remove_item("pstream_probe").is_ok());
+    let stored = storage().is_some_and(|s| s.set_item("streams_probe", "1").is_ok() && s.get_item("streams_probe").ok().flatten().is_some() && s.remove_item("streams_probe").is_ok());
     rows.push(Row { label: "help-act-d-storage", level: if stored { Level::Ok } else { Level::Fail }, detail: if stored { tr("help-act-v-supported") } else { tr("help-act-v-blocked") }, fix: (!stored).then_some("saved-data") });
 
     // full screen

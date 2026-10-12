@@ -872,13 +872,13 @@ cookie-essential =
 
     Lifespan: they stay until you clear this site's data.
 cookie-essential-list =
-    - <b>pstream_profiles</b> and <b>pstream_active_profile</b>: your profiles and the one in use.
-    - <b>pstream_watch_progress_v1</b>: how far you watched each title.
-    - <b>pstream_session</b>: your sign in, when you have one.
-    - <b>pstream_language</b>: the language you chose.
-    - <b>pstream_consent</b>: the choices you make in this window.
-    - <b>pstream_help_votes</b>: your answers to “Was this article helpful?”
-    - <b>pstream-notifications-read:default</b>: which notifications you have opened.
+    - <b>streams_profiles</b> and <b>streams_active_profile</b>: your profiles and the one in use.
+    - <b>streams_watch_progress_v1</b>: how far you watched each title.
+    - <b>streams_session</b>: your sign in, when you have one.
+    - <b>streams_language</b>: the language you chose.
+    - <b>streams_consent</b>: the choices you make in this window.
+    - <b>streams_help_votes</b>: your answers to “Was this article helpful?”
+    - <b>streams-notifications-read:default</b>: which notifications you have opened.
 cookie-personal =
     These items let { $brand } adapt the rows to your taste. When you start a title, the app sends the title and a random session number to our recommendation service. The service keeps a small taste profile for about a day and then discards it.
 
@@ -886,8 +886,8 @@ cookie-personal =
 
     Lifespan: until you clear this site's data or turn this off.
 cookie-personal-list =
-    - <b>pstream_session_id</b>: a random number that is not linked to your name.
-    - <b>pstream_user_affinity</b>: the genres you picked.
+    - <b>streams_session_id</b>: a random number that is not linked to your name.
+    - <b>streams_user_affinity</b>: the genres you picked.
 cookie-third =
     Posters and details come from a public film catalog, and streams come from independent sources. Those websites receive your IP address when your browser loads from them and may set their own cookies. We cannot switch them off from here.
 

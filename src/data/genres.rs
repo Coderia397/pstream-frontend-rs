@@ -1,7 +1,7 @@
 //! TMDB Genre Mappings, Adjacent Genres, and Micro-Genre Catalog.
 //!
 //! Zero-cost compile-time static slices (`&'static [T]`) and `const fn` lookups.
-//! Ported directly from `pstream-frontend/data/genres.ts` and `pstream-frontend/data/themes.ts`.
+//! Ported directly from `streams-frontend/data/genres.ts` and `streams-frontend/data/themes.ts`.
 
 use serde::{Deserialize, Serialize};
 

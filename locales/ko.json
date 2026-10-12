@@ -437,7 +437,7 @@
         "opacity": "불투명도",
         "blur": "흐림",
         "fonts": {
-            "brand": "Pstream Sans",
+            "brand": "Streams Sans",
             "monospace": "콘솔",
             "typewriter": "타자기",
             "print": "인쇄체",
@@ -1102,7 +1102,7 @@
             "ChloeDecker": "Chloe Decker",
             "Mazikeen": "Mazikeen",
             "Amenadiel": "Amenadiel",
-            "PStreamClassics": "P-Stream Classics",
+            "StreamsClassics": "P-Stream Classics",
             "BlueFluffball": "Blue Fluffball",
             "GrayFluffball": "Gray Fluffball",
             "OrangeFluffball": "Orange Fluffball",
@@ -1119,7 +1119,7 @@
             "OnePiece": "One Piece",
             "PeakyBlinders": "Peaky Blinders",
             "Lucifer": "Lucifer",
-            "PStreamClassics": "P-Stream Classics"
+            "StreamsClassics": "P-Stream Classics"
         }
     }
 }

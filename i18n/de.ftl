@@ -824,13 +824,13 @@ cookie-essential =
 
     Lebensdauer: Sie bleiben erhalten, bis Sie die Daten dieser Website löschen.
 cookie-essential-list =
-    - <b>pstream_profiles</b> und <b>pstream_active_profile</b>: Ihre Profile und das aktuell verwendete.
-    - <b>pstream_watch_progress_v1</b>: Wie weit Sie jeden Titel geschaut haben.
-    - <b>pstream_session</b>: Ihre Anmeldung, sofern vorhanden.
-    - <b>pstream_language</b>: Die von Ihnen gewählte Sprache.
-    - <b>pstream_consent</b>: Die Auswahl, die Sie in diesem Fenster treffen.
-    - <b>pstream_help_votes</b>: Ihre Antworten auf „War dieser Artikel hilfreich?“
-    - <b>pstream-notifications-read:default</b>: Welche Benachrichtigungen Sie geöffnet haben.
+    - <b>streams_profiles</b> und <b>streams_active_profile</b>: Ihre Profile und das aktuell verwendete.
+    - <b>streams_watch_progress_v1</b>: Wie weit Sie jeden Titel geschaut haben.
+    - <b>streams_session</b>: Ihre Anmeldung, sofern vorhanden.
+    - <b>streams_language</b>: Die von Ihnen gewählte Sprache.
+    - <b>streams_consent</b>: Die Auswahl, die Sie in diesem Fenster treffen.
+    - <b>streams_help_votes</b>: Ihre Antworten auf „War dieser Artikel hilfreich?“
+    - <b>streams-notifications-read:default</b>: Welche Benachrichtigungen Sie geöffnet haben.
 cookie-personal =
     Diese Elemente ermöglichen es { $brand }, die Reihen an Ihren Geschmack anzupassen. Wenn Sie einen Titel starten, sendet die App den Titel und eine zufällige Sitzungsnummer an unseren Empfehlungsdienst. Der Dienst speichert ein kleines Geschmacksprofil für etwa einen Tag und verwirft es dann.
 
@@ -838,8 +838,8 @@ cookie-personal =
 
     Lebensdauer: Bis Sie die Daten dieser Website löschen oder dies deaktivieren.
 cookie-personal-list =
-    - <b>pstream_session_id</b>: Eine zufällige Nummer, die nicht mit Ihrem Namen verknüpft ist.
-    - <b>pstream_user_affinity</b>: Die von Ihnen gewählten Genres.
+    - <b>streams_session_id</b>: Eine zufällige Nummer, die nicht mit Ihrem Namen verknüpft ist.
+    - <b>streams_user_affinity</b>: Die von Ihnen gewählten Genres.
 cookie-third =
     Poster und Details stammen aus einem öffentlichen Filmkatalog, Streams aus unabhängigen Quellen. Diese Websites erhalten Ihre IP-Adresse, wenn Ihr Browser sie lädt, und können eigene Cookies setzen. Von hier aus können wir sie nicht deaktivieren.
 

@@ -1,4 +1,4 @@
-//! Static avatar definitions and categories ported from `pstream-frontend/data/avatars.ts`.
+//! Static avatar definitions and categories ported from `streams-frontend/data/avatars.ts`.
 //! Zero-cost compile-time static slices for WebAssembly runtime efficiency.
 
 use serde::Serialize;

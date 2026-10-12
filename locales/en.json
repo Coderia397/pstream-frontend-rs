@@ -437,7 +437,7 @@
         "opacity": "Opacity",
         "blur": "Blur",
         "fonts": {
-            "brand": "Pstream Sans",
+            "brand": "Streams Sans",
             "monospace": "Console",
             "typewriter": "Typewriter",
             "print": "Print",
@@ -1098,7 +1098,7 @@
             "ChloeDecker": "Chloe Decker",
             "Mazikeen": "Mazikeen",
             "Amenadiel": "Amenadiel",
-            "PStreamClassics": "P-Stream Classics",
+            "StreamsClassics": "P-Stream Classics",
             "BlueFluffball": "Blue Fluffball",
             "GrayFluffball": "Gray Fluffball",
             "OrangeFluffball": "Orange Fluffball",
@@ -1115,7 +1115,7 @@
             "OnePiece": "One Piece",
             "PeakyBlinders": "Peaky Blinders",
             "Lucifer": "Lucifer",
-            "PStreamClassics": "P-Stream Classics"
+            "StreamsClassics": "P-Stream Classics"
         }
     }
 }

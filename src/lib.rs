@@ -5,6 +5,7 @@ pub mod consent;
 pub mod data;
 pub mod i18n;
 pub mod keys;
+pub mod legacy_keys;
 pub mod models;
 pub mod pages;
 pub mod services;

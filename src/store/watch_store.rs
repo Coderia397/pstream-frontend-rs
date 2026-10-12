@@ -2,7 +2,7 @@ use leptos::prelude::*;
 use serde::{Deserialize, Serialize};
 use std::collections::HashMap;
 
-const WATCH_STORAGE_KEY: &str = "pstream_watch_progress_v1";
+const WATCH_STORAGE_KEY: &str = "streams_watch_progress_v1";
 
 #[derive(Clone, Debug, Deserialize, Serialize, PartialEq)]
 pub struct WatchRecord {

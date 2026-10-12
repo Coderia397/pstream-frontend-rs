@@ -3,8 +3,8 @@ import fs from 'fs';
 import path from 'path';
 import { execSync } from 'child_process';
 
-const FRONTEND_DIR = '/home/ibrahim/code/pstream/pstream-frontend';
-const FRONTEND_RS_DIR = '/home/ibrahim/code/pstream/pstream-frontend-rs';
+const FRONTEND_DIR = '/home/ibrahim/code/streams/streams-frontend';
+const FRONTEND_RS_DIR = '/home/ibrahim/code/streams/streams-frontend-rs';
 const TMP_DIR = '/tmp';
 
 console.log('================================================================');
@@ -16,7 +16,7 @@ console.log('Step 1: Compiling and running Rust static slice exporter...');
 execSync(
   `rustc --edition 2024 \
     -L ${FRONTEND_RS_DIR}/target/debug/deps \
-    --extern pstream_frontend_rs=${FRONTEND_RS_DIR}/target/debug/deps/libpstream_frontend_rs.rlib \
+    --extern streams_frontend_rs=${FRONTEND_RS_DIR}/target/debug/deps/libpstream_frontend_rs.rlib \
     --extern serde_json=${FRONTEND_RS_DIR}/target/debug/deps/libserde_json-d4ba44fbbbee01b4.rlib \
     --extern serde=${FRONTEND_RS_DIR}/target/debug/deps/libserde-097d69548a51c3b5.rlib \
     ${FRONTEND_RS_DIR}/export_rust_data.rs -o ${TMP_DIR}/export_rust_data && ${TMP_DIR}/export_rust_data > ${TMP_DIR}/rust_data.json`,
@@ -324,8 +324,8 @@ const testInputJson = JSON.stringify(testIds);
 fs.writeFileSync(`${TMP_DIR}/test_ids.json`, testInputJson);
 
 const rustEvalScript = `
-use pstream_frontend_rs::data::page_genres::*;
-use pstream_frontend_rs::data::genres::MediaType;
+use streams_frontend_rs::data::page_genres::*;
+use streams_frontend_rs::data::genres::MediaType;
 use std::fs;
 
 fn main() {
@@ -351,7 +351,7 @@ fs.writeFileSync(`${TMP_DIR}/eval_resolve.rs`, rustEvalScript);
 execSync(
   `rustc --edition 2024 \
     -L ${FRONTEND_RS_DIR}/target/debug/deps \
-    --extern pstream_frontend_rs=${FRONTEND_RS_DIR}/target/debug/deps/libpstream_frontend_rs.rlib \
+    --extern streams_frontend_rs=${FRONTEND_RS_DIR}/target/debug/deps/libpstream_frontend_rs.rlib \
     --extern serde_json=${FRONTEND_RS_DIR}/target/debug/deps/libserde_json-d4ba44fbbbee01b4.rlib \
     --extern serde=${FRONTEND_RS_DIR}/target/debug/deps/libserde-097d69548a51c3b5.rlib \
     ${TMP_DIR}/eval_resolve.rs -o ${TMP_DIR}/eval_resolve && ${TMP_DIR}/eval_resolve > ${TMP_DIR}/rust_resolve_results.json`

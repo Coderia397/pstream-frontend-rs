@@ -7,7 +7,7 @@
 //! - Themed / Micro-genre streams & page genres
 
 use std::collections::HashSet;
-use pstream_frontend_rs::data::*;
+use streams_frontend_rs::data::*;
 
 // Simple Xorshift64 PRNG for deterministic, reproducible fuzz testing
 struct Xorshift64(u64);

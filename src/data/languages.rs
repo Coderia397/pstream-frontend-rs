@@ -1,4 +1,4 @@
-//! Static language options, ISO mappings, and display datasets ported from `pstream-frontend/data/languages.ts`.
+//! Static language options, ISO mappings, and display datasets ported from `streams-frontend/data/languages.ts`.
 //! Zero-cost compile-time static slices and pattern matching for WebAssembly CSR runtime.
 
 use serde::{Deserialize, Serialize};

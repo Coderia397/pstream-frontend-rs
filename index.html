@@ -34,7 +34,7 @@
       /* The start animation is for the first visit and for a return after a long time. A visit within the last
          data-boot-quiet-minutes (set on <body>) never shows it. It also waits 1.2 s, so a quick start never shows it. */
       try {
-        var seen = Number(localStorage.getItem("pstream_boot_seen") || 0);
+        var seen = Number(localStorage.getItem("streams_boot_seen") || 0);
         var quiet = Number(document.documentElement.getAttribute("data-boot-quiet-minutes") || 360) * 60000;
         if (seen && Date.now() - seen < quiet) document.documentElement.classList.add("boot-skip");
       } catch (e) {}
@@ -62,7 +62,7 @@
     <script>
       (function() {
         try {
-          var raw = localStorage.getItem("pstream-ambient:last");
+          var raw = localStorage.getItem("streams-ambient:last");
           var r = 16, g = 21, b = 25;
           if (raw) {
             var parsed = JSON.parse(raw);
@@ -83,7 +83,7 @@
     <link rel="stylesheet" href="/assets/phosphor/bold/style.css" />
     <link rel="stylesheet" href="/assets/phosphor/fill/style.css" />
     <!-- Trunk Rust binary target specification -->
-    <link data-trunk rel="rust" data-bin="pstream-frontend-rs" />
+    <link data-trunk rel="rust" data-bin="streams-frontend-rs" />
     <!-- Trunk will automatically hash and include this CSS file -->
     <link data-trunk rel="css" href="style/output.css" />
     <link data-trunk rel="copy-dir" href="fonts" />

@@ -2,7 +2,7 @@
 # Build the site on a Linux builder (Cloudflare Pages). Installs a minimal Rust toolchain with the wasm target, Trunk and the
 # Tailwind standalone binary, then runs a release build into dist/. Versions match the ones used on the dev machine.
 #   Pages settings: build command `bash scripts/cloudflare_build.sh`, output directory `dist`.
-#   Optional environment variable: PSTREAM_ENGINE_URL (base URL of the recommendation engine, no trailing slash).
+#   Optional environment variable: STREAMS_ENGINE_URL (base URL of the recommendation engine, no trailing slash).
 set -euo pipefail
 
 TRUNK_VERSION="${TRUNK_VERSION:-0.21.14}"

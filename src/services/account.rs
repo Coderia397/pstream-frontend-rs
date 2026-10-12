@@ -128,10 +128,14 @@ pub fn session() -> Option<Session> {
 }
 
 pub async fn sign_in(email: &str, password: &str, remember: bool) -> Result<Session, AuthError> {
+    let previous = session().map(|s| s.access_token);
     let (status, body) = post("/auth/v1/token?grant_type=password", &json!({ "email": email.trim(), "password": password }), None).await?;
     if status == 200 {
         let session = session_from(&body).ok_or_else(|| AuthError::Other("unexpected answer".into()))?;
         save(&session, remember);
+        if let Some(old) = previous {
+            end_old_session(&old).await;
+        }
         return Ok(session);
     }
     Err(classify(status, &body))
@@ -196,6 +200,12 @@ fn token() -> Result<String, AuthError> {
     session().map(|s| s.access_token).ok_or_else(|| AuthError::Other("not signed in".into()))
 }
 
+/// Ends the session an older token belongs to, without touching the new one. Every password or code check makes a new sign in
+/// at Supabase; without this the old one would stay in the device list for ever. A failure (the old token had expired) is fine.
+async fn end_old_session(old_token: &str) {
+    let _ = post("/auth/v1/logout?scope=local", &json!({}), Some(old_token)).await;
+}
+
 /// Checks the password of the signed in account for the step up check. The sign in it creates replaces the saved session (in the
 /// same storage), because the database decides "recent sign in" from the time the password was last used, and that time is in the
 /// new token.
@@ -206,6 +216,7 @@ pub async fn verify_password(password: &str) -> Result<(), AuthError> {
     if status == 200 {
         if let Some(fresh) = session_from(&body) {
             save(&fresh, remember);
+            end_old_session(&current.access_token).await;
         }
         return Ok(());
     }
@@ -303,6 +314,7 @@ pub async fn verify_code(code: &str) -> Result<(), AuthError> {
     if status == 200 {
         if let Some(fresh) = session_from(&body) {
             save(&fresh, remember);
+            end_old_session(&current.access_token).await;
         }
         return Ok(());
     }

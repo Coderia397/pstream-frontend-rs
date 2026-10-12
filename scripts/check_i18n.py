@@ -36,6 +36,8 @@ for k in en:
         used.add(k)  # mood words, looked up at runtime (i18n::mood_label)
     elif k.startswith(("set-color-", "set-edge-", "set-event-")):
         used.add(k)  # subtitle colours and edge styles, and account event names, looked up at runtime on the settings screens
+    elif k.startswith("email-"):
+        used.add(k)  # sent by the mail Worker (pstream-backend-rs/mail), not shown in the app
     elif k.startswith("genre-"):
         used.add(k)  # looked up from the genre name at runtime (i18n::genre_label)
     elif k.startswith("legal-") and any(k.startswith(f"legal-{i}-") for i in legal_ids):

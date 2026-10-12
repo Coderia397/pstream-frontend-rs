@@ -23,7 +23,5 @@ login-sign-in = Entrar
 navbar-mobile-cast = Elenco
 new-popular-worth-the-wait = Vale a pena esperar
 search-bar-search = Pesquisar
-settings-done = Feito
-settings-preferences = Preferências
 subtitle-drawer-subtitles = Legendas
 video-player-rewind-10s = Recuar 10s

@@ -23,7 +23,5 @@ login-sign-in = साइन इन करें
 navbar-mobile-cast = कलाकार
 new-popular-worth-the-wait = इंतज़ार के लायक
 search-bar-search = खोजें
-settings-done = हो गया
-settings-preferences = पसंद
 subtitle-drawer-subtitles = सबटाइटल
 video-player-rewind-10s = 10 सेकंड पीछे

@@ -20,7 +20,5 @@ login-password = Wachtwoord
 login-sign-in = Inloggen
 new-popular-worth-the-wait = Het wachten waard
 search-bar-search = Zoeken
-settings-done = Klaar
-settings-preferences = Voorkeuren
 subtitle-drawer-subtitles = Ondertitels
 video-player-rewind-10s = 10s terugspoelen

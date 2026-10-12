@@ -22,7 +22,5 @@ login-sign-in = S'identifier
 navbar-mobile-cast = Distribution
 new-popular-worth-the-wait = À ne pas manquer
 search-bar-search = Rechercher
-settings-done = Terminé
-settings-preferences = Préférences
 subtitle-drawer-subtitles = Sous-titres
 video-player-rewind-10s = Reculer de 10s

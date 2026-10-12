@@ -23,7 +23,5 @@ login-sign-in = Zaloguj się
 navbar-mobile-cast = Obsada
 new-popular-worth-the-wait = Warto poczekać
 search-bar-search = Szukaj
-settings-done = Gotowe
-settings-preferences = Preferencje
 subtitle-drawer-subtitles = Napisy
 video-player-rewind-10s = Cofnij 10s

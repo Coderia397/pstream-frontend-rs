@@ -23,7 +23,5 @@ login-sign-in = Войти
 navbar-mobile-cast = В ролях
 new-popular-worth-the-wait = Стоит подождать
 search-bar-search = Поиск
-settings-done = Готово
-settings-preferences = Предпочтения
 subtitle-drawer-subtitles = Субтитры
 video-player-rewind-10s = Назад 10с

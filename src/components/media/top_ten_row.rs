@@ -203,8 +203,9 @@ fn TopTenCard(
             data-card="true"
             data-card-id=my_card_id
             class="relative flex-none flex items-end tile-width topten-card cursor-pointer"
-            on:mouseenter=move |_| mouse_enter_cb.run(())
-            on:mouseleave=move |_| mouse_leave_cb.run(())
+            // a finger is not a hover: touch browsers fire mouse events after a tap, so only a mouse or pen opens the popup
+            on:pointerenter=move |e: leptos::ev::PointerEvent| if e.pointer_type() != "touch" { mouse_enter_cb.run(()) }
+            on:pointerleave=move |e: leptos::ev::PointerEvent| if e.pointer_type() != "touch" { mouse_leave_cb.run(()) }
             on:click=open_modal
         >
             <RankNumber index=index />

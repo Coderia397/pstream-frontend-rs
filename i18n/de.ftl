@@ -793,6 +793,7 @@ help-art-report-bug-body =
     Auf der Seite <a=/help/contact>Kontakt</a> gibt es einen Button, der eine E-Mail mit Ihren Browserdetails öffnet.
 
     @@ diagnostics
+cookie-sheet = <b>{ $brand }</b> verwendet Cookies, um Ihre Profile und Einstellungen zu speichern und, wenn Sie es zulassen, Empfehlungen zu personalisieren.
 cookie-learn = Mehr erfahren
 cookie-reject = Ablehnen
 cookie-accept = Akzeptieren
@@ -970,6 +971,7 @@ notif-ago-months =
     }
 notif-h-trending = Gerade im Trend
 notif-h-new-arrival = Neu eingetroffen
+notif-h-coming-soon = Demnächst verfügbar
 notif-title = Benachrichtigungen
 notif-desc-available = Jetzt in Ihrer Streaming-Bibliothek verfügbar.
 notif-caught-up = Sie sind auf dem neuesten Stand
@@ -1009,6 +1011,7 @@ media-no-description = Keine Beschreibung verfügbar.
 media-no-episodes = Keine Folgen verfügbar.
 media-more-like-this = Ähnliche Titel
 media-rating-aria = BBFC-Freigabe { $rating }
+media-rating-nr = Nicht bewertet
 share-copied = Link kopiert
 share-copied-instagram = Link kopiert — in Instagram einfügen
 share-copied-snapchat = Link kopiert — in Snapchat einfügen
@@ -1026,6 +1029,7 @@ login-reason-place-body = „Weiterschauen“ setzt genau dort fort, wo aufgehö
 login-ready = Bereit zum Anschauen? Geben Sie Ihre E-Mail-Adresse ein, um ein Konto zu erstellen oder sich anzumelden.
 mylist-empty = Ihre Liste ist leer
 mylist-empty-hint = Fügen Sie Serien und Filme hinzu, um den Überblick über Ihre Wunschliste zu behalten.
+search-results-for = Ergebnisse für „{ $query }“
 search-no-matches = Keine Treffer gefunden
 search-try-another = Versuchen Sie es mit einem anderen Suchbegriff.
 search-explore = Titel entdecken
@@ -1116,3 +1120,903 @@ genre-funny = Lustig
 genre-girls-take-the-lead = Mädchen in der Hauptrolle
 genre-singing-dancing = Singen & Tanzen
 genre-spooky-stuff = Gruseliges
+genre-watch-with-the-family = Mit der Familie schauen
+genre-animals = Tiere
+genre-animated = Animiert
+genre-princess-tales = Prinzessinnen-Geschichten
+genre-animation = Animation
+genre-drama = Drama
+genre-comedy = Komödie
+genre-science-fiction = Science-Fiction
+genre-music = Musik
+genre-family = Familie
+genre-action-adventure = Action & Abenteuer
+genre-news = Nachrichten
+genre-soap = Soap
+genre-talk = Talk
+genre-war-politics = Krieg & Politik
+genre-tv-movie = TV-Film
+profile-manage-title = Profile verwalten:
+profile-whos-watching = Wer schaut?
+profile-sign-out = Abmelden von { $brand }
+profile-enter-pin = Geben Sie Ihre PIN ein, um auf das Profil von { $name } zuzugreifen.
+profile-add = Profil hinzufügen
+profile-edit-title = Profil bearbeiten
+profile-edit-hint = Aktualisieren Sie den Namen, das Symbol und das Schloss dieses Profils.
+profile-add-hint = Fügen Sie ein Profil für eine weitere Person hinzu, die { $brand } nutzt.
+nf-original = EIN 404-FEHLER ORIGINAL
+nf-unknown-agent = Unbekannter Agent
+nf-system-code = Systemcode
+nf-endpoint = Angefragter Endpunkt
+nf-timestamp = Zeitstempel des Vorfalls
+nf-agent = Plattform-Agent
+nf-return-home = Zur Startseite zurückkehren
+nf-more-info = Weitere Informationen
+nf-system-notice = Systemhinweis:
+nf-dim1-title = 404: Das Silizium-Vakuum
+nf-dim2-title = 404: Offline-Signal
+nf-dim3-title = 404: Zersplitterte Hinweise
+nf-dim4-title = 404: Verlorene Filmrollen
+nf-dim5-title = 404: Der Beobachter
+nf-dim6-title = 404: Kosmische Drift
+nf-dim1-synopsis = Tief im Inneren des Mainboards fällt ein leuchtender roter Pixelwürfel in einen dunklen Wirbel, beobachtet von einem silhouettenhaften karmesinroten Auge, das aus den Schatten eines zerrissenen Leinwandschirms späht.
+nf-dim2-synopsis = Reihe um Reihe leerer Samt-Kinositze. Auf der Bühne flackert ein kaputtes Retro-CRT-Fernseher mit Farbtestbildern und Signalrauschen unter einem glitchigen Himmel.
+nf-dim3-synopsis = Ein einsamer Detektiv im Trenchcoat durchsucht einen dunklen Raum und sucht nach einem fehlenden Web-Asset, das in tausend Glasscherben zerbrochen ist. Jede Spur ist ein kaputter Redirect.
+nf-dim4-synopsis = Ein riesiges, atmendes Raster aus vergessenen Filmrollen pulsiert in hochkontrastigem Rot. Während man das Archiv durchsucht, reißt der Zelluloidstreifen, und man bleibt im kinematografischen Dunkel zurück.
+nf-dim5-synopsis = Ein leuchtender digitaler Projektorstrahl durchschneidet ein wirbelndes Schwarzes Loch und scheint durch eine zersplitterte Linse, die wie ein aufragender mechanischer Wächter zurückstarrt.
+nf-dim6-synopsis = Getrieben in einer kosmischen Wolke, schweben uralte Weltraumkabel durch eine Sternennebel und versuchen, Pakete durch einen Riss im Raumzeitgewebe zu routen. Verbindungstimeout.
+nf-zone-1 = Hardware-Glitches
+nf-zone-2 = Signalstörungen
+nf-zone-3 = Verlorene Datendateien
+nf-zone-4 = Analoge Korruption
+nf-zone-5 = Wächter des Leeren
+nf-zone-6 = Kosmische Drift
+legal-privacy-title = Datenschutzerklärung
+legal-privacy-updated = Zuletzt aktualisiert: August 2026
+legal-privacy-1-title = 1. Einleitung
+legal-privacy-1-body = { $brand } ist ein Link-Aggregator und eine Suchmaschine. Diese Datenschutzerklärung erklärt, wie wir Ihre persönlichen Informationen sammeln, verwenden und schützen, wenn Sie unseren Dienst nutzen.
+legal-privacy-2-title = 2. Informationen, die wir sammeln
+legal-privacy-2-body = Wir sammeln begrenzte persönliche Informationen, um den Dienst bereitzustellen und zu verbessern:
+legal-privacy-2-b1 = <strong>Kontoinformationen:</strong> E-Mail-Adresse und Anzeigename, wenn Sie ein Konto erstellen.
+legal-privacy-2-b2 = <strong>Nutzungsdaten:</strong> Anonymisierte Verlaufsdaten und Einstellungen, begrenzt auf Ihr Profil.
+legal-privacy-2-b3 = <strong>Sitzungs-Cookies:</strong> Werden verwendet, um Sie sicher angemeldet zu halten.
+legal-privacy-3-title = 3. Was wir nicht tun
+legal-privacy-3-body = Wir verpflichten uns zu Ihrem Datenschutz:
+legal-privacy-3-b1 = <strong>Ihre Daten weitergeben:</strong> Wir geben keine personenbezogenen Daten an Werbetreibende oder Datenhändler weiter.
+legal-privacy-3-b2 = <strong>Ihre Daten verkaufen:</strong> Wir verkaufen, vermieten oder tauschen niemals personenbezogene Daten mit Dritten.
+legal-privacy-3-b3 = <strong>Ihren Browser identifizieren:</strong> Wir führen kein Browser-Fingerprinting oder eine andere Form der Geräteidentifizierung durch.
+legal-privacy-4-title = 4. Rechtliche Grundlage für die Verarbeitung (UK-DSGVO)
+legal-privacy-4-body = Gemäß der UK-Datenschutzgrundverordnung (UK-DSGVO) stützen wir die Verarbeitung dieser Informationen auf folgende rechtliche Grundlagen:
+legal-privacy-4-b1 = <strong>Vertragliche Erforderlichkeit:</strong> Um Ihnen die Link-Aggregations- und Profilfunktionen bereitzustellen, für die Sie sich angemeldet haben.
+legal-privacy-4-b2 = <strong>Legitime Interessen:</strong> Zur Analyse der allgemeinen Plattformnutzung und zur Verbesserung der Leistungsfähigkeit unter Verwendung streng anonymisierter, aggregierter Daten.
+legal-privacy-5-title = 5. Wie wir Ihre Daten speichern
+legal-privacy-5-body = Ihre Daten werden sicher über Supabase (unser Backend-Infrastrukturanbieter) gespeichert. Wir verwenden Row-Level-Security-(RLS)-Richtlinien, um sicherzustellen, dass nur Sie auf Ihre Daten zugreifen können.
+legal-privacy-6-title = 6. Dienste von Drittanbietern
+legal-privacy-6-body = Wir verwenden APIs von Drittanbietern, darunter TMDB (für Metadaten) und Cloudflare Turnstile (für Botschutz). Diese Dienste unterliegen ihren eigenen Datenschutzrichtlinien.
+legal-privacy-7-title = 7. Ihre Rechte zum Datenschutz
+legal-privacy-7-body = Gemäß der UK-DSGVO haben Sie folgende Rechte:
+legal-privacy-7-b1 = <strong>Zugangsrecht:</strong> Fordern Sie eine Kopie der personenbezogenen Daten an, die wir über Sie gespeichert haben.
+legal-privacy-7-b2 = <strong>Recht auf Löschung:</strong> Fordern Sie die Löschung Ihrer personenbezogenen Daten an (das „Recht auf Vergessenwerden“). Sie können Ihr Konto direkt auf der Seite Einstellungen löschen.
+legal-privacy-7-b3 = <strong>Recht auf Berichtigung:</strong> Fordern Sie die Berichtigung ungenauer personenbezogener Daten an, die wir über Sie gespeichert haben.
+legal-privacy-7-b4 = <strong>Widerspruchsrecht:</strong> Widersprechen Sie der Verarbeitung Ihrer personenbezogenen Daten, wenn wir uns auf legitime Interessen stützen.
+legal-privacy-8-title = 8. Kontakt
+legal-privacy-8-body = Wenn Sie Fragen zu dieser Datenschutzrichtlinie haben oder Ihre Datenrechte ausüben möchten, wenden Sie sich bitte an den Repository-Betreiber unter { $support_email }.
+legal-terms-title = Nutzungsbedingungen
+legal-terms-updated = Zuletzt aktualisiert: August 2026
+legal-terms-1-title = 1. Annahme der Bedingungen
+legal-terms-1-body = Durch den Zugriff auf oder die Nutzung von { $brand } erklären Sie sich mit diesen Nutzungsbedingungen und unserer Datenschutzerklärung einverstanden. Wenn Sie nicht einverstanden sind, nutzen Sie den Dienst nicht.
+legal-terms-2-title = 2. Art des Dienstes
+legal-terms-2-body = { $brand } ist ein Link-Aggregator und eine Suchmaschine. Wir hosten, laden, übertragen oder kontrollieren keine Videoinhalte auf unseren Servern. Alle Medien stammen von Drittanbieter-Plattformen.
+legal-terms-3-title = 3. Benutzerkonten
+legal-terms-3-body = Um auf bestimmte Funktionen zuzugreifen (wie das Speichern einer Merkliste oder das Synchronisieren des Fortschritts), müssen Sie ein Konto erstellen. Sie sind dafür verantwortlich, die Sicherheit Ihrer Kontodaten zu gewährleisten.
+legal-terms-4-title = 4. Zulässige Nutzung
+legal-terms-4-body = Sie erklären sich damit einverstanden, den Dienst nicht zu folgenden Zwecken zu nutzen:
+legal-terms-4-b1 = Sicherheitsfunktionen des Dienstes zu umgehen, zu deaktivieren oder zu beeinträchtigen.
+legal-terms-4-b2 = Automatisierte Tools (wie Bots, Scraper oder Crawler) zu verwenden, um auf den Dienst zuzugreifen oder Abfragen zu stellen, die die Leistung beeinträchtigen könnten.
+legal-terms-4-b3 = Versuche zu unternehmen, die Verwundbarkeit der Infrastruktur des Dienstes zu prüfen, zu scannen oder zu testen.
+legal-terms-4-b4 = In Verhalten verwickelt zu sein, das rechtswidrig, schädlich oder von uns als unangemessen eingestuft wird.
+legal-terms-5-title = 5. Geistiges Eigentum
+legal-terms-5-body = Die Marke { $brand }, das Interface-Design und der ursprüngliche Softwarecode sind durch das Urheberrecht geschützt. Alle über { $brand } zugänglichen Medieninhalte bleiben das Eigentum der jeweiligen Rechteinhaber.
+legal-terms-6-title = 6. Haftungsausschluss und Begrenzung der Haftung
+legal-terms-6-body = Der Dienst wird „wie besehen“ und „wie verfügbar“ ohne jegliche Gewährleistung bereitgestellt. { $brand } garantiert keine kontinuierliche Verfügbarkeit und haftet nicht für indirekte oder Folgeschäden.
+legal-terms-7-title = 7. Inhalte Dritter
+legal-terms-7-body = { $brand } bietet Zugriff auf Links, die auf Inhalte verweisen, die auf unabhängigen Servern von Drittanbietern gehostet werden. Wir haben keine Kontrolle über und übernehmen keine Verantwortung für die Inhalte, Datenschutzrichtlinien oder Praktiken von Drittanbieter-Websites.
+legal-terms-8-title = 8. Kündigung
+legal-terms-8-body = Wir behalten uns das Recht vor, Ihr Konto und den Zugriff auf den Dienst nach unserem alleinigen Ermessen ohne vorherige Ankündigung zu sperren oder zu beenden, wenn wir der Ansicht sind, dass Ihr Verhalten gegen diese Bedingungen verstößt oder sich nachteilig auf andere Nutzer, uns oder Dritte auswirkt.
+legal-terms-9-title = 9. Anwendbares Recht
+legal-terms-9-body = Diese Nutzungsbedingungen unterliegen dem Recht von England und Wales und sind entsprechend auszulegen, ohne Berücksichtigung von Kollisionsnormen.
+legal-terms-10-title = 10. Kontakt
+legal-terms-10-body = Bei Fragen zu diesen Nutzungsbedingungen wenden Sie sich bitte über die Kontaktseite an uns.
+legal-cookie-policy-title = Cookie-Richtlinie
+legal-cookie-policy-updated = Zuletzt aktualisiert: 16. August 2026
+legal-cookie-policy-1-title = Wie wir Cookies verwenden
+legal-cookie-policy-1-body = Wir verwenden Cookies und ähnliche Tracking-Technologien, um die Aktivität auf unserem Dienst zu verfolgen und bestimmte Informationen zu speichern. Cookies sind Dateien mit kleinen Datenmengen, die einen anonymen eindeutigen Bezeichner enthalten können.
+legal-dmca-title = DMCA Safe Harbor Notice
+legal-dmca-updated = Zuletzt aktualisiert: August 2026
+legal-dmca-1-title = 1. Unsere Rolle – Link-Aggregator, kein Host
+legal-dmca-1-body = { $brand } ist ein Link-Aggregator und eine Suchmaschine. Wir hosten, laden, speichern, übertragen oder kontrollieren keine Video- oder Mediendateien. Alle Inhalte werden von Drittanbieter-Servern bereitgestellt, die vollständig außerhalb unserer Kontrolle liegen.
+legal-dmca-2-title = 2. Notice-and-Takedown-Verfahren
+legal-dmca-2-body = Wenn Sie Inhaber von Urheberrechten sind oder ein bevollmächtigter Vertreter eines Urheberrechtsinhabers, und Sie der Ansicht sind, dass ein Link in unserem Index Ihre Urheberrechte verletzt, senden Sie bitte eine schriftliche Mitteilung an { $support_email } mit folgenden Angaben:
+legal-dmca-2-b1 = <strong>Physische oder elektronische Unterschrift</strong> des Urheberrechtsinhabers oder seines bevollmächtigten Vertreters.
+legal-dmca-2-b2 = <strong>Identifizierung des urheberrechtlich geschützten Werks</strong>, dessen Verletzung Sie geltend machen, oder – falls mehrere Werke durch eine einzige Mitteilung abgedeckt sind – eine repräsentative Liste dieser Werke.
+legal-dmca-2-b3 = <strong>Identifizierung des Materials</strong> (d. h. des spezifischen { $brand }-Links oder der URL), dessen Verletzung Sie geltend machen, mit ausreichenden Informationen, damit wir es lokalisieren können.
+legal-dmca-3-title = 3. Weitere erforderliche Angaben
+legal-dmca-3-body = Ihre DMCA-Meldung muss außerdem folgende Angaben enthalten:
+legal-dmca-3-b1 = <strong>Ihre Kontaktdaten</strong> — Name, Adresse, Telefonnummer und E-Mail-Adresse.
+legal-dmca-3-b2 = <strong>Eine Erklärung des guten Glaubens</strong> — dass Sie in gutem Glauben annehmen, dass die beanstandete Nutzung des Materials nicht vom Urheberrechtsinhaber, dessen Bevollmächtigten oder dem Gesetz autorisiert ist.
+legal-dmca-3-b3 = <strong>Eine Erklärung zur Richtigkeit</strong> — dass die Angaben in der Meldung zutreffend sind und dass Sie, unter Androhung der Strafe wegen Meineids, befugt sind, im Namen des Urheberrechtsinhabers zu handeln.
+legal-dmca-3-b4 = <strong>Meldungen senden an:</strong> { $support_email }
+legal-dmca-3-b5 = Wir prüfen alle Meldungen und entfernen Links aus unserem Index, die die oben genannten gesetzlichen Anforderungen erfüllen.
+legal-dmca-3-b6 = <strong>Gegenbenachrichtigung:</strong> Wenn Sie der Ansicht sind, dass Ihr Link zu Unrecht entfernt wurde, können Sie gemäß 17 U.S.C. § 512(g) eine Gegenbenachrichtigung einreichen.
+legal-dmca-4-title = 4. Wichtige Einschränkung — Wir können nur Links entfernen
+legal-dmca-4-body = Da { $brand } keine Mediendateien hostet, können wir nur den Link aus unserem Suchindex entfernen. Wir können den zugrunde liegenden Inhalt nicht vom Server entfernen, auf dem er gehostet wird.
+legal-dmca-5-title = 5. Richtlinie für wiederholte Rechtsverletzer
+legal-dmca-5-body = In geeigneten Fällen und nach unserem alleinigen Ermessen wird { $brand } den Zugriff für Benutzer oder Konten deaktivieren oder beenden, die wiederholte Rechtsverletzer sind.
+legal-dmca-6-title = 6. Keine Anerkennung von Haftung
+legal-dmca-6-body = Die Entfernung eines Links aus unserem Index als Reaktion auf eine DMCA-Meldung stellt keine Anerkennung durch { $brand } dar, dass eine Rechtsverletzung vorliegt.
+legal-disclaimer-title = Haftungsausschluss
+legal-disclaimer-updated = Zuletzt aktualisiert: August 2026
+legal-disclaimer-1-title = 1. Keine Inhaltsbereitstellung
+legal-disclaimer-1-body = { $brand } ist ein Link-Aggregator und eine Suchmaschine für öffentlich verfügbare eingebettete Medialinks. Wir hosten, laden, speichern, übertragen oder kontrollieren keine Video-, Audio- oder Medieninhalte auf unseren Servern.
+legal-disclaimer-2-title = 2. Inhalte Dritter — Keine Haftung
+legal-disclaimer-2-body = Alle Inhalte, die über von { $brand } indexierte Links zugänglich sind, stammen von externen, unabhängigen Drittanbietern. { $brand } hat keinen Einfluss auf und übernimmt keine Verantwortung für die Rechtmäßigkeit, Richtigkeit, Qualität oder Verfügbarkeit dieser Inhalte.
+legal-disclaimer-3-title = 3. Annahme von Risiken durch den Nutzer
+legal-disclaimer-3-body = Sie erkennen an und stimmen zu, dass die Nutzung von { $brand } und der Zugriff auf Inhalte über externe eingebettete Links ausschließlich auf Ihr eigenes Risiko erfolgen. { $brand } schließt alle Gewährleistungen, ausdrücklich oder stillschweigend, ausdrücklich aus.
+legal-disclaimer-4-title = 4. Verfügbarkeit von Links
+legal-disclaimer-4-body = Von { $brand } indexierte eingebettete Links verweisen auf Ressourcen auf Servern von Drittanbietern. Wir können die anhaltende Verfügbarkeit, Qualität oder Vollständigkeit der verlinkten Inhalte nicht garantieren. Links können ohne Vorankündigung defekt oder nicht mehr verfügbar sein.
+legal-disclaimer-5-title = 5. Richtigkeit der Informationen
+legal-disclaimer-5-body = Die auf { $brand } angezeigten Metadaten (einschließlich Titel, Beschreibungen, Bewertungen und Bilder) stammen von Drittanbietern von Daten wie TMDB. Wir garantieren nicht für die Richtigkeit oder Vollständigkeit dieser Metadaten.
+help-ui-kind-policy = Richtlinie
+help-ui-filter-all = Alle
+help-ui-filter-articles = Hilfeartikel
+help-ui-filter-policies = Richtlinien
+help-ui-recent = Letzte Suchen
+help-ui-clear = Leeren
+help-ui-did-you-mean = Meinten Sie „{ $query }“?
+help-ui-viewed = Kürzlich angesehen
+help-ui-on-this-page = Auf dieser Seite
+help-ui-other-policies = Weitere Richtlinien
+help-ui-section-link = Link zu diesem Abschnitt
+help-ui-policy-questions = Fragen zu dieser Richtlinie?
+help-topic-legal = Rechtliches und Richtlinien
+help-group-policies = Richtlinien
+help-art-fake-sites-title = So erkennt man gefälschte { $brand }-Seiten und -Nachrichten
+help-art-fake-sites-summary = Die offiziellen Adressen, was wir niemals verlangen und was man bei einer Kopie tun sollte.
+help-art-fake-sites-keywords = gefälscht betrug phishing kopie nachahmung offizielle adresse sichere download passwort zahlung e-mail
+help-art-fake-sites-body =
+    Kopien beliebter Seiten tauchen ständig auf. Dies sind die einzigen Adressen, die zu { $brand } gehören:
+
+    - <b>streams.watch</b>, die App
+    - <b>help.streams.watch</b>, dieses Hilfezentrum
+    - <b>@streams.watch</b>-E-Mail-Adressen, z. B. <a=mailto:{ $help_email }>{ $help_email }</a>
+
+    ## Was wir niemals verlangen
+    - Eine Kartennummer, Bankdaten oder eine Zahlung. { $brand } ist kostenlos. Siehe <a=/help/article/free-to-use>Ist { $brand } kostenlos?</a>
+    - Das Passwort per E-Mail, Chat oder über ein Formular außerhalb der Anmeldeseite.
+    - Ein Download, eine Erweiterung, einen Codec oder ein Update zum Ansehen.
+
+    ## Wenn Sie eine Kopie finden
+    1. Schließen Sie die Seite und geben Sie keine Daten ein.
+    2. Falls Sie ein Passwort eingegeben haben, ändern Sie es auf der Seite, zu der es gehört.
+    3. Senden Sie die Adresse an <a=mailto:{ $help_email }>{ $help_email }</a>, damit wir sie melden können.
+help-art-security-report-title = Sicherheitsproblem melden
+help-art-security-report-summary = Wie man uns sicher über eine Schwachstelle informiert.
+help-art-security-report-keywords = security vulnerability bug bounty responsible disclosure exploit hack report weakness
+help-art-security-report-body =
+    Wenn Sie einen Weg gefunden haben, auf die Daten anderer zuzugreifen, ein Profil-PIN zu umgehen oder die Seite zu kompromittieren, informieren Sie uns bitte, bevor Sie es jemand anderem sagen.
+
+    1. Schreiben Sie an <a=mailto:{ $help_email }>{ $help_email }</a> mit dem Betreff <b>Security</b>.
+    2. Beschreiben Sie, was Sie gefunden haben, die Schritte zur Reproduktion und die betroffene Seite oder Adresse.
+    3. Greifen Sie nicht auf die Daten anderer zu und testen Sie nicht mit automatisierten Anfragenfluten.
+
+    Wir lesen jeden Bericht. Die gleichen Details finden sich in der maschinenlesbaren Datei unter <a=/.well-known/security.txt>/.well-known/security.txt</a>.
+help-art-translate-title = Helfen Sie bei der Übersetzung von { $brand }
+help-art-translate-summary = Oberflächentexte befinden sich in einfachen Dateien, eine pro Sprache, und jeder kann sie verbessern.
+help-art-translate-keywords = translate translation localisation localization language contribute ftl fluent grammar gender plural
+help-art-translate-body =
+    Der gesamte Interface-Text wird pro Sprache in einer einfachen Textdatei gespeichert. Für Übersetzungen ist kein Programmieren nötig.
+
+    ## Was zu beachten ist
+    - Nachrichten sehen so aus: <b>Schlüssel = Text</b>. Nur den Text nach dem Gleichheitszeichen ändern.
+    - Wörter in geschweiften Klammern, z. B. <b>{ "{ $brand }" }</b>, werden von der App eingefügt. Diese beibehalten und bei Bedarf an die passende Stelle im Satz verschieben.
+    - Manche Nachrichten haben Formen für Einzahl und Mehrzahl (<b>1 Staffel</b>, <b>2 Staffeln</b>). Sprachen mit mehr als zwei Formen können alle hinzufügen.
+    - Wenn die Sprache ein Wort je nach Genus oder Kasus ändert, die passende Form für den Satz verwenden.
+
+    ## So wird eine Übersendung gesendet
+    An <a=mailto:{ $contribute_email }>{ $contribute_email }</a> schreiben und die Sprache sowie entweder die Datei oder einen Link zur Änderung angeben. Muttersprachler, die die Arbeit der anderen prüfen, sind die beste Kontrolle.
+help-art-cookies-explained-title = Cookies und lokaler Speicher erklärt
+help-art-cookies-explained-summary = Was der Browser für { $brand } speichert, in einfachen Worten.
+help-art-cookies-explained-keywords = Cookies lokaler Speicher Browserdaten Tracking Einwilligung Banner Einstellungen Sitzung Drittanbieter
+help-art-cookies-explained-body =
+    <b>Cookies</b> sind kleine Notizen, die eine Website vom Browser speichern lässt. <b>Lokaler Speicher</b> ist ein ähnlicher Ort, den nur die Website lesen kann und der nicht mit jeder Anfrage gesendet wird.
+
+    { $brand } verwendet den lokalen Speicher für Profile, PINs, Fortschritt und Sprache. Diese bleiben auf dem Gerät. Andere Websites, die Bilder oder Videos bereitstellen, können eigene Cookies setzen, die nicht kontrolliert werden können. Siehe <a=/help/article/sources>Wo Titel herkommen</a>.
+
+    ## Optionen
+    - Beim ersten Besuch fragt ein Banner, ob Empfehlungen das Nutzungsverhalten verwenden dürfen. Die Entscheidung kann jederzeit geändert werden.
+    - Mit <b>Ablehnen</b> bleiben alle Funktionen erhalten, die für die Nutzung der Website nötig sind, und die Personalisierung wird deaktiviert.
+    - Der Browser kann Cookies und Website-Daten auch blockieren oder löschen. In diesem Fall gehen Profile und Fortschritt verloren.
+
+    @@ cookies
+help-art-stuck-loading-title = Die Seite bleibt beim Logo oder auf einem leeren Bildschirm stehen
+help-art-stuck-loading-summary = Was zu tun ist, wenn { $brand } nicht fertig startet.
+help-art-stuck-loading-keywords = hängt Ladeanzeige Logo leer weißer Bildschirm Startbildschirm startet nicht WebAssembly wasm eingefroren Start
+help-art-stuck-loading-body =
+    Während { $brand } startet, wird das Würfel-Logo mit einer Reihe sich bewegender Punkte angezeigt. Das sollte nur wenige Sekunden dauern. { $brand } läuft als WebAssembly-App, daher bleibt man auf diesem Bildschirm, wenn der Browser oder eine Einstellung WebAssembly deaktiviert.
+
+    1. Laden Sie die Seite mit <b>Strg + Umschalt + R</b> (auf dem Mac <b>Cmd + Umschalt + R</b>) neu, um die neueste Version abzurufen.
+    2. Öffnen Sie die Seite in einem privaten Fenster. Wenn es dort funktioniert, stört eine Erweiterung. Siehe <a=/help/article/extensions-blockers>Erweiterungen, die den Player blockieren</a>.
+    3. Aktualisieren Sie Ihren Browser. Siehe <a=/help/article/supported-browsers>Unterstützte Browser</a>.
+    4. Deaktivieren Sie für diese Website jeden Modus, der Web-Funktionen einschränkt, wie z. B. einen Lockdown- oder strikten Sicherheitsmodus.
+    5. Löschen Sie die Daten dieser Website. Siehe <a=/help/article/clear-data>So löschen Sie Ihre gespeicherten Daten</a>.
+
+    @@ refresh
+help-art-slow-pages-title = Seiten laden langsam
+help-art-slow-pages-summary = So wird das Browsen bei langsamer Verbindung oder älteren Geräten schneller.
+help-art-slow-pages-keywords = langsam lag performance geschwindigkeit laden speicher altes handy ruckeln scrollen vorschauen
+help-art-slow-pages-body =
+    Beim ersten Besuch wird die App heruntergeladen, ca. 3 MB. Danach besteht der größte Teil der Wartezeit aus Bildern und Vorschauen.
+
+    - Deaktivieren Sie <b>Automatische Vorschauen</b> in den <b>Einstellungen</b> unter <b>Wiedergabeeinstellungen</b>. Trailer, die von selbst starten, verbrauchen Daten und Speicher.
+    - Schließen Sie Tabs und andere Apps, die das Netzwerk oder viel Speicherplatz nutzen.
+    - Verwenden Sie einen aktuellen Browser. Ältere Browser führen die App langsamer aus.
+    - Bei mobilen Daten: Wechseln Sie, wenn möglich, zu Wi-Fi.
+
+    @@ diagnostics
+help-art-vpn-network-title = VPNs, Schul- und Arbeitsnetzwerke
+help-art-vpn-network-summary = Warum einige Netzwerke Titel oder Bilder blockieren und was man versuchen kann.
+help-art-vpn-network-keywords = vpn proxy schule arbeit netzwerk firewall dns filter blockiert safedns eingeschränkt wifi
+help-art-vpn-network-body =
+    { $brand } lädt Details und Bilder aus einem öffentlichen Filmkatalog und streamt von unabhängigen Quellen. Einige Netzwerke blockieren diese Websites, und einige Quellen lehnen bestimmte Adressen ab.
+
+    - <b>VPN oder Proxy.</b> Einige Quellen antworten nicht auf VPN-Adressen. Schalten Sie es aus oder wählen Sie ein anderes Land.
+    - <b>Schule, Arbeit oder öffentliches Wi-Fi.</b> Filter blockieren oft Streaming oder den Katalog. Versuchen Sie die mobilen Daten Ihres Handys.
+    - <b>DNS-Filter.</b> Ein filternder DNS-Dienst kann den Katalog blockieren und Zeilen oder Bilder leer lassen. Verwenden Sie einen anderen DNS oder deaktivieren Sie den Filter für diese Website.
+
+    Die Geräteprüfung zeigt, welchen Dienst Ihr Netzwerk nicht erreichen kann.
+
+    @@ diagnostics
+help-art-is-down-title = Ist { $brand } down?
+help-art-is-down-summary = Prüfen Sie, welche Teile von Ihrem Gerät aus funktionieren.
+help-art-is-down-keywords = ausfall status nicht funktioniert offline nicht verfügbar server wartung fehler seite
+help-art-is-down-body =
+    { $brand } hat drei Teile, die unabhängig voneinander ausfallen können:
+
+    - <b>Die App</b>, die Sie gerade ansehen.
+    - <b>Der Film- und Serienkatalog</b>, der Details und Bilder bereitstellt.
+    - <b>Die Streaming-Quellen</b>, die das Video liefern.
+
+    Führen Sie die Prüfung durch, um zu sehen, welche davon von Ihrem Gerät aus antworten. Wenn der Katalog oder die Quellen für niemanden antworten, warten Sie ein paar Minuten und versuchen Sie es erneut. Wenn nur für Sie ein Teil nicht erreichbar ist, siehe <a=/help/article/vpn-network>VPNs, Schul- und Arbeitsnetzwerke</a>.
+
+    @@ diagnostics
+help-art-no-sound-title = Kein Ton
+help-art-no-sound-summary = Beheben Sie das Problem, wenn ein Titel ohne Ton abgespielt wird.
+help-art-no-sound-keywords = kein ton audio stumm leise lautsprecher bluetooth kopfhörer autoplay
+help-art-no-sound-body =
+    1. Drücken Sie <b>M</b> oder wählen Sie den Lautsprecher-Button im Player, um den Ton zu aktivieren. Browser starten Videos oft stumm, wenn sie automatisch beginnen, siehe <a=/help/article/autoplay-blocked>Video startet stumm</a>.
+    2. Drücken Sie die <b>Pfeiltaste nach oben</b>, um die Lautstärke zu erhöhen, und prüfen Sie die Lautstärke Ihres Geräts.
+    3. Prüfen Sie, ob der Browser-Tab nicht stummgeschaltet ist. Klicken Sie mit der rechten Maustaste auf den Tab, um dies zu sehen.
+    4. Öffnen Sie <b>Audio & Untertitel</b> und wählen Sie einen anderen Tonspuren, falls vorhanden.
+    5. Wenn Sie Bluetooth verwenden, trennen Sie Ihre Kopfhörer und verbinden Sie sie erneut.
+help-art-autoplay-blocked-title = Video startet stumm oder startet nicht automatisch
+help-art-autoplay-blocked-summary = Warum Browser verhindern, dass Ton automatisch startet, und wie { $brand } damit umgeht.
+help-art-autoplay-blocked-keywords = autoplay blockiert stumm start richtlinie browser ton auto play previews trailer
+help-art-autoplay-blocked-body =
+    Browser erlauben es einer Seite nicht, Video mit Ton zu starten, bis Sie darauf geklickt oder getippt haben. { $brand } versucht zunächst, mit Ton zu starten. Wenn der Browser dies ablehnt, startet es stumm und zeigt den stummen Lautsprecher an, und Sie können den Ton mit <b>M</b> oder dem Lautsprecher-Button aktivieren.
+
+    - Damit Trailer und Vorschauen nicht mehr automatisch starten, deaktivieren Sie <b>Autoplay-Vorschauen</b> in <b>Einstellungen</b> unter <b>Wiedergabeeinstellungen</b>.
+    - Wenn ein Titel nie startet, siehe <a=/help/article/wont-play>Ein Titel wird nicht abgespielt</a>.
+help-art-clips-title = Clips verwenden
+help-art-clips-summary = Durch kurze Vorschauen scrollen und das, was man mag, zur Liste hinzufügen.
+help-art-clips-keywords = Clips Kurzvideos Vorschauen Scrollen Vertikal Trailer Wischen Stummschalten Info Meine Liste
+help-art-clips-body =
+    <b>Clips</b> zeigt kurze Vorschauen nacheinander an, in der Leiste unten auf dem Smartphone.
+
+    1. Scrollen oder wischen, um zum nächsten Clip zu gelangen.
+    2. Auf die Lautsprecher-Taste tippen, um den Ton ein- oder auszuschalten. Clips starten stumm.
+    3. Auf <b>Meine Liste</b> tippen, um den Titel zu speichern, auf <b>Wiedergabe</b>, um ihn anzusehen, oder auf <b>Info</b>, um mehr darüber zu erfahren.
+help-art-genres-title = Nach Genre stöbern
+help-art-genres-summary = Filme und Serien nach dem gewünschten Titeltyp eingrenzen.
+help-art-genres-keywords = Genres Kategorien Komödie Drama Horror Action Filtern Stöbern Filme Serien Untermenü
+help-art-genres-body =
+    1. <b>Filme</b> oder <b>Serien</b> in der oberen Leiste öffnen.
+    2. Auf <b>Genres</b> neben dem Seitentitel tippen.
+    3. Ein Genre auswählen. Die Seite zeigt dann nur dieses Genre mit dafür erstellten Reihen.
+
+    Um zu allem zurückzukehren, <b>Filme</b> oder <b>Serien</b> erneut öffnen. Auf dem Smartphone öffnet sich die Genreliste als Blatt von unten.
+help-art-top-10-title = Was sind die Top-10-Reihen?
+help-art-top-10-summary = Eine Reihe mit den zehn Titeln, die gerade am meisten angesehen werden.
+help-art-top-10-keywords = Top 10 Top Ten beliebt Trending Ranking Zahlen Reihe am meisten angesehen
+help-art-top-10-body = Eine <b>Top-10</b>-Reihe zeigt die zehn am meisten angesehenen Titel des Moments, jeweils mit einer großen Zahl. Sie folgt der aktuellen Beliebtheit im Katalog und ändert sich von Tag zu Tag. Sie ist für alle gleich und basiert nicht auf dem eigenen Profil.
+help-art-episodes-title = Staffeln und Episoden
+help-art-episodes-summary = Eine Staffel und eine Episode im Detailfenster oder im Player auswählen.
+help-art-episodes-keywords = Staffeln Episoden Serien Liste Nächste Episode Schublade Serienauswahl TV-Sendungen
+help-art-episodes-body =
+    ## Vor der Wiedergabe
+    Eine Serie öffnen und auf <b>Episoden</b> tippen. Über das Staffelmenü die Staffel wechseln und dann eine Episode auswählen.
+
+    ## Während der Wiedergabe
+    - Auf <b>Episoden</b> in den Player-Steuerungselementen tippen, um die Liste zu öffnen, ohne den Player zu verlassen.
+    - Auf <b>Nächste Episode</b> tippen oder sie automatisch starten lassen. Siehe <a=/help/article/skip-intro-next>Intro überspringen und Nächste Episode</a>.
+help-art-share-title = So teilt man einen Titel
+help-art-share-summary = Einen Link zu einem Titel an eine Freundin oder einen Freund senden.
+help-art-share-keywords = Teilen Link WhatsApp Nachrichten Instagram Snapchat Kopieren Senden Freundin Freund
+help-art-share-body =
+    1. Öffne die Details eines Titels und wähle <b>Teilen</b>.
+    2. Wähle <b>WhatsApp</b> oder <b>Nachrichten</b>, um den Link zu senden, oder <b>Link kopieren</b>, um ihn überall einzufügen.
+    3. Für Instagram und Snapchat wird der Link kopiert und in die App eingefügt.
+
+    Der Link öffnet die Titelseite auf { $brand }. Die Person, die ihn öffnet, muss nicht angemeldet sein.
+help-art-title-details-title = Das Titeldetails-Fenster
+help-art-title-details-summary = Was man lesen und tun kann, bevor man auf Abspielen drückt.
+help-art-title-details-keywords = mehr info details modal besetzung genres handlung ähnliche mehr wie dieser trailer bewertung match
+help-art-title-details-body =
+    Wähle eine Titelkarte oder <b>Mehr Infos</b>, um die Details zu öffnen.
+
+    - <b>Abspielen</b> oder <b>Weiter</b> startet den Titel an der Stelle, an der man aufgehört hat.
+    - <b>Meine Liste</b> speichert ihn, und der Daumen bewertet ihn.
+    - Die Zusammenfassung, die Besetzung, die Genres und ein paar Wörter, die die Stimmung beschreiben, helfen bei der Entscheidung.
+    - Für Serien listet <b>Folgen</b> die Staffeln auf.
+    - <b>Ähnliche Titel</b> zeigt Titel, die inhaltlich ähnlich sind, was ein guter Weg ist, etwas Neues zu finden.
+help-art-accessibility-title = Barrierefreiheit auf { $brand }
+help-art-accessibility-summary = Untertitel, Tastatursteuerung und Anzeigeeinstellungen, die helfen.
+help-art-accessibility-keywords = barrierefreiheit screen reader tastatur untertitel untertitel größe kontrast zoom reduzierte bewegung behinderung
+help-art-accessibility-body =
+    - <b>Untertitel.</b> Wähle Sprache, Größe, Farbe und Hintergrund in <b>Einstellungen</b>. Siehe <a=/help/article/subtitles>So nutzt man Untertitel, Bildunterschriften oder wählt die Audiosprache</a>.
+    - <b>Tastatur.</b> Nutze <b>Tab</b>, um zwischen Steuerelementen zu wechseln, und <b>Esc</b>, um Fenster zu schließen. Der Player hat eigene Tasten, siehe <a=/help/article/shortcuts>Tastaturkürzel</a>.
+    - <b>Textgröße.</b> Zoome den Browser mit <b>Ctrl</b> und <b>+</b> (<b>Cmd</b> und <b>+</b> auf einem Mac). Das Layout passt sich an.
+    - <b>Bewegung.</b> Wenn das Gerät nach reduzierter Bewegung fragt, bleibt das animierte Logo still.
+
+    Wenn etwas schwer zu bedienen ist, teile es uns auf der Seite <a=/help/article/report-bug>Problem melden</a> mit. Wir nehmen diese Meldungen ernst.
+help-art-profile-icons-title = So wählt man ein Profilsymbol
+help-art-profile-icons-summary = Wähle einen Avatar für ein Profil.
+help-art-profile-icons-keywords = profil symbol avatar bild bild ändern wählen charakter
+help-art-profile-icons-body =
+    1. Öffnen Sie <b>Profile verwalten</b> und wählen Sie das Profil aus.
+    2. Wählen Sie das Symbol aus.
+    3. Wählen Sie eines aus den Gruppen und klicken Sie auf <b>Speichern</b>.
+
+    Ein Kinderprofil verwendet standardmäßig das gestreifte Kinder-Symbol, es sei denn, Sie wählen ein anderes aus. Sie können den Symbolauswahlbereich auch über <b>Einstellungen</b> erreichen.
+auth-questions = Fragen?
+auth-email = E-Mail-Adresse
+auth-password = Passwort
+auth-continue = Weiter
+auth-next = Weiter
+auth-show-password = Passwort anzeigen
+auth-hide-password = Passwort ausblenden
+auth-login-title = Geben Sie Ihre Daten ein, um sich anzumelden
+auth-login-subtitle = Oder starten Sie mit einem neuen Konto.
+auth-new-here = Neu bei { $brand }?
+auth-signup-link = Jetzt registrieren
+auth-welcome-back = Willkommen zurück
+auth-not-you = Nicht Sie?
+auth-signing-in = Anmeldung läuft…
+auth-remember = Angemeldet bleiben
+auth-forgot-link = Passwort vergessen?
+auth-get-help = Hilfe erhalten
+auth-resend = Bestätigungs-E-Mail erneut senden
+auth-resent = Wir haben eine neue Bestätigungs-E-Mail an { $email } gesendet.
+auth-error-email = Geben Sie eine gültige E-Mail-Adresse ein.
+auth-error-invalid = E-Mail oder Passwort ist falsch. Versuchen Sie es erneut oder setzen Sie Ihr Passwort zurück.
+auth-error-unconfirmed = Bestätigen Sie zuerst Ihre E-Mail-Adresse. Wir haben einen Link an { $email } gesendet.
+auth-error-rate = Zu viele Versuche. Warten Sie eine Minute und versuchen Sie es erneut.
+auth-error-network = Der Server konnte nicht erreicht werden. Prüfen Sie Ihre Verbindung und versuchen Sie es erneut.
+auth-error-generic = Etwas ist schiefgelaufen. Bitte versuchen Sie es erneut.
+auth-error-name = Geben Sie Ihren Vor- und Nachnamen ein.
+auth-error-password-short = Verwenden Sie ein Passwort mit mindestens { $min } Zeichen.
+auth-error-could-not-create = Wir konnten mit diesen Angaben kein Konto erstellen. Wenn Sie bereits ein Konto haben, melden Sie sich an oder setzen Sie Ihr Passwort zurück.
+auth-forgot-title = Passwort zurücksetzen
+auth-forgot-body = Geben Sie Ihre E-Mail-Adresse ein und wir senden Ihnen einen Link, um ein neues Passwort festzulegen.
+auth-send-link = Link senden
+auth-back-to-sign-in = Zurück zur Anmeldung
+auth-forgot-sent-title = E-Mail-Postfach prüfen
+auth-forgot-sent = Falls es ein Konto für { $email } gibt, ist ein Link zum Zurücksetzen des Passworts unterwegs.
+auth-step = Schritt { $n } von { $total }
+auth-signup-title = Konto erstellen
+auth-welcome-title = Willkommen bei { $brand }
+auth-tick-free = Kostenlos. Keine Zahlungsdaten, keine Verpflichtungen.
+auth-tick-devices = Ihre Liste und Ihr Fortschritt folgen Ihnen auf jedem Gerät.
+auth-tick-profiles = Profile für alle im Haushalt, mit einem sofort einsatzbereiten Kinderprofil.
+auth-details-title = Konto erstellen
+auth-details-body = Sagen Sie uns, wer Sie sind. Ihr Vorname wird zum Namen Ihres Hauptprofils.
+auth-first-name = Vorname
+auth-last-name = Nachname
+auth-password-rule = Mindestens { $min } Zeichen.
+auth-create = Konto erstellen
+auth-creating = Ihr Konto wird erstellt…
+auth-terms = Mit der Erstellung eines Kontos stimmen Sie den <a=/terms>Nutzungsbedingungen</a> und der <a=/privacy>Datenschutzerklärung</a> zu.
+auth-check-title = E-Mail prüfen
+auth-check-body = Wir haben einen Link an { $email } gesendet. Öffnen Sie ihn, um Ihre Adresse zu bestätigen, und melden Sie sich anschließend an.
+auth-check-spam = Nichts gefunden? Schauen Sie in Ihrem Spam-Ordner nach.
+landing-promo-title = { $brand } ist kostenlos.
+landing-promo-body = Kein Abo, keine Karte, keine Verpflichtungen.
+landing-learn-more = Mehr erfahren
+landing-faq = Häufig gestellte Fragen
+landing-read-more = Vollständigen Artikel lesen
+legal-credits-title = Lizenzen und Credits
+legal-credits-updated = Zuletzt aktualisiert: Oktober 2026
+legal-credits-1-title = 1. Schriften
+legal-credits-1-body = Der Text im Logo ist in einer Pixel-Schrift gesetzt. Alle anderen Interface-Texte sind in Inter gesetzt.
+legal-credits-1-b1 = <strong>Baby Blocks</strong> von Colorful Typhoon, verwendet für das { $brand }-Logo unter den Linkware-Bedingungen für private, nicht-kommerzielle Nutzung. Siehe <a href="http://www.geocities.jp/kitschlabo/" target="_blank" rel="noopener">Colorful Typhoon</a>.
+legal-credits-1-b2 = <strong>Inter</strong> von Rasmus Andersson, verwendet unter der SIL Open Font License 1.1.
+legal-credits-2-title = 2. Symbole
+legal-credits-2-body = Interface-Symbole stammen von Phosphor Icons und werden unter der MIT-Lizenz verwendet.
+legal-credits-3-title = 3. Informationen zu Filmen und Serien
+legal-credits-3-body = Dieses Produkt nutzt die TMDB-API, wird aber nicht von TMDB unterstützt oder zertifiziert. Titel, Zusammenfassungen, Poster, Bewertungen und Besetzungsinformationen stammen von <a href="https://www.themoviedb.org" target="_blank" rel="noopener">The Movie Database</a>.
+legal-credits-4-title = 4. Software
+legal-credits-4-body = { $brand } basiert auf Open-Source-Software, die jeweils unter ihrer eigenen Lizenz verwendet wird:
+legal-credits-4-b1 = <strong>Rust</strong> und <strong>Leptos</strong> für die Anwendung (MIT und Apache 2.0).
+legal-credits-4-b2 = <strong>Tailwind CSS</strong> für das Styling (MIT).
+legal-credits-4-b3 = <strong>hls.js</strong> für die adaptive Videowiedergabe (Apache 2.0).
+legal-credits-4-b4 = <strong>Project Fluent</strong> für den übersetzten Interface-Text (Apache 2.0 und MIT).
+legal-credits-5-title = 5. Marken und Kunstwerke
+legal-credits-5-body = Namen, Logos, Poster und Kunstwerke von Filmen, Serien und Diensten, die auf { $brand } angezeigt werden, gehören ihren jeweiligen Inhabern. Sie dienen nur zur Identifizierung des Titels und bedeuten nicht, dass der Inhaber { $brand } unterstützt.
+legal-credits-6-title = 6. Kontakt
+legal-credits-6-body = Wenn Sie der Meinung sind, dass hier etwas falsch genannt oder geändert werden muss, schreiben Sie bitte an { $support_email }.
+help-ui-legal-credits = Lizenzen und Credits
+landing-browse-guest = Oder einfach ohne Konto umsehen
+landing-slide-everyone = Ein Ort für alle
+landing-slide-place = Machen Sie genau dort weiter, wo Sie aufgehört haben.
+auth-login-app-title = Bereit zum Ansehen?
+auth-login-app-subtitle = Geben Sie Ihre Daten ein, um sich anzumelden oder ein neues Konto zu erstellen.
+auth-forgot-email = E-Mail-Adresse vergessen?
+auth-learn-signin = Mehr über die Anmeldung erfahren
+auth-back = Zurück
+mood-mind-bending = Kopfkino
+mood-cerebral = Intellektuell
+mood-ominous = Unheimlich
+mood-chilling = Eisig
+mood-suspenseful = Spannungsgeladen
+mood-psychological = Psychologisch
+mood-witty = Witzig
+mood-irreverent = Respektlos
+mood-gritty = Roh
+mood-atmospheric = Atmosphärisch
+mood-high-octane = Hochoktanig
+mood-exciting = Spannend
+mood-heartfelt = Herzergreifend
+mood-emotional = Emotional
+mood-imaginative = Fantasievoll
+mood-charming = Charmant
+mood-provocative = Provokant
+mood-eye-opening = Augenöffnend
+mood-compelling = Fesselnd
+mood-captivating = Fesselnd
+mood-dystopian = Dystopisch
+mood-cyberpunk = Cyberpunk
+mood-edge-of-your-seat = Spannung bis zum Schluss
+mood-slick = Glattpoliert
+mood-coming-of-age = Coming-of-Age
+mood-epic = Episch
+mood-action = Action
+mood-adventurous = Abenteuerlich
+mood-thrilling = Nervenkitzel
+mood-feel-good = Feel-Good
+mood-dark = Düster
+mood-insightful = Eindringlich
+mood-heartwarming = Herzerwärmend
+mood-family = Familie
+mood-enchanting = Bezaubernd
+mood-mythical = Mythisch
+mood-sweeping = Großartig
+mood-historical = Historisch
+mood-terrifying = Erschreckend
+mood-soulful = Seelenvoll
+mood-rhythmic = Rhythmisch
+mood-mysterious = Mysteriös
+mood-intriguing = Intrigant
+mood-romantic = Romantisch
+mood-passionate = Leidenschaftlich
+mood-sci-fi = Sci-Fi
+mood-futuristic = Futuristisch
+mood-gripping = Grippe
+mood-visceral = Viszeral
+mood-intense = Intensiv
+mood-raw = Roh
+mood-playful = Verspielt
+mood-wholesome = Unbeschwert
+mood-unscripted = Unskriptet
+mood-dramatic = Dramatisch
+mood-political = Politisch
+browse-grid-empty = Hier ist noch nichts zu sehen.
+category-series = Serien
+category-films = Filme
+category-top10-movies = Top 10 Filme heute
+category-top10-series = Top 10 Serien heute
+reads-title = Comics & Manga
+reads-empty = Keine Comics in der Bibliothek
+profile-default-main = Hauptprofil
+profile-default-kids = Kinder
+set-title = Einstellungen
+set-back = Zurück
+set-cancel = Abbrechen
+set-save = Speichern
+set-add = Hinzufügen
+set-remove = Entfernen
+set-delete = Löschen
+set-reset = Auf Standard zurücksetzen
+set-continue = Weiter
+set-none = Keine
+set-nav-profile = Profil bearbeiten
+set-nav-profiles = Profile verwalten
+set-nav-app = App-Einstellungen
+set-nav-account = Konto
+set-nav-help = Hilfe
+set-sign-out = Abmelden
+set-sign-out-body = Sie werden aus diesem Browser abgemeldet. Ihre Profile und Einstellungen bleiben in Ihrem Konto gespeichert.
+set-signin-needed = Melden Sie sich bei Ihrem Konto an, um diese Details zu ändern.
+set-manage-profiles = Profile verwalten
+set-profiles-hint = Wählen Sie ein Profil aus, um es zu bearbeiten, oder fügen Sie ein neues hinzu.
+set-add-profile = Profil hinzufügen
+set-kids-profile = Kinderprofil
+set-profile-missing = Dieses Profil konnte nicht gefunden werden.
+set-profile-name = Profilname
+set-title-profiles = Profile verwalten
+set-title-edit-profile = Profil bearbeiten
+set-title-avatar = Profilbild auswählen
+set-title-restrictions = Anzeigeeinschränkungen
+set-title-ratings = Altersfreigaben
+set-title-blocked = Titel blockieren
+set-title-lock = Profil-Sperre
+set-title-language = Anzeigesprache
+set-title-subtitles = Untertitel-Erscheinungsbild
+set-title-audio-subtitles = Audio und Untertitel
+set-title-name = Name
+set-title-app = App-Einstellungen
+set-title-account = Konto
+set-title-password = Passwort
+set-title-email = E-Mail
+set-title-phone = Mobiltelefon
+set-title-devices = Zugriff und Geräte
+set-title-privacy = Datenschutz- und Dateneinstellungen
+set-title-activity = Ansehaktivität
+set-title-delete = Konto löschen
+set-ratings-hint = In diesem Profil werden nur Titel bis zur ausgewählten Altersfreigabe angezeigt. Titel ohne Altersfreigabe werden nur angezeigt, wenn keine Einschränkungen gesetzt sind.
+set-blocked-hint = Blockierte Titel werden in diesem Profil nicht angezeigt.
+set-blocked-placeholder = Titel einer Serie oder eines Films eingeben
+set-blocked-count =
+    { $count ->
+     [one] 1 Titel
+    *[other] { $count } Titel}
+set-lock-on = An
+set-lock-off = Aus
+set-lock-title-on = Profil-Sperre ist aktiviert
+set-lock-title-off = Profil-Sperre erstellen
+set-lock-body = Machen Sie dieses Profil privat mit einer { $digits }-stelligen PIN, die zum Öffnen eingegeben werden muss.
+set-lock-pin = Neue PIN
+set-lock-invalid = Die PIN muss { $digits } Stellen haben.
+set-lock-change = PIN ändern
+set-lock-remove = Profil-Sperre entfernen
+set-lock-remove-body = Jeder kann dieses Profil ohne PIN öffnen. Geben Sie die aktuelle PIN ein, um fortzufahren.
+set-delete-profile = Profil löschen
+set-delete-profile-body = Dieses Profil, der Sehverlauf und die Einstellungen werden entfernt. Dies kann nicht rückgängig gemacht werden.
+set-language-hint = Wählen Sie die Sprache des Textes in der App. Dies gilt für alle Ihre Geräte.
+set-subtitles-hint = Ändern Sie das Aussehen der Untertitel.
+set-autoplay-next = Nächste Folge automatisch abspielen
+set-autoplay-next-hint = Startet die nächste Folge, wenn eine endet.
+set-autoplay-previews = Vorschauen automatisch abspielen
+set-autoplay-previews-hint = Spielt Vorschauen ab, während Sie stöbern.
+set-sub-preview = So werden Ihre Untertitel aussehen.
+set-sub-size = Textgröße
+set-sub-size-small = Kleiner Text
+set-sub-size-medium = Mittlerer Text
+set-sub-size-large = Großer Text
+set-sub-color = Textfarbe
+set-sub-edge = Textrand-Stil
+set-sub-edge-color = Textrand-Farbe
+set-sub-background = Hintergrundfarbe
+set-sub-window = Fensterfarbe
+set-sub-transparent = Transparenz
+set-sub-none = Keine
+set-color-white = Weiß
+set-color-yellow = Gelb
+set-color-green = Grün
+set-color-cyan = Cyan
+set-color-blue = Blau
+set-color-magenta = Magenta
+set-color-red = Rot
+set-color-black = Schwarz
+set-edge-none = Keine
+set-edge-raised = Erhöht
+set-edge-depressed = Eingedrückt
+set-edge-uniform = Gleichmäßig
+set-edge-shadow = Schragschatten
+set-app-playback = Wiedergabe
+set-data-usage = Datennutzung
+set-data-auto = Automatisch
+set-data-save = Daten sparen
+set-data-max = Maximale Daten
+set-app-notifications = Benachrichtigungen
+set-allow-notifications = Benachrichtigungen zulassen
+set-allow-notifications-hint = Erhalte Informationen zu neuen Inhalten und Updates.
+set-app-about = Über
+set-app-device = Gerät
+set-app-version = Version
+set-app-diagnostics = Diagnose
+set-check-network = Netzwerk prüfen
+set-check-network-hint = Teste die Verbindung auf Probleme, die die Wiedergabe beeinträchtigen könnten.
+set-check-running = Prüfe…
+set-playback-spec = Wiedergabespezifikation
+set-spec-drm = Widevine
+set-spec-codecs = Unterstützte Hardware-Codecs
+set-spec-hdr = HDR-Fähigkeiten
+set-spec-screen = Bildschirmgröße
+set-spec-yes = Ja
+set-spec-no = Nein
+set-spec-none = Nicht verfügbar
+set-app-legal = Rechtliches
+set-app-licences = Open-Source-Lizenzen
+set-licences-hint = Die App wurde mit { $count } Open-Source-Paketen erstellt.
+set-licences-tmdb = Film- und Seriendaten sowie Bilder stammen von TMDB. Dieses Produkt nutzt die TMDB-API, wird aber nicht von TMDB empfohlen oder zertifiziert.
+set-account-security = Sicherheit
+set-account-devices = Geräte
+set-account-profiles = Profile
+set-verify-title = Zuerst stellen wir sicher, dass es sich um dich handelt
+set-verify-body = Bestätige vor Änderungen dein Kontopasswort.
+set-password-current = Aktuelles Passwort
+set-forgot-password = Passwort vergessen?
+set-password-hint = Schütze dein Konto mit einem eindeutigen Passwort mit mindestens { $min } Zeichen.
+set-password-new = Neues Passwort
+set-password-again = Neues Passwort erneut eingeben
+set-password-signout-all = Von allen Geräten abmelden
+set-password-short = Das Passwort muss mindestens { $min } Zeichen lang sein.
+set-password-mismatch = Die beiden Passwörter stimmen nicht überein.
+set-password-saved = Das Passwort wurde geändert.
+set-email-hint = Ändern Sie die E-Mail-Adresse, mit der Sie sich anmelden und Nachrichten zu Ihrem Konto erhalten.
+set-email-current = Aktuelle E-Mail
+set-email-new = Neue E-Mail
+set-email-invalid = Geben Sie eine gültige E-Mail-Adresse ein.
+set-email-sent = Wir haben eine Nachricht an die neue Adresse gesendet. Öffnen Sie den Link darin, um die Änderung abzuschließen.
+set-phone-hint = Fügen Sie eine Mobilnummer hinzu, um bei Bedarf wieder Zugriff auf Ihr Konto zu erhalten.
+set-phone-invalid = Geben Sie eine gültige Telefonnummer ein.
+set-phone-saved = Die Nummer wurde gespeichert.
+set-devices-hint = Melden Sie sich von diesem Browser oder von jedem Browser ab, in dem Ihr Konto geöffnet ist.
+set-devices-current = Dieses Gerät
+set-devices-note = Andere Browser werden nicht aufgelistet. Wenn Sie sich von allen Geräten abmelden, werden alle offenen Sitzungen geschlossen, einschließlich dieser.
+set-devices-signout-all = Von allen Geräten abmelden
+set-devices-signout-body = Jeder Browser, in dem Ihr Konto geöffnet ist, wird abgemeldet, einschließlich dieses.
+set-for-profile = Für { $name }
+set-privacy-viewing = Privatsphäre beim Ansehen
+set-privacy-lock-hint = PIN zum Öffnen dieses Profils erforderlich
+set-privacy-activity-hint = Verwalten Sie Ihren Ansehverlauf
+set-privacy-data = Dateneinstellungen
+set-privacy-personalization = Personalisierte Empfehlungen
+set-privacy-personalization-hint = Nutzen Sie Ihre Ansehgewohnheiten, um Titel vorzuschlagen. Wenn deaktiviert, werden allgemeine Empfehlungen angezeigt.
+set-activity-clear-body = Ihr Ansehverlauf und Fortschrittsstände werden von diesem Browser entfernt.
+set-delete-account-body = Wenn Sie Ihr Konto löschen, werden Ihre Profile, Einstellungen und Ihr Ansehverlauf dauerhaft entfernt.
+set-delete-account-confirm = Konto und alle darin gespeicherten Daten löschen? Dies kann nicht rückgängig gemacht werden.
+set-err-invalid = Das Passwort ist falsch. Versuchen Sie es erneut.
+set-err-weak = Das Passwort ist zu schwach. Verwenden Sie ein längeres Passwort mit Buchstaben und Zahlen.
+set-err-rate = Zu viele Versuche. Warten Sie eine Minute und versuchen Sie es erneut.
+set-err-network = Die Verbindung ist fehlgeschlagen. Prüfen Sie Ihr Netzwerk und versuchen Sie es erneut.
+set-err-other = Etwas ist schiefgelaufen. Versuchen Sie es in einem Moment erneut.
+set-audio-subtitles-hint = Wählen Sie die Sprachen, in denen Sie Serien und Filme ansehen möchten. Ohne Auswahl wird die Anzeigesprache verwendet.
+set-audio-language = TonSprache
+set-subtitle-language = Untertitelsprache
+set-lang-follow = Wie Anzeigesprache
+set-subtitles-off = Aus
+set-name-taken = Ein anderes Profil hat bereits diesen Namen.
+set-main-profile = Als Hauptprofil festlegen
+set-main-profile-hint = Das Hauptprofil kann nicht gelöscht werden.
+set-main-profile-body = { $name } wird das Hauptprofil dieses Kontos. Das Hauptprofil kann nicht gelöscht werden.
+set-lock-create = Profil-Sperre erstellen
+set-lock-current = Aktueller PIN
+set-lock-wrong = Dieser PIN ist falsch.
+set-lock-forgot = PIN vergessen?
+set-lock-reset-body = Der PIN dieses Profils wird entfernt. Danach kann ein neuer PIN festgelegt werden.
+set-name-hint = Der Name der Person hinter dem Konto. Das Hauptprofil übernimmt den Vornamen.
+set-name-first = Vorname
+set-name-last = Nachname
+set-name-required = Vor- und Nachname eingeben.
+set-name-saved = Ihr Name wurde gespeichert.
+set-err-recent = Aus Sicherheitsgründen geben Sie Ihr Passwort erneut ein, um fortzufahren.
+set-events-title = Letzte Sicherheitsaktivität
+set-privacy-export = Meine Daten herunterladen
+set-nav-overview = Übersicht
+set-back-to-app = Zurück zu { $brand }
+set-title-playback = Wiedergabeeinstellungen
+set-title-notifications = Benachrichtigungseinstellungen
+set-playback-hint = Autoplay und Vorschauen einstellen.
+set-playback-autoplay = Autoplay und Übergänge
+set-notifications-hint = E-Mail- und Push-Benachrichtigungen verwalten.
+set-notifications-body = Wählen Sie, wie dieses Profil über Neuheiten und Updates informiert wird.
+set-notify-email = E-Mail
+set-notify-push = Push-Benachrichtigungen
+set-account-details = Kontodetails
+set-access-hint = Angemeldete Geräte verwalten
+set-overview-quick = Schnellzugriffe
+set-overview-update-password = Passwort aktualisieren
+set-overview-edit = Einstellungen bearbeiten
+set-overview-edit-hint = Sprachen, Untertitel, Autoplay, Benachrichtigungen, Datenschutz und mehr
+set-overview-profiles =
+    { $count ->
+     [one] 1 Profil
+    *[other] { $count } Profile}
+set-security-access = Zugriff und Datenschutz
+set-privacy-hint = Verwalten der Verwendung Ihrer persönlichen Informationen
+set-profiles-parental = Elternkontrolle und Berechtigungen
+set-profiles-parental-hint = Freigabestufe festlegen, Titel blockieren
+set-profiles-settings = Profil-Einstellungen
+set-now-watching = Gerade angesehen
+set-activity-episode = S{ $season }:F{ $episode }
+set-activity-title = { $title } · { $episode }
+set-device-line = { $platform } · { $browser }
+set-saved = Gespeichert
+set-done = Fertig
+set-show-more = Mehr anzeigen
+set-need-help = Brauchen Sie Hilfe?
+set-visit-help = Zum Hilfe-Center
+set-try-another-way = Andere Methode versuchen
+set-title-game-handle = Spielername
+set-title-personal-info = Zugriff auf persönliche Informationen
+set-title-speed-test = Internet-Speedtest
+set-title-testing = Testbeteiligung
+set-title-transfer = Profilübertragung
+set-title-transfer-profile = Profil übertragen
+set-activity-for = Aktivität für { $name }
+set-activity-hide = Diesen Titel ausblenden
+set-activity-hide-all = Alle ausblenden
+set-activity-hidden = Aus Ihrer Sehaktivität entfernt
+set-activity-download = Alle herunterladen
+set-activity-report = Problem melden
+set-csv-title = Titel
+set-csv-season = Staffel
+set-csv-episode = Folge
+set-csv-date = Datum
+set-notify-email-hint = Nachrichten über Neuheiten und Updates
+set-notify-push-hint = Benachrichtigungen auf diesem Gerät
+set-topics-title = Wovon Sie hören
+set-push-denied = Benachrichtigungen sind in Ihrem Browser für diese Website blockiert. Erlauben Sie sie in den Browser-Einstellungen und versuchen Sie es erneut.
+set-push-unsupported = Dieser Browser kann keine Benachrichtigungen anzeigen.
+set-usage-title = Datennutzung pro Bildschirm
+set-usage-auto = Automatisch
+set-usage-auto-hint = Wählt die Qualität, die zu Ihrer Verbindung passt.
+set-usage-low = Niedrig
+set-usage-low-hint = Verbraucht die wenigsten Daten. Grundlegende Bildqualität.
+set-usage-medium = Mittel
+set-usage-medium-hint = Standard-Bildqualität, weniger Daten als bei hoher Qualität.
+set-usage-high = Hoch
+set-usage-high-hint = Beste Bildqualität. Verbraucht die meisten Daten.
+set-handle-body = Dieser eindeutige Name wird in Spielen angezeigt, wenn andere Spieler Ihr Gameplay sehen.
+set-handle-change = Den Spielnamen jederzeit ändern.
+set-handle-create = Spielnamen erstellen
+set-handle-suggest = Namen vorschlagen
+set-handle-invalid = { $min } bis { $max } Buchstaben und Ziffern verwenden, ohne Leerzeichen.
+set-transfer-row-hint = Kopieren eines Profils auf ein anderes Konto zulassen
+set-transfer-on-title = Profilübertragung ist aktiviert
+set-transfer-on-body = Profile können aus diesem Konto gespeichert und einem anderen hinzugefügt werden. Deaktivieren Sie die Funktion, um zu verhindern, dass Profile Ihr Konto verlassen. Profile, die bereits diesem Konto hinzugefügt wurden, sind nicht betroffen.
+set-transfer-off-title = Profilübertragung ist deaktiviert
+set-transfer-off-body = Profile können nicht aus diesem Konto kopiert werden. Aktivieren Sie die Funktion, um dies zu erlauben.
+set-transfer-profile-hint = Dieses Profil auf ein anderes Konto kopieren
+set-transfer-profile-body = Dieses Profil als Datei speichern und einem anderen Konto hinzufügen. Die Kopie behält den Namen, das Bild, die Einstellungen und den Verlauf bei.
+set-transfer-step-1 = „Profildatei herunterladen“ auswählen und die Datei sicher aufbewahren.
+set-transfer-step-2 = Bei dem anderen Konto anmelden und „Profile verwalten“ öffnen.
+set-transfer-step-3 = „Profil importieren“ auswählen und die Datei wählen.
+set-transfer-download = Profildatei herunterladen
+set-transfer-saved = Profildatei gespeichert
+set-transfer-note = Die Datei enthält nicht die PIN zur Profilsperrung. Jeder, der die Datei hat, kann das Profil seinem Konto hinzufügen. Die Datei sollte daher nicht geteilt werden.
+set-transfer-blocked-body = Die Profilübertragung ist für dieses Konto deaktiviert, daher kann dieses Profil nicht kopiert werden.
+set-transfer-open-setting = Einstellungen für die Profilübertragung öffnen
+set-import-title = Profil importieren
+set-import-hint = Ein aus einem anderen Konto gespeichertes Profil hinzufügen.
+set-import-done = { $name } wurde hinzugefügt
+set-import-invalid = Diese Datei ist kein gespeichertes Profil.
+set-import-newer = Diese Datei stammt von einer neueren App-Version und kann noch nicht gelesen werden.
+set-import-full = Dieses Konto hat bereits die maximale Anzahl an Profilen erreicht.
+set-privacy-cookies-hint = Wählen Sie aus, welche Cookies und ähnliche Speichermedien verwendet werden.
+set-personal-info-hint = Eine Kopie Ihrer persönlichen Informationen anfordern
+set-personal-info-body = Sie können eine Kopie der persönlichen Informationen anfordern, die wir über Ihr Konto gespeichert haben. Die Datei enthält:
+set-personal-info-done = Ihre Datei wurde gespeichert.
+set-personal-info-note = Die Datei bleibt auf Ihrem Gerät. Sie kann persönliche Informationen enthalten, daher bitte sicher aufbewahren.
+set-testing-row-hint = An Tests und Vorschauen teilnehmen
+set-testing-body = Von Zeit zu Zeit testen wir neue Funktionen mit einer kleinen Gruppe, bevor sie für alle verfügbar sind.
+set-testing-switch = An Tests und Vorschauen teilnehmen
+set-testing-hint = Deaktivieren Sie diese Option, um bei der aktuellen Version aller Funktionen zu bleiben.
+set-code-email = Code per E-Mail senden
+set-code-title = Bitte geben Sie den gerade gesendeten Code ein
+set-code-body = Bitte geben Sie den Code ein, den wir an { $target } gesendet haben, um Ihr Konto zu schützen. Der Code läuft nach { $minutes } Minuten ab.
+set-code-label = Code
+set-code-submit = Absenden
+set-code-resend = Code erneut senden
+set-code-wrong = Das war leider nicht ganz richtig. Bitte versuchen Sie es erneut.
+set-password-confirm = Passwort bestätigen
+set-password-show = Passwort anzeigen
+set-password-hide = Passwort ausblenden
+set-device-name = { $browser } auf { $system }
+set-device-unknown = Unbekanntes Gerät
+set-device-last = Zuletzt aktiv { $time }
+set-device-sign-out = Von diesem Gerät abmelden
+set-device-sign-out-body = Dieser Browser wird von Ihrem Konto abgemeldet.
+set-device-signed-out = Gerät abgemeldet
+set-devices-list-note = Diese Liste ist möglicherweise unvollständig. Einige Geräte oder bestimmte Geräteaktivitäten werden möglicherweise nicht angezeigt.
+set-check-intro = Testen Sie Ihre Internetverbindung auf Probleme, die die Nutzung von { $brand } verhindern könnten.
+set-check-start = Test starten
+set-check-internet = Internetverbindung
+set-check-service = Streaming-Dienst
+set-check-images = Kunstwerke und Poster
+set-check-engine = Empfehlungen
+set-check-ms = { $ms } ms
+set-check-all-ok = Alles funktioniert.
+set-check-some-failed = Einige Prüfungen sind fehlgeschlagen. Versuchen Sie es erneut oder prüfen Sie Ihre Verbindung.
+set-spec-drm-title = Digitale Rechteverwaltung
+set-spec-playback-title = Wiedergabe
+set-spec-resolution = Maximale Wiedergabeauflösung
+set-spec-help = Hilfe-Center
+set-speed-intro = Dieser Test lädt eine Datei herunter und misst, wie schnell Ihre Verbindung sie überträgt.
+set-speed-unit = Mbps
+set-speed-running = Test läuft…
+set-speed-again = Erneut testen
+set-speed-failed = Der Test konnte nicht abgeschlossen werden. Prüfen Sie Ihre Verbindung und versuchen Sie es erneut.
+set-licences-search = Pakete oder Lizenzen suchen
+set-transfer-turn-off = Profilübertragung deaktivieren
+set-transfer-turn-on = Profilübertragung aktivieren
+set-restrictions-none = Keine Einschränkungen
+set-rating-up-to = Bis { $rating }
+set-rating-u = U
+set-rating-u-hint = Für alle Altersgruppen geeignet.
+set-rating-pg = PG
+set-rating-pg-hint = Elterliche Begleitung empfohlen. Einige Szenen könnten für kleine Kinder unangemessen sein.
+set-rating-12 = 12
+set-rating-12-hint = Für Personen ab 12 Jahren geeignet.
+set-rating-15 = 15
+set-rating-15-hint = Für Personen ab 15 Jahren geeignet.
+set-rating-18 = 18
+set-rating-18-hint = Nur für Erwachsene. Für Personen ab 18 Jahren geeignet.
+auth-confirm-title = E-Mail-Adresse wird bestätigt
+auth-confirm-working = Wird bestätigt…
+auth-confirm-working-body = Einen Moment, während wir Ihren Link prüfen.
+auth-confirm-failed-title = Dieser Link hat nicht funktioniert
+auth-confirm-failed-body = Der Link ist möglicherweise abgelaufen oder wurde bereits verwendet. Melden Sie sich an oder fordern Sie einen neuen Link an.
+auth-confirm-new-link = Neuen Link senden
+set-device-kind = Gerätetyp
+set-device-first-seen = Erstmals angemeldet
+set-device-timezone = Zeitzone
+set-device-screen = Bildschirm
+set-device-language = Sprache
+set-device-countries-note = Dieses Gerät hat sich aus mehreren Ländern verbunden: { $countries }. Ein VPN oder eine Reise kann der Grund dafür sein. Ein Gerät wird über seinen Browser erkannt, nicht über den Ort der Verbindung, es handelt sich also weiterhin um dasselbe Gerät.
+email-footer = Gesendet von { $brand }. Fragen? Lesen Sie das Hilfe-Center oder schreiben Sie an { $help_email }.
+email-help-center = Hilfe-Center
+email-ignore = Falls Sie dies nicht angefordert haben, können Sie diese E-Mail ignorieren.
+email-button-fallback = Falls der Button nicht funktioniert, kopieren Sie diese Adresse in Ihren Browser:
+email-greeting = Hallo { $name },
+email-greeting-plain = Hallo,
+email-for-profile = Diese Nachricht ist für das Profil { $profile }.
+email-confirm-subject = Bestätigen Sie Ihre E-Mail-Adresse
+email-confirm-title = Bestätigen Sie Ihre E-Mail-Adresse
+email-confirm-body = Willkommen bei { $brand }. Bestätigen Sie diese Adresse, um die Erstellung Ihres Kontos abzuschließen.
+email-confirm-button = E-Mail-Adresse bestätigen
+email-recovery-subject = Setzen Sie Ihr { $brand }-Passwort zurück
+email-recovery-title = Setzen Sie Ihr Passwort zurück
+email-recovery-body = Wir haben eine Anfrage zum Zurücksetzen des Passworts Ihres Kontos erhalten. Verwenden Sie den Button, um ein neues auszuwählen. Der Link funktioniert nur einmal und läuft bald ab.
+email-recovery-button = Neues Passwort wählen
+email-code-subject = Ihr { $brand }-Anmeldecode
+email-code-title = Ihr Anmeldecode
+email-code-body = Geben Sie diesen Code ein, um fortzufahren. Er funktioniert nur einmal und läuft in { $minutes } Minuten ab.
+email-code-or-link = Oder verwenden Sie den Button, um sich anzumelden.
+email-code-button = Anmelden
+email-change-subject = Bestätigen Sie Ihre neue E-Mail-Adresse
+email-change-title = Bestätigen Sie Ihre neue E-Mail-Adresse
+email-change-body = Sie haben angefordert, die E-Mail-Adresse Ihres Kontos auf { $new_email } zu ändern. Bestätigen Sie dies mit dem Button.
+email-change-button = Neue Adresse bestätigen
+email-invite-subject = Sie wurden zu { $brand } eingeladen
+email-invite-title = Sie wurden eingeladen
+email-invite-body = Akzeptieren Sie die Einladung, um Ihr Konto zu erstellen.
+email-invite-button = Einladung annehmen
+email-reauth-subject = Ihr { $brand }-Bestätigungscode
+email-reauth-title = Ihr Bestätigungscode
+email-reauth-body = Gib diesen Code ein, um zu bestätigen, dass es sich um dich handelt. Er funktioniert nur einmal und läuft bald ab.
+email-device-subject = Neues Gerät bei deinem { $brand }-Konto angemeldet
+email-device-title = Neues Gerät angemeldet
+email-device-body = { $browser } auf { $system } hat sich { $where } am { $time } bei deinem Konto angemeldet. Falls dies du warst, ist nichts weiter zu tun. Falls nicht, ändere dein Passwort und melde dich von allen Geräten ab.
+email-device-where = aus { $country }
+email-device-button = Geräte überprüfen
+help-breadcrumb-label = Brotkrumen-Navigation
+help-pagination-label = Seitennavigation
+age-badge-all = Alle
+age-aria-all = Für alle Altersgruppen geeignet
+age-aria-plus = Geeignet für { $age } und älter
+set-rating-system-title = Altersfreigabe-Labels
+set-rating-system-hint = Welche Altersfreigabe-Labels angezeigt werden. Bei „Automatisch“ wird das Land des Geräts verwendet, von dem aus angemeldet wurde.
+set-rating-system-auto = Automatisch
+set-rating-system-uk = Vereinigtes Königreich (U, PG, 12, 15, 18)
+set-rating-system-us = Vereinigte Staaten (G, PG, PG-13, R, NC-17)

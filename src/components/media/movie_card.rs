@@ -177,8 +177,9 @@ pub fn MovieCard(
             class=card_class
             class=("z-(--z-card-hover)", move || is_hovered.get())
             class=("z-10", move || !is_hovered.get())
-            on:mouseenter=move |_| mouse_enter_cb.run(())
-            on:mouseleave=move |_| mouse_leave_cb.run(())
+            // a finger is not a hover: touch browsers fire mouse events after a tap, so only a mouse or pen opens the popup
+            on:pointerenter=move |e: leptos::ev::PointerEvent| if e.pointer_type() != "touch" { mouse_enter_cb.run(()) }
+            on:pointerleave=move |e: leptos::ev::PointerEvent| if e.pointer_type() != "touch" { mouse_leave_cb.run(()) }
             on:click=open_modal
         >
             <div class="w-full h-full relative rounded-tile overflow-hidden movie-card-glow">

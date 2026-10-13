@@ -398,13 +398,14 @@ button,
   line-height: 1.45;
 }
 
-/* ─── Row touch-action fix: outer wrapper allows vertical, inner strip horizontal ─ */
-.row-scroll-outer {
-  touch-action: pan-y;
+/* ─── Row touch-action: a finger on a row may scroll the row sideways or the page up and down; the browser picks by direction.
+   (pan-x alone made every vertical drag that started on a card do nothing.) ─ */
+.row-scroll-outer,
+.row-scroll-strip {
+  touch-action: pan-x pan-y;
 }
 
 .row-scroll-strip {
-  touch-action: pan-x;
   overflow-clip-margin: content-box;
 }
 

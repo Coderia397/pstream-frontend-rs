@@ -1049,7 +1049,6 @@ media-percent-watched = { $pct }% watched
 media-coming = Coming { $when }
 row-explore-all = Explore All ›
 row-jump-back-in = Jump Back In ›
-row-explore-vibe = Explore Vibe ›
 media-cast = Cast:
 media-genres = Genres:
 media-this-show-is = This show is:

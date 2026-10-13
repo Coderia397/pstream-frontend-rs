@@ -1000,7 +1000,6 @@ media-percent-watched = { $pct } % angesehen
 media-coming = Erscheint { $when }
 row-explore-all = Alle entdecken ›
 row-jump-back-in = Weiterschauen ›
-row-explore-vibe = Stimmung entdecken ›
 media-cast = Besetzung:
 media-genres = Genres:
 media-this-show-is = Diese Serie ist:

@@ -1003,7 +1003,6 @@ media-percent-watched = تمت مشاهدة { $pct }%
 media-coming = قادم { $when }
 row-explore-all = استكشف الكل ›
 row-jump-back-in = عد للمشاهدة ›
-row-explore-vibe = استكشف الأجواء ›
 media-cast = طاقم العمل:
 media-genres = الأجناس:
 media-this-show-is = هذا المسلسل:

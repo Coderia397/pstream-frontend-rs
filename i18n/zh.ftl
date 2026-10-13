@@ -1001,7 +1001,6 @@ media-percent-watched = 已观看 { $pct }%
 media-coming = 将于 { $when } 上线
 row-explore-all = 查看全部 ›
 row-jump-back-in = 继续观看 ›
-row-explore-vibe = 探索风格 ›
 media-cast = 演职人员：
 media-genres = 类型：
 media-this-show-is = 这部剧是：

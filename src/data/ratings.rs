@@ -98,17 +98,51 @@ pub fn limit_label(system: RatingSystem, key: &str) -> String {
     }
 }
 
-/// Fill and text colour of a ticket badge by rank: green for the lowest age through yellow, orange and magenta to red, grey for not rated.
-/// Every pair reaches at least 4.5 to 1 contrast (tested), so the text reads at any size.
+// Colours. The British ratings use the colours the classification is known by (green U, yellow PG, orange 12, pink 15, red 18, blue R18).
+// The American ratings have no official colours, so they use the same logical scale: green for all ages, yellow, orange, red, and a dark red
+// for NC-17. Where white text on the official colour is too faint to read, the text is near black instead (each pair is tested).
+const GREEN: (&str, &str) = ("#00a826", "#0b0b0c");
+const YELLOW: (&str, &str) = ("#f5a800", "#0b0b0c");
+const ORANGE: (&str, &str) = ("#f05a1a", "#0b0b0c");
+const PINK: (&str, &str) = ("#eb287f", "#0b0b0c");
+const RED: (&str, &str) = ("#dc1420", "#ffffff");
+const DARK_RED: (&str, &str) = ("#7f1d1d", "#ffffff");
+const BLUE: (&str, &str) = ("#0060cf", "#ffffff");
+const GREY: (&str, &str) = ("#6b6b72", "#ffffff");
+/// Every colour pair in use, for the contrast test.
+pub const PALETTE: [(&str, &str); 8] = [GREEN, YELLOW, ORANGE, PINK, RED, DARK_RED, BLUE, GREY];
+
+/// Fill and text colour by rank, the British scale: 1 U green, 2 PG yellow, 3 12 orange, 4 15 pink, 5 18 red, 0 not rated grey.
 pub const fn colors(rank: u8) -> (&'static str, &'static str) {
     match rank {
-        1 => ("#15803d", "#ffffff"),
-        2 => ("#facc15", "#1a1a1a"),
-        3 => ("#fb923c", "#1a1a1a"),
-        4 => ("#be185d", "#ffffff"),
-        5 => ("#b91c1c", "#ffffff"),
-        _ => ("#52525b", "#ffffff"),
+        1 => GREEN,
+        2 => YELLOW,
+        3 => ORANGE,
+        4 => PINK,
+        5 => RED,
+        _ => GREY,
     }
+}
+
+/// Colours of a label for a reader of `system`. An American certificate has its own logical colour (R and TV-MA red, PG-13 and TV-14 orange,
+/// NC-17 dark red); every other label takes the colour of its rank. R18 is blue.
+pub fn colors_for(system: RatingSystem, label: &AgeLabel) -> (&'static str, &'static str) {
+    if let Say::Rated(text) = &label.say {
+        if text == "R18" {
+            return BLUE;
+        }
+        if system == RatingSystem::Us {
+            return match text.as_str() {
+                "G" | "TV-Y" | "TV-G" => GREEN,
+                "PG" | "TV-PG" | "TV-Y7" | "TV-Y7-FV" => YELLOW,
+                "PG-13" | "TV-14" => ORANGE,
+                "R" | "TV-MA" => RED,
+                "NC-17" => DARK_RED,
+                _ => colors(label.rank),
+            };
+        }
+    }
+    colors(label.rank)
 }
 
 #[cfg(test)]
@@ -130,10 +164,22 @@ mod tests {
 
     #[test]
     fn every_badge_colour_pair_is_readable() {
-        for rank in 0..=5 {
-            let (bg, fg) = colors(rank);
-            assert!(contrast(bg, fg) >= 4.5, "rank {rank}: {bg} on {fg} is {:.2}", contrast(bg, fg));
+        for (bg, fg) in PALETTE {
+            assert!(contrast(bg, fg) >= 4.5, "{bg} with {fg} is {:.2}", contrast(bg, fg));
         }
+    }
+
+    #[test]
+    fn american_ratings_have_their_own_logical_colours() {
+        let label = |us: &str| age_label(RatingSystem::Us, None, Some(us));
+        assert_eq!(colors_for(RatingSystem::Us, &label("G")), GREEN);
+        assert_eq!(colors_for(RatingSystem::Us, &label("PG-13")), ORANGE);
+        assert_eq!(colors_for(RatingSystem::Us, &label("R")), RED);
+        assert_eq!(colors_for(RatingSystem::Us, &label("TV-MA")), RED);
+        assert_eq!(colors_for(RatingSystem::Us, &label("NC-17")), DARK_RED);
+        // the British reader keeps the British scale for the same title
+        assert_eq!(colors_for(RatingSystem::Uk, &age_label(RatingSystem::Uk, Some("15"), Some("R"))), PINK);
+        assert_eq!(colors_for(RatingSystem::Uk, &age_label(RatingSystem::Uk, Some("R18"), None)), BLUE);
     }
 
     #[test]

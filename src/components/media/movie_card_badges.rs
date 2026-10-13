@@ -1,12 +1,12 @@
-use crate::data::ratings::{age_label, colors, AgeLabel, Say};
+use crate::data::ratings::{age_label, colors_for, AgeLabel, RatingSystem, Say};
 use crate::pages::settings::prefs::use_prefs;
 use leptos::prelude::*;
 
 /// A badge for an age label: one look for both rating systems, a ticket (a solid colour by rank with a half round notch cut from each short
 /// side, so it reads on any poster and cannot be mistaken for an official classification symbol). `size` is "xs", "sm", "md" or "lg"; the badge is drawn in em, so it also follows the text around it.
 #[component]
-pub fn AgeBadge(label: AgeLabel, #[prop(default = "sm".to_string())] size: String) -> impl IntoView {
-    let (bg, fg) = colors(label.rank);
+pub fn AgeBadge(label: AgeLabel, #[prop(default = RatingSystem::Uk)] system: RatingSystem, #[prop(default = "sm".to_string())] size: String) -> impl IntoView {
+    let (bg, fg) = colors_for(system, &label);
     let px = match size.as_str() {
         "xs" => 11,
         "md" => 16,
@@ -51,8 +51,9 @@ pub fn RatingBadge(
     view! {
         {move || {
             let info = resource.get().unwrap_or_default();
-            let label = age_label(prefs.rating_system(), info.gb.as_deref(), info.us.as_deref());
-            view! { <AgeBadge label=label size=size.clone() /> }
+            let system = prefs.rating_system();
+            let label = age_label(system, info.gb.as_deref(), info.us.as_deref());
+            view! { <AgeBadge label=label system=system size=size.clone() /> }
         }}
     }
 }

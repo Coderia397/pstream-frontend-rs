@@ -14,6 +14,7 @@ const SAMPLES: &[(&str, Option<&str>, Option<&str>)] = &[
     ("TV-14", None, Some("TV-14")),
     ("TV-MA", None, Some("TV-MA")),
     ("only British 12", Some("12"), None),
+    ("R18", Some("R18"), None),
     ("only American R", None, Some("R")),
     ("none", None, None),
 ];
@@ -39,7 +40,7 @@ pub fn DevBadgesPage() -> impl IntoView {
                         <p class="mb-2 text-sm font-bold" style="mix-blend-mode:difference;color:#fff">{*bg_name}</p>
                         {["xs", "sm", "md", "lg"].into_iter().map(|size| view! {
                             <div class="mb-2 flex flex-wrap items-center gap-3">
-                                {SAMPLES.iter().map(|(_, gb, us)| view! { <AgeBadge label=age_label(system, *gb, *us) size=size.to_string() /> }).collect_view()}
+                                {SAMPLES.iter().map(|(_, gb, us)| view! { <AgeBadge label=age_label(system, *gb, *us) system=system size=size.to_string() /> }).collect_view()}
                             </div>
                         }).collect_view()}
                     </div>

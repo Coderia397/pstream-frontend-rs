@@ -98,16 +98,21 @@ pub fn limit_label(system: RatingSystem, key: &str) -> String {
     }
 }
 
-/// Background and text colour of a badge by rank. Every pair reaches at least 4.5 to 1 contrast (tested), so the text reads on any
-/// poster behind it; the badge adds its own thin ring in the style sheet.
-pub const fn colors(rank: u8) -> (&'static str, &'static str) {
+/// The plate every badge sits on (near black, 72 percent opaque) and the text colour on it. The rank shows as the colour of a bar on the plate's
+/// left edge; the text is always white, so it reads on any poster or background (tested against the worst case, a white background).
+pub const PLATE: &str = "#0a0a0c";
+pub const PLATE_ALPHA: f64 = 0.72;
+pub const TEXT: &str = "#ffffff";
+
+/// Colour of the rank bar: green for the lowest age through yellow, orange and pink to red, and grey for not rated.
+pub const fn bar_color(rank: u8) -> &'static str {
     match rank {
-        1 => ("#15803d", "#ffffff"),
-        2 => ("#facc15", "#1a1a1a"),
-        3 => ("#fb923c", "#1a1a1a"),
-        4 => ("#be185d", "#ffffff"),
-        5 => ("#b91c1c", "#ffffff"),
-        _ => ("#52525b", "#ffffff"),
+        1 => "#22c55e",
+        2 => "#facc15",
+        3 => "#fb923c",
+        4 => "#ec4899",
+        5 => "#ef4444",
+        _ => "#a1a1aa",
     }
 }
 
@@ -128,11 +133,22 @@ mod tests {
         (x.max(y) + 0.05) / (x.min(y) + 0.05)
     }
 
+    /// The plate over a white background, the worst case for white text.
+    fn plate_over_white() -> String {
+        let v = (10.0 * PLATE_ALPHA + 255.0 * (1.0 - PLATE_ALPHA)).round() as u8;
+        format!("#{v:02x}{v:02x}{v:02x}")
+    }
+
     #[test]
-    fn every_badge_colour_pair_is_readable() {
+    fn the_text_reads_on_the_plate_even_over_a_white_background() {
+        assert!(contrast(TEXT, &plate_over_white()) >= 4.5, "{:.2}", contrast(TEXT, &plate_over_white()));
+        assert!(contrast(TEXT, PLATE) >= 4.5);
+    }
+
+    #[test]
+    fn every_rank_bar_stands_out_from_the_plate() {
         for rank in 0..=5 {
-            let (bg, fg) = colors(rank);
-            assert!(contrast(bg, fg) >= 4.5, "rank {rank}: {bg} on {fg} is {:.2}", contrast(bg, fg));
+            assert!(contrast(bar_color(rank), PLATE) >= 3.0, "rank {rank}: {:.2}", contrast(bar_color(rank), PLATE));
         }
     }
 
@@ -168,7 +184,7 @@ mod tests {
     #[test]
     fn colour_follows_the_rank_in_both_systems() {
         assert_eq!(age_label(RatingSystem::Uk, Some("18"), None).rank, age_label(RatingSystem::Us, None, Some("NC-17")).rank);
-        assert_eq!(colors(5), colors(age_label(RatingSystem::Us, Some("18"), None).rank));
+        assert_eq!(bar_color(5), bar_color(age_label(RatingSystem::Us, Some("18"), None).rank));
     }
 
     #[test]

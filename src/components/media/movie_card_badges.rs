@@ -1,12 +1,12 @@
-use crate::data::ratings::{age_label, colors, AgeLabel, Say};
+use crate::data::ratings::{age_label, bar_color, AgeLabel, Say};
 use crate::pages::settings::prefs::use_prefs;
 use leptos::prelude::*;
 
-/// A badge for an age label: one look for both rating systems (solid colour by rank, the text in a readable colour, a thin ring so it
-/// stands out on any poster). `size` is "xs", "sm", "md" or "lg"; the badge is drawn in em, so it also follows the text around it.
+/// A badge for an age label: one look for both rating systems (a dark plate with white text and a colour bar for the rank, so it reads on any
+/// poster). `size` is "xs", "sm", "md" or "lg"; the badge is drawn in em, so it also follows the text around it.
 #[component]
 pub fn AgeBadge(label: AgeLabel, #[prop(default = "sm".to_string())] size: String) -> impl IntoView {
-    let (bg, fg) = colors(label.rank);
+    let bar = bar_color(label.rank);
     let px = match size.as_str() {
         "xs" => 11,
         "md" => 16,
@@ -20,7 +20,7 @@ pub fn AgeBadge(label: AgeLabel, #[prop(default = "sm".to_string())] size: Strin
         Say::NotRated => ("NR".to_string(), crate::i18n::t("media-rating-nr")),
     };
     view! {
-        <span class="age-badge" role="img" aria-label=aria style=format!("--age-bg:{bg};--age-fg:{fg};font-size:{px}px")>{shown}</span>
+        <span class="age-badge" role="img" aria-label=aria style=format!("--age-bar:{bar};font-size:{px}px")>{shown}</span>
     }
 }
 

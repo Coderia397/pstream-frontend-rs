@@ -93,6 +93,30 @@ pub struct ProfileStore {
     pub is_kids_mode: RwSignal<bool>,
 }
 
+/// The profiles of a browser that has saved none: the main profile and the Kids profile.
+pub fn default_profiles() -> Vec<crate::models::profile::Profile> {
+    vec![
+        crate::models::profile::Profile {
+            id: "p1".to_string(),
+            name: crate::i18n::t("profile-default-main"),
+            avatar_url: Some(crate::brand::DEFAULT_AVATAR.to_string()),
+            is_kids: false,
+            is_default: Some(true),
+            pin: None,
+            sort_order: 0,
+        },
+        crate::models::profile::Profile {
+            id: "p2".to_string(),
+            name: crate::i18n::t("profile-default-kids"),
+            avatar_url: None,
+            is_kids: true,
+            is_default: Some(false),
+            pin: None,
+            sort_order: 1,
+        },
+    ]
+}
+
 pub fn provide_profile_store() {
     let storage = web_sys::window().and_then(|w| w.local_storage().ok().flatten());
     let initial_profile = storage
@@ -104,26 +128,7 @@ pub fn provide_profile_store() {
         .as_ref()
         .and_then(|s| s.get_item(crate::keys::PROFILES).ok().flatten())
         .and_then(|raw| serde_json::from_str::<Vec<crate::models::profile::Profile>>(&raw).ok())
-        .unwrap_or_else(|| vec![
-            crate::models::profile::Profile {
-                id: "p1".to_string(),
-                name: crate::i18n::t("profile-default-main"),
-                avatar_url: Some(crate::brand::DEFAULT_AVATAR.to_string()),
-                is_kids: false,
-                is_default: Some(true),
-                pin: None,
-                sort_order: 0,
-            },
-            crate::models::profile::Profile {
-                id: "p2".to_string(),
-                name: crate::i18n::t("profile-default-kids"),
-                avatar_url: None,
-                is_kids: true,
-                is_default: Some(false),
-                pin: None,
-                sort_order: 1,
-            },
-        ]);
+        .unwrap_or_else(default_profiles);
 
     provide_context(ProfileStore {
         active_profile_id: RwSignal::new(initial_profile),

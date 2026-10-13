@@ -34,8 +34,9 @@ pub const BROWSE_LANGUAGES: &[LangItem] = &[
     LangItem { code: "id", label: "Indonesian" },
 ];
 
-/// Message keys of the three ways to pick a language.
-pub const PREF_TYPES: &[&'static str] = &["lang-original", "lang-dubbing", "lang-subtitles"];
+/// Message keys of the ways to pick a language. Only the original language of a title is in our data (TMDB lists no dubbing or subtitle
+/// tracks), so it is the only way offered; the choice appears again when a source for the others exists.
+pub const PREF_TYPES: &[&'static str] = &["lang-original"];
 
 #[component]
 pub fn BrowseLanguagePage() -> impl IntoView {
@@ -86,9 +87,18 @@ pub fn BrowseLanguagePage() -> impl IntoView {
             .unwrap_or_else(|| crate::i18n::language_name("en"))
     };
 
+    // Languages a limited profile has too few titles for are not offered
+    let hidden_langs = LocalResource::new(move || {
+        let codes: Vec<String> = BROWSE_LANGUAGES.iter().map(|l| l.code.to_string()).collect();
+        async move { crate::services::ai_engine::hidden_languages(&codes).await }
+    });
+
     let items_resource = LocalResource::new(move || {
         let lang = selected_lang.get();
         async move {
+            if let Some(items) = crate::services::ai_engine::fetch_language_titles(lang).await {
+                return items;
+            }
             let mut all = fetch_by_language(lang, 1).await.unwrap_or_default();
             if let Ok(mut more) = fetch_by_language(lang, 2).await {
                 all.append(&mut more);
@@ -120,12 +130,14 @@ pub fn BrowseLanguagePage() -> impl IntoView {
                         </h1>
 
                         <div class="flex items-center gap-3">
+                            {(PREF_TYPES.len() > 1).then(|| view! {
                             <span class="text-ink/80 text-body-sm hidden md:block select-none whitespace-nowrap">
                                 {crate::i18n::t("language-select-your-preferences")}
                             </span>
+                            })}
 
-                            // Dropdown 1: Preference Type (Original Language / Dubbing / Subtitles)
-                            <div node_ref=pref_container_ref class="relative">
+                            // Dropdown 1: Preference Type (only shown when there is more than one way to pick)
+                            <div node_ref=pref_container_ref class="relative" class:hidden=(PREF_TYPES.len() <= 1)>
                                 <button
                                     on:click=toggle_pref_dropdown
                                     class="flex items-center justify-between min-w-[160px] md:min-w-[170px] px-3.5 py-1.5 text-label md:text-body-sm font-bold tracking-tight text-ink bg-void border border-line-strong hover:border-ink transition-colors gap-x-2.5 cursor-pointer select-none rounded-hairline"
@@ -180,7 +192,7 @@ pub fn BrowseLanguagePage() -> impl IntoView {
                                     if lang_dropdown_open.get() {
                                         view! {
                                             <div class="absolute top-[calc(100%+4px)] left-0 w-full min-w-[150px] max-h-64 overflow-y-auto bg-void/95 border border-line shadow-2xl z-50 py-1 scrollbar-hide rounded-hairline">
-                                                {BROWSE_LANGUAGES.iter().map(|lang| {
+                                                {BROWSE_LANGUAGES.iter().filter(|lang| !hidden_langs.get().unwrap_or_default().contains(lang.code) || selected_lang.get_untracked() == lang.code).map(|lang| {
                                                     let code = lang.code;
                                                     let label = crate::i18n::language_name(lang.code);
                                                     let is_selected = selected_lang.get() == code;

@@ -29,6 +29,9 @@ pub struct VibeItem {
     pub rating_gb: Option<String>,
     #[serde(default)]
     pub rating_us: Option<String>,
+    /// Full release date (YYYY-MM-DD) when the engine knows it; New & Popular rows carry it
+    #[serde(default)]
+    pub release_date: Option<String>,
 }
 
 impl VibeItem {
@@ -54,8 +57,8 @@ impl VibeItem {
             vote_average: self.vote_average.unwrap_or(0.0),
             vote_count: None,
             adult: Some(false),
-            release_date: self.release_year.clone(),
-            first_air_date: self.release_year.clone(),
+            release_date: self.release_date.clone().or_else(|| self.release_year.clone()),
+            first_air_date: self.release_date.clone().or_else(|| self.release_year.clone()),
             media_type: self.media_type.clone(),
             match_percentage: self.match_percentage,
             vibe_pills: self.vibe_pills.clone(),
@@ -142,31 +145,76 @@ fn rating_query() -> String {
 }
 
 thread_local! {
-    /// (age limit, surface) -> genre names the profile cannot fill a page for
-    static HIDDEN_GENRES: std::cell::RefCell<std::collections::HashMap<(String, String), std::collections::HashSet<String>>> = std::cell::RefCell::new(std::collections::HashMap::new());
+    /// (route, age limit, surface) -> names of pages the profile cannot fill
+    static HIDDEN_PAGES: std::cell::RefCell<std::collections::HashMap<(String, String, String), std::collections::HashSet<String>>> = std::cell::RefCell::new(std::collections::HashMap::new());
 }
 
-/// The genre pages a limited profile should not be offered: the engine counts the titles that profile may see per genre and reports the
-/// pages too small to fill. A profile with no limit, or an engine that cannot be reached, hides nothing. Answers are kept per limit and surface.
-pub async fn hidden_genres(surface: &str, names: &[String]) -> std::collections::HashSet<String> {
+/// Asks the engine which of `names` a limited profile has too few titles for (`route` is `genre-support` or `language-support`, `param` the
+/// query field that carries the names, `field` the key of the answer). A profile with no limit, or an engine that cannot be reached, hides
+/// nothing. Answers are kept per limit, route and surface.
+async fn hidden_pages(route: &str, param: &str, field: &str, surface: &str, names: &[String]) -> std::collections::HashSet<String> {
     let Some(limit) = crate::pages::settings::prefs::active_rating().filter(|l| *l != "18") else { return Default::default() };
-    let key = (limit.to_string(), surface.to_string());
-    if let Some(hit) = HIDDEN_GENRES.with(|c| c.borrow().get(&key).cloned()) {
+    let key = (route.to_string(), limit.to_string(), surface.to_string());
+    if let Some(hit) = HIDDEN_PAGES.with(|c| c.borrow().get(&key).cloned()) {
         return hit;
     }
     let joined: String = js_sys::encode_uri_component(&names.join(",")).into();
-    let url = format!("{}/api/genre-support?surface={}&names={}&rating={}", AI_API_BASE_URL, surface, joined, limit);
+    let url = format!("{}/api/{}?surface={}&{}={}&rating={}", AI_API_BASE_URL, route, surface, param, joined, limit);
     let Some(v) = (match Request::get(&url).send().await {
         Ok(r) if r.ok() => r.json::<serde_json::Value>().await.ok(),
         _ => None,
     }) else { return Default::default() };
     let hidden: std::collections::HashSet<String> = v
-        .get("genres")
+        .get(field)
         .and_then(|g| g.as_object())
         .map(|m| m.iter().filter(|(_, e)| e.get("supported").and_then(|s| s.as_bool()) == Some(false)).map(|(n, _)| n.clone()).collect())
         .unwrap_or_default();
-    HIDDEN_GENRES.with(|c| c.borrow_mut().insert(key, hidden.clone()));
+    HIDDEN_PAGES.with(|c| c.borrow_mut().insert(key, hidden.clone()));
     hidden
+}
+
+/// The genre pages a limited profile should not be offered (see `hidden_pages`).
+pub async fn hidden_genres(surface: &str, names: &[String]) -> std::collections::HashSet<String> {
+    hidden_pages("genre-support", "names", "genres", surface, names).await
+}
+
+/// The language pages a limited profile should not be offered.
+pub async fn hidden_languages(codes: &[String]) -> std::collections::HashSet<String> {
+    hidden_pages("language-support", "codes", "languages", "both", codes).await
+}
+
+/// The New & Popular page from the engine: the desktop rows, or with a `tab` (watching, top10_movies, top10_series, just_landed,
+/// coming_soon) the single row of that mobile tab. None when the engine cannot be reached or has nothing.
+pub async fn fetch_new_popular(tab: Option<&str>) -> Option<Vec<FeedRow>> {
+    let mut url = format!("{}/api/new-popular?session_id={}{}", AI_API_BASE_URL, get_or_create_session_id(), rating_query());
+    if let Some(t) = tab {
+        url.push_str(&format!("&tab={t}"));
+    }
+    let resp = Request::get(&url).send().await.ok()?;
+    if !resp.ok() {
+        return None;
+    }
+    let data: FeedResponse = resp.json().await.ok()?;
+    (!data.rows.is_empty()).then_some(data.rows)
+}
+
+/// The titles of a language page (original language) as rows from the engine, the Top 10 rows left out so the page reads as one ranked grid.
+pub async fn fetch_language_titles(lang: &str) -> Option<Vec<MediaItem>> {
+    let url = format!("{}/api/feed?language={}&limit=12&session_id={}{}", AI_API_BASE_URL, lang, get_or_create_session_id(), rating_query());
+    let resp = Request::get(&url).send().await.ok()?;
+    if !resp.ok() {
+        return None;
+    }
+    let data: FeedResponse = resp.json().await.ok()?;
+    let mut seen = std::collections::HashSet::new();
+    let items: Vec<MediaItem> = data
+        .rows
+        .iter()
+        .filter(|r| !r.is_top_ten())
+        .flat_map(|r| r.to_media_items())
+        .filter(|m| seen.insert((m.media_type.clone(), m.id)))
+        .collect();
+    (!items.is_empty()).then_some(items)
 }
 
 /// Fetches dynamic feed rows composed by the backend intelligence server

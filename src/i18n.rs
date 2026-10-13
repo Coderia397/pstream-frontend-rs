@@ -160,6 +160,19 @@ pub fn t_args(key: &str, args: &[(&str, FluentValue)]) -> String {
     })
 }
 
+/// A release date (`YYYY-MM-DD`) written short for the reader's language, for example "21 Oct" or "Oct 21". An unreadable date comes back unchanged.
+pub fn short_date(iso: &str) -> String {
+    let opts = js_sys::Object::new();
+    let _ = js_sys::Reflect::set(&opts, &"day".into(), &"numeric".into());
+    let _ = js_sys::Reflect::set(&opts, &"month".into(), &"short".into());
+    // noon keeps the day the same in every time zone
+    let date = js_sys::Date::new(&wasm_bindgen::JsValue::from_str(&format!("{}T12:00:00", iso.get(..10).unwrap_or(iso))));
+    if date.get_time().is_nan() {
+        return iso.to_string();
+    }
+    date.to_locale_date_string(&language(), &opts).as_string().unwrap_or_else(|| iso.to_string())
+}
+
 /// Name of a language in the language the interface is shown in, from the browser's own language data, so no list of names has
 /// to be kept in sync. Falls back to the code.
 pub fn language_name(code: &str) -> String {

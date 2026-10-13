@@ -84,7 +84,7 @@ pub fn SpotlightCard(
 
     let formatted_rank = rank.map(|r| if r < 10 { format!("0{}", r) } else { format!("{}", r) });
 
-    let coming_soon_label = release_date.clone().unwrap_or_default();
+    let coming_soon_label = release_date.as_deref().map(crate::i18n::short_date).unwrap_or_default();
 
     let backdrop_src = if backdrop_path.starts_with("http") {
         backdrop_path.clone()

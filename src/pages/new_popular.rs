@@ -10,10 +10,22 @@ use crate::services::tmdb::{fetch_trending, fetch_top_rated, fetch_row_content};
 pub fn NewPopularPage() -> impl IntoView {
     let (active_tab, set_active_tab) = signal(NewPopularTab::Watching);
 
-    // Resource for mobile spotlight feed
+    // Resource for mobile spotlight feed: the engine's row for the tab, TMDB when the engine cannot be reached
     let mobile_feed = LocalResource::new(move || {
         let tab = active_tab.get();
         async move {
+            let engine_tab = match tab {
+                NewPopularTab::Watching => "watching",
+                NewPopularTab::Top10Movies => "top10_movies",
+                NewPopularTab::Top10Series => "top10_series",
+                NewPopularTab::JustLanded => "just_landed",
+                NewPopularTab::ComingSoon => "coming_soon",
+            };
+            if let Some(rows) = crate::services::ai_engine::fetch_new_popular(Some(engine_tab)).await {
+                if let Some(row) = rows.first() {
+                    return row.to_media_items();
+                }
+            }
             match tab {
                 NewPopularTab::Watching => fetch_trending("all").await.unwrap_or_default(),
                 NewPopularTab::Top10Movies => fetch_top_rated("movie").await.unwrap_or_default(),
@@ -23,6 +35,9 @@ pub fn NewPopularPage() -> impl IntoView {
             }
         }
     });
+
+    // Desktop rows from the engine; the fixed TMDB rows below are the fallback
+    let desktop_feed = LocalResource::new(move || async move { crate::services::ai_engine::fetch_new_popular(None).await.unwrap_or_default() });
 
     view! {
         <Layout>
@@ -60,6 +75,7 @@ pub fn NewPopularPage() -> impl IntoView {
                                             let backdrop = m.backdrop_url("w780").unwrap_or_default();
                                             let overview = m.overview.clone();
                                             let rank = if is_top10 { Some(idx + 1) } else { None };
+                                            let release_date = if is_coming { m.release_date.clone().or_else(|| m.first_air_date.clone()) } else { None };
                                             view! {
                                                 <SpotlightCard
                                                     movie_id=movie_id
@@ -69,6 +85,7 @@ pub fn NewPopularPage() -> impl IntoView {
                                                     overview=overview
                                                     rank=rank
                                                     is_coming_soon=is_coming
+                                                    release_date=release_date
                                                 />
                                             }
                                         }).collect::<Vec<_>>()}
@@ -81,21 +98,55 @@ pub fn NewPopularPage() -> impl IntoView {
 
                 // ── DESKTOP DYNAMIC ROWS (>= md) ──────────────────────────
                 <main class="hidden md:block relative z-10 pb-16 rows-stack">
-                    <TopTenRow title=crate::i18n::t("new-popular-top-10-films-in-the") kind="movie" />
-                    <TopTenRow title=crate::i18n::t("new-popular-top-10-series-in-the") kind="tv" />
-                    <Row title=crate::i18n::t("new-popular-newly-added-to-the-collection") endpoint="/movie/now_playing" kind="movie" />
-                    <Row title=crate::i18n::t("new-popular-worth-the-wait") sort_by="vote_average.desc" extra_params="&vote_count.gte=1000" kind="movie" />
-                    <Row title=crate::i18n::t("new-popular-rising-stars-under-the-radar") sort_by="popularity.desc" extra_params="&vote_count.lte=2500&vote_count.gte=150&vote_average.gte=7.0" kind="movie" />
-                    <Row title=crate::i18n::t("new-popular-the-best-of-2026-so") sort_by="vote_average.desc" extra_params="&primary_release_date.gte=2025-01-01&vote_count.gte=80" kind="movie" />
-                    <Row title=crate::i18n::t("new-popular-new-series-everyone-is-watching") endpoint="/trending/tv/week" kind="tv" />
-                    <Row title=crate::i18n::t("new-popular-the-shows-the-internet-cant") genre_id="18" kind="tv" sort_by="popularity.desc" />
-                    <Row title=crate::i18n::t("new-popular-the-films-everyone-is-discussing") endpoint="/trending/movie/week" kind="movie" />
-                    <Row title=crate::i18n::t("new-popular-coming-to-the-collection-soon") endpoint="/movie/upcoming" kind="movie" />
-                    <Row title=crate::i18n::t("new-popular-new-and-acclaimed") sort_by="vote_average.desc" extra_params="&vote_count.gte=400&primary_release_date.gte=2024-01-01" kind="movie" />
-                    <Row title=crate::i18n::t("new-popular-series-picking-up-steam") genre_id="10765" kind="tv" sort_by="popularity.desc" />
-                    <Row title=crate::i18n::t("new-popular-international-discoveries") genre_id="international" kind="tv" />
+                    <Suspense fallback=move || view! {
+                        <div class="space-y-6">
+                            <div class="h-40 bg-ink/[0.02] rounded-card animate-pulse mx-[var(--app-x,56px)]" />
+                            <div class="h-40 bg-ink/[0.02] rounded-card animate-pulse mx-[var(--app-x,56px)]" />
+                        </div>
+                    }>
+                        {move || desktop_feed.get().map(|rows| {
+                            if rows.is_empty() {
+                                view! { <FallbackRows /> }.into_any()
+                            } else {
+                                rows.into_iter().map(|r| {
+                                    let row_title = r.title.clone();
+                                    let media_items = r.to_media_items();
+                                    if r.is_top_ten() {
+                                        let kind = if r.items.first().is_some_and(|i| i.is_tv()) { "tv" } else { "movie" };
+                                        view! { <TopTenRow title=row_title kind=kind.to_string() items=Some(media_items) /> }.into_any()
+                                    } else {
+                                        view! {
+                                            <crate::components::media::vibe_row::VibeRow
+                                                title=row_title
+                                                tagline=r.tagline.clone()
+                                                mood_pills=r.mood_pills.clone()
+                                                items=media_items
+                                            />
+                                        }.into_any()
+                                    }
+                                }).collect::<Vec<_>>().into_any()
+                            }
+                        })}
+                    </Suspense>
                 </main>
             </div>
         </Layout>
+    }
+}
+
+/// The page as it was before the engine served it: fixed TMDB rows, shown only when the engine cannot be reached.
+#[component]
+fn FallbackRows() -> impl IntoView {
+    view! {
+        <TopTenRow title=crate::i18n::t("new-popular-top-10-films-in-the") kind="movie" />
+        <TopTenRow title=crate::i18n::t("new-popular-top-10-series-in-the") kind="tv" />
+        <Row title=crate::i18n::t("new-popular-newly-added-to-the-collection") endpoint="/movie/now_playing" kind="movie" />
+        <Row title=crate::i18n::t("new-popular-worth-the-wait") sort_by="vote_average.desc" extra_params="&vote_count.gte=1000" kind="movie" />
+        <Row title=crate::i18n::t("new-popular-rising-stars-under-the-radar") sort_by="popularity.desc" extra_params="&vote_count.lte=2500&vote_count.gte=150&vote_average.gte=7.0" kind="movie" />
+        <Row title=crate::i18n::t("new-popular-the-best-of-2026-so") sort_by="vote_average.desc" extra_params="&primary_release_date.gte=2025-01-01&vote_count.gte=80" kind="movie" />
+        <Row title=crate::i18n::t("new-popular-new-series-everyone-is-watching") endpoint="/trending/tv/week" kind="tv" />
+        <Row title=crate::i18n::t("new-popular-the-films-everyone-is-discussing") endpoint="/trending/movie/week" kind="movie" />
+        <Row title=crate::i18n::t("new-popular-coming-to-the-collection-soon") endpoint="/movie/upcoming" kind="movie" />
+        <Row title=crate::i18n::t("new-popular-new-and-acclaimed") sort_by="vote_average.desc" extra_params="&vote_count.gte=400&primary_release_date.gte=2024-01-01" kind="movie" />
     }
 }

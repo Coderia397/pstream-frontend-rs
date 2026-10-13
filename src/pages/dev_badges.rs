@@ -32,7 +32,6 @@ pub fn DevBadgesPage() -> impl IntoView {
     }
     view! {
         <div class="p-6 text-ink" style="background:#111">
-            <h1 class="mb-4 text-2xl font-bold">"Age badges (developer preview)"</h1>
             {[RatingSystem::Uk, RatingSystem::Us].into_iter().map(|system| view! {
                 <h2 class="mt-6 mb-2 text-xl font-bold">{system.key().to_uppercase()}</h2>
                 {BACKGROUNDS.iter().map(|(bg_name, bg)| view! {

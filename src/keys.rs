@@ -22,6 +22,10 @@ pub const ACCOUNT_PREFS: &str = "streams_account_prefs";
 /// When the app last started in this browser (milliseconds); index.html reads it to decide whether to show the start animation.
 /// Random id this browser keeps so an account can recognise it again (see services/device.rs).
 pub const DEVICE_KEY: &str = "streams_device_key";
+/// Country of the connection (two letters) as the edge reported it at the last registration, and the rating system the database resolved
+/// for this session ("uk" or "us"). Both are only caches for showing labels without waiting for the network.
+pub const COUNTRY: &str = "streams_country";
+pub const RATING_SYSTEM_AUTO: &str = "streams_rating_system_auto";
 pub const BOOT_SEEN: &str = "streams_boot_seen";
 
 pub const VIDEO_ELEMENT_ID: &str = "streams-video";

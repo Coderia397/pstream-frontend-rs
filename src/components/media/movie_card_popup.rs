@@ -184,12 +184,10 @@ pub fn MovieCardPopup(
 
     let title = movie.display_title();
     let backdrop = movie.backdrop_path.clone().or(movie.poster_path.clone());
-    let cert = movie.certification.clone();
     let is_tv = movie.is_tv();
 
     let overview_stored = StoredValue::new(movie.overview.clone());
     let title_stored = StoredValue::new(title);
-    let cert_stored = StoredValue::new(cert);
     let image_url = backdrop.map(|p| {
         if p.starts_with("http") { p } else { format!("{}/w780{}", crate::config::TMDB_IMAGE_URL, p) }
     });
@@ -451,7 +449,7 @@ pub fn MovieCardPopup(
                         <span class="text-success font-bold">
                             {crate::i18n::t_args("media-percent-match", &[("pct", fluent_bundle::FluentValue::from(movie_stored.get_value().match_score() as i64))])}
                         </span>
-                        <RatingBadge id=movie_stored.get_value().id_u32() is_tv=movie_stored.get_value().is_tv() known=cert_stored.get_value().unwrap_or_default() size="xs".to_string() />
+                        <RatingBadge id=movie_stored.get_value().id_u32() is_tv=movie_stored.get_value().is_tv() gb=movie_stored.get_value().rating_gb.clone() us=movie_stored.get_value().rating_us.clone() size="xs".to_string() />
                         <span>
                             {if is_tv { crate::i18n::t("media-series") } else { crate::i18n::t("media-film") }}
                         </span>

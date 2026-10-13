@@ -94,3 +94,24 @@
 @media (max-width: 63.999rem) {
   .theme-paper .set-row { min-height: 4rem; padding-block: 0.875rem; }
 }
+
+/* Age rating badge: one look for every rating system. Colours come from the rank (src/data/ratings.rs) as custom properties. */
+.age-badge {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-width: 2.1em;
+  height: 1.6em;
+  padding: 0 0.5em;
+  border-radius: 0.5em;
+  font-weight: 800;
+  line-height: 1;
+  letter-spacing: -0.01em;
+  white-space: nowrap;
+  font-variant-numeric: tabular-nums;
+  background: var(--age-bg);
+  color: var(--age-fg);
+  /* a dark outer line and a light inner line keep the edge readable on any poster or background, dark or light */
+  box-shadow: 0 0 0 1px rgb(0 0 0 / 0.35), inset 0 0 0 1px rgb(255 255 255 / 0.28);
+  user-select: none;
+}

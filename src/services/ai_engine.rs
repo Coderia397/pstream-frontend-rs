@@ -25,6 +25,10 @@ pub struct VibeItem {
     pub cosine_similarity: Option<f64>,
     #[serde(default)]
     pub vibe_pills: Vec<String>,
+    #[serde(default)]
+    pub rating_gb: Option<String>,
+    #[serde(default)]
+    pub rating_us: Option<String>,
 }
 
 impl VibeItem {
@@ -56,6 +60,8 @@ impl VibeItem {
             match_percentage: self.match_percentage,
             vibe_pills: self.vibe_pills.clone(),
             genre_ids: Vec::new(),
+            rating_gb: self.rating_gb.clone(),
+            rating_us: self.rating_us.clone(),
             ..Default::default()
         }
     }

@@ -1,4 +1,5 @@
 pub mod browse;
+pub mod dev_badges;
 pub mod player;
 pub mod search;
 pub mod my_list;

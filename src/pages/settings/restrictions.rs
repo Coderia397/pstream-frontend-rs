@@ -1,6 +1,7 @@
 //! Viewing restrictions of one profile: the British age rating limit (profile_settings.age_rating) and the titles that are blocked.
 use super::prefs::use_prefs;
-use super::widgets::{toast, LinkRow, Section, Stepper};
+use super::widgets::{toast, ChoiceList, LinkRow, Section, Stepper};
+use crate::data::ratings::{limit_label, RatingSystem};
 use super::Screen;
 use crate::config::{BLOCKED_TITLES_MAX, BLOCKED_TITLE_MAX};
 use crate::data::settings::{rating, DEFAULT_RATING, RATINGS};
@@ -18,7 +19,7 @@ pub fn Restrictions(id: String) -> impl IntoView {
     let id = StoredValue::new(id);
     let level_value = Signal::derive(move || {
         let r = rating(prefs.profile(&id.get_value()).rating_for(is_kids(&id.get_value())));
-        if r.key == DEFAULT_RATING { t("set-restrictions-none") } else { t_args("set-rating-up-to", &[("rating", r.key.into())]) }
+        if r.key == DEFAULT_RATING { t("set-restrictions-none") } else { t_args("set-rating-up-to", &[("rating", limit_label(prefs.rating_system(), r.key).into())]) }
     });
     let blocked_value = Signal::derive(move || {
         let n = prefs.profile(&id.get_value()).blocked_titles.len();
@@ -29,6 +30,7 @@ pub fn Restrictions(id: String) -> impl IntoView {
             <LinkRow icon="warning-circle" title=t("set-title-ratings") href=Screen::Ratings(id.get_value()).path() value=level_value />
             <LinkRow icon="prohibit" title=t("set-title-blocked") href=Screen::Blocked(id.get_value()).path() value=blocked_value />
         </Section>
+        <RatingSystemChoice />
     }
 }
 
@@ -40,7 +42,8 @@ pub fn Ratings(id: String) -> impl IntoView {
     let id = StoredValue::new(id);
     let kids = is_kids(&id.get_value());
     let selected = Signal::derive(move || prefs.profile(&id.get_value()).rating_for(kids).to_string());
-    let options: Vec<(String, String, String)> = RATINGS.iter().filter(|r| !kids || r.kids).map(|r| (r.key.to_string(), t(r.label_key), t(r.hint_key))).collect();
+    let system = prefs.rating_system();
+    let options: Vec<(String, String, String)> = RATINGS.iter().filter(|r| !kids || r.kids).map(|r| (r.key.to_string(), limit_label(system, r.key), t(r.hint_key))).collect();
     view! {
         <div>
             <p class="mb-5 text-body-md text-ink/60">{t("set-ratings-hint")}</p>
@@ -96,6 +99,37 @@ pub fn Blocked(id: String) -> impl IntoView {
                     }
                 }).collect_view()}
             </ul>
+        </div>
+    }
+}
+
+/// Which age rating labels this person reads. Automatic follows the country of the device the session signed in from; the choice is kept
+/// in the account (account_details.rating_system) and the database answer for automatic is asked again after a change.
+#[component]
+fn RatingSystemChoice() -> impl IntoView {
+    let prefs = use_prefs();
+    let selected = Signal::derive(move || prefs.account.with(|a| a.rating_system.clone()));
+    let options = vec![
+        ("auto".to_string(), t("set-rating-system-auto")),
+        (RatingSystem::Uk.key().to_string(), t("set-rating-system-uk")),
+        (RatingSystem::Us.key().to_string(), t("set-rating-system-us")),
+    ];
+    view! {
+        <div class="mt-8">
+            <h2 class="mb-1 text-heading-sm font-bold">{t("set-rating-system-title")}</h2>
+            <p class="mb-4 text-body-md text-ink/60">{t("set-rating-system-hint")}</p>
+            <ChoiceList
+                options=options
+                selected=selected
+                on_pick=Callback::new(move |v: String| {
+                    prefs.account.update(|a| a.rating_system = v.clone());
+                    leptos::task::spawn_local(async move {
+                        let _ = crate::services::account::rpc("set_rating_system", &serde_json::json!({ "p_system": v })).await;
+                        crate::services::device::refresh_rating_system().await;
+                    });
+                    toast(t("set-saved"));
+                })
+            />
         </div>
     }
 }

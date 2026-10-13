@@ -75,6 +75,11 @@ pub struct MediaItem {
     pub genre_ids: Vec<u32>,
     #[serde(default)]
     pub vibe_pills: Vec<String>,
+    /// The real British and American certificates when the engine sent them
+    #[serde(default)]
+    pub rating_gb: Option<String>,
+    #[serde(default)]
+    pub rating_us: Option<String>,
 }
 
 impl MediaItem {

@@ -98,11 +98,13 @@ impl Default for AppPrefs {
 pub struct AccountPrefs {
     pub test_participation: bool,
     pub profile_transfer: bool,
+    /// "auto" (follow the device), "uk" or "us": which age rating labels are read (account_details.rating_system)
+    pub rating_system: String,
 }
 
 impl Default for AccountPrefs {
     fn default() -> Self {
-        Self { test_participation: true, profile_transfer: true }
+        Self { test_participation: true, profile_transfer: true, rating_system: "auto".into() }
     }
 }
 
@@ -166,6 +168,17 @@ impl Prefs {
         self.profiles.set(HashMap::new());
         self.app.set(AppPrefs::default());
         self.account.set(AccountPrefs::default());
+    }
+
+    /// The rating labels this person reads: their choice; on auto the answer the database gave for this session's device, else the country of
+    /// the connection, else British. Reactive: reading it inside a view follows the setting.
+    pub fn rating_system(&self) -> crate::data::ratings::RatingSystem {
+        use crate::data::ratings::{system_for_country, RatingSystem};
+        let choice = self.account.with(|a| a.rating_system.clone());
+        RatingSystem::from_key(&choice)
+            .or_else(|| crate::services::device::cached_rating_system().and_then(|k| RatingSystem::from_key(&k)))
+            .or_else(|| crate::services::device::cached_country().map(|c| system_for_country(&c)))
+            .unwrap_or(RatingSystem::Uk)
     }
 
     pub fn is_verified(&self) -> bool {

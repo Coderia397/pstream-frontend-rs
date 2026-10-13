@@ -124,8 +124,44 @@ pub async fn register() -> Result<(), AuthError> {
     if account::session().is_none() {
         return Ok(());
     }
-    let info = collect(country().await);
-    account::rpc("register_device", &json!({ "p_device_key": device_key(), "p_info": info })).await.map(|_| ())
+    let country = country().await;
+    if let Some(c) = &country {
+        store(crate::keys::COUNTRY, c);
+    }
+    let info = collect(country);
+    let registered = account::rpc("register_device", &json!({ "p_device_key": device_key(), "p_info": info })).await.map(|_| ());
+    refresh_rating_system().await;
+    registered
+}
+
+fn store(key: &str, value: &str) {
+    if let Some(storage) = web_sys::window().and_then(|w| w.local_storage().ok().flatten()) {
+        let _ = storage.set_item(key, value);
+    }
+}
+
+fn stored(key: &str) -> Option<String> {
+    web_sys::window()?.local_storage().ok().flatten()?.get_item(key).ok().flatten().filter(|v| !v.is_empty())
+}
+
+/// The country the connection came from at the last registration, if there was one.
+pub fn cached_country() -> Option<String> {
+    stored(crate::keys::COUNTRY)
+}
+
+/// The rating system the database resolved for this session ("uk" or "us"), if it has answered yet.
+pub fn cached_rating_system() -> Option<String> {
+    stored(crate::keys::RATING_SYSTEM_AUTO)
+}
+
+/// Asks the database which rating labels this session reads (the account choice, else the country of this session's device) and keeps the
+/// answer. A failure changes nothing.
+pub async fn refresh_rating_system() {
+    if let Ok(answer) = account::rpc("my_rating_system", &json!({})).await {
+        if let Some(system) = answer.as_str().filter(|s| matches!(*s, "uk" | "us")) {
+            store(crate::keys::RATING_SYSTEM_AUTO, system);
+        }
+    }
 }
 
 /// `register` without waiting for it; a failure (not set up yet, offline) changes nothing for the person.

@@ -3,27 +3,47 @@
 use std::cell::RefCell;
 use std::collections::HashMap;
 
-thread_local! {
-    static CACHE: RefCell<HashMap<(u32, bool), String>> = RefCell::new(HashMap::new());
+/// The real certificates of a title: the British one and the American one, each missing when the title has none.
+#[derive(Clone, Debug, Default, PartialEq, Eq)]
+pub struct RatingInfo {
+    pub gb: Option<String>,
+    pub us: Option<String>,
 }
 
-/// "U", "PG", "12", "15", "18" or "NR". An unreachable engine also gives "NR" (and is not remembered).
-pub async fn fetch(id: u32, is_tv: bool) -> String {
+impl RatingInfo {
+    /// From one certificate text as other parts of the app carry it ("15", "PG-13"): it goes to the system it belongs to.
+    pub fn from_text(text: &str) -> Self {
+        let t = text.trim();
+        if crate::data::settings::bbfc_rank(t).is_some() {
+            Self { gb: Some(t.to_string()), us: None }
+        } else if crate::data::settings::us_to_bbfc_rank(t).is_some() {
+            Self { gb: None, us: Some(t.to_string()) }
+        } else {
+            Self::default()
+        }
+    }
+}
+
+thread_local! {
+    static CACHE: RefCell<HashMap<(u32, bool), RatingInfo>> = RefCell::new(HashMap::new());
+}
+
+/// The certificates of a title from the engine (`/api/rating`). A title the engine does not know, or an engine that cannot be reached,
+/// gives none (shown as NR); an unreachable engine is not remembered.
+pub async fn fetch(id: u32, is_tv: bool) -> RatingInfo {
     if let Some(hit) = CACHE.with(|c| c.borrow().get(&(id, is_tv)).cloned()) {
         return hit;
     }
     let url = format!("{}/api/rating?id={}&media_type={}", crate::config::ENGINE_URL, id, if is_tv { "tv" } else { "movie" });
-    let label = match gloo_net::http::Request::get(&url).send().await {
-        Ok(r) if r.ok() => r.json::<serde_json::Value>().await.ok().and_then(|v| v.get("rating").and_then(|x| x.as_str()).map(str::to_string)),
+    let answer = match gloo_net::http::Request::get(&url).send().await {
+        Ok(r) if r.ok() => r.json::<serde_json::Value>().await.ok(),
         _ => None,
     };
-    match label {
-        Some(l) => {
-            CACHE.with(|c| c.borrow_mut().insert((id, is_tv), l.clone()));
-            l
-        }
-        None => "NR".to_string(),
-    }
+    let Some(v) = answer else { return RatingInfo::default() };
+    let text = |k: &str| v.get(k).and_then(|x| x.as_str()).map(str::to_string);
+    let info = RatingInfo { gb: text("rating_gb"), us: text("rating_us") };
+    CACHE.with(|c| c.borrow_mut().insert((id, is_tv), info.clone()));
+    info
 }
 
 thread_local! {

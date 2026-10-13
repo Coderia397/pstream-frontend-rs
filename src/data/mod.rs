@@ -7,6 +7,7 @@ pub mod genres;
 pub mod help;
 pub mod languages;
 pub mod page_genres;
+pub mod ratings;
 pub mod settings;
 
 // Re-exports for convenient downstream consumption

@@ -46,6 +46,10 @@ pub struct Movie {
     #[serde(default)]
     pub certification: Option<String>,
     #[serde(default)]
+    pub rating_gb: Option<String>,
+    #[serde(default)]
+    pub rating_us: Option<String>,
+    #[serde(default)]
     pub match_percentage: Option<u32>,
     #[serde(default)]
     pub vibe_pills: Option<Vec<String>>,
@@ -105,6 +109,8 @@ impl From<crate::services::tmdb::MediaItem> for Movie {
             match_percentage: m.match_percentage,
             genre_ids: if m.genre_ids.is_empty() { None } else { Some(m.genre_ids.iter().map(|&g| g as i64).collect()) },
             vibe_pills: if m.vibe_pills.is_empty() { None } else { Some(m.vibe_pills) },
+            rating_gb: m.rating_gb,
+            rating_us: m.rating_us,
             ..Default::default()
         }
     }

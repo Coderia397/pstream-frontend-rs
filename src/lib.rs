@@ -46,6 +46,7 @@ pub fn App() -> impl IntoView {
         <Router>
             <Routes fallback=crate::pages::not_found::NotFoundPage>
                 <Route path=path!("/browse") view=BrowseHome />
+                <Route path=path!("/dev/badges") view=crate::pages::dev_badges::DevBadgesPage />
                 <Route path=path!("/browse/genre/:id") view=crate::pages::browse_grid::BrowseGridPage />
                 <Route path=path!("/watch/:id") view=crate::pages::player::PlayerPage />
                 <Route path=path!("/watch/:kind/:id") view=crate::pages::player::PlayerPage />

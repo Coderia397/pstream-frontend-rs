@@ -164,7 +164,7 @@ pub fn RecCard(
                         <span class="text-success font-bold text-xs">
                             {crate::i18n::t_args("media-percent-match", &[("pct", fluent_bundle::FluentValue::from(match_score as i64))])}
                         </span>
-                        <RatingBadge id=rec.id_u32() is_tv=rec.is_tv() known=rec.certification.clone().unwrap_or_default() size="sm".to_string() />
+                        <RatingBadge id=rec.id_u32() is_tv=rec.is_tv() gb=rec.rating_gb.clone() us=rec.rating_us.clone() size="sm".to_string() />
                         {if !year.is_empty() {
                             view! {
                                 <span class="text-gray-300 text-xs font-medium px-0.5">{year}</span>

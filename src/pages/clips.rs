@@ -2,7 +2,7 @@ use leptos::prelude::*;
 use leptos_router::hooks::use_navigate;
 use crate::services::tmdb::{fetch_trending, MediaItem};
 use crate::store::{use_library_store, use_ui_store, LibraryEntry};
-use crate::components::media::movie_card_badges::MaturityBadge;
+use crate::components::media::movie_card_badges::RatingBadge;
 
 #[component]
 pub fn ClipCard(
@@ -177,7 +177,7 @@ pub fn ClipCard(
             // Bottom Content Overlay
             <div class="relative z-20 px-4 pb-8 max-w-[80%] flex flex-col gap-2">
                 <div class="flex items-center gap-2 mb-1">
-                    <MaturityBadge certification="16+".to_string() size="xs".to_string() />
+                    <RatingBadge id=movie_id is_tv=is_tv size="xs".to_string() />
                 </div>
                 <h2 class="text-ink font-black text-2xl md:text-3xl leading-tight drop-shadow-lg">
                     {title}

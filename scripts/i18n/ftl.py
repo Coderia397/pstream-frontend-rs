@@ -82,6 +82,8 @@ def check(en_value, tr_value):
         problems.append(f"tags differ: {tags(en_value)} vs {tags(tr_value)}")
     if urls(en_value) != urls(tr_value):
         problems.append(f"links differ: {urls(en_value)} vs {urls(tr_value)}")
+    if tr_value.count("{") != tr_value.count("}"):
+        problems.append("braces are not balanced")
     if ("->" in en_value) != ("->" in tr_value):
         problems.append("plural selection lost or added")
     if "->" in tr_value and "*[" not in tr_value:

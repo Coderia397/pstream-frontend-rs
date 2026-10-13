@@ -176,7 +176,8 @@ def write_file(lang):
     en = ftl.read((ROOT / "i18n/en.ftl").read_text())
     cache = json.loads((CACHE / f"{lang}.json").read_text())
     out = [(k, cache[k]) for k, _ in en if k in cache]
-    (ROOT / f"i18n/{lang}.ftl").write_text(ftl.write(out))
+    import tidy
+    (ROOT / f"i18n/{lang}.ftl").write_text(tidy.tidy(ftl.write(out)))
     print(f"{lang}: wrote i18n/{lang}.ftl with {len(out)} of {len(en)} messages")
 
 

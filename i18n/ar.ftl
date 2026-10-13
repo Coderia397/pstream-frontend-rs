@@ -1685,6 +1685,7 @@ set-blocked-count =
      [few] { $count } عناوين
      [many] { $count } عنواناً
     *[other] { $count } عنوان
+    }
 set-lock-on = مفعّل
 set-lock-off = معطّل
 set-lock-title-on = قفل الملف الشخصي مفعّل

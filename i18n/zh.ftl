@@ -1670,6 +1670,7 @@ set-blocked-placeholder = 输入剧集或电影名称
 set-blocked-count =
     { $count ->
     *[other] { $count } 部影片
+    }
 set-lock-on = 开启
 set-lock-off = 关闭
 set-lock-title-on = 已开启个人资料锁
@@ -1823,6 +1824,7 @@ set-overview-edit-hint = 语言、字幕、自动播放、通知、隐私等
 set-overview-profiles =
     { $count ->
     *[other] { $count } 个配置文件
+    }
 set-security-access = 访问和隐私
 set-privacy-hint = 管理您的个人信息使用
 set-profiles-parental = 家长控制和权限

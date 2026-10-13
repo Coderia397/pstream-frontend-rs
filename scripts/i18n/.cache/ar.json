@@ -1140,7 +1140,7 @@
  "set-sub-preview": "هكذا ستبدو الترجمة لديك.",
  "set-sub-size": "حجم النص",
  "set-sub-size-small": "نص صغير",
- "set-blocked-count": "{ $count ->\n [zero] لا توجد عناوين\n [one] عنوان واحد\n [two] عنوانان\n [few] { $count } عناوين\n [many] { $count } عنواناً\n*[other] { $count } عنوان",
+ "set-blocked-count": "{ $count ->\n [zero] لا توجد عناوين\n [one] عنوان واحد\n [two] عنوانان\n [few] { $count } عناوين\n [many] { $count } عنواناً\n*[other] { $count } عنوان}",
  "set-sub-size-medium": "نص متوسط",
  "set-sub-size-large": "نص كبير",
  "set-sub-color": "لون النص",

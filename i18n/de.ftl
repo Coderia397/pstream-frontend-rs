@@ -1677,7 +1677,8 @@ set-blocked-placeholder = Titel einer Serie oder eines Films eingeben
 set-blocked-count =
     { $count ->
      [one] 1 Titel
-    *[other] { $count } Titel}
+    *[other] { $count } Titel
+}
 set-lock-on = An
 set-lock-off = Aus
 set-lock-title-on = Profil-Sperre ist aktiviert
@@ -1831,7 +1832,8 @@ set-overview-edit-hint = Sprachen, Untertitel, Autoplay, Benachrichtigungen, Dat
 set-overview-profiles =
     { $count ->
      [one] 1 Profil
-    *[other] { $count } Profile}
+    *[other] { $count } Profile
+}
 set-security-access = Zugriff und Datenschutz
 set-privacy-hint = Verwalten der Verwendung Ihrer persönlichen Informationen
 set-profiles-parental = Elternkontrolle und Berechtigungen

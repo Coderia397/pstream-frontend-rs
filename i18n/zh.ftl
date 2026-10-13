@@ -957,7 +957,6 @@ footer-cookie-policy = Cookie 政策
 footer-contact = 联系我们
 footer-help = 帮助中心
 footer-cookie-preferences = Cookie 偏好设置
-notif-new = 新
 notif-today = 今天
 notif-ago-days =
     { $n ->
@@ -971,27 +970,9 @@ notif-ago-months =
     { $n ->
        *[other] { $n } 个月前
     }
-notif-h-top-pick = 为你精选
 notif-h-trending = 正在热播
-notif-h-dont-miss = 不容错过
 notif-h-new-arrival = 新上线
-notif-h-must-watch = 必看佳作
-notif-h-top10-films = 电影Top 10
-notif-h-critics = 口碑之选
-notif-h-new-on = { $brand } 新上线
-notif-h-new-season = 新一季已上线
-notif-h-top-series = 为你推荐的热播剧
-notif-h-everyone = 大家都在看
-notif-h-comedy = 为你精选的喜剧佳作
-notif-h-binge = 值得连刷
-notif-h-top10-series = 电视剧Top 10
 notif-title = 通知
-notif-badge-trending = 热播榜第1名
-notif-badge-top-series = 热门剧集
-notif-badge-critics = 口碑之选
-notif-desc-trending = 现在大家都在看。观看预告片或加入片单。
-notif-desc-series = 新剧集正在播出。今天就来追剧吧。
-notif-desc-critics = 本季评分最高的作品。根据你的口味，强烈推荐。
 notif-desc-available = 现已在你的片库中上线。
 notif-caught-up = 你已看完所有内容
 notif-caught-up-body = 新的通知和上线内容将显示在这里。

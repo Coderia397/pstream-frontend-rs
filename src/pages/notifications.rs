@@ -1,6 +1,5 @@
 use leptos::prelude::*;
 use crate::components::layout::Layout;
-use crate::services::tmdb::{fetch_trending, fetch_top_rated};
 use crate::store::use_ui_store;
 
 #[derive(Clone, Debug, PartialEq)]
@@ -21,73 +20,20 @@ pub fn NotificationsPage() -> impl IntoView {
     let (read_ids, set_read_ids) = signal(std::collections::HashSet::<String>::new());
 
     let notifications_resource = LocalResource::new(move || async move {
-        let trending_movies = fetch_trending("movie").await.unwrap_or_default();
-        let trending_tv = fetch_trending("tv").await.unwrap_or_default();
-        let top_movies = fetch_top_rated("movie").await.unwrap_or_default();
-
-        let mut list = Vec::new();
-
-        // 1. Trending Movie Alert
-        if let Some(m) = trending_movies.first() {
-            list.push(NotificationItem {
-                id: format!("notif-trend-m-{}", m.id),
-                movie_id: m.id,
-                is_tv: false,
-                badge: crate::i18n::t("notif-badge-trending"),
-                title: m.display_title().to_string(),
-                description: crate::i18n::t("notif-desc-trending"),
-                backdrop: m.backdrop_url("w780").or_else(|| m.poster_url("w500")),
-                time_label: crate::i18n::t("notif-today"),
-            });
-        }
-
-        // 2. Hot TV Series Arrival
-        if let Some(tv) = trending_tv.first() {
-            list.push(NotificationItem {
-                id: format!("notif-trend-tv-{}", tv.id),
-                movie_id: tv.id,
-                is_tv: true,
-                badge: crate::i18n::t("notif-badge-top-series"),
-                title: tv.display_title().to_string(),
-                description: crate::i18n::t("notif-desc-series"),
-                backdrop: tv.backdrop_url("w780").or_else(|| tv.poster_url("w500")),
-                time_label: crate::i18n::t_args("notif-ago-days", &[("n", fluent_bundle::FluentValue::from(1))]),
-            });
-        }
-
-        // 3. Critically Acclaimed Pick
-        if let Some(top) = top_movies.first() {
-            list.push(NotificationItem {
-                id: format!("notif-top-m-{}", top.id),
-                movie_id: top.id,
-                is_tv: false,
-                badge: crate::i18n::t("notif-badge-critics"),
-                title: top.display_title().to_string(),
-                description: crate::i18n::t("notif-desc-critics"),
-                backdrop: top.backdrop_url("w780").or_else(|| top.poster_url("w500")),
-                time_label: crate::i18n::t_args("notif-ago-days", &[("n", fluent_bundle::FluentValue::from(2))]),
-            });
-        }
-
-        // 4. Fill with remaining trending titles
-        for (idx, item) in trending_movies.iter().skip(1).take(6).enumerate() {
-            list.push(NotificationItem {
-                id: format!("notif-m-{}", item.id),
-                movie_id: item.id,
-                is_tv: item.is_tv(),
-                badge: crate::i18n::t("notif-h-new-arrival"),
-                title: item.display_title().to_string(),
-                description: if item.overview.trim().is_empty() {
-                    crate::i18n::t("notif-desc-available")
-                } else {
-                    item.overview.clone()
-                },
-                backdrop: item.backdrop_url("w780").or_else(|| item.poster_url("w500")),
-                time_label: crate::i18n::t_args("notif-ago-days", &[("n", fluent_bundle::FluentValue::from((idx + 3) as i64))]),
-            });
-        }
-
-        list
+        crate::services::notifications::fetch()
+            .await
+            .into_iter()
+            .map(|n| NotificationItem {
+                id: format!("notif-{}-{}", if n.item.is_tv() { "tv" } else { "movie" }, n.item.id),
+                movie_id: n.item.id,
+                is_tv: n.item.is_tv(),
+                badge: n.headline(),
+                title: n.item.display_title().to_string(),
+                description: if n.item.overview.trim().is_empty() { crate::i18n::t("notif-desc-available") } else { n.item.overview.clone() },
+                backdrop: n.item.backdrop_url("w780").or_else(|| n.item.poster_url("w500")),
+                time_label: n.time_label(),
+            })
+            .collect::<Vec<_>>()
     });
 
     let on_card_click = Callback::new(move |item: NotificationItem| {

@@ -3,7 +3,6 @@ use leptos::html::Div;
 use wasm_bindgen::JsCast;
 use std::collections::HashSet;
 use crate::store::use_ui_store;
-use crate::services::tmdb::fetch_trending;
 
 #[derive(Clone, Debug, PartialEq)]
 pub struct AppNotification {
@@ -49,82 +48,25 @@ pub fn NotificationsDropdown() -> impl IntoView {
 
     let root_ref = NodeRef::<Div>::new();
 
-    // Fetch trending media to generate real notification arrivals
+    // Real arrivals: new releases, titles due soon and what is trending (see services/notifications.rs)
     Effect::new(move |_| {
         leptos::task::spawn_local(async move {
-            let movies = fetch_trending("movie").await.unwrap_or_default();
-            let shows = fetch_trending("tv").await.unwrap_or_default();
-            
-            let mut list = Vec::new();
-            let mut count = 0;
-            
-            for (idx, m) in movies.into_iter().enumerate() {
-                if count >= 8 { break; }
-                if let Some(backdrop) = m.backdrop_url("w300").or_else(|| m.poster_url("w300")) {
-                    let rel = match idx {
-                        0 => crate::i18n::t("notif-new"),
-                        1 => crate::i18n::t_args("notif-ago-days", &[("n", fluent_bundle::FluentValue::from(1))]),
-                        2 => crate::i18n::t_args("notif-ago-days", &[("n", fluent_bundle::FluentValue::from(3))]),
-                        3 => crate::i18n::t_args("notif-ago-weeks", &[("n", fluent_bundle::FluentValue::from(1))]),
-                        4 => crate::i18n::t_args("notif-ago-weeks", &[("n", fluent_bundle::FluentValue::from(2))]),
-                        5 => crate::i18n::t_args("notif-ago-weeks", &[("n", fluent_bundle::FluentValue::from(3))]),
-                        _ => crate::i18n::t_args("notif-ago-months", &[("n", fluent_bundle::FluentValue::from(1))]),
-                    };
-                    list.push(AppNotification {
-                        id: format!("notif-movie-{}", m.id),
-                        movie_id: m.id,
-                        is_tv: false,
-                        headline: match idx {
-                            0 => crate::i18n::t("notif-h-top-pick"),
-                            1 => crate::i18n::t("notif-h-trending"),
-                            2 => crate::i18n::t("notif-h-dont-miss"),
-                            3 => crate::i18n::t("notif-h-new-arrival"),
-                            4 => crate::i18n::t("notif-h-must-watch"),
-                            5 => crate::i18n::t("notif-h-top10-films"),
-                            6 => crate::i18n::t("notif-h-critics"),
-                            _ => crate::i18n::t_args("notif-h-new-on", &[("brand", fluent_bundle::FluentValue::from(crate::brand::NAME))]),
-                        },
-                        body: m.title.clone().unwrap_or_default(),
+            let list: Vec<AppNotification> = crate::services::notifications::fetch()
+                .await
+                .into_iter()
+                .filter_map(|n| {
+                    let backdrop = n.item.backdrop_url("w300").or_else(|| n.item.poster_url("w300"))?;
+                    Some(AppNotification {
+                        id: format!("notif-{}-{}", if n.item.is_tv() { "tv" } else { "movie" }, n.item.id),
+                        movie_id: n.item.id,
+                        is_tv: n.item.is_tv(),
+                        headline: n.headline(),
+                        body: n.item.display_title().to_string(),
                         backdrop,
-                        relative_time: rel,
-                    });
-                    count += 1;
-                }
-            }
-
-            for (idx, s) in shows.into_iter().enumerate() {
-                if count >= 16 { break; }
-                if let Some(backdrop) = s.backdrop_url("w300").or_else(|| s.poster_url("w300")) {
-                    let rel = match idx {
-                        0 => crate::i18n::t("notif-new"),
-                        1 => crate::i18n::t_args("notif-ago-days", &[("n", fluent_bundle::FluentValue::from(2))]),
-                        2 => crate::i18n::t_args("notif-ago-weeks", &[("n", fluent_bundle::FluentValue::from(1))]),
-                        3 => "2 weeks ago".to_string(),
-                        4 => "3 weeks ago".to_string(),
-                        _ => crate::i18n::t_args("notif-ago-months", &[("n", fluent_bundle::FluentValue::from(1))]),
-                    };
-                    list.push(AppNotification {
-                        id: format!("notif-tv-{}", s.id),
-                        movie_id: s.id,
-                        is_tv: true,
-                        headline: match idx {
-                            0 => crate::i18n::t("notif-h-new-season"),
-                            1 => crate::i18n::t("notif-h-top-series"),
-                            2 => crate::i18n::t("notif-h-everyone"),
-                            3 => crate::i18n::t("notif-h-comedy"),
-                            4 => crate::i18n::t("notif-h-binge"),
-                            5 => crate::i18n::t("notif-h-top10-series"),
-                            6 => crate::i18n::t("notif-h-new-arrival"),
-                            _ => crate::i18n::t_args("notif-h-new-on", &[("brand", fluent_bundle::FluentValue::from(crate::brand::NAME))]),
-                        },
-                        body: s.title.clone().unwrap_or_default(),
-                        backdrop,
-                        relative_time: rel,
-                    });
-                    count += 1;
-                }
-            }
-
+                        relative_time: n.time_label(),
+                    })
+                })
+                .collect();
             set_items.set(list);
             set_is_loading.set(false);
         });

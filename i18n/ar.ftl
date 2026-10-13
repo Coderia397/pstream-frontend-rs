@@ -952,7 +952,6 @@ footer-cookie-policy = سياسة ملفات تعريف الارتباط
 footer-contact = اتصل بنا
 footer-help = مركز المساعدة
 footer-cookie-preferences = تفضيلات ملفات تعريف الارتباط
-notif-new = جديد
 notif-today = اليوم
 notif-ago-days =
     { $n ->
@@ -972,27 +971,9 @@ notif-ago-months =
         [two] قبل شهرين
        *[other] قبل { $n } أشهر
     }
-notif-h-top-pick = اختيارك المفضل
 notif-h-trending = رائج الآن
-notif-h-dont-miss = لا تفوّت الفرصة
 notif-h-new-arrival = وصول جديد
-notif-h-must-watch = يجب مشاهدته
-notif-h-top10-films = أفضل 10 أفلام
-notif-h-critics = اختيار النقاد
-notif-h-new-on = جديد على { $brand }
-notif-h-new-season = موسم جديد متاح
-notif-h-top-series = أفضل المسلسلات لك
-notif-h-everyone = ما يشاهده الجميع
-notif-h-comedy = كوميديا راقية مختارة لك
-notif-h-binge = يستحق المشاهدة المتواصلة
-notif-h-top10-series = أفضل 10 مسلسلات
 notif-title = الإشعارات
-notif-badge-trending = رائج #1
-notif-badge-top-series = أفضل مسلسل
-notif-badge-critics = اختيار النقاد
-notif-desc-trending = الجميع يشاهد هذا الآن. شاهد الإعلان أو أضفه إلى قائمتي.
-notif-desc-series = حلقات جديدة متاحة للمشاهدة. تابع القصة اليوم.
-notif-desc-critics = أعلى عمل تقييمًا هذا الموسم. يُنصح به بشدة بناءً على ذوقك.
 notif-desc-available = متوفر الآن في مكتبتك للبث.
 notif-caught-up = لقد شاهدت كل شيء
 notif-caught-up-body = ستظهر الإشعارات والوصول الجديد هنا.

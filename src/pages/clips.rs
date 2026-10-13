@@ -193,6 +193,12 @@ pub fn ClipCard(
 #[component]
 pub fn ClipsPage() -> impl IntoView {
     let feed_resource = LocalResource::new(move || async move {
+        // what is being watched today, from the engine (age limit applied there); TMDB only when the engine cannot be reached
+        if let Some(rows) = crate::services::ai_engine::fetch_new_popular_n(Some("watching"), Some(20)).await {
+            if let Some(row) = rows.first() {
+                return row.to_media_items();
+            }
+        }
         fetch_trending("all").await.unwrap_or_default()
     });
 

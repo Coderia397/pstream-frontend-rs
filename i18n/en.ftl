@@ -1000,7 +1000,6 @@ footer-cookie-policy = Cookie Policy
 footer-contact = Contact Us
 footer-help = Help Center
 footer-cookie-preferences = Cookie Preferences
-notif-new = New
 notif-today = Today
 notif-ago-days =
     { $n ->
@@ -1017,27 +1016,10 @@ notif-ago-months =
         [one] 1 month ago
        *[other] { $n } months ago
     }
-notif-h-top-pick = Top pick for you
 notif-h-trending = Trending now
-notif-h-dont-miss = Don't miss out
 notif-h-new-arrival = New arrival
-notif-h-must-watch = A must-watch
-notif-h-top10-films = Top 10 films
-notif-h-critics = Critics' choice
-notif-h-new-on = New on { $brand }
-notif-h-new-season = New season available
-notif-h-top-series = Top series for you
-notif-h-everyone = Everyone's watching
-notif-h-comedy = A top comedy picked for you
-notif-h-binge = Binge-worthy
-notif-h-top10-series = Top 10 series
+notif-h-coming-soon = Coming soon
 notif-title = Notifications
-notif-badge-trending = Trending #1
-notif-badge-top-series = Top Series
-notif-badge-critics = Critic's Choice
-notif-desc-trending = Everyone is watching this right now. Watch the trailer or add to My List.
-notif-desc-series = New episodes are streaming. Catch up on the story today.
-notif-desc-critics = Highest rated title of the season. Highly recommended based on your tastes.
 notif-desc-available = Now available in your streaming library.
 notif-caught-up = You're all caught up
 notif-caught-up-body = New notifications and arrivals will appear here.

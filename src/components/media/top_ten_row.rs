@@ -330,6 +330,13 @@ pub fn TopTenRow(
                     return it.into_iter().take(10).collect::<Vec<_>>();
                 }
             }
+            // no items given: the engine's Top 10 for this kind (films for "all"), TMDB trending only when the engine cannot be reached
+            let tab = if kind_str == "tv" { "top10_series" } else { "top10_movies" };
+            if let Some(rows) = crate::services::ai_engine::fetch_new_popular(Some(tab)).await {
+                if let Some(row) = rows.first() {
+                    return row.to_media_items().into_iter().take(10).collect::<Vec<_>>();
+                }
+            }
             let results = fetch_trending(&kind_str).await.unwrap_or_default();
             results.into_iter().take(10).collect::<Vec<_>>()
         }

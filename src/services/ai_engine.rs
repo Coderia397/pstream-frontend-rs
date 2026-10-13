@@ -99,6 +99,7 @@ impl FeedRow {
 
 #[derive(Clone, Debug, Default, Deserialize, Serialize, PartialEq)]
 pub struct FeedResponse {
+    #[serde(default)]
     pub surface: String,
     pub genre: Option<String>,
     #[serde(default)]
@@ -226,9 +227,17 @@ pub async fn search_titles(query: &str) -> Option<Vec<MediaItem>> {
 /// The New & Popular page from the engine: the desktop rows, or with a `tab` (watching, top10_movies, top10_series, just_landed,
 /// coming_soon) the single row of that mobile tab. None when the engine cannot be reached or has nothing.
 pub async fn fetch_new_popular(tab: Option<&str>) -> Option<Vec<FeedRow>> {
+    fetch_new_popular_n(tab, None).await
+}
+
+/// As `fetch_new_popular`, asking for up to `limit` titles per row (the engine allows 30).
+pub async fn fetch_new_popular_n(tab: Option<&str>, limit: Option<usize>) -> Option<Vec<FeedRow>> {
     let mut url = format!("{}/api/new-popular?session_id={}{}", AI_API_BASE_URL, get_or_create_session_id(), rating_query());
     if let Some(t) = tab {
         url.push_str(&format!("&tab={t}"));
+    }
+    if let Some(n) = limit {
+        url.push_str(&format!("&limit={n}"));
     }
     let resp = Request::get(&url).send().await.ok()?;
     if !resp.ok() {

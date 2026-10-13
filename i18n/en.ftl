@@ -2149,3 +2149,5 @@ email-device-title = New device signed in
 email-device-body = { $browser } on { $system } signed in to your account { $where } on { $time }. If this was you, nothing more is needed. If it was not, change your password and sign out of all devices.
 email-device-where = from { $country }
 email-device-button = Review your devices
+help-breadcrumb-label = Breadcrumb
+help-pagination-label = Pagination

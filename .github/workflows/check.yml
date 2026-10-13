@@ -20,6 +20,8 @@ jobs:
         run: sh scripts/build_interop.sh
       - name: Interface text keys
         run: python3 scripts/check_i18n.py
+      - name: No hard coded interface text
+        run: python3 scripts/check_literals.py
       - name: Brand guard
         run: sh scripts/check_brand.sh
       - name: Tailwind build

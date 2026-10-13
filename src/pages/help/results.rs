@@ -58,7 +58,7 @@ pub fn ResultsPage() -> impl IntoView {
     view! {
         <HelpShell>
             <main class="mx-auto w-full max-w-[720px] px-6 pb-20 pt-8">
-                <nav class="mb-5 flex items-center gap-2 text-body-sm text-paper-mute" aria-label="Breadcrumb">
+                <nav class="mb-5 flex items-center gap-2 text-body-sm text-paper-mute" aria-label=move || crate::i18n::t("help-breadcrumb-label")>
                     <a href="/help" class="underline underline-offset-2 hover:text-brand-active">{tr("help-ui-center")}</a>
                     <i class="ph-bold ph-caret-right text-fine rtl:-scale-x-100" aria-hidden="true"></i>
                     <span>{tr("help-ui-search-label")}</span>
@@ -136,7 +136,7 @@ pub fn ResultsPage() -> impl IntoView {
                             </section>
                         })}
                         {(pages > 1).then(|| view! {
-                            <nav class="mt-8 flex items-center gap-1" aria-label="Pagination">
+                            <nav class="mt-8 flex items-center gap-1" aria-label=move || crate::i18n::t("help-pagination-label")>
                                 <button
                                     aria-label=tr("help-ui-page-prev")
                                     disabled=move || page.get() == 0

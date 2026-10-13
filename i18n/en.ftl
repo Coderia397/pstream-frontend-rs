@@ -1095,6 +1095,7 @@ login-reason-place-body = Continue Watching picks up exactly where you left off 
 login-ready = Ready to watch? Enter your email to create or log in to your account.
 mylist-empty = Your list is empty
 mylist-empty-hint = Add shows and movies to keep track of what you want to watch.
+search-results-for = Results for “{ $query }”
 search-no-matches = No matches found
 search-try-another = Try a different keyword.
 search-explore = Explore titles

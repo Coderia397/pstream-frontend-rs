@@ -15,7 +15,10 @@ pub fn SearchPage() -> impl IntoView {
             if current_q.trim().is_empty() {
                 vec![]
             } else {
-                search_media(&current_q).await.unwrap_or_default()
+                match crate::services::ai_engine::search_titles(&current_q).await {
+                    Some(items) => items,
+                    None => search_media(&current_q).await.unwrap_or_default(),
+                }
             }
         }
     });
@@ -25,7 +28,7 @@ pub fn SearchPage() -> impl IntoView {
             <div class="pt-[calc(5rem+env(safe-area-inset-top))] md:pt-28 px-[var(--app-x,56px)] pb-12 min-h-screen bg-void md:bg-page">
                 <div class="mb-8">
                     <h1 class="text-gray-400 text-lg">
-                        {move || if !q().is_empty() { format!("Results for \"{}\"", q()) } else { crate::i18n::t("nav-search") }}
+                        {move || if !q().is_empty() { crate::i18n::t_args("search-results-for", &[("query", fluent_bundle::FluentValue::from(q()))]) } else { crate::i18n::t("nav-search") }}
                     </h1>
                 </div>
 

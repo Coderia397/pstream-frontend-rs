@@ -183,6 +183,46 @@ pub async fn hidden_languages(codes: &[String]) -> std::collections::HashSet<Str
     hidden_pages("language-support", "codes", "languages", "both", codes).await
 }
 
+/// Search from the engine: titles by words (the last one may be unfinished), by director or cast, and near misses for typos, with the real
+/// certificates and the profile's age limit applied. None when the engine cannot be reached.
+pub async fn search_titles(query: &str) -> Option<Vec<MediaItem>> {
+    let encoded: String = js_sys::encode_uri_component(query.trim()).into();
+    let url = format!("{}/api/search?q={}&limit=40{}", AI_API_BASE_URL, encoded, rating_query());
+    let resp = Request::get(&url).send().await.ok()?;
+    if !resp.ok() {
+        return None;
+    }
+    let v: serde_json::Value = resp.json().await.ok()?;
+    let text = |r: &serde_json::Value, k: &str| r.get(k).and_then(|x| x.as_str()).map(str::to_string);
+    let items = v
+        .get("results")?
+        .as_array()?
+        .iter()
+        .filter_map(|r| {
+            let media_type = text(r, "media_type")?;
+            let year = r.get("release_year").and_then(|y| y.as_i64()).map(|y| y.to_string());
+            let title = text(r, "title");
+            Some(MediaItem {
+                id: r.get("id")?.as_u64()? as u32,
+                title: if media_type == "tv" { None } else { title.clone() },
+                name: if media_type == "tv" { title } else { None },
+                overview: text(r, "overview").unwrap_or_default(),
+                poster_path: text(r, "poster_path"),
+                backdrop_path: text(r, "backdrop_path"),
+                vote_average: r.get("vote_average").and_then(|x| x.as_f64()).unwrap_or(0.0),
+                release_date: year.clone(),
+                first_air_date: year,
+                media_type: Some(media_type),
+                rating_gb: text(r, "rating_gb"),
+                rating_us: text(r, "rating_us"),
+                ..Default::default()
+            })
+        })
+        .filter(|m| m.poster_path.is_some() || m.backdrop_path.is_some())
+        .collect();
+    Some(items)
+}
+
 /// The New & Popular page from the engine: the desktop rows, or with a `tab` (watching, top10_movies, top10_series, just_landed,
 /// coming_soon) the single row of that mobile tab. None when the engine cannot be reached or has nothing.
 pub async fn fetch_new_popular(tab: Option<&str>) -> Option<Vec<FeedRow>> {

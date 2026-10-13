@@ -141,6 +141,34 @@ fn rating_query() -> String {
     crate::pages::settings::prefs::active_rating().map(|r| format!("&rating={r}")).unwrap_or_default()
 }
 
+thread_local! {
+    /// (age limit, surface) -> genre names the profile cannot fill a page for
+    static HIDDEN_GENRES: std::cell::RefCell<std::collections::HashMap<(String, String), std::collections::HashSet<String>>> = std::cell::RefCell::new(std::collections::HashMap::new());
+}
+
+/// The genre pages a limited profile should not be offered: the engine counts the titles that profile may see per genre and reports the
+/// pages too small to fill. A profile with no limit, or an engine that cannot be reached, hides nothing. Answers are kept per limit and surface.
+pub async fn hidden_genres(surface: &str, names: &[String]) -> std::collections::HashSet<String> {
+    let Some(limit) = crate::pages::settings::prefs::active_rating().filter(|l| *l != "18") else { return Default::default() };
+    let key = (limit.to_string(), surface.to_string());
+    if let Some(hit) = HIDDEN_GENRES.with(|c| c.borrow().get(&key).cloned()) {
+        return hit;
+    }
+    let joined: String = js_sys::encode_uri_component(&names.join(",")).into();
+    let url = format!("{}/api/genre-support?surface={}&names={}&rating={}", AI_API_BASE_URL, surface, joined, limit);
+    let Some(v) = (match Request::get(&url).send().await {
+        Ok(r) if r.ok() => r.json::<serde_json::Value>().await.ok(),
+        _ => None,
+    }) else { return Default::default() };
+    let hidden: std::collections::HashSet<String> = v
+        .get("genres")
+        .and_then(|g| g.as_object())
+        .map(|m| m.iter().filter(|(_, e)| e.get("supported").and_then(|s| s.as_bool()) == Some(false)).map(|(n, _)| n.clone()).collect())
+        .unwrap_or_default();
+    HIDDEN_GENRES.with(|c| c.borrow_mut().insert(key, hidden.clone()));
+    hidden
+}
+
 /// Fetches dynamic feed rows composed by the backend intelligence server
 pub async fn fetch_dynamic_feed(surface: &str, genre: Option<&str>, limit: Option<usize>) -> Option<Vec<FeedRow>> {
     let lim = limit.unwrap_or(18);

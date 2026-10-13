@@ -82,6 +82,18 @@ pub fn BrowseHome() -> impl IntoView {
         }
     });
 
+    // Genre pages a limited profile has too few titles for are not offered
+    let genre_names: Vec<String> = genres.iter().map(|g| g.name.clone()).collect();
+    let all_genres = genres.clone();
+    let hidden = LocalResource::new(move || {
+        let names = genre_names.clone();
+        async move { crate::services::ai_engine::hidden_genres("both", &names).await }
+    });
+    let offered = move || {
+        let hide = hidden.get().unwrap_or_default();
+        all_genres.iter().filter(|g| !hide.contains(&g.name)).cloned().collect::<Vec<SubNavGenre>>()
+    };
+
     view! {
         <Layout>
             <div class="w-full pb-20 bg-void md:bg-page min-h-screen relative overflow-x-hidden">
@@ -93,12 +105,14 @@ pub fn BrowseHome() -> impl IntoView {
 
                 // Genre picker, mobile only
                 <div class="sm:hidden">
-                    <CategorySubNav
-                        title=crate::i18n::t("browse-home").to_string()
-                        genres=genres
-                        selected_genre=selected_genre
-                        on_genre_select=on_genre_select_cb
-                    />
+                    {move || view! {
+                        <CategorySubNav
+                            title=crate::i18n::t("browse-home").to_string()
+                            genres=offered()
+                            selected_genre=selected_genre
+                            on_genre_select=on_genre_select_cb
+                        />
+                    }}
                 </div>
 
                 // Hero Carousel driven by real TMDB / AI feed

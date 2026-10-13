@@ -130,11 +130,16 @@ fn get_user_taste_affinity() -> Option<String> {
     storage.get_item(crate::keys::USER_AFFINITY).ok().flatten()
 }
 
+/// `&rating=PG` for the profile in use, so the engine only returns titles that profile may see (empty when there is no profile).
+fn rating_query() -> String {
+    crate::pages::settings::prefs::active_rating().map(|r| format!("&rating={r}")).unwrap_or_default()
+}
+
 /// Fetches dynamic feed rows composed by the backend intelligence server
 pub async fn fetch_dynamic_feed(surface: &str, genre: Option<&str>, limit: Option<usize>) -> Option<Vec<FeedRow>> {
     let lim = limit.unwrap_or(18);
     let session_id = get_or_create_session_id();
-    let mut url = format!("{}/api/feed?surface={}&limit={}&session_id={}", AI_API_BASE_URL, surface, lim, session_id);
+    let mut url = format!("{}/api/feed?surface={}&limit={}&session_id={}{}", AI_API_BASE_URL, surface, lim, session_id, rating_query());
     
     if let Some(aff) = get_user_taste_affinity() {
         if !aff.is_empty() {
@@ -248,7 +253,7 @@ pub struct HeroFeedResponse {
 /// Fetches dynamic surface-differentiated hero feed from local recommendation engine
 pub async fn fetch_hero_feed(surface: &str, genre: Option<&str>) -> Option<Vec<MediaItem>> {
     let session_id = get_or_create_session_id();
-    let mut url = format!("{}/api/hero-feed?surface={}&session_id={}", AI_API_BASE_URL, surface, session_id);
+    let mut url = format!("{}/api/hero-feed?surface={}&session_id={}{}", AI_API_BASE_URL, surface, session_id, rating_query());
     if let Some(g) = genre {
         if !g.is_empty() {
             let encoded = js_sys::encode_uri_component(g);
@@ -278,7 +283,7 @@ pub struct RecommendationsResponse {
 /// Fetches latent vector cosine recommendations with Netflix match percentage and vibe tags
 pub async fn fetch_ai_recommendations(id: u32, is_tv: bool) -> Option<Vec<VibeItem>> {
     // TMDB ids repeat across movies and series, so the media type is part of the identity
-    let url = format!("{}/api/recommendations?id={}&media_type={}", AI_API_BASE_URL, id, if is_tv { "tv" } else { "movie" });
+    let url = format!("{}/api/recommendations?id={}&media_type={}{}", AI_API_BASE_URL, id, if is_tv { "tv" } else { "movie" }, rating_query());
     let resp = Request::get(&url).send().await.ok()?;
     if !resp.ok() {
         return None;

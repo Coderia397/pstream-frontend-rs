@@ -13,7 +13,7 @@ mod privacy;
 mod transfer;
 mod hub;
 mod languages;
-mod prefs;
+pub(crate) mod prefs;
 mod profile;
 mod restrictions;
 mod subtitles;

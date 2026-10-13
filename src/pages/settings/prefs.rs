@@ -200,3 +200,14 @@ mod tests {
         assert_eq!(p.rating_for(false), "15");
     }
 }
+
+/// The age rating limit of the profile in use (U, PG, 12, 15 or 18), read straight from the browser store, for requests to the engine.
+/// Not reactive: it is read when a request is made. None when there is no profile yet.
+pub fn active_rating() -> Option<&'static str> {
+    let storage = web_sys::window().and_then(|w| w.local_storage().ok().flatten())?;
+    let active = storage.get_item(crate::keys::ACTIVE_PROFILE).ok().flatten();
+    let profiles: Vec<crate::models::profile::Profile> = read(crate::keys::PROFILES)?;
+    let profile = profiles.iter().find(|p| Some(&p.id) == active.as_ref()).or_else(|| profiles.first())?;
+    let prefs: HashMap<String, ProfilePrefs> = read(crate::keys::PROFILE_PREFS).unwrap_or_default();
+    Some(prefs.get(&profile.id).cloned().unwrap_or_default().rating_for(profile.is_kids))
+}

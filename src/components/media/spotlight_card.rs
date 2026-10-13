@@ -2,7 +2,7 @@ use leptos::prelude::*;
 use leptos_router::hooks::use_navigate;
 use crate::store::{use_library_store, use_ui_store, LibraryEntry};
 use crate::services::tmdb::MediaItem;
-use crate::components::media::movie_card_badges::MaturityBadge;
+use crate::components::media::movie_card_badges::RatingBadge;
 
 #[component]
 pub fn SpotlightCard(
@@ -154,10 +154,7 @@ pub fn SpotlightCard(
 
                     // Maturity disc
                     <div class="absolute top-3 right-3 z-20 pointer-events-none drop-shadow-md">
-                        <MaturityBadge
-                            certification="16+".to_string()
-                            size="xs".to_string()
-                        />
+                        <RatingBadge id=movie_id is_tv=is_tv size="xs".to_string() />
                     </div>
                 </div>
 

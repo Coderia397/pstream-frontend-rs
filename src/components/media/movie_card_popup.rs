@@ -2,7 +2,7 @@ use leptos::prelude::*;
 use leptos::portal::Portal;
 use wasm_bindgen::prelude::*;
 use crate::models::movie::Movie;
-use crate::components::media::movie_card_badges::MaturityBadge;
+use crate::components::media::movie_card_badges::RatingBadge;
 use crate::components::media::movie_card_rating::MovieRating;
 use crate::components::media::action_buttons::{
     PlayCircleButton, MyListButton, RatingButton, MoreInfoCaretButton, MuteReplayButton,
@@ -185,8 +185,6 @@ pub fn MovieCardPopup(
     let title = movie.display_title();
     let backdrop = movie.backdrop_path.clone().or(movie.poster_path.clone());
     let cert = movie.certification.clone();
-    let adult = movie.adult;
-    let vote_avg = (movie.vote_average * 10.0).round() / 10.0;
     let is_tv = movie.is_tv();
 
     let overview_stored = StoredValue::new(movie.overview.clone());
@@ -453,12 +451,7 @@ pub fn MovieCardPopup(
                         <span class="text-success font-bold">
                             {crate::i18n::t_args("media-percent-match", &[("pct", fluent_bundle::FluentValue::from(movie_stored.get_value().match_score() as i64))])}
                         </span>
-                        <MaturityBadge
-                            certification=cert_stored.get_value().unwrap_or_default()
-                            adult=adult.unwrap_or(false)
-                            vote_average=vote_avg
-                            size="xs".to_string()
-                        />
+                        <RatingBadge id=movie_stored.get_value().id_u32() is_tv=movie_stored.get_value().is_tv() known=cert_stored.get_value().unwrap_or_default() size="xs".to_string() />
                         <span>
                             {if is_tv { crate::i18n::t("media-series") } else { crate::i18n::t("media-film") }}
                         </span>

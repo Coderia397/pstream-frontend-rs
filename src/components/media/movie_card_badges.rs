@@ -1,48 +1,41 @@
 use leptos::prelude::*;
 
+/// How a rating is drawn: the BBFC label, its colour and its shape.
+#[derive(Debug, PartialEq, Eq, Clone, Copy)]
+pub struct BadgeStyle {
+    pub label: &'static str,
+    pub fill: &'static str,
+    pub triangle: bool,
+    pub square: bool,
+}
+
+/// The badge for a certificate text. British ratings map to themselves, common US and other labels map to the nearest British one (the engine
+/// already sends British ratings). An adult flag from the data counts as 18. Anything else, including an empty text, is NR (not rated):
+/// nothing is guessed from genres or scores.
+pub fn badge_style(certification: &str, adult: bool) -> BadgeStyle {
+    let style = |label, fill, triangle, square| BadgeStyle { label, fill, triangle, square };
+    match certification.trim().to_uppercase().as_str() {
+        "U" | "G" | "TV-G" | "TV-Y" | "ALL" | "0" | "0+" => style("U", "#00a826", true, false),
+        "PG" | "TV-PG" | "TV-Y7" | "TV-Y7-FV" | "6" | "7" | "6+" | "7+" => style("PG", "#f5a800", true, false),
+        "12A" | "PG-13" => style("12A", "#f05a1a", false, false),
+        "12" | "12+" | "13" | "14" => style("12", "#f05a1a", false, false),
+        "15" | "15+" | "16" | "16+" | "TV-14" => style("15", "#eb287f", false, false),
+        "18" | "R" | "TV-MA" | "NC-17" | "18+" => style("18", "#dc1420", false, false),
+        "R18" => style("R18", "#0060cf", false, true),
+        _ if adult => style("18", "#dc1420", false, false),
+        _ => style("NR", "#6b6b72", false, false),
+    }
+}
+
 #[component]
 pub fn MaturityBadge(
     #[prop(default = String::new())] certification: String,
     #[prop(default = false)] adult: bool,
-    #[prop(optional)] vote_average: Option<f64>,
     #[prop(default = "sm".to_string())] size: String,
 ) -> impl IntoView {
-    let cert = certification.trim().to_uppercase();
+    let BadgeStyle { label, fill, triangle: is_triangle, square: is_square } = badge_style(&certification, adult);
 
-    // Official BBFC classifications & exact colors
-    let (label, fill, is_triangle, is_square) = match cert.as_str() {
-        "U" | "G" | "TV-G" | "TV-Y" | "TV-Y7" | "ALL" | "0" | "0+" => ("U", "#00a826", true, false),
-        "PG" | "TV-PG" | "6" | "7" | "6+" | "7+" => ("PG", "#f5a800", true, false),
-        "12A" | "PG-13" => ("12A", "#f05a1a", false, false),
-        "12" | "TV-14" | "12+" | "13" | "14" => ("12", "#f05a1a", false, false),
-        "15" | "15+" | "16" | "16+" => ("15", "#eb287f", false, false),
-        "18" | "R" | "TV-MA" | "NC-17" | "18+" => ("18", "#dc1420", false, false),
-        "R18" => ("R18", "#0060cf", false, true),
-        _ => {
-            if adult {
-                ("18", "#dc1420", false, false)
-            } else if let Some(vote) = vote_average {
-                if vote >= 7.8 {
-                    ("18", "#dc1420", false, false)
-                } else if vote >= 6.0 {
-                    ("15", "#eb287f", false, false)
-                } else {
-                    ("12", "#f05a1a", false, false)
-                }
-            } else if !cert.is_empty() && (cert.contains("18") || cert.contains("MA") || cert.contains("R")) {
-                ("18", "#dc1420", false, false)
-            } else if !cert.is_empty() && (cert.contains("15") || cert.contains("16")) {
-                ("15", "#eb287f", false, false)
-            } else if !cert.is_empty() && cert.contains("PG") {
-                ("PG", "#f5a800", true, false)
-            } else if !cert.is_empty() && cert.contains("U") {
-                ("U", "#00a826", true, false)
-            } else {
-                ("12", "#f05a1a", false, false)
-            }
-        }
-    };
-
+    let aria_label = if label == "NR" { crate::i18n::t("media-rating-nr") } else { crate::i18n::t_args("media-rating-aria", &[("rating", fluent_bundle::FluentValue::from(label.to_string()))]) };
     let (w_px, h_px) = match size.as_str() {
         "xs" => (20, if is_triangle { 18 } else { 20 }),
         "sm" => (24, if is_triangle { 21 } else { 24 }),
@@ -59,7 +52,7 @@ pub fn MaturityBadge(
                 height=h_px
                 viewBox="0 0 110 96"
                 class="shrink-0 inline-block align-middle select-none drop-shadow-sm"
-                aria-label=crate::i18n::t_args("media-rating-aria", &[("rating", fluent_bundle::FluentValue::from(label.to_string()))])
+                aria-label=aria_label.clone()
             >
                 // Outer dark outline
                 <path d="M 55 12 L 98 86 L 12 86 Z" fill="black" stroke="black" stroke-width="10" stroke-linejoin="round" />
@@ -88,7 +81,7 @@ pub fn MaturityBadge(
                 height=h_px
                 viewBox="0 0 100 100"
                 class="shrink-0 inline-block align-middle select-none drop-shadow-sm"
-                aria-label=crate::i18n::t_args("media-rating-aria", &[("rating", fluent_bundle::FluentValue::from(label.to_string()))])
+                aria-label=aria_label.clone()
             >
                 // Outer dark outline
                 <rect x="3" y="3" width="94" height="94" rx="18" ry="18" fill="black" />
@@ -118,7 +111,7 @@ pub fn MaturityBadge(
                 height=h_px
                 viewBox="0 0 100 100"
                 class="shrink-0 inline-block align-middle select-none drop-shadow-sm"
-                aria-label=crate::i18n::t_args("media-rating-aria", &[("rating", fluent_bundle::FluentValue::from(label.to_string()))])
+                aria-label=aria_label.clone()
             >
                 // Outer dark outline
                 <circle cx="50" cy="50" r="49" fill="black" />
@@ -140,5 +133,76 @@ pub fn MaturityBadge(
                 </text>
             </svg>
         }.into_any()
+    }
+}
+
+/// The badge for a title: shows the given certificate when the caller already has it, otherwise asks the engine (NR until it answers
+/// or when the title has none).
+#[component]
+pub fn RatingBadge(
+    id: u32,
+    #[prop(default = false)] is_tv: bool,
+    #[prop(default = "sm".to_string())] size: String,
+    #[prop(optional)] known: Option<String>,
+) -> impl IntoView {
+    let resource = LocalResource::new(move || {
+        let known = known.clone().filter(|k| !k.trim().is_empty());
+        async move {
+            match known {
+                Some(k) => k,
+                None => crate::services::rating::fetch(id, is_tv).await,
+            }
+        }
+    });
+    view! {
+        {move || {
+            let label = resource.get().map(|r| r.to_string()).unwrap_or_else(|| "NR".to_string());
+            view! { <MaturityBadge certification=label size=size.clone() /> }
+        }}
+    }
+}
+
+#[cfg(test)]
+mod tests {
+    use super::badge_style;
+
+    #[test]
+    fn british_ratings_map_to_themselves() {
+        for r in ["U", "PG", "12A", "12", "15", "18", "R18"] {
+            assert_eq!(badge_style(r, false).label, r);
+        }
+    }
+
+    #[test]
+    fn us_ratings_map_to_the_nearest_british_one() {
+        assert_eq!(badge_style("TV-Y7", false).label, "PG");
+        assert_eq!(badge_style("PG-13", false).label, "12A");
+        assert_eq!(badge_style("TV-14", false).label, "15");
+        assert_eq!(badge_style("TV-MA", false).label, "18");
+        assert_eq!(badge_style(" r ", false).label, "18");
+    }
+
+    #[test]
+    fn no_certificate_is_not_rated_and_nothing_is_guessed() {
+        for r in ["", "  ", "NR", "Unrated", "Not Rated", "X", "???"] {
+            let b = badge_style(r, false);
+            assert_eq!(b.label, "NR", "{r:?}");
+            assert_eq!(b.fill, "#6b6b72");
+            assert!(!b.triangle && !b.square);
+        }
+    }
+
+    #[test]
+    fn an_adult_flag_is_the_only_signal_for_an_unrated_title() {
+        assert_eq!(badge_style("", true).label, "18");
+        assert_eq!(badge_style("NR", true).label, "18");
+        assert_eq!(badge_style("PG", true).label, "PG");
+    }
+
+    #[test]
+    fn shapes_follow_the_bbfc_style() {
+        assert!(badge_style("U", false).triangle && badge_style("PG", false).triangle);
+        assert!(badge_style("R18", false).square);
+        assert!(!badge_style("15", false).triangle);
     }
 }

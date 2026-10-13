@@ -4,7 +4,7 @@ use wasm_bindgen::prelude::*;
 use crate::store::{use_ui_store, use_library_store, LibraryEntry};
 use crate::services::tmdb::{fetch_details, fetch_movie_logo, fetch_videos, select_best_tmdb_trailer};
 use crate::models::movie::Movie;
-use crate::components::media::movie_card_badges::MaturityBadge;
+use crate::components::media::movie_card_badges::RatingBadge;
 use crate::components::media::info_modal_episodes::InfoModalEpisodes;
 use crate::components::media::info_modal_recommendations::InfoModalRecommendations;
 use crate::components::media::action_buttons::{PlayPillButton, MyListButton, RatingButton, MuteReplayButton, CloseButton};
@@ -384,21 +384,6 @@ pub fn InfoModal() -> impl IntoView {
 
                             let current_movie_id = details.id;
                             let is_tv_val = details.number_of_seasons.is_some();
-                            let genres_list = details.genres.clone().unwrap_or_default();
-                            let is_family_or_anim = genres_list.iter().any(|g| g.id == 16 || g.id == 10751 || g.name.to_lowercase().contains("animation") || g.name.to_lowercase().contains("family") || g.name.to_lowercase().contains("children"));
-                            let is_horror = genres_list.iter().any(|g| g.id == 27 || g.name.to_lowercase().contains("horror"));
-                            let certification_str = if is_family_or_anim {
-                                if details.vote_average < 7.0 { "U" } else { "PG" }
-                            } else if is_horror {
-                                "18"
-                            } else if details.vote_average >= 8.0 {
-                                "18"
-                            } else if details.vote_average >= 6.5 {
-                                "15"
-                            } else {
-                                "12"
-                            }.to_string();
-
                             let is_in_list = Signal::derive(move || {
                                 library_store.my_list.get().contains_key(&current_movie_id)
                             });
@@ -604,10 +589,7 @@ pub fn InfoModal() -> impl IntoView {
                                                 <div class="flex flex-wrap items-center gap-x-3 gap-y-2 text-ink font-normal text-base font-brand">
                                                     <span class="text-success font-extrabold tracking-wide">{match_score}</span>
                                                     <span class="text-ink-silver">{release_year}</span>
-                                                    <MaturityBadge
-                                                        certification=certification_str
-                                                        size="xs".to_string()
-                                                    />
+                                                    <RatingBadge id=current_movie_id is_tv=is_tv_val size="xs".to_string() />
                                                     <span class="border border-ink/40 px-[5.6px] text-ink/90 text-caption-sm flex items-center rounded-tick">"HD"</span>
                                                     <span class="text-ink-silver">{duration}</span>
                                                 </div>

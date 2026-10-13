@@ -1,7 +1,7 @@
 use leptos::prelude::*;
 use crate::models::movie::Movie;
 use crate::services::tmdb::{fetch_recommendations, fetch_movie_logo};
-use crate::components::media::movie_card_badges::MaturityBadge;
+use crate::components::media::movie_card_badges::RatingBadge;
 use crate::components::media::action_buttons::MyListButton;
 use crate::store::{use_library_store, LibraryEntry};
 
@@ -164,11 +164,7 @@ pub fn RecCard(
                         <span class="text-success font-bold text-xs">
                             {crate::i18n::t_args("media-percent-match", &[("pct", fluent_bundle::FluentValue::from(match_score as i64))])}
                         </span>
-                        <MaturityBadge
-                            adult=rec.adult.unwrap_or(false)
-                            certification=rec.certification.clone().unwrap_or_default()
-                            size="sm".to_string()
-                        />
+                        <RatingBadge id=rec.id_u32() is_tv=rec.is_tv() known=rec.certification.clone().unwrap_or_default() size="sm".to_string() />
                         {if !year.is_empty() {
                             view! {
                                 <span class="text-gray-300 text-xs font-medium px-0.5">{year}</span>

@@ -1080,6 +1080,7 @@ media-no-description = No description available.
 media-no-episodes = No episodes available.
 media-more-like-this = More Like This
 media-rating-aria = BBFC rating { $rating }
+media-rating-nr = Not rated
 share-copied = Link copied
 share-copied-instagram = Link copied — paste it into Instagram
 share-copied-snapchat = Link copied — paste it into Snapchat

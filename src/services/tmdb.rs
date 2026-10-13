@@ -128,7 +128,7 @@ pub async fn fetch_trending(kind: &str) -> Result<Vec<MediaItem>, gloo_net::Erro
         "{}/trending/{}/week?api_key={}&language=en-US",
         TMDB_BASE_URL, kind, TMDB_API_KEY
     );
-    let resp: TmdbResponse<MediaItem> = get(&url).send().await?.json().await?;
+    let resp: TmdbResponse<MediaItem> = get(&url).send().await?.json::<TmdbResponse<MediaItem>>().await?.rated().await;
     let items = resp.results.into_iter().filter(|i| !i.is_nsfw() && (i.backdrop_path.is_some() || i.poster_path.is_some())).collect();
     Ok(items)
 }
@@ -139,7 +139,7 @@ pub async fn fetch_top_rated(kind: &str) -> Result<Vec<MediaItem>, gloo_net::Err
         "{}/{}/top_rated?api_key={}&language=en-US",
         TMDB_BASE_URL, kind, TMDB_API_KEY
     );
-    let resp: TmdbResponse<MediaItem> = get(&url).send().await?.json().await?;
+    let resp: TmdbResponse<MediaItem> = get(&url).send().await?.json::<TmdbResponse<MediaItem>>().await?.rated().await;
     let items = resp.results.into_iter().filter(|i| !i.is_nsfw() && (i.backdrop_path.is_some() || i.poster_path.is_some())).collect();
     Ok(items)
 }
@@ -150,7 +150,7 @@ pub async fn fetch_by_genre(kind: &str, genre_id: u32) -> Result<Vec<MediaItem>,
         "{}/discover/{}?api_key={}&with_genres={}&language=en-US&sort_by=popularity.desc",
         TMDB_BASE_URL, kind, TMDB_API_KEY, genre_id
     );
-    let resp: TmdbResponse<MediaItem> = get(&url).send().await?.json().await?;
+    let resp: TmdbResponse<MediaItem> = get(&url).send().await?.json::<TmdbResponse<MediaItem>>().await?.rated().await;
     Ok(resp.results)
 }
 
@@ -160,7 +160,7 @@ pub async fn fetch_british_tv() -> Result<Vec<MediaItem>, gloo_net::Error> {
         "{}/discover/tv?api_key={}&with_origin_country=GB&language=en-US&sort_by=popularity.desc",
         TMDB_BASE_URL, TMDB_API_KEY
     );
-    let resp: TmdbResponse<MediaItem> = get(&url).send().await?.json().await?;
+    let resp: TmdbResponse<MediaItem> = get(&url).send().await?.json::<TmdbResponse<MediaItem>>().await?.rated().await;
     Ok(resp.results)
 }
 
@@ -279,7 +279,7 @@ pub async fn search_media(query: &str) -> Result<Vec<MediaItem>, gloo_net::Error
         "{}/search/multi?api_key={}&language=en-US&query={}&page=1&include_adult=false",
         TMDB_BASE_URL, TMDB_API_KEY, encoded_query
     );
-    let resp: TmdbResponse<MediaItem> = get(&url).send().await?.json().await?;
+    let resp: TmdbResponse<MediaItem> = get(&url).send().await?.json::<TmdbResponse<MediaItem>>().await?.rated().await;
     // Filter out people, nsfw content, and items without artwork
     let filtered = resp.results.into_iter().filter(|i| {
         i.media_type.as_deref() != Some("person")
@@ -296,7 +296,7 @@ pub async fn fetch_recommendations(id: u32, is_tv: bool) -> Result<Vec<MediaItem
         "{}/{}/{}/recommendations?api_key={}&language=en-US&page=1",
         TMDB_BASE_URL, kind, id, TMDB_API_KEY
     );
-    let resp: TmdbResponse<MediaItem> = get(&url).send().await?.json().await?;
+    let resp: TmdbResponse<MediaItem> = get(&url).send().await?.json::<TmdbResponse<MediaItem>>().await?.rated().await;
     let filtered = resp.results.into_iter().filter(|i| {
         !i.is_nsfw() && (i.backdrop_path.is_some() || i.poster_path.is_some())
     }).collect();
@@ -447,7 +447,7 @@ pub async fn fetch_trending_page(kind: &str, page: u32) -> Result<Vec<MediaItem>
     let safe_kind = if kind == "tv" { "tv" } else { "movie" };
     let url = format!("{}/trending/{}/day?api_key={}&page={}", TMDB_BASE_URL, safe_kind, TMDB_API_KEY, page);
     let resp = get(&url).send().await?;
-    let data: TmdbResponse<MediaItem> = resp.json().await?;
+    let data: TmdbResponse<MediaItem> = resp.json::<TmdbResponse<MediaItem>>().await?.rated().await;
     let items = data.results.into_iter().filter_map(|mut item| {
         if item.is_nsfw() {
             return None;
@@ -489,6 +489,7 @@ pub async fn fetch_row_content(
         }
         if let Ok(resp) = get(&url).send().await {
             if let Ok(data) = resp.json::<TmdbResponse<MediaItem>>().await {
+                let data = data.rated().await;
                 let items: Vec<MediaItem> = data.results.into_iter().filter_map(|mut item| {
                     if item.is_nsfw() {
                         return None;
@@ -760,6 +761,7 @@ pub async fn fetch_row_content(
 
         if let Ok(resp) = get(&url).send().await {
             if let Ok(data) = resp.json::<TmdbResponse<MediaItem>>().await {
+                let data = data.rated().await;
                 let items: Vec<MediaItem> = data.results.into_iter().filter_map(|mut item| {
                     if item.is_nsfw() {
                         return None;
@@ -792,6 +794,7 @@ pub async fn fetch_row_content(
             };
             if let Ok(resp) = get(&base_url).send().await {
                 if let Ok(data) = resp.json::<TmdbResponse<MediaItem>>().await {
+                let data = data.rated().await;
                     let items: Vec<MediaItem> = data.results.into_iter().filter_map(|mut item| {
                         if item.is_nsfw() || (item.backdrop_path.is_none() && item.poster_path.is_none()) {
                             None
@@ -831,6 +834,8 @@ pub async fn fetch_by_language(lang: &str, page: u32) -> Result<Vec<MediaItem>, 
     );
     let resp_tv: Result<TmdbResponse<MediaItem>, _> = get(&url_tv).send().await?.json().await;
 
+    let resp_movie = match resp_movie { Ok(r) => Ok(r.rated().await), e => e };
+    let resp_tv = match resp_tv { Ok(r) => Ok(r.rated().await), e => e };
     let mut combined = resp_movie.map(|r| r.results).unwrap_or_default();
     if let Ok(tv_resp) = resp_tv {
         for mut item in tv_resp.results {
@@ -841,3 +846,11 @@ pub async fn fetch_by_language(lang: &str, page: u32) -> Result<Vec<MediaItem>, 
     Ok(combined)
 }
 
+
+impl TmdbResponse<MediaItem> {
+    /// Drops the titles the profile in use may not see (its age rating limit), see `services::rating`.
+    pub async fn rated(mut self) -> Self {
+        self.results = crate::services::rating::filter_allowed(std::mem::take(&mut self.results)).await;
+        self
+    }
+}

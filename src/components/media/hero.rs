@@ -3,7 +3,7 @@ use wasm_bindgen::prelude::*;
 use crate::services::tmdb::{fetch_movie_logo, fetch_videos, fetch_details, MediaItem};
 use crate::store::use_ui_store;
 use crate::components::media::mobile_hero::MobileHero;
-use crate::components::media::movie_card_badges::MaturityBadge;
+use crate::components::media::movie_card_badges::RatingBadge;
 use crate::components::media::action_buttons::{PlayPillButton, MoreInfoPillButton, MuteReplayButton};
 use crate::components::trailer_player::TrailerPlayer;
 use crate::models::movie::Movie;
@@ -280,45 +280,6 @@ pub fn HeroSection(
         }
     };
 
-    let maturity_rating_label = move || {
-        let item = current_item();
-        let details_opt = details_resource.get().flatten();
-        let genres_list = details_opt.as_ref().and_then(|d| d.genres.clone()).unwrap_or_default();
-        let is_family_or_anim = genres_list.iter().any(|g| {
-            let n = g.name.to_lowercase();
-            n.contains("anim") || n.contains("family") || n.contains("child")
-        }) || {
-            let g = genre_label().to_lowercase();
-            g.contains("anim") || g.contains("family") || g.contains("child")
-        };
-        let is_horror = genres_list.iter().any(|g| g.name.to_lowercase().contains("horror"))
-            || genre_label().to_lowercase().contains("horror");
-
-        if is_family_or_anim {
-            if item.vote_average < 7.0 {
-                "U".to_string()
-            } else {
-                "PG".to_string()
-            }
-        } else if is_horror {
-            "18".to_string()
-        } else if genres_list.iter().any(|g| {
-            let n = g.name.to_lowercase();
-            n.contains("crime") || n.contains("thriller")
-        }) || genre_label().to_lowercase().contains("crime") || genre_label().to_lowercase().contains("thriller") {
-            if item.vote_average >= 7.8 {
-                "18".to_string()
-            } else {
-                "15".to_string()
-            }
-        } else if item.vote_average >= 8.0 {
-            "18".to_string()
-        } else if item.vote_average >= 6.5 {
-            "15".to_string()
-        } else {
-            "12".to_string()
-        }
-    };
 
     // Intelligent Hero Highlights from local recommendation engine & creator vectors
     let highlight_resource = LocalResource::new(move || {
@@ -718,12 +679,9 @@ pub fn HeroSection(
                             <span class="text-ink/40 text-body-md">"•"</span>
                             <div class="inline-flex items-center">
                                 {move || {
-                                    let cert = maturity_rating_label();
+                                    let item = current_item();
                                     view! {
-                                        <MaturityBadge
-                                            certification=cert
-                                            size="xs".to_string()
-                                        />
+                                        <RatingBadge id=item.id is_tv=item.is_tv() size="xs".to_string() />
                                     }
                                 }}
                             </div>

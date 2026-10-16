@@ -351,7 +351,18 @@ pub async fn hidden_languages(codes: &[String]) -> std::collections::HashSet<Str
 pub async fn search_titles(query: &str) -> Option<Vec<MediaItem>> {
     let encoded: String = js_sys::encode_uri_component(query.trim()).into();
     let url = format!("{}/api/search?q={}&limit=40{}", base(), encoded, rating_query());
-    let resp = Request::get(&url).send().await.ok()?;
+    fetch_result_list(&url).await
+}
+
+/// What the search page offers before anything is typed: titles the engine picks for this session (taste, not started, well known), different every six hours.
+pub async fn fetch_search_suggestions(limit: usize) -> Option<Vec<MediaItem>> {
+    let url = format!("{}/api/search-suggestions?session_id={}&limit={}{}", base(), get_or_create_session_id(), limit, rating_query());
+    fetch_result_list(&url).await
+}
+
+/// A `{ "results": [...] }` answer of the engine (search, suggestions) as media items; titles with no picture are left out.
+async fn fetch_result_list(url: &str) -> Option<Vec<MediaItem>> {
+    let resp = Request::get(url).send().await.ok()?;
     if !resp.ok() {
         return None;
     }
@@ -370,8 +381,8 @@ pub async fn search_titles(query: &str) -> Option<Vec<MediaItem>> {
                 title: if media_type == "tv" { None } else { title.clone() },
                 name: if media_type == "tv" { title } else { None },
                 overview: text(r, "overview").unwrap_or_default(),
-                poster_path: text(r, "poster_path"),
-                backdrop_path: text(r, "backdrop_path"),
+                poster_path: text(r, "poster_path").filter(|p| !p.is_empty()),
+                backdrop_path: text(r, "backdrop_path").filter(|p| !p.is_empty()),
                 vote_average: r.get("vote_average").and_then(|x| x.as_f64()).unwrap_or(0.0),
                 release_date: year.clone(),
                 first_air_date: year,

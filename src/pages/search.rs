@@ -135,11 +135,15 @@ pub fn SearchPage() -> impl IntoView {
             }
         }
     });
+    // before anything is typed: the engine's suggestions for this session, with the Home feed's picks row as the fallback
     let recommended = LocalResource::new(move || {
         let signals = crate::services::ai_engine::personal_signals();
         async move {
+            if let Some(items) = crate::services::ai_engine::fetch_search_suggestions(12).await.filter(|v| !v.is_empty()) {
+                return Some(items);
+            }
             let page = crate::services::ai_engine::fetch_feed_page("home", None, Some(6), &signals).await?;
-            let row = page.rows.into_iter().find(|r| r.title_key.as_deref() == Some("row.todays_top_picks")).or_else(|| None)?;
+            let row = page.rows.into_iter().find(|r| r.title_key.as_deref() == Some("row.todays_top_picks"))?;
             Some(row.to_media_items())
         }
     });

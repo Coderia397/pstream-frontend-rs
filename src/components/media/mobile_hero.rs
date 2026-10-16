@@ -31,11 +31,13 @@ pub fn MobileHero(
         }
     });
 
-    let poster_url = movie.poster_path.as_ref().or(movie.backdrop_path.as_ref()).map(|p| {
+    // The backdrop, cropped to the portrait card: backdrops carry no title, so the logo drawn over it (or the title text) is the only one. A poster has its own title baked in
+    // and showed it twice; and one kind of image for every hero means no swap from one to the other while the page loads.
+    let poster_url = movie.backdrop_path.as_ref().or(movie.poster_path.as_ref()).map(|p| {
         if p.starts_with("http") {
             p.clone()
         } else {
-            format!("{}/w780{}", crate::config::TMDB_IMAGE_URL, p)
+            format!("{}/w1280{}", crate::config::TMDB_IMAGE_URL, p)
         }
     }).unwrap_or_default();
 
@@ -127,7 +129,7 @@ pub fn MobileHero(
                 <img
                     src=poster_url
                     alt=title.clone()
-                    class="absolute inset-0 w-full h-full object-cover select-none pointer-events-none"
+                    class="absolute inset-0 w-full h-full object-cover object-[50%_35%] select-none pointer-events-none"
                     loading="eager"
                 />
 

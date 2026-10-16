@@ -113,9 +113,6 @@ pub fn ContinueWatchingRow() -> impl IntoView {
                                         None => crate::i18n::t("continue-watching-row-continue-watching"),
                                     }
                                 }}
-                                <span class="text-xs text-danger ml-2 opacity-0 group-hover/title:opacity-100 transition-opacity duration-(--motion-slow) flex items-center font-semibold">
-                                    {crate::i18n::t("row-jump-back-in")}
-                                </span>
                             </h2>
                         </div>
 

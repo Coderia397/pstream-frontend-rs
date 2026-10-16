@@ -206,25 +206,6 @@ pub fn MovieCard(
                     </span>
                 })}
 
-                // Watch Progress Bar if user has watched this title
-                {move || {
-                    let watch_store = crate::store::use_watch_store();
-                    if let Some(rec) = watch_store.get_record(movie_id, is_tv) {
-                        if rec.percentage > 0.0 {
-                            let pct = rec.percentage.clamp(0.0, 100.0);
-                            view! {
-                                <div class="absolute bottom-0 inset-x-0 h-1 bg-ink/20 z-10 pointer-events-none">
-                                    <div class="h-full bg-brand" style=format!("width: {:.1}%;", pct) />
-                                </div>
-                            }.into_any()
-                        } else {
-                            view! { <span /> }.into_any()
-                        }
-                    } else {
-                        view! { <span /> }.into_any()
-                    }
-                }}
-
                 {move || {
                     if !is_hovered.get() {
                         let _t = title_stored.with_value(|t| t.clone());

@@ -490,22 +490,6 @@ pub fn InfoModal() -> impl IntoView {
                                         // Cinematic Gradient Overlay (bottom 40% blend)
                                         <div class="absolute inset-x-0 bottom-0 h-1/2 bg-gradient-to-t from-raised to-transparent z-10 pointer-events-none" />
 
-                                        // Watch Progress Bar along the bottom of the hero banner
-                                        {if has_progress {
-                                            if let Some(ref rec) = watch_record {
-                                                let pct = rec.percentage.clamp(0.0, 100.0);
-                                                view! {
-                                                    <div class="absolute bottom-0 inset-x-0 h-1.5 bg-ink/20 z-30 pointer-events-none">
-                                                        <div class="h-full bg-brand transition-all duration-(--motion-slow)" style=format!("width: {:.1}%;", pct) />
-                                                    </div>
-                                                }.into_any()
-                                            } else {
-                                                view! { <span /> }.into_any()
-                                            }
-                                        } else {
-                                            view! { <span /> }.into_any()
-                                        }}
-
                                         // Title / Logo & Action Buttons Overlay
                                         <div class="absolute bottom-6 left-6 md:left-12 w-[340px] max-w-[70%] z-20 pointer-events-auto">
                                             // Logo or Title
@@ -531,22 +515,51 @@ pub fn InfoModal() -> impl IntoView {
                                                 </Suspense>
                                             </div>
 
+                                            // How far the viewer is (a started title): the bar and `16 of 43m`, above the buttons, as in the app
+                                            {watch_record.as_ref().filter(|_| has_progress).map(|rec| {
+                                                let pct = rec.percentage.clamp(2.0, 100.0);
+                                                let time_text = crate::i18n::t_args("continue-watching-time-of", &[
+                                                    ("done", fluent_bundle::FluentValue::from((rec.current_time / 60.0).round() as i64)),
+                                                    ("total", fluent_bundle::FluentValue::from((rec.duration / 60.0).round() as i64)),
+                                                ]);
+                                                view! {
+                                                    <div class="mb-4 flex items-center gap-3">
+                                                        <div class="h-[3px] w-[310px] max-w-[70%] overflow-hidden rounded-full bg-ink/40">
+                                                            <div class="h-full bg-red-600" style=format!("width: {:.1}%;", pct) />
+                                                        </div>
+                                                        <span class="text-ink-silver text-[16px] tabular-nums">{time_text}</span>
+                                                    </div>
+                                                }
+                                            })}
+
                                             // CTA Action Buttons
                                             <div class="flex items-center flex-wrap gap-2 sm:gap-3">
                                                 <PlayPillButton
                                                     href=watch_url
                                                     is_resume=has_progress
                                                     size="lg".to_string()
-                                                    shape="pill".to_string()
+                                                    shape="rect".to_string()
                                                 />
 
-                                                // MyList Button
-                                                <MyListButton
-                                                    is_in_list=is_in_list
-                                                    on_toggle=toggle_my_list_cb
-                                                    size="md".to_string()
-                                                    show_tooltip=true
-                                                />
+                                                // A started title: mark as watched (takes it out of Continue Watching); otherwise the My List button
+                                                {if has_progress {
+                                                    view! {
+                                                        <crate::components::media::action_buttons::CircleIconButton
+                                                            icon="ph-check"
+                                                            on_click=Callback::new(move |_| crate::store::use_watch_store().remove_record(current_movie_id, is_tv_val))
+                                                            title=crate::i18n::t("continue-watching-mark-watched")
+                                                        />
+                                                    }.into_any()
+                                                } else {
+                                                    view! {
+                                                        <MyListButton
+                                                            is_in_list=is_in_list
+                                                            on_toggle=toggle_my_list_cb
+                                                            size="md".to_string()
+                                                            show_tooltip=true
+                                                        />
+                                                    }.into_any()
+                                                }}
 
                                                 // Thumbs Up / Rate Button
                                                 <RatingButton
@@ -594,6 +607,14 @@ pub fn InfoModal() -> impl IntoView {
                                                     <span class="border border-ink/40 px-[5.6px] text-ink/90 text-caption-sm flex items-center rounded-tick">"HD"</span>
                                                     <span class="text-ink-silver">{duration}</span>
                                                 </div>
+
+                                                {watch_record.as_ref().filter(|r| has_progress && r.is_tv).and_then(|r| match (r.season, r.episode) {
+                                                    (Some(se), Some(ep)) => Some(match r.episode_title.as_deref().filter(|t| !t.is_empty()) {
+                                                        Some(t) => format!("S{}:E{} \"{}\"", se, ep, t),
+                                                        None => format!("S{}:E{}", se, ep),
+                                                    }),
+                                                    _ => None,
+                                                }).map(|line| view! { <p class="text-ink font-bold text-[22px] leading-tight">{line}</p> })}
 
                                                 <p class="text-ink font-normal text-body-sm leading-6 pt-1">
                                                     {overview}

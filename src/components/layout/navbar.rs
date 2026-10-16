@@ -148,6 +148,9 @@ pub fn Navbar(
                                 {crate::i18n::t("navbar-exit-kids")}
                             </button>
                         }.into_any()
+                    } else if !p_store.profiles.get().iter().any(|p| p.is_kids) {
+                        // no Kids profile (it was deleted): no Kids button
+                        view! { <span /> }.into_any()
                     } else {
                         view! {
                             <button

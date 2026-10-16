@@ -96,16 +96,33 @@ pub fn SpotlightCard(
         String::new()
     };
 
+    // the colour of the artwork, found once (cached by the hero's helper), turned into the gradient of the strip with plain arithmetic:
+    //   left  = colour * 1.0                                   (its own brightness and colour)
+    //   right = (grey + (colour - grey) * 0.15) * 0.88          (grey = luma of the colour: 15 percent of the colour kept, 12 percent less bright)
+    let strip_style = RwSignal::new(String::from("background: linear-gradient(to right, rgb(40,40,40), rgb(30,30,30))"));
+    if formatted_rank.is_some() {
+        let make = move |(r, g, b): (u8, u8, u8)| {
+            let (r, g, b) = (r as f32, g as f32, b as f32);
+            let grey = 0.299 * r + 0.587 * g + 0.114 * b;
+            let right = |c: f32| ((grey + (c - grey) * 0.15) * 0.88).clamp(0.0, 255.0).round() as u8;
+            strip_style.set(format!("background: linear-gradient(to right, rgb({},{},{}), rgb({},{},{}))", r as u8, g as u8, b as u8, right(r), right(g), right(b)));
+        };
+        match crate::utils::ambient::get_cached_ambient_color(&backdrop_src) {
+            Some(c) => make(c),
+            None => crate::utils::ambient::extract_ambient_color(&backdrop_src, move |c| if let Some(c) = c { make(c) }),
+        }
+    }
+
     view! {
         <div class="spot-card relative overflow-visible py-3 group/spotlight z-10 w-full sm:max-w-[85vw] sm:mx-auto">
             // the shade the page lays over a card that is leaving or arriving (see new_popular.rs dim_cards)
             <div class="absolute inset-0 z-30 pointer-events-none rounded-[14px] bg-void transition-opacity duration-150" style="opacity: var(--dim, 0)"></div>
-            // Top 10: a tinted strip of the picture peeks out above the card with the numeral on it, the numeral outlined thin and its foot hidden behind the card, as in the app
+            // Top 10: a strip peeks out above the card with the numeral on it. It is a gradient of the colour of the artwork (the one the hero uses): left the colour at its own brightness,
+            // right a little less bright and almost grey (`strip_style`). The numeral is outlined thin and its foot is hidden behind the card, as in the app.
             {formatted_rank.clone().map(|r_text| {
-                let strip = format!("background-image: linear-gradient(to right, rgba(0,0,0,0.35), rgba(0,0,0,0.88) 70%), url('{}')", backdrop_src.clone());
                 view! {
                     <div class="pointer-events-none select-none h-[62px]">
-                        <div class="absolute left-0 right-0 top-[47px] h-[40px] rounded-t-[14px] border border-b-0 border-ink/25 bg-cover bg-top" style=strip></div>
+                        <div class="absolute left-0 right-0 top-[47px] h-[40px] rounded-t-[14px] border border-b-0 border-ink/25" style=move || strip_style.get()></div>
                         <svg viewBox="0 0 280 218" class="absolute left-[24px] top-[12px] w-[108px] h-[84px] overflow-visible">
                             <text x="0" y="215" fill="#000" stroke="#fff" stroke-width="3.4" stroke-linejoin="round" font-size="290" font-weight="900" font-family="'Inter', sans-serif" textLength="276" lengthAdjust="spacingAndGlyphs">
                                 {r_text}

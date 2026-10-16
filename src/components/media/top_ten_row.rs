@@ -28,21 +28,21 @@ fn RankNumber(index: usize) -> impl IntoView {
     // Sizes use container query units of `.topten-card`, so the numeral scales with the slot. "10" is squeezed
     // horizontally to fit the half slot, like the SVG numerals do.
     let is_ten = index == 9;
-    let text_class = "font-black text-[83cqw]";
+    let text_class = "font-bold text-[83cqw]";
     let letter_spacing = "-1.7cqw";
     let squeeze = if is_ten { "transform: scaleX(0.56); transform-origin: right center;" } else { "" };
     let stroke_style = format!(
-        "line-height: 0.75; letter-spacing: {}; -webkit-text-stroke: 3.3cqw #595959; font-family: var(--font-brand); {}",
+        "line-height: 0.75; letter-spacing: {}; -webkit-text-stroke: 1.4cqw #6e6e6e; font-family: var(--font-brand); {}",
         letter_spacing, squeeze
     );
     let fill_style = format!(
-        "line-height: 0.75; letter-spacing: {}; font-family: var(--font-brand); {}",
+        "line-height: 0.75; letter-spacing: {}; font-family: var(--font-brand); color: var(--color-page); {}",
         letter_spacing, squeeze
     );
     let num_str = (index + 1).to_string();
 
     view! {
-        <div class="topten-rank absolute left-0 top-0 bottom-0 w-1/2 flex justify-end items-center pointer-events-none z-0">
+        <div class=format!("topten-rank absolute left-0 top-0 bottom-0 w-1/2 flex justify-end items-center pointer-events-none z-0{}", if is_ten { " topten-rank-ten" } else { "" })>
             <div class="relative flex items-center justify-center">
                 // Background thick stroke
                 <span
@@ -53,7 +53,7 @@ fn RankNumber(index: usize) -> impl IntoView {
                 </span>
                 // Foreground sharp fill
                 <span
-                    class=format!("{} text-[#000000] relative select-none", text_class)
+                    class=format!("{} relative select-none", text_class)
                     style=fill_style
                 >
                     {num_str}
@@ -87,6 +87,7 @@ fn TopTenCard(
     let poster_url_stored = StoredValue::new(item.poster_url("w342").unwrap_or_default());
     let backdrop_url_stored = StoredValue::new(item.backdrop_url("w780").unwrap_or_default());
     let overview_stored = StoredValue::new(item.overview.clone());
+    let is_new = item.badges.iter().any(|b| b == "new");
     let vote_avg = item.vote_average;
     let match_percentage = item.match_percentage;
     let vibe_pills = item.vibe_pills.clone();
@@ -222,6 +223,13 @@ fn TopTenCard(
                     loading="lazy"
                     draggable="false"
                 />
+
+                // "Recently Added" (the engine's `new` badge): a red tab at the bottom of the poster, centred, as in the app
+                {is_new.then(|| view! {
+                    <span class="absolute bottom-[3%] left-1/2 -translate-x-1/2 z-10 whitespace-nowrap rounded-[2px] bg-red-600 px-[1.6cqw] py-[0.7cqw] text-[3.6cqw] font-bold leading-none text-white pointer-events-none">
+                        {crate::i18n::t("badge-recently-added")}
+                    </span>
+                })}
 
                 // Watch Progress Bar
                 {move || {

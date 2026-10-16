@@ -65,7 +65,7 @@ fn SearchListRow(item: MediaItem) -> impl IntoView {
             </div>
             <span class="flex-1 min-w-0 text-[16px] font-bold leading-tight text-ink line-clamp-2">{title.clone()}</span>
             <button on:click=play aria-label=crate::i18n::t("media-play") class="flex-none w-[26px] h-[26px] rounded-full border-[1.5px] border-ink/70 flex items-center justify-center active:scale-95 transition-transform">
-                <i class="ph-fill ph-play text-ink text-[11px] ms-px"></i>
+                <i class="ph-fill ph-play text-ink text-[14px] ms-px"></i>
             </button>
         </div>
     }

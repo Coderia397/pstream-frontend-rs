@@ -84,6 +84,11 @@
   .topten-card .topten-rank > div { transform-origin: left bottom; }
 }
 
+/* From tablet width up the digits are narrower, as the numerals of the app are, and tuck right against the poster ("10" has its own squeeze in the component). */
+@media (min-width: 600px) {
+  .topten-card .topten-rank:not(.topten-rank-ten) span { transform: scaleX(0.8); transform-origin: right center; }
+}
+
 /* Landscape rows on phones (continue watching) keep 2.15 tiles of 16:9. */
 @media (max-width: 599.98px) {
   .tile-width.tile-landscape { width: calc((100cqw - var(--app-x) - 2 * var(--tile-gap)) / 2.15); }

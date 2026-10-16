@@ -181,7 +181,7 @@ pub fn NewPopularPage() -> impl IntoView {
 
                 // ── MOBILE: ONE LONG PAGE OF TABS (< md) ───────────────────
                 <div class="block md:hidden">
-                    <div class="sticky top-[calc(var(--nav-h-mobile)+env(safe-area-inset-top))] z-40 bg-void">
+                    <div class="mobile-pills-sticky">
                         <NewPopularSubNavMobile active_tab=active_tab on_tab_change=jump_to />
                     </div>
                     <div class="px-3 pt-3 pb-24 space-y-8">

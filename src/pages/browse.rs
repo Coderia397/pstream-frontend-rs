@@ -104,15 +104,15 @@ pub fn BrowseHome(#[prop(optional)] event: Option<(u32, &'static str)>) -> impl 
 
     view! {
         <Layout>
-            <div class="w-full pb-20 bg-void md:bg-page min-h-screen relative overflow-x-hidden">
+            <div class="w-full pb-20 bg-void md:bg-page min-h-screen relative overflow-x-clip">
                 // Ambient Atmospheric Glow behind navbar and hero billboard (fades after 50% of hero height)
                 <div
                     class="absolute inset-x-0 top-0 h-[92vh] md:h-[760px] lg:h-[820px] pointer-events-none -z-0 transition-all duration-(--motion-slowest) ease-out"
                     style=ambient_bg_style
                 />
 
-                // Genre picker, mobile only
-                <div class="sm:hidden">
+                // Genre picker, mobile only (`contents`: the pills stick to the page, not to this box)
+                <div class="sm:hidden contents">
                     {move || view! {
                         <CategorySubNav
                             title=crate::i18n::t("browse-home").to_string()

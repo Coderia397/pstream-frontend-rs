@@ -96,7 +96,6 @@ pub fn App() -> impl IntoView {
                 <Route path=path!("/credits") view=|| view! { <crate::pages::help::LegalPage doc="credits" /> } />
                 <Route path=path!("/disclaimer") view=|| view! { <crate::pages::help::LegalPage doc="disclaimer" /> } />
                 <Route path=path!("/contact") view=|| view! { <leptos_router::components::Redirect path="/help/contact" /> } />
-                <Route path=path!("/notifications") view=crate::pages::notifications::NotificationsPage />
             </Routes>
             <crate::components::consent::CookieManager />
         </Router>

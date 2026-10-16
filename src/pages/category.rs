@@ -175,7 +175,7 @@ pub fn CategoryPage(
 
     view! {
         <Layout>
-            <div class="with-subnav w-full pb-20 bg-void md:bg-page min-h-screen relative overflow-x-hidden">
+            <div class="with-subnav w-full pb-20 bg-void md:bg-page min-h-screen relative overflow-x-clip">
                 // Ambient Atmospheric Glow behind navbar, category sub-nav, and hero billboard (fades after 50% of hero height)
                 <div
                     class="absolute inset-x-0 top-0 h-[92vh] md:h-[760px] lg:h-[820px] pointer-events-none -z-0 transition-all duration-(--motion-slowest) ease-out"

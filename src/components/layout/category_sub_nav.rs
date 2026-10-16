@@ -33,7 +33,7 @@ pub fn CategorySubNav(
 
     view! {
         // Mobile layout: render in-flow
-        <div class="block sm:hidden pt-[calc(var(--nav-h-mobile)+env(safe-area-inset-top))]">
+        <div class="mobile-subnav block sm:hidden pt-[calc(var(--nav-h-mobile)+env(safe-area-inset-top))]">
             {if let Some(lbl) = mobile_dropdown_label {
                 view! {
                     <CategorySubNavMobile

@@ -21,7 +21,21 @@ pub fn NavbarMobile(
         let tab = if p.starts_with("/search") { "search" } else if p.starts_with("/clips") || p.starts_with("/latest") { "clips" } else if p.starts_with("/browse/my-list") { "settings" } else { "home" };
         set_active_bottom_nav.set(tab);
     });
-    let (profile_sheet_open, set_profile_sheet_open) = signal(false);
+
+    // The header and the pills under it leave when the page is scrolled down and come back at the first swipe up (not only at the very top), as in the app. The state is on the root element
+    // as `--nav-shown` (1 or 0) and `--hdr-solid` (0 to 1, solid black by 60px) so the pills under the header follow it.
+    Effect::new(move |prev: Option<f64>| {
+        let y = scroll_y.get();
+        let last = prev.unwrap_or(y);
+        let root = web_sys::window().and_then(|w| w.document()).and_then(|d| d.document_element()).and_then(|e| wasm_bindgen::JsCast::dyn_into::<web_sys::HtmlElement>(e).ok());
+        if let Some(root) = root {
+            let style = root.style();
+            let shown = if y <= 80.0 || y < last - 6.0 { Some("1") } else if y > last + 6.0 { Some("0") } else { None };
+            if let Some(v) = shown { let _ = style.set_property("--nav-shown", v); }
+            let _ = style.set_property("--hdr-solid", &format!("{:.3}", (y / 60.0).clamp(0.0, 1.0)));
+        }
+        if (y - last).abs() > 6.0 { y } else { last }
+    });
 
     // As in the app: a soft shade over the picture at the top, solid black (the colour of the pill row under it) by about 60px of scrolling
     let scroll_style = move || {
@@ -73,7 +87,6 @@ pub fn NavbarMobile(
             .unwrap_or_else(|| crate::brand::DEFAULT_AVATAR.to_string())
     };
 
-    let unread = LocalResource::new(|| async { crate::components::layout::notifications_dropdown::unread_count().await });
     let nav_to_browse = navigate.clone();
     let nav_to_latest = navigate.clone();
     let nav_to_search = navigate.clone();
@@ -128,7 +141,7 @@ pub fn NavbarMobile(
             // ── Top Brand Header ───────────────────────────────────────────────
             <header
                 class:hidden=on_search
-                class="fixed top-0 left-0 right-0 z-(--z-nav) pl-1 pr-1 pt-[env(safe-area-inset-top)] h-[calc(var(--nav-h-mobile)+env(safe-area-inset-top))] box-content flex items-center justify-between pointer-events-auto transition-colors duration-(--motion-base)"
+                class="mobile-header fixed top-0 left-0 right-0 z-(--z-nav) pl-1 pr-1 pt-[env(safe-area-inset-top)] h-[calc(var(--nav-h-mobile)+env(safe-area-inset-top))] box-content flex items-center justify-between pointer-events-auto transition-colors duration-(--motion-base)"
                 style=scroll_style
             >
                 // Logo mark and page title on Home, a back arrow and the page title on the pages under it, as in the app header
@@ -156,122 +169,11 @@ pub fn NavbarMobile(
                     }}
                     <span class="ms-1 truncate text-heading font-bold leading-none tracking-tight text-ink">{page_title}</span>
                 </div>
-
-                // Action buttons: notifications and the profile (on Home only, as in the app)
-                <Show when=move || !on_sub_page()>
-                <div class="flex items-center">
-                    // Notifications (the bell of the app header)
-                    <a
-                        href="/notifications"
-                        class="relative w-11 h-11 flex items-center justify-center text-ink active:scale-95 transition-transform cursor-pointer"
-                        aria-label=crate::i18n::t("navbar-mobile-notifications")
-                    >
-                        <i class="ph-bold ph-bell text-heading"></i>
-                        {move || unread.get().filter(|n| *n > 0).map(|n| view! {
-                            <span class="absolute top-1 right-0.5 min-w-[18px] h-[18px] px-1 rounded-full bg-red-600 text-white text-micro font-semibold flex items-center justify-center leading-none">
-                                {if n > 99 { "99+".to_string() } else { n.to_string() }}
-                            </span>
-                        })}
-                    </a>
-
-                    // Profile avatar button (Task 087)
-                    <button
-                        on:click=move |_| set_profile_sheet_open.update(|o| *o = !*o)
-                        class="w-11 h-11 flex items-center justify-center active:scale-95 transition-transform cursor-pointer"
-                        aria-label=crate::i18n::t("navbar-mobile-profile-menu")
-                    >
-                        <img
-                            src=current_avatar
-                            alt=crate::i18n::t("navbar-mobile-avatar")
-                            class="w-8 h-8 rounded-control object-cover"
-                        />
-                    </button>
-                </div>
-                </Show>
             </header>
 
             // ── Bottom Nav ───────────────────────────────────────────────────
             <BottomNavMobile items=bottom_nav_items active_id=active_bottom_nav />
 
-            // ── Profile Bottom Sheet Modal ───────────────────────────────────
-            <Show when=move || profile_sheet_open.get()>
-                <div class="fixed inset-0 z-(--z-drawer)">
-                    <div
-                        on:click=move |_| set_profile_sheet_open.set(false)
-                        class="absolute inset-0 bg-void/70 backdrop-blur-sm"
-                    ></div>
-
-                    <div class="absolute bottom-0 inset-x-0 bg-page border-t border-ink/10 rounded-t-sheet max-h-[80vh] flex flex-col z-10 shadow-2xl animate-in slide-in-from-bottom duration-(--motion-base)">
-                        <div class="flex items-center justify-between p-4 border-b border-ink/10">
-                            <span class="text-title-sm font-bold text-ink">{crate::i18n::t("nav-profiles-more")}</span>
-                            <button
-                                on:click=move |_| set_profile_sheet_open.set(false)
-                                class="w-8 h-8 rounded-full bg-ink/10 flex items-center justify-center text-ink/70 hover:text-ink"
-                            >
-                                <i class="ph-bold ph-x text-base"></i>
-                            </button>
-                        </div>
-
-                        // Profile tiles
-                        <div class="p-4 flex flex-col gap-3">
-                            {move || profile_store.profiles.get().into_iter().map(|p| {
-                                let pid = p.id.clone();
-                                let is_active = profile_store.active_profile_id.get() == Some(pid.clone());
-                                let p_name = p.name.clone();
-                                let av = p.avatar_url.unwrap_or_else(|| crate::brand::DEFAULT_AVATAR.to_string());
-
-                                view! {
-                                    <button
-                                        on:click=move |_| {
-                                            profile_store.active_profile_id.set(Some(pid.clone()));
-                                            set_profile_sheet_open.set(false);
-                                        }
-                                        class="flex items-center gap-3 p-2 rounded-card hover:bg-ink/5 transition-colors text-left w-full cursor-pointer"
-                                    >
-                                        <div
-                                            class=if is_active {
-                                                "w-10 h-10 rounded-control overflow-hidden shrink-0 border border-ink ring-2 ring-ink/50"
-                                            } else {
-                                                "w-10 h-10 rounded-control overflow-hidden shrink-0 border border-transparent"
-                                            }
-                                        >
-                                            <img src=av alt=p_name.clone() class="w-full h-full object-cover" />
-                                        </div>
-                                        <div class="flex-1 min-w-0">
-                                            <span class="text-ink text-body font-medium">{p_name}</span>
-                                        </div>
-                                        {if is_active {
-                                            view! { <i class="ph-bold ph-check text-green-500 text-lg"></i> }.into_any()
-                                        } else {
-                                            view! { <div></div> }.into_any()
-                                        }}
-                                    </button>
-                                }
-                            }).collect::<Vec<_>>()}
-
-                            <div class="border-t border-ink/10 my-2"></div>
-
-                            // Quick settings links
-                            <a
-                                href="/browse/my-list"
-                                class="flex items-center gap-3 p-2 text-ink/80 hover:text-ink transition-colors text-body"
-                                on:click=move |_| set_profile_sheet_open.set(false)
-                            >
-                                <i class="ph-bold ph-list-plus text-xl"></i>
-                                <span>{crate::i18n::t("nav-my-list")}</span>
-                            </a>
-                            <a
-                                href="/settings"
-                                class="flex items-center gap-3 p-2 text-ink/80 hover:text-ink transition-colors text-body"
-                                on:click=move |_| set_profile_sheet_open.set(false)
-                            >
-                                <i class="ph-bold ph-gear text-xl"></i>
-                                <span>{crate::i18n::t("nav-account-settings")}</span>
-                            </a>
-                        </div>
-                    </div>
-                </div>
-            </Show>
         </div>
     }
 }

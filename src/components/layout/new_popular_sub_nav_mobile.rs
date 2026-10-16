@@ -35,7 +35,6 @@ pub fn NewPopularSubNavMobile(
     active_tab: ReadSignal<NewPopularTab>,
     on_tab_change: Callback<NewPopularTab>,
 ) -> impl IntoView {
-    let navigate = leptos_router::hooks::use_navigate();
     let features = LocalResource::new(|| async { crate::services::ai_engine::fetch_features().await });
     let games_on = move || features.get().is_some_and(|f| f.get("games") == Some(&true));
     // The pills of the app: Coming Soon, Everyone's Watching, Games, Top 10 Series, Top 10 Films, each with its own glyph
@@ -67,7 +66,6 @@ pub fn NewPopularSubNavMobile(
                     {tabs.into_iter().map(|(tab, label, glyph)| {
                         let is_active = move || tab.is_some_and(|t| active_tab.get() == t);
                         let on_change = on_tab_change;
-                        let nav = navigate.clone();
                         let is_games = tab == Some(NewPopularTab::Games);
                         view! {
                             <button

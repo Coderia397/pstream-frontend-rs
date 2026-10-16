@@ -2327,3 +2327,5 @@ row-np-new-genre = New { $genre }
 row-np-under-the-radar = Under the Radar
 row-np-hidden-gems = Hidden Gems
 row-np-closer-look = Worth a Closer Look
+row-np-top10-language = Top 10 { $language } Titles Today
+row-np-top10-genre = Top 10 { $genre } Today

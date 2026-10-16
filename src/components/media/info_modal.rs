@@ -345,7 +345,7 @@ pub fn InfoModal() -> impl IntoView {
         >
             // Modal Container
             <div
-                class="relative w-full max-w-[850px] bg-raised rounded-field mt-6 md:mt-8 mb-8 overflow-hidden h-fit mx-4 transition-transform duration-(--motion-slow) origin-center"
+                class="relative w-full max-w-[850px] bg-raised rounded-modal mt-6 md:mt-8 mb-8 overflow-hidden h-fit mx-4 transition-transform duration-(--motion-slow) origin-center"
                 class=("scale-100", move || is_open.get())
                 class=("scale-95", move || !is_open.get())
                 on:click=|e| e.stop_propagation()

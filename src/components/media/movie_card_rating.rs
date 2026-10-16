@@ -19,8 +19,8 @@ pub fn DoubleThumbsUpIcon(
 ) -> impl IntoView {
     let _ = mask_color;
     let s = size as f64;
-    let (dx, dy) = ((s * 0.42).round(), (s * 0.34).round());
-    let gap = s * 0.60;
+    let (dx, dy) = ((s * 0.55).round(), (s * 0.45).round());
+    let gap = s * 0.58;
     // centre of the front thumb, in the coordinates of the thumb behind it
     let (cx, cy) = (s / 2.0 - dx + s * 0.02, s / 2.0 + dy - s * 0.02);
     let class = if filled { "ph-fill ph-thumbs-up" } else { "ph-bold ph-thumbs-up" };

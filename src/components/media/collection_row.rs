@@ -60,7 +60,7 @@ pub fn CollectionRow(row: FeedRow) -> impl IntoView {
                         let poster = item.poster_path.as_ref().map(|p| format!("{}/w342{}", crate::config::TMDB_IMAGE_URL, p));
                         let is_new = item.badges.iter().any(|b| b == "new");
                         view! {
-                            <div class="relative flex-none w-[clamp(150px,17vw,250px)] aspect-video overflow-visible rounded-tile">
+                            <div class="relative flex-none w-[clamp(150px,17vw,250px)] aspect-video max-[599px]:w-[118px] max-[599px]:aspect-[5/7] overflow-visible rounded-tile">
                                 <MovieCard
                                     movie_id=item.id
                                     is_tv=is_tv

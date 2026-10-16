@@ -227,7 +227,7 @@ pub fn MovieCard(
                     if !is_hovered.get() {
                         let _t = title_stored.with_value(|t| t.clone());
                         view! {
-                            <div class="absolute inset-x-0 bottom-0 flex items-end justify-center pb-2 px-2 transition-opacity duration-(--motion-base) pointer-events-none">
+                            <div class="absolute inset-x-0 bottom-0 flex items-end justify-center pb-2 px-2 transition-opacity duration-(--motion-base) pointer-events-none max-[599px]:hidden">
                                 <Suspense fallback=move || {
                                     let t = title_stored.with_value(|t| t.clone());
                                     view! {

@@ -220,7 +220,8 @@ pub fn HeroSection(
         let id = current_id();
         let tv = current_is_tv();
         async move {
-            if id > 0 {
+            // no trailer for the banner on a phone: it is not looked up, so no frame is made and nothing plays
+            if id > 0 && !crate::utils::layout::is_phone() {
                 fetch_videos(id, tv).await.unwrap_or_default()
             } else {
                 vec![]

@@ -12,3 +12,8 @@ fn css_px(name: &str) -> Option<f64> {
     let raw = style.get_property_value(name).ok()?;
     raw.trim().trim_end_matches("px").trim().parse().ok()
 }
+
+/// True on a phone layout (narrower than the `md` breakpoint, 768px). The hero banner plays no trailer there.
+pub fn is_phone() -> bool {
+    web_sys::window().and_then(|w| w.match_media("(max-width: 767.98px)").ok().flatten()).is_some_and(|m| m.matches())
+}

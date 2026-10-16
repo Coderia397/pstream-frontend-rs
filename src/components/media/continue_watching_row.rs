@@ -180,29 +180,37 @@ pub fn ContinueWatchingRow() -> impl IntoView {
                                     };
 
                                     let pct_label = crate::i18n::t_args("media-percent-watched", &[("pct", fluent_bundle::FluentValue::from(format!("{:.0}", percentage)))]);
-                                    let _ = (&ep_badge, &episode_title, &handle_open_info);
+                                    // the label of the hover card: the episode of a series (`S1:E22 "Blood Brothers"`), the title of a film; and how far: `16 of 43m`
+                                    let label = match (is_tv, season, episode, episode_title.clone()) {
+                                        (true, Some(s), Some(e), Some(t)) if !t.is_empty() => format!("S{}:E{} \"{}\"", s, e, t),
+                                        (true, Some(s), Some(e), _) => format!("S{}:E{}", s, e),
+                                        _ => title.clone(),
+                                    };
+                                    let time_text = crate::i18n::t_args("continue-watching-time-of", &[
+                                        ("done", fluent_bundle::FluentValue::from((rec.current_time / 60.0).round() as i64)),
+                                        ("total", fluent_bundle::FluentValue::from((rec.duration / 60.0).round() as i64)),
+                                    ]);
+                                    let resume = crate::components::media::movie_card_popup::ResumeInfo {
+                                        label,
+                                        time_text,
+                                        percent: percentage,
+                                        on_remove: Callback::new(move |_| watch_store.remove_record(id, is_tv)),
+                                    };
+                                    let poster = rec.poster_url("w342").unwrap_or_default();
+                                    let _ = (&handle_open_info, &handle_remove, &handle_play, &ep_badge);
                                     view! {
-                                        <div
-                                            class=format!("relative flex-none {} group/card cursor-pointer", card_width_class)
-                                            on:click=handle_play
-                                        >
-                                            // The picture, like every other tile of the page
-                                            <div class="relative w-full aspect-video bg-card-alt rounded-tile overflow-hidden">
-                                                <img
-                                                    src=backdrop
-                                                    alt=title.clone()
-                                                    class="w-full h-full object-cover object-center"
-                                                    loading="lazy"
+                                        <div class=format!("relative flex-none {}", card_width_class)>
+                                            // The picture and its hover card (the same tile as everywhere else)
+                                            <div class="movie-card-container relative pointer-events-auto overflow-visible rounded-tile w-full aspect-video" style="z-index: auto;">
+                                                <crate::components::media::movie_card::MovieCard
+                                                    movie_id=id
+                                                    is_tv=is_tv
+                                                    title=title.clone()
+                                                    backdrop_path=backdrop
+                                                    poster_path=poster
+                                                    vote_average=0.0
+                                                    resume=Some(resume)
                                                 />
-                                                // Dismiss (on hover)
-                                                <button
-                                                    type="button"
-                                                    on:click=handle_remove
-                                                    class="absolute top-2 right-2 w-7 h-7 rounded-full bg-void/60 hover:bg-void/90 text-ink/70 hover:text-ink flex items-center justify-center opacity-0 group-hover/card:opacity-100 transition-opacity duration-(--motion-base) z-20 backdrop-blur-sm"
-                                                    title=crate::i18n::t("continue-watching-options-sheet-remove-from-continue-watching")
-                                                >
-                                                    <i class="ph-bold ph-x text-xs"></i>
-                                                </button>
                                             </div>
 
                                             // How far you are: a short bar under the picture, not touching it, red for what is watched and white for what is left

@@ -2332,3 +2332,4 @@ row-np-top10-genre = Top 10 { $genre } Today
 
 continue-watching-row-for = Continue watching for { $name }
 continue-watching-mark-watched = Mark as watched
+continue-watching-time-of = { $done } of { $total }m

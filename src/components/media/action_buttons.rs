@@ -66,16 +66,17 @@ pub fn PlayPillButton(
 }
 
 // ── Pill More Info Button ─────────────────────────────────────────────────────
-// Used in Hero billboard. Stadium pill (rounded-full) with authentic Netflix #6d6d6e semi-transparency.
+// Used in Hero billboard. Stadium pill (rounded-full) with authentic Netflix #6d6d6e semi-transparency. Text only (no icon), the same size as PlayPillButton.
 #[component]
 pub fn MoreInfoPillButton(
     on_click: Callback<()>,
-    #[prop(default = "More Info".to_string(), into)] label: String,
+    #[prop(default = crate::i18n::t("action-buttons-more-info"), into)] label: String,
     #[prop(default = "md".to_string(), into)] size: String,
     #[prop(default = "pill".to_string(), into)] shape: String,
     #[prop(optional, into)] class: Option<String>,
 ) -> impl IntoView {
-    let (pad_classes, text_classes, icon_classes) = match size.as_str() {
+    // text only, as in the app, and the same padding and text size as the Play button next to it, so it never grows wider than Play
+    let (pad_classes, text_classes, _icon_classes) = match size.as_str() {
         "sm" => ("px-3.5 py-1", "text-xs", "text-sm"),
         "lg" => ("px-5 h-12", "text-title-sm leading-[18px]", "text-heading"),
         _ => ("px-4 sm:px-5 py-1.5 sm:py-2", "text-label sm:text-sm", "text-base sm:text-lg"),
@@ -110,7 +111,6 @@ pub fn MoreInfoPillButton(
             class=base_classes
             title=label_title
         >
-            <i class=format!("ph ph-info {}", icon_classes)></i>
             <span>{label}</span>
         </button>
     }

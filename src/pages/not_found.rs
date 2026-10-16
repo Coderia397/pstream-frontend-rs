@@ -237,7 +237,6 @@ pub fn NotFoundPage() -> impl IntoView {
                                 on:click=move |_| set_is_drawer_open.set(true)
                                 class="btn-glass flex items-center justify-center px-5 sm:px-8 h-[36px] md:h-[42px] rounded-control transition-all text-body-sm md:text-body-lg gap-2 active:scale-95 shadow-lg duration-(--motion-base)"
                             >
-                                <i class="ph-bold ph-info text-xl" />
                                 <span>{crate::i18n::t("nf-more-info")}</span>
                             </button>
                         </div>

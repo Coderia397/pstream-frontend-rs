@@ -38,6 +38,15 @@ fn save_read_ids(ids: &HashSet<String>) {
     }
 }
 
+/// How many of the current notices this browser has not opened yet (for the bell of the mobile header).
+pub async fn unread_count() -> usize {
+    let read = load_read_ids();
+    crate::services::notifications::fetch().await.into_iter()
+        .filter(|n| n.item.backdrop_url("w300").or_else(|| n.item.poster_url("w300")).is_some())
+        .filter(|n| !read.contains(&format!("notif-{}-{}", if n.item.is_tv() { "tv" } else { "movie" }, n.item.id)))
+        .count()
+}
+
 #[component]
 pub fn NotificationsDropdown() -> impl IntoView {
     let ui_store = use_ui_store();

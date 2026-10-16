@@ -2297,3 +2297,17 @@ tour-list-text = Save a title to My List and it waits for you here.
 navbar-mobile-notifications = Notifications
 media-play-series = Play Series
 media-play-film = Play Film
+nav-all-categories = All Categories
+navbar-mobile-back = Back
+
+## Search page
+search-placeholder = Search series, films, people…
+search-recommended = Recommended series & films
+search-top-results = Top Results
+search-more-like = More like { $title }
+search-voice = Search by voice
+media-mute = Mute
+media-unmute = Unmute
+new-hot-watch-series = Watch the series now
+new-hot-watch-film = Watch the film now
+tabs-top10-films = Top 10 Films

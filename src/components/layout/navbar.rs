@@ -70,6 +70,8 @@ pub fn Navbar(
         }
     };
 
+    let features = LocalResource::new(|| async { crate::services::ai_engine::fetch_features().await });
+    let games_on = move || features.get().is_some_and(|f| f.get("games") == Some(&true));
     let nav_items = vec![
         ("home", "nav-home", "/browse"),
         ("tv", "nav-series", "/browse/series"),
@@ -102,6 +104,7 @@ pub fn Navbar(
                         let is_active = move || active_tab() == id;
                         view! {
                             <li
+                                class:hidden=move || id == "games" && !games_on()
                                 data-tour=format!("nav-{id}")
                                 class=move || if is_active() {
                                     "cursor-pointer transition-all duration-(--motion-base) whitespace-nowrap text-ink font-medium text-body-md rounded-full bg-ink/20 h-[40px] px-4 inline-flex items-center justify-center"
@@ -173,7 +176,7 @@ pub fn Navbar(
             </div>
 
             // ── Mobile Header & Bottom Nav (Task 087 & 088) ───────────────────
-            <NavbarMobile scroll_y=scroll_y_sig.get_untracked() />
+            <NavbarMobile scroll_y=scroll_y_sig />
         </>
     }
 }

@@ -68,15 +68,14 @@ pub fn BrowseHome(#[prop(optional)] event: Option<(u32, &'static str)>) -> impl 
 
     let ambient_bg_style = move || {
         let (r, g, b) = ui_store.ambient_color.get();
+        // the colour of the hero's artwork at the top of the page (behind the header), fading to the page colour over the first screen, as in the app
         format!(
-            "background: \
-             radial-gradient(ellipse 110% 65% at 50% 20%, rgba({r}, {g}, {b}, 0.22) 0%, rgba({r}, {g}, {b}, 0.11) 36%, rgba({r}, {g}, {b}, 0.02) 52%, transparent 70%), \
-             linear-gradient(to bottom, \
-                 rgba(6, 8, 10, 0.45) 0%, \
-                 rgba(6, 8, 10, 0.15) 12%, \
-                 transparent 22%, \
-                 rgba(20, 20, 20, 0.50) 55%, \
-                 rgba(20, 20, 20, 1.0) 82%);",
+            "background: linear-gradient(to bottom, \
+                 rgba({r}, {g}, {b}, 0.88) 0%, \
+                 rgba({r}, {g}, {b}, 0.64) 20%, \
+                 rgba({r}, {g}, {b}, 0.34) 42%, \
+                 rgba({r}, {g}, {b}, 0.12) 62%, \
+                 transparent 84%);",
             r = r, g = g, b = b
         )
     };
@@ -108,7 +107,7 @@ pub fn BrowseHome(#[prop(optional)] event: Option<(u32, &'static str)>) -> impl 
             <div class="w-full pb-20 bg-void md:bg-page min-h-screen relative overflow-x-hidden">
                 // Ambient Atmospheric Glow behind navbar and hero billboard (fades after 50% of hero height)
                 <div
-                    class="absolute inset-x-0 top-0 h-[580px] md:h-[660px] lg:h-[720px] pointer-events-none -z-0 transition-all duration-(--motion-slowest) ease-out"
+                    class="absolute inset-x-0 top-0 h-[92vh] md:h-[760px] lg:h-[820px] pointer-events-none -z-0 transition-all duration-(--motion-slowest) ease-out"
                     style=ambient_bg_style
                 />
 
@@ -120,7 +119,7 @@ pub fn BrowseHome(#[prop(optional)] event: Option<(u32, &'static str)>) -> impl 
                             genres=offered()
                             selected_genre=selected_genre
                             on_genre_select=on_genre_select_cb
-                            show_categories=false
+                            show_categories=true
                         />
                     }}
                 </div>

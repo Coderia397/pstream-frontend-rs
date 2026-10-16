@@ -112,6 +112,8 @@ pub fn TrailerPlayer(
     #[prop(optional, into)] on_ready: Option<Callback<()>>,
     #[prop(optional, into)] on_ended: Option<Callback<()>>,
     #[prop(optional, into)] on_time_update: Option<Callback<f64>>,
+    /// The length of the video in seconds, when the player has told it
+    #[prop(optional, into)] on_duration: Option<Callback<f64>>,
     #[prop(optional, default = "trailer-iframe".to_string(), into)] iframe_id: String,
     #[prop(optional, into)] class: Option<String>,
 ) -> impl IntoView {
@@ -127,6 +129,7 @@ pub fn TrailerPlayer(
     let playback_anchor_epoch = StoredValue::new(0.0f64);
     let time_update_timer = StoredValue::new(None::<i32>);
     let on_time_update_stored = StoredValue::new(on_time_update);
+    let on_duration_stored = StoredValue::new(on_duration);
 
     let iframe_id_stored = StoredValue::new(iframe_id);
 
@@ -538,6 +541,10 @@ pub fn TrailerPlayer(
                         cb.run(cur);
                     }
                 }
+            }
+
+            if let (Some(cb), Some(dur)) = (on_duration_stored.get_value(), parse_yt_number(&s, "duration")) {
+                if dur > 0.0 { cb.run(dur); }
             }
 
             // Smart Outro Cutoff: If remaining < 7.0s, end before YouTube shows recommendation tiles

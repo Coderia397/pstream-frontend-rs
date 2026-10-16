@@ -42,7 +42,7 @@ fn RankNumber(index: usize) -> impl IntoView {
     let num_str = (index + 1).to_string();
 
     view! {
-        <div class="absolute left-0 top-0 bottom-0 w-1/2 flex justify-end items-center pointer-events-none z-0">
+        <div class="topten-rank absolute left-0 top-0 bottom-0 w-1/2 flex justify-end items-center pointer-events-none z-0">
             <div class="relative flex items-center justify-center">
                 // Background thick stroke
                 <span
@@ -214,7 +214,7 @@ fn TopTenCard(
             // not the outer div (which includes the wide number padding-left).
             <div
                 node_ref=card_ref
-                class="relative flex-none ml-auto w-1/2 aspect-[145/207] z-10 rounded-control overflow-hidden">
+                class="topten-poster relative flex-none ml-auto w-1/2 aspect-[5/7] z-10 rounded-control overflow-hidden">
                 <img
                     src=poster_src
                     alt=title_for_img.clone()

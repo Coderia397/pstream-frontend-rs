@@ -19,6 +19,25 @@ pub const RESOLVER_URL: &str = setting(option_env!("STREAMS_RESOLVER_URL"), "htt
 /// Recommendation engine. The old variable name still works so existing build scripts keep working.
 pub const ENGINE_URL: &str = setting(option_env!("STREAMS_ENGINE_URL"), setting(option_env!("STREAMS_ENGINE_URL"), "http://127.0.0.1:8088"));
 
+/// The engine address for this page. A build that points at the laptop (127.0.0.1) is also used from another device on the same network (a phone opening the dev server by the
+/// laptop's address): there the engine is on the same host as the page, at the same port. Everything else uses the address the build was made with.
+pub fn engine_url() -> &'static str {
+    use std::sync::OnceLock;
+    static URL: OnceLock<String> = OnceLock::new();
+    URL.get_or_init(|| {
+        let built = ENGINE_URL.trim_end_matches('/');
+        if built.contains("127.0.0.1") || built.contains("localhost") {
+            if let Some(host) = web_sys::window().and_then(|w| w.location().hostname().ok()) {
+                if host != "localhost" && host != "127.0.0.1" {
+                    let port = built.rsplit(':').next().filter(|p| !p.is_empty() && p.chars().all(|c| c.is_ascii_digit())).unwrap_or("8088");
+                    return format!("http://{host}:{port}");
+                }
+            }
+        }
+        built.to_string()
+    })
+}
+
 /// Film and series catalog. The key is visible in the browser, as TMDB keys always are, and is free to replace.
 pub const TMDB_API_URL: &str = setting(option_env!("STREAMS_TMDB_URL"), "https://api.themoviedb.org/3");
 pub const TMDB_IMAGE_URL: &str = setting(option_env!("STREAMS_TMDB_IMAGE_URL"), "https://image.tmdb.org/t/p");

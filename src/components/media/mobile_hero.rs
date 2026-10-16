@@ -41,7 +41,11 @@ pub fn MobileHero(
         }
     }).unwrap_or_default();
 
-    let tags: Vec<String> = movie.vibe_pills.clone().unwrap_or_default().into_iter().take(3).collect();
+    // up to three tags, as many as fit on one line next to the kind (about 38 characters)
+    let tags: Vec<String> = {
+        let mut used = if is_tv { 6 } else { 4 };
+        movie.vibe_pills.clone().unwrap_or_default().into_iter().take(3).take_while(|t| { used += t.chars().count() + 3; used <= 40 }).collect()
+    };
     let movie_c1 = movie.clone();
     let movie_c2 = movie.clone();
     let movie_c3 = movie.clone();
@@ -181,7 +185,7 @@ pub fn MobileHero(
                         <button
                             type="button"
                             on:click=handle_play
-                            class="btn-ink flex-1 flex items-center justify-center h-12 rounded-md text-lg gap-2 transition-all active:scale-95"
+                            class="btn-ink flex-1 flex items-center justify-center h-12 rounded-full text-lg gap-2 transition-all active:scale-95"
                         >
                             <i class="ph-fill ph-play text-2xl"></i>
                             <span>{move || {
@@ -199,7 +203,7 @@ pub fn MobileHero(
                         <button
                             type="button"
                             on:click=toggle_my_list
-                            class="btn-glass flex-1 flex items-center justify-center h-12 rounded-md text-lg gap-2 transition-all active:scale-95"
+                            class="btn-glass flex-1 flex items-center justify-center h-12 rounded-full text-lg gap-2 transition-all active:scale-95"
                         >
                             <i class=move || if is_added.get() { "ph-bold ph-check text-2xl" } else { "ph-bold ph-plus text-2xl" }></i>
                             <span>{crate::i18n::t("nav-my-list")}</span>

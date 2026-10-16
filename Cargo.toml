@@ -56,6 +56,12 @@ web-sys = { version = "0.3", features = [
     "File",
     "FileList",
     "Blob",
+    "ScrollToOptions",
+    "NodeList",
+    "ScrollBehavior",
+    "IntersectionObserver",
+    "IntersectionObserverEntry",
+    "IntersectionObserverInit",
 ] }
 
 [profile.release]
@@ -68,3 +74,12 @@ panic = "abort"
 [profile.dev]
 opt-level = 0
 debug = 0
+
+# Quick builds for the phone while editing (trunk serve --cargo-profile phone --address 0.0.0.0): no whole program optimisation, parallel and incremental, so an edit rebuilds in well under a minute
+[profile.phone]
+inherits = "release"
+lto = false
+opt-level = "s"
+codegen-units = 16
+incremental = true
+panic = "abort"

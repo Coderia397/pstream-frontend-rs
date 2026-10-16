@@ -5,8 +5,9 @@ export interface AmbientRGB {
 }
 
 const cache = new Map<string, AmbientRGB>();
-const STORAGE_PREFIX = 'streams-ambient:';
-const LAST_KEY = 'streams-ambient:last';
+// version 2: brighter colours, close to the artwork's own (the app tints the top of the page with it)
+const STORAGE_PREFIX = 'streams-ambient2:';
+const LAST_KEY = 'streams-ambient2:last';
 
 export function getCachedAmbientColor(imageUrl: string): AmbientRGB | null {
   if (!imageUrl) return null;
@@ -83,30 +84,19 @@ export function extractAmbientColor(imageUrl: string): Promise<AmbientRGB | null
         let ag = Math.round((g / count) * 0.70 + vibG * 0.30);
         let ab = Math.round((b / count) * 0.70 + vibB * 0.30);
 
-        // Desaturate 35% toward neutral gray for an understated cinematic look
+        // Soften the colour a little toward grey (25 percent), keep it close to the artwork's own tone
         const mean = (ar + ag + ab) / 3;
-        ar = Math.round(ar * 0.65 + mean * 0.35);
-        ag = Math.round(ag * 0.65 + mean * 0.35);
-        ab = Math.round(ab * 0.65 + mean * 0.35);
+        ar = Math.round(ar * 0.75 + mean * 0.25);
+        ag = Math.round(ag * 0.75 + mean * 0.25);
+        ab = Math.round(ab * 0.75 + mean * 0.25);
 
-        // Tone down intensity toward darker/blacker side (nudged one notch darker)
-        ar = Math.min(255, Math.max(8, Math.round(ar * 0.72)));
-        ag = Math.min(255, Math.max(8, Math.round(ag * 0.72)));
-        ab = Math.min(255, Math.max(8, Math.round(ab * 0.72)));
-
-        // Keep luminance in a deep, subtle dark range (between 18 and 48)
+        // Luminance between 34 and 112: a bright poster gives a clearly lit top of the page, a dark one a deep tint
         const lum = (ar * 299 + ag * 587 + ab * 114) / 1000;
-        if (lum > 48) {
-          const scale = 48 / lum;
-          ar = Math.round(ar * scale);
-          ag = Math.round(ag * scale);
-          ab = Math.round(ab * scale);
-        } else if (lum < 18) {
-          const scale = 18 / Math.max(lum, 1);
-          ar = Math.round(ar * scale);
-          ag = Math.round(ag * scale);
-          ab = Math.round(ab * scale);
-        }
+        const target = lum > 112 ? 112 : lum < 34 ? 34 : lum;
+        const scale = target / Math.max(lum, 1);
+        ar = Math.min(255, Math.round(ar * scale));
+        ag = Math.min(255, Math.round(ag * scale));
+        ab = Math.min(255, Math.round(ab * scale));
 
         const rgb = { r: ar, g: ag, b: ab };
         cache.set(imageUrl, rgb);

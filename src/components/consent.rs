@@ -62,7 +62,7 @@ fn Center() -> impl IntoView {
     let (section, set_section) = signal(Section::General);
     let personal = ui.personalization;
     view! {
-        <div class="fixed inset-0 z-(--z-modal-top) flex items-center justify-center bg-void/60 p-3" on:click=move |_| ui.center.set(false)>
+        <div class="fixed inset-0 z-(--z-consent) flex items-center justify-center bg-void/60 p-3" on:click=move |_| ui.center.set(false)>
             <div
                 role="dialog"
                 aria-modal="true"
@@ -171,12 +171,12 @@ pub fn CookieManager() -> impl IntoView {
     };
     view! {
         <Show when=visible>
-            <div class="fixed inset-0 z-(--z-modal) bg-void/50" aria-hidden="true"></div>
+            <div class="fixed inset-0 z-(--z-consent) bg-void/50" aria-hidden="true"></div>
             <div
                 role="dialog"
                 aria-modal="true"
                 aria-label=move || tr("cookie-center-title")
-                class=format!("fixed inset-x-0 bottom-0 z-(--z-modal) min-h-sheet-min w-full rounded-t-modal bg-paper px-5 pb-[max(1.25rem,env(safe-area-inset-bottom))] pt-3 font-sans text-paper-ink shadow-popover sm:w-sheet sm:max-w-[calc(100%-3rem)] sm:rounded-modal sm:p-6 {place}")
+                class=format!("fixed inset-x-0 bottom-0 z-(--z-consent) min-h-sheet-min w-full rounded-t-modal bg-paper px-5 pb-[max(1.25rem,env(safe-area-inset-bottom))] pt-3 font-sans text-paper-ink shadow-popover sm:w-sheet sm:max-w-[calc(100%-3rem)] sm:rounded-modal sm:p-6 {place}")
             >
                 <span class="mx-auto mb-3 block h-1 w-10 rounded-full bg-paper-line sm:hidden" aria-hidden="true"></span>
                 <div class="flex items-start gap-3">

@@ -177,6 +177,7 @@
   --z-info-modal: 10000;
   --z-bottom-nav: 10020;
   --z-drawer: 10030;
+  --z-consent: 10040; /* the cookie banner and its settings sit above the bottom navigation */
   --z-sheet-backdrop: 10040;
   --z-sheet: 10050;
   --z-share-backdrop: 10080;

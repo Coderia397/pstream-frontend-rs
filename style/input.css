@@ -70,8 +70,16 @@
 
 /* Ranked (Top 10) card: one slot wide, numeral left half, poster right half. Phones use 47% of the row (about 2 cards). */
 .topten-card { container-type: inline-size; }
+/* On phones (measured on the app's Top 10 row): a slot is 43.7 percent of the row, the poster is as wide as a normal tile (28.2 percent of the row), and the numeral is a
+   little under half the height of the poster, at the bottom left, partly behind the poster, drawn as a thin light outline on black. */
 @media (max-width: 599.98px) {
-  .tile-width.topten-card { width: 47cqw; }
+  .tile-width.topten-card { width: 43.67cqw; }
+  .topten-card .topten-poster { margin-left: 22.4%; width: 64.6%; }
+  .topten-card .topten-rank { left: 4.5%; width: auto; align-items: flex-end; justify-content: flex-start; }
+  .topten-card .topten-rank span { font-size: 53cqw; letter-spacing: -1cqw !important; -webkit-text-stroke-width: 0.8cqw !important; line-height: 0.74 !important; }
+  .topten-card .topten-rank span:last-child { -webkit-text-stroke-width: 0 !important; }
+  .topten-card .topten-rank span:first-child { -webkit-text-stroke-color: #b8b8b8 !important; }
+  .topten-card .topten-rank > div { transform-origin: left bottom; }
 }
 
 /* Landscape rows on phones (continue watching) keep 2.15 tiles of 16:9. */

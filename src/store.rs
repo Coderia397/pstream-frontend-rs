@@ -19,6 +19,10 @@ pub struct UIStore {
     /// One-shot seek signal: set when modal closes so hero TrailerPlayer jumps to exact timestamp.
     /// Cleared immediately after being consumed by the seek Effect.
     pub hero_resume_seek: RwSignal<Option<f64>>,
+    /// The card of the New & Hot page whose trailer is playing now (one at a time): `movie-550`, `tv-1399`
+    pub spotlight_playing: RwSignal<Option<String>>,
+    /// True while the page is scrolling to a tab of New & Hot: no card starts its trailer on the way
+    pub spotlight_hold: RwSignal<bool>,
 }
 
 pub fn get_session_preview_muted(profile_id: Option<&str>, is_kids: bool) -> bool {
@@ -78,6 +82,8 @@ pub fn provide_ui_store() {
         modal_video_key: RwSignal::new(None),
         modal_is_teaser: RwSignal::new(false),
         hero_resume_seek: RwSignal::new(None),
+        spotlight_playing: RwSignal::new(None),
+        spotlight_hold: RwSignal::new(false),
     });
 }
 

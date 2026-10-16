@@ -15,5 +15,9 @@ lines = ['<?xml version="1.0" encoding="UTF-8"?>', '<urlset xmlns="http://www.si
 lines += [url(p, "0.8" if p in ("/browse", "/help", "/") else "0.6") for p in pages]
 lines += [url(f"/help/article/{s}", "0.5") for s in slugs]
 lines.append("</urlset>")
-(ROOT / "public/sitemap.xml").write_text("\n".join(lines) + "\n")
+out = ROOT / "public/sitemap.xml"
+text = "\n".join(lines) + "\n"
+# written only when it changed: a write on every build makes `trunk serve` see a changed file and build again, for ever (and reload the phone each time)
+if not out.exists() or out.read_text() != text:
+    out.write_text(text)
 print(f"sitemap: {len(pages)} pages, {len(slugs)} articles")

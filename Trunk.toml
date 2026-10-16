@@ -4,6 +4,7 @@ target = "index.html"
 [watch]
 ignore = [
     "style/output.css",
+    "public/sitemap.xml",
     "interop/dist",
 ]
 

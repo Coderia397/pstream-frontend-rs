@@ -525,7 +525,7 @@ pub fn InfoModal() -> impl IntoView {
                                                 view! {
                                                     <div class="mb-4 flex items-center gap-3">
                                                         <div class="h-[3px] w-[310px] max-w-[70%] overflow-hidden rounded-full bg-ink/40">
-                                                            <div class="h-full bg-red-600" style=format!("width: {:.1}%;", pct) />
+                                                            <div class="h-full bg-brand" style=format!("width: {:.1}%;", pct) />
                                                         </div>
                                                         <span class="text-ink-silver text-[16px] tabular-nums">{time_text}</span>
                                                     </div>

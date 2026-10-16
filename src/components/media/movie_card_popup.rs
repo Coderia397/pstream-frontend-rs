@@ -352,25 +352,6 @@ pub fn MovieCardPopup(
                     }}
                 </div>
 
-                // Watch Progress Bar if watched
-                {move || {
-                    let watch_store = crate::store::use_watch_store();
-                    if let Some(rec) = watch_store.get_record(movie_id, is_tv) {
-                        if rec.percentage > 0.0 {
-                            let pct = rec.percentage.clamp(0.0, 100.0);
-                            view! {
-                                <div class="h-1 w-full bg-ink/20 relative">
-                                    <div class="h-full bg-brand" style=format!("width: {:.1}%;", pct) />
-                                </div>
-                            }.into_any()
-                        } else {
-                            view! { <span /> }.into_any()
-                        }
-                    } else {
-                        view! { <span /> }.into_any()
-                    }
-                }}
-
                 // Metadata & Action Controls
                 <div class="p-4">
                     // Action Buttons Row
@@ -474,7 +455,7 @@ pub fn MovieCardPopup(
                                 <p class="text-ink text-[18px] font-bold leading-snug">{r.label.clone()}</p>
                                 <div class="mt-3 flex items-center gap-3">
                                     <div class="h-[3px] flex-1 overflow-hidden rounded-full bg-ink/40">
-                                        <div class="h-full bg-red-600" style=format!("width: {:.1}%;", r.percent.clamp(2.0, 100.0)) />
+                                        <div class="h-full bg-brand" style=format!("width: {:.1}%;", r.percent.clamp(2.0, 100.0)) />
                                     </div>
                                     <span class="text-ink-silver text-[16px] tabular-nums">{r.time_text.clone()}</span>
                                 </div>

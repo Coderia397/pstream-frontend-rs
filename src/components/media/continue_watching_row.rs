@@ -215,7 +215,7 @@ pub fn ContinueWatchingRow() -> impl IntoView {
 
                                             // How far you are: a short bar under the picture, not touching it, red for what is watched and white for what is left
                                             <div class="mx-auto mt-2 h-[3px] w-[60%] flex overflow-hidden rounded-full bg-ink" aria-label=pct_label.clone()>
-                                                <div class="h-full bg-red-600" style=format!("width: {:.1}%;", percentage.clamp(2.0, 100.0)) />
+                                                <div class="h-full bg-brand" style=format!("width: {:.1}%;", percentage.clamp(2.0, 100.0)) />
                                             </div>
                                         </div>
                                     }

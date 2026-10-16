@@ -556,6 +556,18 @@ pub fn HeroSection(
 
     let is_video_visible = move || should_play() && is_video_ready.get();
 
+    // Three seconds after the trailer is on screen the description leaves (fading a little faster than it slides down), and the logo and the line under it slide down with it; the buttons stay.
+    // It comes back when the trailer is not on screen any more (a new title, the end, the info window).
+    let (synopsis_hidden, set_synopsis_hidden) = signal(false);
+    Effect::new(move |_| {
+        if is_video_visible() {
+            let handle = set_timeout_with_handle(move || set_synopsis_hidden.set(true), std::time::Duration::from_millis(3000)).ok();
+            on_cleanup(move || { if let Some(h) = handle { h.clear(); } });
+        } else {
+            set_synopsis_hidden.set(false);
+        }
+    });
+
     view! {
         <>
             // Mobile Hero (< 768px)
@@ -665,11 +677,7 @@ pub fn HeroSection(
 
                         // Logo / Title with scale transition
                         <div
-                            class=move || if is_video_visible() {
-                                "relative flex items-end transition-transform duration-(--motion-slowest) origin-bottom-left scale-[0.93] sm:scale-[0.96]"
-                            } else {
-                                "relative flex items-end transition-transform duration-(--motion-slowest) origin-bottom-left"
-                            }
+                            class="relative flex items-end origin-bottom-left"
                         >
                             <Suspense fallback=move || {
                                 let t = current_title();
@@ -721,10 +729,12 @@ pub fn HeroSection(
                         </div>
 
                         // Overview / Synopsis
-                        <div class="overflow-hidden transition-opacity duration-(--motion-slow) mt-2">
-                            <p class="billboard-synopsis text-ink font-normal line-clamp-3 select-none">
-                                {move || current_overview()}
-                            </p>
+                        <div class=move || if synopsis_hidden.get() { "hero-synopsis is-hidden" } else { "hero-synopsis" }>
+                            <div class="overflow-hidden min-h-0">
+                                <p class="billboard-synopsis text-ink font-normal line-clamp-3 select-none">
+                                    {move || current_overview()}
+                                </p>
+                            </div>
                         </div>
 
                         // Action Buttons: Play (pill) & More Info (pill)

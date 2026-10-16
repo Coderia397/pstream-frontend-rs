@@ -85,8 +85,10 @@
 }
 
 /* From tablet width up the digits are narrower, as the numerals of the app are, and tuck right against the poster ("10" has its own squeeze in the component). */
+.topten-card .topten-svg { display: none; }
 @media (min-width: 600px) {
-  .topten-card .topten-rank:not(.topten-rank-ten) span { transform: scaleX(0.8); transform-origin: right center; }
+  .topten-card .topten-svg { display: block; height: 100%; width: auto; max-width: none; overflow: visible; margin-right: -3cqw; }
+  .topten-card .topten-rank > .topten-spans { display: none; }
 }
 
 /* Landscape rows on phones (continue watching) keep 2.15 tiles of 16:9. */
@@ -634,3 +636,9 @@ button,
 .mobile-header { transform: translateY(calc(-100% * (1 - var(--nav-shown, 1)))); transition: transform 0.25s ease; }
 .mobile-subnav { position: sticky; top: calc((var(--nav-h-mobile) + env(safe-area-inset-top)) * (var(--nav-shown, 1) - 1)); z-index: 40; background: rgba(0, 0, 0, var(--hdr-solid, 0)); transition: top 0.25s ease; }
 .mobile-pills-sticky { position: sticky; top: calc((var(--nav-h-mobile) + env(safe-area-inset-top)) * var(--nav-shown, 1)); z-index: 40; background: #000; transition: top 0.25s ease; }
+
+/* Edge buttons of a row (row_scroll.rs): clear until hovered, then a dark blurred veil over the peeking cards that eases back slowly when the pointer leaves. */
+.edge-btn { background-color: rgba(20, 20, 20, 0); transition: background-color 0.6s ease, opacity 0.25s ease; }
+.edge-btn:hover { background-color: rgba(20, 20, 20, 0.82); backdrop-filter: blur(6px); -webkit-backdrop-filter: blur(6px); transition: background-color 0.12s ease, opacity 0.25s ease; }
+.edge-pill { display: flex; align-items: center; justify-content: center; width: 30px; height: 58px; border-radius: 999px; background: rgba(42, 42, 42, 0.72); backdrop-filter: blur(8px); -webkit-backdrop-filter: blur(8px); color: #fff; font-size: 20px; transition: transform 0.15s ease; }
+.edge-btn:hover .edge-pill { transform: scale(1.12); }

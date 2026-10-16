@@ -90,7 +90,7 @@ pub fn Row(
             let scroll_w = el.scroll_width() as f64;
 
             set_can_scroll_left.set(cur > 10.0);
-            set_can_scroll_right.set(scroll_w > client_w + 10.0 && scroll_w - (cur + client_w) > 10.0);
+            set_can_scroll_right.set(scroll_w > client_w + 10.0);
 
             let margin = crate::utils::layout::app_x();
             let page_w = (client_w - 2.0 * margin + 6.0).max(100.0);
@@ -142,11 +142,7 @@ pub fn Row(
                 let margin = crate::utils::layout::app_x();
                 let step = (client_width - 2.0 * margin + 6.0).max(100.0);
                 
-                let target = if direction == "left" {
-                    (current_scroll - step).max(0.0)
-                } else {
-                    (current_scroll + step).min(scroll_width - client_width)
-                };
+                let target = crate::components::media::row_scroll::page_target(direction != "left", current_scroll, client_width, scroll_width, step);
 
                 el.scroll_to_with_x_and_y(target, 0.0);
 
@@ -281,35 +277,8 @@ pub fn Row(
                                     <div class="flex-none h-full pointer-events-none" style="width: var(--app-x, 56px);" />
                                 </div>
 
-                                // Left Chevron Handle: sits inside left margin gutter, exactly var(--app-x) wide
-                                <button
-                                    type="button"
-                                    class=move || if can_scroll_left.get() {
-                                        "hidden md:flex absolute top-2 bottom-6 left-0 z-30 items-center justify-center cursor-pointer bg-transparent hover:bg-void/70 transition-all duration-(--motion-base) opacity-0 group-hover/row:opacity-100 group-hover/row:pointer-events-auto select-none border-none outline-none"
-                                    } else {
-                                        "hidden !pointer-events-none !opacity-0"
-                                    }
-                                    style="width: var(--app-x, 56px);"
-                                    on:click=move |_| scroll_left("left")
-                                    aria-label=crate::i18n::t("continue-watching-row-scroll-left")
-                                >
-                                    <i class="ph-bold ph-caret-left text-ink text-3xl sm:text-4xl drop-shadow-lg transition-transform hover:scale-125"></i>
-                                </button>
-
-                                // Right Chevron Handle: sits inside right margin gutter, exactly var(--app-x) wide
-                                <button
-                                    type="button"
-                                    class=move || if can_scroll_right.get() {
-                                        "hidden md:flex absolute top-2 bottom-6 right-0 z-30 items-center justify-center cursor-pointer bg-transparent hover:bg-void/70 transition-all duration-(--motion-base) opacity-0 group-hover/row:opacity-100 group-hover/row:pointer-events-auto select-none border-none outline-none"
-                                    } else {
-                                        "hidden !pointer-events-none !opacity-0"
-                                    }
-                                    style="width: var(--app-x, 56px);"
-                                    on:click=move |_| scroll_right("right")
-                                    aria-label=crate::i18n::t("continue-watching-row-scroll-right")
-                                >
-                                    <i class="ph-bold ph-caret-right text-ink text-3xl sm:text-4xl drop-shadow-lg transition-transform hover:scale-125"></i>
-                                </button>
+                                <crate::components::media::row_scroll::EdgeButton edge=crate::components::media::row_scroll::Edge::Left visible=can_scroll_left on_click=Callback::new(move |_| scroll_left("left")) label=crate::i18n::t("continue-watching-row-scroll-left") />
+                                <crate::components::media::row_scroll::EdgeButton edge=crate::components::media::row_scroll::Edge::Right visible=can_scroll_right on_click=Callback::new(move |_| scroll_right("right")) label=crate::i18n::t("continue-watching-row-scroll-right") />
                             </>
                         }.into_any()
                     }

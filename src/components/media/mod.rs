@@ -1,4 +1,5 @@
 pub mod row;
+pub mod row_scroll;
 pub mod movie_card;
 pub mod hero;
 pub mod info_modal;

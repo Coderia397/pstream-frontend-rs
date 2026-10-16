@@ -32,7 +32,7 @@ pub fn VibeRow(
             let client_w = el.client_width() as f64;
             let scroll_w = el.scroll_width() as f64;
             set_can_scroll_left.set(cur > 10.0);
-            set_can_scroll_right.set(scroll_w > client_w + 10.0 && scroll_w - (cur + client_w) > 10.0);
+            set_can_scroll_right.set(scroll_w > client_w + 10.0);
 
             if client_w > 0.0 {
                 let p = (cur / (client_w * 0.85)).round() as usize;
@@ -71,11 +71,7 @@ pub fn VibeRow(
                 let margin = if client_width >= 1750.0 { 60.0 } else if client_width >= 1350.0 { 56.0 } else if client_width >= 800.0 { 48.0 } else { 16.0 };
                 let step = (client_width - 2.0 * margin + 6.0).max(100.0);
                 
-                let target = if direction == "left" {
-                    (current_scroll - step).max(0.0)
-                } else {
-                    (current_scroll + step).min(scroll_width - client_width)
-                };
+                let target = crate::components::media::row_scroll::page_target(direction != "left", current_scroll, client_width, scroll_width, step);
 
                 el.scroll_to_with_x_and_y(target, 0.0);
 
@@ -183,45 +179,8 @@ pub fn VibeRow(
                                     <div class="flex-none h-full pointer-events-none" style="width: var(--app-x, 56px);" />
                                 </div>
 
-                                // Left Chevron Navigation Button
-                                <button
-                                    on:click={
-                                        let sl = scroll_left.clone();
-                                        move |e: web_sys::MouseEvent| {
-                                            e.stop_propagation();
-                                            sl("left");
-                                        }
-                                    }
-                                    class=move || format!(
-                                        "absolute left-0 top-2 bottom-6 w-[var(--app-x,56px)] z-30 flex items-center justify-center bg-void/40 hover:bg-void/70 text-ink transition-all duration-(--motion-slow) pointer-events-auto rounded-r-control backdrop-blur-[2px] cursor-pointer group/btn {}",
-                                        if can_scroll_left.get() { "opacity-0 group-hover/row:opacity-100" } else { "opacity-0 pointer-events-none" }
-                                    )
-                                    aria-label=crate::i18n::t("vibe-row-scroll-left")
-                                >
-                                    <svg class="w-6 h-6 md:w-8 md:h-8 transition-transform duration-(--motion-base) group-hover/btn:scale-125" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M15 19l-7-7 7-7" />
-                                    </svg>
-                                </button>
-
-                                // Right Chevron Navigation Button
-                                <button
-                                    on:click={
-                                        let sr = scroll_right.clone();
-                                        move |e: web_sys::MouseEvent| {
-                                            e.stop_propagation();
-                                            sr("right");
-                                        }
-                                    }
-                                    class=move || format!(
-                                        "absolute right-0 top-2 bottom-6 w-[var(--app-x,56px)] z-30 flex items-center justify-center bg-void/40 hover:bg-void/70 text-ink transition-all duration-(--motion-slow) pointer-events-auto rounded-l-control backdrop-blur-[2px] cursor-pointer group/btn {}",
-                                        if can_scroll_right.get() { "opacity-0 group-hover/row:opacity-100" } else { "opacity-0 pointer-events-none" }
-                                    )
-                                    aria-label=crate::i18n::t("vibe-row-scroll-right")
-                                >
-                                    <svg class="w-6 h-6 md:w-8 md:h-8 transition-transform duration-(--motion-base) group-hover/btn:scale-125" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M9 5l7 7-7 7" />
-                                    </svg>
-                                </button>
+                                <crate::components::media::row_scroll::EdgeButton edge=crate::components::media::row_scroll::Edge::Left visible=can_scroll_left on_click=Callback::new(move |_| scroll_left("left")) label=crate::i18n::t("vibe-row-scroll-left") />
+                                <crate::components::media::row_scroll::EdgeButton edge=crate::components::media::row_scroll::Edge::Right visible=can_scroll_right on_click=Callback::new(move |_| scroll_right("right")) label=crate::i18n::t("vibe-row-scroll-right") />
                             </>
                         }.into_any()
                     }

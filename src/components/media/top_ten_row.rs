@@ -41,9 +41,28 @@ fn RankNumber(index: usize) -> impl IntoView {
     );
     let num_str = (index + 1).to_string();
 
+    // From tablet width up the numeral is drawn as an outline whose line fades from light on the left to dark on the right (`topten-svg`); phones keep the text numeral (`topten-spans`)
+    let gradient_id = format!("tt-grad-{}", index);
+    let (view_w, text_w) = if is_ten { (112.0, 108.0) } else { (62.0, 60.0) };
+    let svg_box = format!("0 0 {} 100", view_w);
+    let num_for_svg = num_str.clone();
+    let grad_ref = format!("url(#{})", gradient_id);
+
     view! {
         <div class=format!("topten-rank absolute left-0 top-0 bottom-0 w-1/2 flex justify-end items-center pointer-events-none z-0{}", if is_ten { " topten-rank-ten" } else { "" })>
-            <div class="relative flex items-center justify-center">
+            <svg class="topten-svg" viewBox=svg_box preserveAspectRatio="xMaxYMid meet" aria-hidden="true">
+                <defs>
+                    <linearGradient id=gradient_id x1="0" y1="0" x2="1" y2="0">
+                        <stop offset="0" stop-color="#9e9e9e" />
+                        <stop offset="0.55" stop-color="#5c5c5c" />
+                        <stop offset="1" stop-color="#2d2d2d" />
+                    </linearGradient>
+                </defs>
+                <text x=view_w y="97.5" text-anchor="end" fill="var(--color-page)" stroke=grad_ref stroke-width="1.1" stroke-linejoin="round" font-size="135" font-weight="700" font-family="var(--font-brand)" textLength=text_w lengthAdjust="spacingAndGlyphs">
+                    {num_for_svg}
+                </text>
+            </svg>
+            <div class="topten-spans relative flex items-center justify-center">
                 // Background thick stroke
                 <span
                     class=format!("{} text-transparent absolute select-none", text_class)
@@ -215,18 +234,18 @@ fn TopTenCard(
             // not the outer div (which includes the wide number padding-left).
             <div
                 node_ref=card_ref
-                class="topten-poster relative flex-none ml-auto w-1/2 aspect-[5/7] z-10 rounded-control overflow-hidden">
+                class="topten-poster relative flex-none ml-auto w-1/2 aspect-[5/7] z-10 rounded-[3.6cqw] overflow-hidden">
                 <img
                     src=poster_src
                     alt=title_for_img.clone()
-                    class="w-full h-full object-cover object-top rounded-control"
+                    class="w-full h-full object-cover object-top rounded-[3.6cqw]"
                     loading="lazy"
                     draggable="false"
                 />
 
                 // "Recently Added" (the engine's `new` badge): a red tab at the bottom of the poster, centred, as in the app
                 {is_new.then(|| view! {
-                    <span class="absolute bottom-[3%] left-1/2 -translate-x-1/2 z-10 whitespace-nowrap rounded-[2px] bg-red-600 px-[1.6cqw] py-[0.7cqw] text-[3.6cqw] font-bold leading-none text-white pointer-events-none">
+                    <span class="absolute bottom-0 left-1/2 -translate-x-1/2 z-10 whitespace-nowrap rounded-[1.2cqw] bg-red-600 px-[3.2cqw] py-[1.5cqw] text-[4.4cqw] font-bold leading-none text-white pointer-events-none">
                         {crate::i18n::t("badge-recently-added")}
                     </span>
                 })}
@@ -361,7 +380,7 @@ pub fn TopTenRow(
             let client_w = el.client_width() as f64;
             let scroll_w = el.scroll_width() as f64;
             set_can_scroll_left.set(cur > 10.0);
-            set_can_scroll_right.set(scroll_w > client_w + 10.0 && scroll_w - (cur + client_w) > 10.0);
+            set_can_scroll_right.set(scroll_w > client_w + 10.0);
         }
     });
 
@@ -391,12 +410,9 @@ pub fn TopTenRow(
             if let Some(el) = scroll_ref.get() {
                 let client_width = el.client_width() as f64;
                 let current_scroll = el.scroll_left() as f64;
+                let scroll_width = el.scroll_width() as f64;
                 let step = client_width * 0.9;
-                let target = if direction == "left" {
-                    (current_scroll - step).max(0.0)
-                } else {
-                    current_scroll + step
-                };
+                let target = crate::components::media::row_scroll::page_target(direction != "left", current_scroll, client_width, scroll_width, step);
                 el.scroll_to_with_x_and_y(target, 0.0);
 
                 let update_c = update.clone();
@@ -449,41 +465,8 @@ pub fn TopTenRow(
                     <div class="flex-none pointer-events-none" style="width: var(--app-x, 56px);" />
                 </div>
 
-                // Left arrow — hidden at position 0, same style as normal Row
-                <button
-                    type="button"
-                    class=move || if can_scroll_left.get() {
-                        "hidden md:flex absolute top-2 bottom-0 left-0 z-30 items-center justify-center cursor-pointer bg-transparent hover:bg-void/70 transition-all duration-(--motion-base) opacity-0 group-hover/row:opacity-100 group-hover/row:pointer-events-auto select-none border-none outline-none"
-                    } else {
-                        "hidden !pointer-events-none !opacity-0"
-                    }
-                    style="width: var(--app-x, 56px);"
-                    on:click={
-                        let scroll_left = scroll.clone();
-                        move |_| scroll_left("left")
-                    }
-                    aria-label=crate::i18n::t("continue-watching-row-scroll-left")
-                >
-                    <i class="ph-bold ph-caret-left text-ink text-3xl sm:text-4xl drop-shadow-lg transition-transform hover:scale-125"></i>
-                </button>
-
-                // Right arrow — hidden when at end
-                <button
-                    type="button"
-                    class=move || if can_scroll_right.get() {
-                        "hidden md:flex absolute top-2 bottom-0 right-0 z-30 items-center justify-center cursor-pointer bg-transparent hover:bg-void/70 transition-all duration-(--motion-base) opacity-0 group-hover/row:opacity-100 group-hover/row:pointer-events-auto select-none border-none outline-none"
-                    } else {
-                        "hidden !pointer-events-none !opacity-0"
-                    }
-                    style="width: var(--app-x, 56px);"
-                    on:click={
-                        let scroll_right = scroll.clone();
-                        move |_| scroll_right("right")
-                    }
-                    aria-label=crate::i18n::t("continue-watching-row-scroll-right")
-                >
-                    <i class="ph-bold ph-caret-right text-ink text-3xl sm:text-4xl drop-shadow-lg transition-transform hover:scale-125"></i>
-                </button>
+                <crate::components::media::row_scroll::EdgeButton edge=crate::components::media::row_scroll::Edge::Left visible=can_scroll_left on_click=Callback::new({ let sl = scroll.clone(); move |_| sl("left") }) label=crate::i18n::t("continue-watching-row-scroll-left") inset="top-2 bottom-0" />
+                <crate::components::media::row_scroll::EdgeButton edge=crate::components::media::row_scroll::Edge::Right visible=can_scroll_right on_click=Callback::new({ let sr = scroll.clone(); move |_| sr("right") }) label=crate::i18n::t("continue-watching-row-scroll-right") inset="top-2 bottom-0" />
             </div>
         </div>
     }

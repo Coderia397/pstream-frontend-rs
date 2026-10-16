@@ -202,7 +202,7 @@ pub fn NewPopularPage() -> impl IntoView {
                                 view! { <FallbackRows /> }.into_any()
                             } else {
                                 rows.into_iter().map(|r| {
-                                    let row_title = r.title.clone();
+                                    let row_title = r.display_title();
                                     let media_items = r.to_media_items();
                                     if r.is_top_ten() {
                                         let kind = if r.items.first().is_some_and(|i| i.is_tv()) { "tv" } else { "movie" };

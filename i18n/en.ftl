@@ -2311,3 +2311,19 @@ media-unmute = Unmute
 new-hot-watch-series = Watch the series now
 new-hot-watch-film = Watch the film now
 tabs-top10-films = Top 10 Films
+
+# New & Popular page rows (keys sent by the engine)
+row-np-top10-movies = Top 10 Movies Today
+row-np-top10-series = Top 10 Series Today
+row-np-trending-today = Trending Today
+row-np-new-movies = New Movies
+row-np-new-episodes = New Episodes This Week
+row-np-coming-soon-cinemas = Coming Soon to Cinemas
+row-np-new-acclaimed = New and Acclaimed
+row-np-coming-soon-series = Coming Soon: Series
+row-np-new-series = New Series
+row-np-new-in-language = New in { $language }
+row-np-new-genre = New { $genre }
+row-np-under-the-radar = Under the Radar
+row-np-hidden-gems = Hidden Gems
+row-np-closer-look = Worth a Closer Look

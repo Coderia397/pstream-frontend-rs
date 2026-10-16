@@ -140,17 +140,17 @@ pub fn BrowseLanguagePage() -> impl IntoView {
                             <div node_ref=pref_container_ref class="relative" class:hidden=(PREF_TYPES.len() <= 1)>
                                 <button
                                     on:click=toggle_pref_dropdown
-                                    class="flex items-center justify-between min-w-[160px] md:min-w-[170px] px-4 py-2 leading-none text-label md:text-body-sm font-semibold tracking-[-0.2px] text-ink bg-ink/10 hover:bg-ink/20 border border-ink/20 backdrop-blur-md rounded-full transition-all active:scale-95 gap-x-2.5 cursor-pointer select-none shadow-sm"
+                                    class="flex items-center justify-between min-w-[100px] md:min-w-[125px] px-4 py-2 leading-none text-label md:text-body-sm font-semibold tracking-[-0.2px] text-ink bg-ink/10 hover:bg-ink/20 border border-ink/20 backdrop-blur-md rounded-full transition-all active:scale-95 gap-x-2.5 cursor-pointer select-none shadow-sm"
                                 >
                                     <span>{move || crate::i18n::t(selected_pref_type.get())}</span>
-                                    <i class="ph-fill ph-caret-down text-ink text-micro transition-transform duration-(--motion-base)"
+                                    <i class="ph-fill ph-caret-down text-fine text-ink/80 shrink-0 transition-transform duration-(--motion-base)"
                                        class=("rotate-180", move || pref_dropdown_open.get())></i>
                                 </button>
 
                                 {move || {
                                     if pref_dropdown_open.get() {
                                         view! {
-                                            <div class="absolute top-[calc(100%+8px)] left-0 w-full min-w-[170px] bg-page/95 backdrop-blur-2xl border border-ink/15 shadow-2xl z-50 p-2 scrollbar-hide rounded-sheet">
+                                            <div class="absolute top-[calc(100%+8px)] left-0 w-full min-w-[170px] bg-page/95 backdrop-blur-2xl border border-ink/15 shadow-2xl z-50 p-4 md:p-6 scrollbar-hide rounded-sheet">
                                                 {PREF_TYPES.iter().map(|&t| {
                                                     let is_selected = selected_pref_type.get() == t;
                                                     view! {
@@ -181,17 +181,17 @@ pub fn BrowseLanguagePage() -> impl IntoView {
                             <div node_ref=lang_container_ref class="relative">
                                 <button
                                     on:click=toggle_lang_dropdown
-                                    class="flex items-center justify-between min-w-[130px] md:min-w-[150px] px-4 py-2 leading-none text-label md:text-body-sm font-semibold tracking-[-0.2px] text-ink bg-ink/10 hover:bg-ink/20 border border-ink/20 backdrop-blur-md rounded-full transition-all active:scale-95 gap-x-2.5 cursor-pointer select-none shadow-sm"
+                                    class="flex items-center justify-between min-w-[100px] md:min-w-[125px] px-4 py-2 leading-none text-label md:text-body-sm font-semibold tracking-[-0.2px] text-ink bg-ink/10 hover:bg-ink/20 border border-ink/20 backdrop-blur-md rounded-full transition-all active:scale-95 gap-x-2.5 cursor-pointer select-none shadow-sm"
                                 >
                                     <span>{active_label}</span>
-                                    <i class="ph-fill ph-caret-down text-ink text-micro transition-transform duration-(--motion-base)"
+                                    <i class="ph-fill ph-caret-down text-fine text-ink/80 shrink-0 transition-transform duration-(--motion-base)"
                                        class=("rotate-180", move || lang_dropdown_open.get())></i>
                                 </button>
 
                                 {move || {
                                     if lang_dropdown_open.get() {
                                         view! {
-                                            <div class="absolute top-[calc(100%+8px)] left-0 w-full min-w-[150px] max-h-64 overflow-y-auto bg-page/95 backdrop-blur-2xl border border-ink/15 shadow-2xl z-50 p-2 scrollbar-hide rounded-sheet">
+                                            <div class="absolute top-[calc(100%+8px)] left-0 w-full min-w-[150px] max-h-64 overflow-y-auto bg-page/95 backdrop-blur-2xl border border-ink/15 shadow-2xl z-50 p-4 md:p-6 scrollbar-hide rounded-sheet">
                                                 {BROWSE_LANGUAGES.iter().filter(|lang| !hidden_langs.get().unwrap_or_default().contains(lang.code) || selected_lang.get_untracked() == lang.code).map(|lang| {
                                                     let code = lang.code;
                                                     let label = crate::i18n::language_name(lang.code);

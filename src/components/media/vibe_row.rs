@@ -25,6 +25,8 @@ pub fn VibeRow(
     // the first page turn starts the loop: from then on the row can also be paged back from its start, to its end
     let (looping, set_looping) = signal(false);
     let (page_index, set_page_index) = signal(0);
+    // how many pages the row has once it is on the screen (0 until measured): the dashes follow it
+    let (page_count, set_page_count) = signal(0usize);
 
     let items_stored = StoredValue::new(items);
 
@@ -36,7 +38,10 @@ pub fn VibeRow(
             set_can_scroll_left.set(cur > 10.0);
             set_can_scroll_right.set(scroll_w > client_w + 10.0);
 
-            if client_w > 0.0 {
+            if let Some((i, n)) = crate::components::media::row_scroll::page_position(&el, crate::utils::layout::app_x()) {
+                set_page_index.set(i);
+                set_page_count.set(n);
+            } else if client_w > 0.0 {
                 let p = (cur / (client_w * 0.85)).round() as usize;
                 set_page_index.set(p);
             }
@@ -105,7 +110,7 @@ pub fn VibeRow(
                 {move || {
                     let count = items_stored.with_value(|it| it.len());
                     if count > 4 {
-                        let pages = (count / 4).clamp(2, 6);
+                        let pages = if page_count.get() > 0 { page_count.get() } else { (count / 4).clamp(2, 6) };
                         let current = page_index.get();
                         view! {
                             <div class="hidden md:flex items-center gap-[3px] opacity-0 group-hover:opacity-100 transition-opacity duration-(--motion-slow)">

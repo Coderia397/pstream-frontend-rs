@@ -32,7 +32,7 @@ pub fn EdgeButton(
     #[prop(into)] visible: Signal<bool>,
     on_click: Callback<()>,
     #[prop(into)] label: String,
-    #[prop(default = "-top-3 -bottom-8")] inset: &'static str,
+    #[prop(default = "-top-4 -bottom-4")] inset: &'static str,
 ) -> impl IntoView {
     let side = if edge == Edge::Left { "left-0" } else { "right-0" };
     let icon = if edge == Edge::Left { "ph-bold ph-caret-left" } else { "ph-bold ph-caret-right" };
@@ -143,4 +143,21 @@ pub fn turn_page(strip: &web_sys::HtmlElement, forward: bool, margin: f64) -> bo
     let strip = strip.clone();
     leptos::leptos_dom::helpers::set_timeout(move || settle(&strip, margin), std::time::Duration::from_millis(900));
     true
+}
+
+/// Which page a looping row is on and how many pages it has, for the dashes at the top of the row: (index, pages). None for a row without a copy. Positions inside the copies
+/// count as the same page among the real cards; the first page seen through the copy behind (after the last page) is page one again.
+pub fn page_position(strip: &web_sys::HtmlElement, margin: f64) -> Option<(usize, usize)> {
+    let g = geometry(strip, margin)?;
+    let last = (g.last_page - g.first_page).max(1.0);
+    let pages = ((last / g.step).ceil() as usize + 1).max(2);
+    let pos = (strip.scroll_left() as f64 - g.first_page).rem_euclid(g.length.max(1.0));
+    let index = if pos > last + g.step * 0.5 {
+        0
+    } else if pos >= last - 4.0 {
+        pages - 1
+    } else {
+        ((pos / g.step).round() as usize).min(pages - 2)
+    };
+    Some((index, pages))
 }

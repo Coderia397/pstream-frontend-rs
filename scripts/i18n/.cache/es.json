@@ -1574,5 +1574,10 @@
  "topic-wacky": "Locos y fuera de lo común",
  "topic-sitcoms": "Sitcoms",
  "topic-competition-reality": "Realidad competitiva",
- "topic-dating-reality": "Realidad de citas y relaciones"
+ "topic-dating-reality": "Realidad de citas y relaciones",
+ "row-np-top10-language": "Top 10 { $language } Títulos de Hoy",
+ "row-np-top10-genre": "Top 10 { $genre } de Hoy",
+ "continue-watching-row-for": "Continuar viendo para { $name }",
+ "continue-watching-mark-watched": "Marcar como visto",
+ "continue-watching-time-of": "{ $done } de { $total }m"
 }

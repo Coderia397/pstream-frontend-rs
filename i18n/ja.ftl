@@ -1,30 +1,154 @@
 action-buttons-add-to-my-list = マイリストに追加
+action-buttons-close = 閉じる
 action-buttons-i-like-this = お気に入り
 action-buttons-more-info = さらに見せる
+action-buttons-mute-trailer = トレーラーをミュート
 action-buttons-rate = 評価する
+action-buttons-replay-trailer = トレーラーを再再生
+action-buttons-unmute-trailer = トレーラーをアンミュート
+add-edit-modal-delete-profile = プロフィールを削除
+add-edit-modal-delete-this-profile-all-viewing = このプロフィールを削除しますか？すべての視聴履歴とマイリストのアイテムが永久に削除されます。
+add-edit-modal-enter-4digit-pin = 4桁のPINコードを入力
+add-edit-modal-name = 名前
+add-edit-modal-only-see-childfriendly-series-and = 子供向けのシリーズと映画のみを表示
+add-edit-modal-require-a-4digit-pin-to = このプロフィールに4桁のPINコードを必要とする
 add-edit-modal-save = 保存
+add-edit-modal-yes-delete = はい、削除
 browse-action-adventure = アクション＆アドベンチャー
+browse-comedies = コメディ
+browse-grid-go-back = 戻る
 browse-home = ホーム
 browse-scifi-fantasy = SF＆ファンタジー
+browse-top-10-in-the-uk = イギリスの今日のトップ10
 category-sub-nav-mobile-films = 映画
+category-sub-nav-mobile-new-hot = 新着＆ホット
 category-sub-nav-mobile-series = シリーズ
 choose-icon-back = 戻る
+clips-clips = クリップ
 continue-watching-options-sheet-cancel = キャンセル
 continue-watching-options-sheet-remove-from-continue-watching = 視聴中から削除
+continue-watching-row-continue-watching = 続きを再生
+continue-watching-row-scroll-left = 左にスクロール
+continue-watching-row-scroll-right = 右にスクロール
 controls-overlay-audio-subtitles = 音声 & 字幕
+controls-overlay-back-to-browse = ブラウズに戻る
+controls-overlay-episode-selector = エピソードセレクター
+controls-overlay-forward-10-seconds-right-arrow = 10秒進める（右矢印）
 controls-overlay-fullscreen-f = フルスクリーン (F)
 controls-overlay-next-episode = 次のエピソード
+controls-overlay-playback-speed = 再生速度
+controls-overlay-rewind-10-seconds-left-arrow = 10秒戻す（左矢印）
+episode-drawer-no-episodes-available-for-this = このシーズンにはエピソードがありません。
 games-coming-soon = まもなく配信
 info-modal-episodes-no-image = 画像なし
+info-modal-error-loading-details = 詳細の読み込みエラー。
+language-browse-by-language = 言語で検索
+language-select-your-preferences = お好みを選びましょう
 login-email-address = メールアドレス
 login-get-started = 今すぐ始める
 login-password = パスワード
+login-ready-to-watch-enter-your = 視聴準備ができました。メールアドレスを入力して会員登録または再開してください。
 login-sign-in = ログイン
+login-unlimited-films-series-and-more = 無制限の映画、シリーズ、その他
+mod-finding-optimal-stream = 最適なストリームを検索中...
+mod-retry = 再試行
+movie-card-popup-hd = HD
+navbar-exit-kids = キッズモードを終了
+navbar-menu-current-profile = 現在のプロフィール
+navbar-mobile-avatar = アバター
 navbar-mobile-cast = キャスト
+navbar-mobile-cast-to-tv = テレビにキャスト
+navbar-mobile-profile = プロフィール
+navbar-mobile-profile-menu = プロフィールメニュー
+navbar-switch-to-kids-profile = キッズプロフィールに切り替え
+new-popular-coming-to-the-collection-soon = コレクションに近日登場
+new-popular-new-and-acclaimed = 新作＆評判の高い作品
+new-popular-new-series-everyone-is-watching = 誰もが見る新シリーズ
+new-popular-newly-added-to-the-collection = 新しくコレクションに追加された
+new-popular-rising-stars-under-the-radar = 注目すべき新星：見逃しがちな存在
+new-popular-the-best-of-2026-so = 2026年現在の最高傑作
+new-popular-the-films-everyone-is-discussing = 誰もが話題にしている映画
+new-popular-top-10-films-in-the = 英国で今注目されているトップ10の映画
+new-popular-top-10-series-in-the = 英国で今注目されているトップ10のシリーズ
 new-popular-worth-the-wait = 期待の新作
+not-found-alternate-dimensions = 代替次元
+not-found-alternate-dimensions-more-like-this = 代替次元：似たようなもの
+not-found-cinematic-background = 映画的背景
+not-found-diagnostic-report = 診断レポート
+not-found-the-targeted-router-endpoint-has = ターゲットのルーターのエンドポイントが参照されなくなったか、またはCDNスペースから読み込めませんでした。再生を再開するには、安全なホームストリーミング環境に戻ってください。
+notifications-dropdown-notifications = 通知
+notifications-dropdown-youre-all-caught-up-new = すべて見終えました — 新しい到着はここに表示されます。
+notifications-notifications-arrivals = 通知と到着
+notifications-stay-up-to-date-with = 新作、トレンド、おすすめを常にチェック
+pin-prompt-profile-lock-is-currently-on = プロフィールロックは現在有効です。
+search-bar-clear-search = 検索をクリア
 search-bar-search = 検索
+search-bar-search-input = 検索入力
+search-bar-titles-people-genres = タイトル、人物、ジャンル
+subtitle-drawer-no-subtitles-detected-for-this = このストリームにはサブタイトルが検出されませんでした。
+subtitle-drawer-subtitle-timing-offset = サブタイトルのタイミングオフセット
 subtitle-drawer-subtitles = 字幕
+vibe-row-scroll-left = 左にスクロール
+vibe-row-scroll-right = 右にスクロール
+video-player-forward-10s = 10秒進める
+video-player-fullscreen = フルスクリーン
 video-player-rewind-10s = 10秒戻る
+whos-watching-add-profile = プロフィールを追加
+whos-watching-kids = キッズ
+help-ui-center = ヘルプセンター
+help-ui-browse = ブラウズ
+help-ui-signin = サインイン
+help-ui-hero-title = どうやってお手伝いできますか？
+help-ui-search-label = 検索
+help-ui-search-placeholder = 質問、トピック、または問題を入力
+help-ui-popular = 人気のトピック
+help-ui-explore = トピックを探索
+help-ui-quick-links = クイックリンク
+help-ui-need-more = さらに手伝いが必要ですか？
+help-ui-contact-us = お問い合わせ
+help-ui-language-label = お好みの言語を選択:
+help-ui-back = ヘルプホームに戻る
+help-ui-related = 関連記事
+help-ui-helpful = この記事は役立ちましたか？
+help-ui-yes = はい
+help-ui-no = いいえ
+help-ui-thanks = ご意見ありがとうございます。
+help-ui-tell-more = 不足していた部分を教えてください
+help-ui-recommended = あなたにおすすめ
+help-ui-additional = 追加の検索結果
+help-ui-read = 記事を読む
+help-ui-account = アカウント
+help-ui-signout = { $brand } からログアウト
+help-ui-results-count-link = 「{ $query }」に関するすべての結果を見る
+help-ui-results-none = 「{ $query }」に関する結果が見つかりません。
+help-ui-results-hint = スペルを確認してください、または fewer words を試してください、またはトピックをブラウズしてください。
+help-ui-results-empty = ヘルプセンターを検索するには、いくつかの単語を入力してください。
+help-ui-page-prev = 前のページ
+help-ui-page-next = 次のページ
+help-ui-page-n = ページ { $n }
+help-ui-suggestions = 推奨記事
+help-ui-contact-title = お問い合わせ
+help-ui-contact-prompt = 詳しく教えていただければ、最適な解決策をご案内いたします
+help-ui-describe = 問題を説明してください
+help-ui-mail-subject = サポート依頼
+help-ui-mail-intro = ここに問題を説明してください：
+help-ui-mail-details = 自動的に追加される詳細
+help-ui-mail-feedback = 記事に対するフィードバック：{ $title }
+help-ui-ql-profiles = プロフィールを管理
+help-ui-ql-language = 表示言語を変更
+help-ui-ql-signin = サインイン
+help-ui-ql-copyright = 著作権問題を報告
+help-ui-ql-title = { $brand } にあるタイトルに関するフィードバック
+help-ui-ql-email = { $help_email } までメールでお送りください
+help-ui-not-found-title = その記事は見つかりませんでした
+help-ui-not-found-body = 移動した可能性があります、またはリンクが間違っている可能性があります。ヘルプセンターを検索するか、トピックをブラウズしてください。
+help-ui-legal-terms = 利用規約
+help-ui-legal-privacy = プライバシー
+help-ui-legal-cookies = クッキーポリシー
+help-ui-legal-dmca = DMCA
+help-ui-legal-disclaimer = 免責事項
+help-ui-doc-title = { $brand } ヘルプセンター
+help-topic-account = アカウントとプロフィール
 help-topic-fix = 問題を修正する
 help-topic-watching = 視聴
 help-topic-start = 始める
@@ -65,7 +189,89 @@ help-art-profiles-manage-body =
 help-art-switch-profile-title = プロフィールを切り替える方法
 help-art-switch-profile-summary = ページを離れることなく、誰が視聴中かを変更します。
 help-art-switch-profile-keywords = 切り替え 変更 プロフィール 誰が視聴中 メニュー
+help-art-switch-profile-body =
+    1. ページの右上にあるプロフィールメニューを開きます。
+    2. 使用したいプロフィールを選択します。
+    3. プロフィールにPINが設定されている場合、4桁のPINを入力して続行します。
+
+    おすすめコンテンツ、<b>マイリスト</b> および <b>続きを再生</b> は選択したプロフィールによって変わります。
+
+    !! 注意: プロフィールにPINでロックできます。詳しくは <a=/help/article/profile-pin>プロフィールPINの追加、編集、または削除方法</a> を参照してください。
+
+    @@ profiles
+help-art-profile-pin-title = プロフィールPINの追加、編集、または削除方法
+help-art-profile-pin-summary = 4桁のPINでプロフィールをロックし、正しい人物しか開けないようになります。
+help-art-profile-pin-keywords = pin lock profile lock code passcode four digit secure
+help-art-profile-pin-body =
+    プロフィールPINは4桁です。誰もがプロフィールを選択する前にPINを入力する必要があります。
+
+    ## PINを有効にするか変更する
+    1. <b>プロフィールの管理</b> を開き、プロフィールを選択します。
+    2. <b>プロフィールロック</b> を有効にして4桁を入力します。
+    3. <b>保存</b> を選択します。
+
+    ## PINを削除する
+    1. <b>プロフィールの管理</b> を開き、プロフィールを選択し、現在のPINを入力します。
+    2. <b>プロフィールロック</b> を無効にして<b>保存</b> を選択します。
+
+    !! 注意: PINはこのデバイスに保存され、他の人がこのブラウザのプロフィールにアクセスできないようにします。しかし、ブラウザの設定を開けることができる人には強力なロックではありません。PINを忘れたら、<a=/help/article/forgot-pin>プロフィールPINを忘れました</a> を参照してください。
+
+    @@ profiles
+help-art-kids-profile-title = 子供用プロフィールの作成方法
+help-art-kids-profile-summary = 子供用プロフィールは若い視聴者向けに選ばれたタイトルを表示し、それ以外のものは手の届かない場所に保ちます。
+help-art-kids-profile-keywords = kids children child family parental controls safe young profile
+help-art-kids-profile-body =
+    子供用プロフィールは、若い視聴者向けに適したタイトルのみを表示し、成熟した行をページから削除します。
+
+    1. <b>プロフィールの管理</b> を開き、<b>プロフィールの追加</b> を選択します。
+    2. このプロフィールに<b>キッズモード</b> を有効にします。
+    3. 名前とアイコンを選択し、<b>保存</b> を選択します。
+
+    子供が他のプロフィールに切り替えるのを防ぐには、すべての成人プロフィールにPINを設定してください。詳しくは <a=/help/article/profile-pin>プロフィールPINの追加、編集、または削除方法</a> を参照してください。
+
+    !! 注意: タイトルは独立したソースから取得され、すべてのタイトルにレーティングが付いているわけではありません。子供用プロフィールは子供が見つけることができる内容を減らしますが、一緒に見るのを代替するものではありません。
+
+    @@ profiles
+help-art-need-account-title = アカウントが必要ですか？
+help-art-need-account-summary = アカウントがなくてもブラウジングや視聴はできます。アカウントがあると追加されるものがあります。
+help-art-need-account-keywords = アカウント サインアップ 登録 ログイン 必要 メンバーシップ
+help-art-need-account-body =
+    アカウントを必要とせず、{ $brand }でブラウズ、検索、視聴できます。
+
+    今日、プロフィール、リスト、視聴進捗はこのブラウザ、このデバイスに保存されています。デバイス間でこれらを同期するアカウントが構築中です。それらが利用できるまで、サインインページはプレビューであり、実際のアカウントを作成しません。
+
+    !! 注意: { $brand }はアカウントを作成する際にカード番号を要求しません。詳しくは <a=/help/article/free-to-use>{ $brand }は無料ですか？</a> を参照してください。
+help-art-sign-in-title = サインインとサインアウト
+help-art-sign-in-summary = 今日のサインインページの動作と、それが予期せず動作しない場合の対処法。
+help-art-sign-in-keywords = サインイン ログイン ログイン サインアウト ログアウト パスワード メール サインインできない
+help-art-sign-in-body =
+    サインインページは構築中のアカウントのプレビューです。続けるを選択すると、このデバイスのプロフィールに移動します。パスワードやメールアドレスはまだチェックされていません。
+
+    ## サインアウト
+    プロフィールメニューを開き、<b>サインアウト</b>を選択してください。保存されたプロフィールはこのデバイスに残ります。
+
+    ## サインインが動作しない
+    - ページを再読み込みし、もう一度試してください。
+    - ブラウザがこのサイトにデータを保存することを許可しているか確認してください。詳しくは <a=/help/article/saved-data>プロフィール、リスト、進捗が保存される場所</a> を参照してください。
+    - 問題が続く場合は、<a=/help/contact>お問い合わせ</a> ページからお知らせください。
+help-art-saved-data-title = プロフィール、リスト、進捗が保存される場所
+help-art-saved-data-summary = プロフィール、PIN、視聴進捗はこのブラウザ、このデバイスに保存されています。
+help-art-saved-data-keywords = 保存データ ストレージ ローカル ブラウザ デバイス 損失 同期 進捗 歴史 プロフィール クッキー
+help-art-saved-data-body =
+    { $brand }は、使用しているデバイスのブラウザのローカルストレージにプロフィール、PIN、視聴進捗を保存しています。これらはまだアカウントにアップロードされていません。
+
+    ## これは何を意味するか
+    - 異なるブラウザやデバイスでは、プロフィールや進捗がありません。
+    - プライベートやインコグニートウィンドウでは、閉じるときにすべてのデータが削除されます。
+    - ブラウザのサイトデータをクリアすると、プロフィールや進捗が削除されます。
+    - リストは、ページが開いている間だけ続き、アカウントが利用できるまで続きます。
+
+    ## 何がサーバーに送信されるのか
+    タイトルを開いたり、再生を始めたりすると、アプリがおすすめサービスにそのタイトルを識別し、ランダムなセッション番号を送信します。これはあなたの名前と関連付けられていません。タイトルを停止した後、数時間以内に行列表が調整されます。詳しくは <a=/help/article/recommendations>おすすめの仕組み</a> を参照してください。
+
+    @@ data
 help-art-clear-data-title = どのように保存データを削除するか
+help-art-clear-data-summary = このブラウザからプロフィール、PIN、視聴進捗を削除します。
 help-art-clear-data-keywords = 削除 清理 リセット 削除 データ 歴史 キャッシュ ストレージ クッキー からやり直し
 help-art-clear-data-body =
     サイトデータの削除は、このブラウザで{ $brand }が保存したすべてのプロフィール、PIN、視聴記録を削除します。これは取り消すことはできません。
@@ -131,6 +337,49 @@ help-art-wont-play-body =
 help-art-playback-unavailable-title = { $brand }が「Playback Unavailable（再生不可）」と表示
 help-art-playback-unavailable-summary = メッセージの意味と次に何をすべきか
 help-art-playback-unavailable-keywords = 再生不可 エラーメッセージ ストリーミングができない プロバイダーがサポートされていない
+help-art-playback-unavailable-body =
+    You may see <b>Playback Unavailable</b> or <b>Unable to stream video. All source providers were unavailable or unsupported by your browser.</b>
+
+    It means the player asked every source it knows for this title and none returned a stream your browser can play.
+
+    1. Wait a minute and press play again. Sources go up and down.
+    2. Turn off blockers. See <a=/help/article/extensions-blockers>Extensions that block the player</a>.
+    3. Try a different browser. Some streams need features that are missing in older browsers.
+    4. Try another title to check whether the problem is only this one.
+
+    If the same title fails for a day, <a=/help/article/report-bug>tell us</a>. Include the title, the year and the browser you used.
+
+    @@ diagnostics
+help-art-black-screen-title = 黒い画面で音が聞こえる
+help-art-black-screen-summary = 画像が表示されていませんが、タイトルの音が聞こえます。
+help-art-black-screen-keywords = 黒い画面 画像がない 音のみ ビデオが表示されない 空白 グリーン画面
+help-art-black-screen-body =
+    1. <b>F</b> を押してフルスクリーンを離れて再入力するか、<b>Esc</b> を押し再生をもう一度行います。
+    2. ページをリロードします。
+    3. ブラウザの設定でハードウェアアクセラレーションをオフにして、ブラウザを再起動して再度試してください。
+    4. ブラウザとグラフィックドライバを更新します。
+    5. 他のブラウザを試してください。
+
+    !! Note: 一部のブラウザ拡張機能がページの色を変更したりメディアをブロックしたりするため、画像が隠れることがあります。See <a=/help/article/extensions-blockers>Extensions that block the player</a>.
+
+    @@ diagnostics
+help-art-buffering-title = バッファリング、フリーズ、または遅い開始
+help-art-buffering-summary = ストリームが頻繁に一時停止してデータを読み込む改善方法
+help-art-buffering-keywords = バッファリング ラグ 遅延 フリーズ スターティング スピナー コネクション速度 質量
+help-art-buffering-body =
+    接続がビデオが必要な速度よりも遅くなると、ストリームが一時停止します。
+
+    - 同じネットワークを使用する他のタブ、ダウンロード、デバイスを閉じます。
+    - ルーターに近づいたり、ケーブルを使用します。
+    - 1分間待ってから再生を再開します。
+    - プロキシをオフにします、またはプロキシで近いサーバーを選択します。
+    - あとで再度試してください。ソースは忙しい時間帯では遅くなります。
+
+    ソースが提供する品質レベルを決定するため、再生中に画像の鮮鋭度が変化する可能性があります。
+
+    @@ diagnostics
+help-art-subtitles-missing-title = 字幕が表示されないか、同期していない
+help-art-subtitles-missing-summary = 字幕が表示されない、または間違った言語や音声に遅れています。修正してください。
 help-art-subtitles-missing-keywords = 字幕 キャプション 語言が合っていない 遅れ 早すぎる CC テキスト
 help-art-subtitles-missing-body =
     1. プレーヤーの <b>音声と字幕</b> を選択し、字幕の言語が選択されているか確認してください。
@@ -173,6 +422,49 @@ help-art-fix-phone-body =
 help-art-fix-tv-title = テレビの問題を修正する
 help-art-fix-tv-summary = テレビブラウザやキャストで視聴する際の手順
 help-art-fix-tv-keywords = テレビ スマートテレビ キャスト チャンネル ハイデジタル スティック ブラウザ
+help-art-fix-tv-body =
+    { $brand }にはテレビ用アプリがありません。テレビのウェブブラウザで視聴するか、コンピュータやスマートフォンのブラウザタブを送信してください。
+
+    - テレビのソフトウェアとブラウザを更新してください。
+    - テレビまたはストリーミングスタックを再起動してください。
+    - タブをキャストする場合は、送信デバイスが同じネットワークにあり、そのデバイス上の他のタブを閉じてください。
+    - テレビのブラウザが遅い場合は、代わりにコンピュータからタブを送信してください。
+
+    <a=/help/article/watch-on-tv>テレビで視聴する方法</a>をご覧ください。
+
+    @@ diagnostics
+help-art-extensions-blockers-title = プレイヤーをブロックする拡張機能
+help-art-extensions-blockers-summary = 広告ブロッカーとプライバシーツールはストリームの読み込みを停止する可能性があります。
+help-art-extensions-blockers-keywords = 拡張機能 adblock ublock ghostery プライバシー ブロッカー スクリプト ブロッキング vpn dns フィルター
+help-art-extensions-blockers-body =
+    プレイヤーは第三者のソースからストリームを読み込みます。他のサイトからのスクリプト、フレーム、メディアをブロックするツールはこれを停止する可能性があります。
+
+    1. 拡張機能を開き、このサイトのために一時停止し、再読み込みしてください。
+    2. ネットワーク全体をフィルタする拡張機能（DNSフィルタや学校や職場のネットワークなど）を使用している場合は、別のネットワークを試してください。
+    3. 再生がその後正常に動作する場合、{ $brand }を拡張機能の許可リストに追加してください。
+
+    !! 注意：ストリーミングを視聴するために拡張機能やコーデックをインストールすることを決して求めません。そのようなページは閉じてください。
+
+    @@ diagnostics
+help-art-rows-wont-load-title = 行または画像が読み込まれません
+help-art-rows-wont-load-summary = ページに空の行、スピナー、または欠落した画像が表示されます。
+help-art-rows-wont-load-keywords = 行 空 読み込み ブランク ページ 画像 写真 ポスター 読み込み ホーム エラー 推奨 下
+help-art-rows-wont-load-body =
+    ホームページの行は推奨サービスから取得されます。ポスターと詳細情報はカタログサービスから取得されます。どちらかがアクセスできない場合、空の行や読み込みスピナーが表示される可能性があります。
+
+    1. ページを再読み込みしてください。
+    2. 接続を確認してください。
+    3. このサイトのブロッカーをオフにしてください。詳しくは <a=/help/article/extensions-blockers>プレイヤーをブロックする拡張機能</a> をご覧ください。
+    4. 数分後に再度試してください。
+
+    推奨サービスがダウンしている場合でも、検索ページや保存したアイテムは正常に動作します。問題が1時間以上続く場合は、<a=/help/article/report-bug>お知らせください</a>。
+
+    @@ diagnostics
+
+    @@ refresh
+help-art-list-missing-title = 「マイリスト」または進捗が消えました
+help-art-list-missing-summary = リストまたは「続きを視聴」の行が空になる理由と、どうすればよいのかについて説明します。
+help-art-list-missing-keywords = マイリスト 消えました 消えた 空 進捗 リセット
 help-art-list-missing-body =
     { $brand }はこのブラウザでプロフィールと進捗を保存しています。これらが見つからないのは以下のときです。
 
@@ -348,6 +640,51 @@ help-art-new-popular-body =
 help-art-recommendations-title = おすすめの仕組み
 help-art-recommendations-summary = 行が選ばれる方法と、それを変更できる方法について説明します。
 help-art-recommendations-keywords = おすすめ 行 推奨 あなたが視た 味 アルゴリズム あなた用 パーソナライズド
+help-art-recommendations-body =
+    ホームページの行は、タイトルの説明、ジャンル、クレジットから構成されます。意味が近いタイトルは1行にグループ化されます。例えば、10年間とジャンル、または<b>Like</b>に続いてあなたが見たタイトル。
+
+    ## 行が変わる要因
+    - タイトルを開始する。おすすめサービスは、あなたがどのジャンルにアクセスするかを学習し、約1日間行を調整します。
+    - 使用するプロフィール。キッズプロフィールは、若い視聴者向けのタイトルのみを表示します。
+
+    ## 変わらないこと
+    行は、あなたが支払う金額、住んでいる場所、誰かによって形成されません。サービスは、ランダムなセッション番号のみを確認するため、あなたの名前やメールアドレスは使用しません。詳しくは<a=/help/article/privacy-data>{ $brand }が収集するデータは?</a>をご覧ください。
+
+    @@ data
+help-art-trailers-clips-title = トレーラーとクイックビデオ
+help-art-trailers-clips-summary = コミットする前にタイトルをプレビューします。
+help-art-trailers-clips-keywords = トレーラー クイックビデオ プレビュー 短い動画 テーザー 音量ミュート 自動再生 プレビュー
+help-art-trailers-clips-body =
+    - コンピュータでタイトルカードにマウスをオーバーするか、詳細を開くとトレーラーのプレビューが表示されます。
+    - <b>クイックビデオ</b>は、スクロールできる短い縦のプレビューを表示します。
+    - スピーカーのボタンを使用して、プレビューの音量をオンまたはオフにします。あなたの選択はプロフィールに保存されます。
+
+    プレビューが自動的に始まらないようにするには、<b>設定</b>を開き、<b>再生設定</b>を選択し、<b>自動再生プレビュー</b>をオフにします。
+help-art-what-is-title = What is { $brand }?
+help-art-what-is-summary = { $brand }についての短い説明と、それが行うことと行わないこと。
+help-art-what-is-keywords = what is about streams service explain index links catalog netflix like
+help-art-what-is-body = { $brand } は次に見る映画や番組をお手伝いします。お気に入りのものを学習し、カタログをあなたのページに並べます。<br><br>{ $brand } はリンクのインデックスです。動画をホストしたりアップロードしたりしません。再生ボタンを押すと、プレイヤーが独立したソースからストリームを尋ね、最初に動作するものを再生します。詳しくは<a=/help/article/sources>タイトルの出所</a>をご覧ください。<br><br>購入するものはありませんし、サブスクリプションもありません。詳しくは<a=/help/article/free-to-use>{ $brand } は無料ですか？</a>をご覧ください。
+help-art-getting-started-title =  { $brand } の始まり方
+help-art-getting-started-summary = 最初の5分間：プロフィール、タイトルの見つけ方、保存方法。
+help-art-getting-started-keywords = 始まり方 初心者 初めて ツアー 新しいユーザー 使い方ガイド 基本
+help-art-sources-title = タイトルの出所
+help-art-sources-summary = { $brand } がストリームを見つける方法、タイトルが1日は動くが次の日は動かない理由。
+help-art-sources-keywords = ソース プロバイダー ホストリンク サードパーティ 出所 カタログ TMDB メタデータ 可用性
+help-art-contribute-title = どうやって貢献できますか？
+help-art-contribute-summary = アイデア、修正、翻訳、バグ報告は歓迎します。
+help-art-contribute-keywords = 貢献 貢献する 志願者 翻訳 翻訳 コード GitHub 帮助 改善 建議
+help-art-contribute-body =
+    { $brand }はオープンで構築されています。あなたは以下の方法で協力できます:
+
+    - <b>翻訳。</b>インターフェーステキストは plain text ファイルに保存されており、1つの言語ごとに1つのファイルがあります。したがって、翻訳は編集可能なテキストファイルです。
+    - <b>バグ報告。</b> <a=/help/article/report-bug>問題を報告</a>をご覧ください。
+    - <b>修正と機能。</b>説明またはパッチを送信してください。
+    - <b>アイデア。</b>ヘルプセンターまたはアプリが何をしたいか教えてください。
+
+    <a=mailto:{ $contribute_email }>{ $contribute_email }</a>に、何をしたいかについて数行記述してください。
+help-art-install-app-title = { $brand }をアプリとしてインストールする方法
+help-art-install-app-summary = { $brand }をホーム画面またはデスクトップに追加し、独自のウィンドウで開くようにします。
+help-art-install-app-keywords = アプリインストールPWAホーム画面に追加デスクトップショートカットアイコンウェブアプリ
 help-art-install-app-body =
     { $brand } はウェブアプリです。ストアからダウンロードするものではありません。ブラウザでインストールできるので、独立したウィンドウで開き、独自のアイコンを持ちます。
 
@@ -384,6 +721,51 @@ help-art-watch-on-tv-body =
 help-art-copyright-title = 著作権問題を報告する方法
 help-art-copyright-summary = 権利保持者はリンクの削除を依頼できます。
 help-art-copyright-keywords = 著作権 DMCA 削除要求 権利保持者 削除 通報 通知 法的
+help-art-copyright-body =
+    { $brand }はビデオファイルをホストしていません。他のサービスがホストするタイトルへのリンクをリストしています。タイトルの権利をお持ちで、リンクが権利を侵害していると信じている場合は、お知らせを送ってください。我々はそれを確認します。
+
+    お知らせには次の内容を含める必要があります:
+    1. あなたの名前と連絡先情報。
+    2. あなたが所有する作品の説明。
+    3. { $brand }上のページのアドレス。
+    4. あなたが権利保持者であるか、それらのために行動できると主張する声明。
+
+    <a=mailto:{ $help_email }>{ $help_email }</a>に送信し、件名を<b>DMCA通知</b>とします。完全なプロセスは<a=/dmca>DMCAページ</a>にあります。
+help-art-title-feedback-title = { $brand }上のタイトルに関するフィードバック
+help-art-title-feedback-summary = 誤った説明、欠落しているタイトル、または再生できないタイトルを報告してください。
+help-art-title-feedback-keywords = フィードバックタイトル誤った説明欠落しているリクエスト映画シリーズ追加報告誤ったポスター
+help-art-title-feedback-body =
+    <a=mailto:{ $help_email }>{ $help_email }</a>に書き、次の内容を含めてください:
+
+    - タイトルと年
+    - { $brand }上のそのページのアドレス
+    - 何が間違っているか、例えば誤ったポスター、欠落しているシーズン、または再生できないタイトル
+
+    詳細は公開カタログから取得されるため、誤った説明はそのソースで修正するのが最善です。我々は受け取った修正を伝えることができます。
+help-art-report-bug-title = 問題を報告
+help-art-report-bug-summary = 我々が迅速にバグを見つけ、修正できるように含めるべきものです。
+help-art-report-bug-keywords = 問題報告問題エラークラッシュ壊れた動作しないフィードバック連絡
+help-art-report-bug-body =
+    我々がどれだけ情報を得るかによって、問題を解決するスピードが変わります。以下の情報をご提供ください:
+
+    1. あなたが行っていたことと、期待していたこと。
+    2. 実際に起きたこと、および表示されたメッセージ。
+    3. 再生に関するものであれば、タイトル。
+    4. あなたのデバイスとブラウザ。
+
+    <a=/help/contact>Contact Us</a> ページには、ブラウザの詳細情報を自動で埋め込んでメールを開くボタンがあります。
+
+    @@ diagnostics
+cookie-sheet = <b>{ $brand }</b> は、プロフィールや設定情報を保存し、許可された場合、おすすめ情報をパーソナライズするためにクッキーを使用しています。
+cookie-learn = 詳しくはこちら
+cookie-reject = 拒否
+cookie-accept = 承諾
+cookie-dismiss = 閉じる
+cookie-link = クッキーの設定
+cookie-center-title = プライバシー設定センター
+cookie-save = 設定を保存
+cookie-always-active = 常に有効
+cookie-details = クッキーの詳細
 cookie-hide-details = 詳細を隠す
 cookie-nav-general = 一般説明
 cookie-nav-essential = 必須クッキー
@@ -423,6 +805,47 @@ cookie-third =
     ポスターと詳細情報は公開されている映画カタログから取得され、ストリームは独立したソースから取得されます。これらのウェブサイトは、ブラウザがそれらから読み込まれるときにあなたのIPアドレスを受け取り、独自のクッキーを設定する可能性があります。これらはここからオフにすることはできません。
 
     <a=/help/article/sources>タイトルの出所</a>をご覧ください。
+cookie-ads = 広告用クッキー、トラッカー、または分析ツールは使用していません。
+help-ui-foryou = このデバイスに関するあなたのサポート
+help-ui-recommended-inline = あなたにおすすめ
+help-card-diagnostics-title = このデバイスを確認
+help-card-diagnostics-body = 接続、ブラウザ、および私たちのサービスをテストしてください。
+help-card-profiles-title = あなたのプロフィール
+help-card-profiles-body = PINまたはキッズモードを持つプロフィールを確認してください。
+help-card-data-title = 保存されたデータ
+help-card-data-body = 進捗をクリア、おすすめをリセット、またはやり直してください。
+help-card-language-title = 言語
+help-card-language-body = 言語を選択するか、ブラウザの言語を使用してください。
+help-card-cookies-title = クッキーの選択
+help-card-cookies-body = 保存されているものと共有されているものを確認してください。
+help-card-refresh-title = 最新バージョン
+help-card-refresh-body = 最新バージョンを取得するために再読み込みしてください。
+help-act-run = チェックを実行
+help-act-running = チェック中…
+help-act-copy = 結果をコピー
+help-act-copied = コピー済み
+help-act-email = 結果をメール
+help-act-fix = どう修正するか
+help-act-summary-ok = このデバイスではすべて正常です。
+help-act-d-connection = インターネット接続
+help-act-d-browser = ブラウザ
+help-act-d-video = ビデオ再生
+help-act-d-storage = 保存データ
+help-act-d-fullscreen = フルスクリーン
+help-act-d-engine = レコメンデーションサービス
+help-act-d-sources = ストリームソース
+help-act-d-catalog = 映画・シリーズカタログ
+help-act-v-online = オンライン
+help-act-v-offline = オフライン
+help-act-v-speed = { $type }, 約 { $mbps } Mbps
+help-act-v-supported = 対応
+help-act-v-unsupported = 非対応
+help-act-v-hls-native = ビルトインHLS
+help-act-v-mse = メディアソース拡張
+help-act-v-blocked = ブロックまたは満杯
+help-act-v-reachable = { $ms } msで到達可能
+help-act-v-unreachable = 到達不可
+help-act-v-timeout = { $s }秒以内に応答なし
 help-act-data-title = このデバイス上のあなたのデータ
 help-act-data-lang = 言語: { $lang }
 help-act-clear-progress = 視聴進捗をクリア
@@ -754,6 +1177,67 @@ legal-dmca-3-b4 = <strong>通知を送る先：</strong> { $support_email }
 legal-dmca-3-b5 = 我々はすべての通知を審査し、上記の法定要件を満たすリンクをインデックスから削除します。
 legal-dmca-3-b6 = <strong>反通知：</strong> あなたがリンクが誤って削除されたと信じている場合、17 U.S.C. § 512(g) の下で反通知を提出できます。
 legal-dmca-4-title = 4. 重要な制限 — 我々はリンクのみを削除できます
+legal-dmca-4-body =  { $brand } はメディアファイルをホストしていないため、検索インデックスからリンクを削除することができ only ます。DMCA通知により、ホストされているサーバーから下層コンテンツを削除することはできません。
+legal-dmca-5-title = 5. 再度の著作権侵害ポリシー
+legal-dmca-5-body = 適切な状況において、かつ { $brand } の独断で、繰り返し著作権侵害を行っているユーザーまたはアカウントのアクセスを無効または終了する場合があります。
+legal-dmca-6-title = 6. 責任の否認
+legal-dmca-6-body = DMCA通知に対応して検索インデックスからリンクを削除することにより、 { $brand } が著作権侵害が発生したことを認めているとは限りません。
+legal-disclaimer-title = 免責事項
+legal-disclaimer-updated = 最終更新: 2026年8月
+legal-disclaimer-1-title = 1. コンテンツホスティングなし
+legal-disclaimer-1-body = { $brand } は、公開されている埋め込まれたメディアリンクのリンク集および検索エンジンです。弊社のサーバー上に動画、音声、またはメディアコンテンツをホスト、アップロード、保存、送信、または制御することはありません。
+legal-disclaimer-2-title = 2. 第三者コンテンツ — 責任の否定
+legal-disclaimer-2-body = { $brand } でインデックスされたリンクからアクセス可能なすべてのコンテンツは、外部の独立した第三者のソースから取得されます。{ $brand } は、そのコンテンツの法的性質、正確性、品質、または利用可能性について制御せず、責任も負いません。
+legal-disclaimer-3-title = 3. ユーザーのリスクの認識
+legal-disclaimer-3-body = あなたは、{ $brand } の使用および外部埋め込まれたリンクを通じてコンテンツへのアクセスが、すべてあなたの責任であることを承認し同意します。{ $brand } は、明示的または暗黙的なすべての保証を明示的に否定します。
+legal-disclaimer-4-title = 4. リンクの利用可能性
+legal-disclaimer-4-body = { $brand } でインデックスされた埋め込まれたリンクは、第三者のサーバー上のリソースを指します。リンクされたコンテンツの継続的な利用可能性、品質、または完全性を保証することはできませんし、リンクが突然壊れたり利用できなくなったりする可能性があります。
+legal-disclaimer-5-title = 5. 情報の正確性
+legal-disclaimer-5-body = { $brand } で表示されるメタデータ（タイトル、説明、評価、画像など）は、TMDBなどの第三者データプロバイダーから取得されます。このメタデータの正確性や完全性を保証することはできません。
+help-ui-kind-policy = ポリシー
+help-ui-filter-all = すべて
+help-ui-filter-articles = ヘルプ記事
+help-ui-filter-policies = ポリシー
+help-ui-recent = 最近の検索
+help-ui-clear = クリア
+help-ui-did-you-mean = 「{ $query }」を意味しますか？
+help-ui-viewed = 最近見た
+help-ui-on-this-page = このページで
+help-ui-other-policies = その他のポリシー
+help-ui-section-link = このセクションへのリンク
+help-ui-policy-questions = このポリシーに関する質問がありますか？
+help-topic-legal = 法的およびポリシー
+help-group-policies = ポリシー
+help-art-fake-sites-title = 偽の { $brand } サイトとメッセージの見分け方
+help-art-fake-sites-summary = 公式のアドレス、私たちが決して求めないもの、そしてコピーについての対処法
+help-art-fake-sites-keywords = 偽サイト シュミレーション フィッシング コピー イミテーション 公式アドレス 安全なダウンロード パスワード 支払いメール
+help-art-fake-sites-body =
+    人気のサイトのコピーは常に現れます。これらは{ $brand }に属するアドレスだけです:
+
+    - <b>streams.watch</b>、アプリ
+    - <b>help.streams.watch</b>、このヘルプセンター
+    - <b>@streams.watch</b>メールアドレス、例えば<a=mailto:{ $help_email }>{ $help_email }</a>
+
+    ## 以下のものは決して求めません
+    - カード番号、銀行の詳細、または支払いに関するもの。{ $brand }は無料です。詳しくは<a=/help/article/free-to-use>{ $brand }は無料ですか？</a>
+    - メール、チャット、またはサインインページ以外のフォームでパスワードを。
+    - ダウンロード、拡張機能、コーデック、または視聴のためにアップデート。
+
+    ## 偽サイトを見つけた場合
+    1. ページを閉じて、詳細を入力しない。
+    2. パスワードを入力した場合は、そのサイトでパスワードを変更する。
+    3. アドレスを<a=mailto:{ $help_email }>{ $help_email }</a>に送るようお願いする。
+help-art-security-report-title = セキュリティ問題を報告する
+help-art-security-report-summary = 安全に私たちに弱さを伝える方法。
+help-art-security-report-keywords = セキュリティの脆弱性 バグボンタ レスポンシブルディスコロール エクスプロイト ハック レポート 弱さ
+help-art-security-report-body =
+    他人のデータを読む方法、プロフィールPINを回避する方法、またはサイトを壊す方法を見つけた場合は、他の人に伝える前に私たちに教えてください。
+
+    1. <a=mailto:{ $help_email }>{ $help_email }</a>にメールを送り、件名を<b>セキュリティ</b>とします。
+    2. 発見した内容、再現する手順、影響を与えるページまたはアドレスを説明します。
+    3. 他の人のデータにアクセスしないでください。また、自動でリクエストを送信しないでください。
+
+    すべての報告を読みます。同じ詳細は<a=/.well-known/security.txt>/.well-known/security.txt</a>にある機械読み取り可能なファイルにもあります。
 help-art-translate-title = Help translate { $brand }
 help-art-translate-summary = Interface text lives in plain files, one per language, and anyone can improve one.
 help-art-translate-keywords = translate translation localisation localization language contribute ftl fluent grammar gender plural
@@ -810,6 +1294,31 @@ help-art-slow-pages-body =
 help-art-vpn-network-title = VPNs, school and work networks
 help-art-vpn-network-summary = Why some networks block titles or pictures, and what to try.
 help-art-vpn-network-keywords = vpn proxy school work network firewall dns filter blocked safedns restricted wifi
+help-art-is-down-title = { $brand }がダウンしていますか？
+help-art-is-down-summary = あなたのデバイスからどの部分が動作しているか確認してください。
+help-art-is-down-keywords = down outage status not working offline unavailable server maintenance error site
+help-art-is-down-body =
+    { $brand } has three parts that can fail separately:
+
+    - <b>The app</b>, which you are looking at now.
+    - <b>The film and series catalog</b>, which gives details and pictures.
+    - <b>The stream sources</b>, which provide the video.
+
+    Run the check to see which of them answers from your device. If the catalog or the sources do not answer for everyone, wait a few minutes and try again. If one is unreachable only for you, see <a=/help/article/vpn-network>VPNs, school and work networks</a>.
+
+    @@ diagnostics
+help-art-no-sound-title = There is no sound
+help-art-no-sound-summary = Fix a title that plays without audio.
+help-art-no-sound-keywords = no sound audio muted silent volume speaker bluetooth headphones autoplay
+help-art-no-sound-body =
+    1. Press <b>M</b>, or select the speaker button in the player, to unmute. Browsers often start a video muted when it begins by itself, see <a=/help/article/autoplay-blocked>Video starts muted</a>.
+    2. Press the <b>Up arrow</b> to raise the volume, and check the volume of your device.
+    3. Check that the browser tab is not muted. Right click the tab to see.
+    4. Open <b>Audio & Subtitles</b> and choose another audio track if there is one.
+    5. If you use Bluetooth, disconnect and reconnect your headphones.
+help-art-autoplay-blocked-title = Video starts muted or does not start by itself
+help-art-autoplay-blocked-summary = Why browsers stop sound from starting alone, and how { $brand } handles it.
+help-art-autoplay-blocked-keywords = autoplay blocked muted start policy browser sound auto play previews trailer
 help-art-autoplay-blocked-body =
     ブラウザは、ページが音声付きで動画を開始するのをクリックまたはタップするまで許可しません。{ $brand }は最初、音声付きで開始しようとします。ブラウザが拒否した場合、ミュート状態で開始し、ミュートスピーカーを表示し、<b>M</b>キーまたはスピーカーのボタンでミュートを解除できます。
 
@@ -1087,6 +1596,7 @@ set-lock-on = オン
 set-lock-off = オフ
 set-lock-title-on = プロフィールロックがオン
 set-lock-title-off = プロフィールロックを作成
+set-lock-body = Make this profile private with a { $digits } digit PIN that has to be entered to open it.
 set-lock-pin = 新しいPINコード
 set-lock-invalid = PINコードは{ $digits }桁必要です。
 set-lock-change = PINコードを変更
@@ -1218,6 +1728,47 @@ set-events-title = 最近のセキュリティアクティビティ
 set-privacy-export = 私のデータをダウンロード
 set-nav-overview = 概要
 set-back-to-app =  { $brand } に戻る
+set-title-playback = Playback settings
+set-title-notifications = Notification settings
+set-playback-hint = Set autoplay and previews.
+set-playback-autoplay = Autoplay and transitions
+set-notifications-hint = Manage notifications for email and push.
+set-notifications-body = Choose how this profile hears about new arrivals and updates.
+set-notify-email = Email
+set-notify-push = Push notifications
+set-account-details = Account details
+set-access-hint = サインインデバイスを管理
+set-overview-quick = クイックリンク
+set-overview-update-password = パスワードを更新
+set-overview-edit = 設定を編集
+set-overview-edit-hint = 言語、字幕、オートプレイ、通知、プライバシーなど
+set-security-access = アクセスとプライバシー
+set-privacy-hint = 個人情報をどのように使用するかを管理
+set-profiles-parental = 親の制御と権限
+set-profiles-parental-hint = 成熟度レベルを設定、タイトルをブロック
+set-profiles-settings = プロフィール設定
+set-now-watching = 今視ている
+set-activity-episode = S{ $season }:E{ $episode }
+set-activity-title = { $title } · { $episode }
+set-device-line = { $platform } · { $browser }
+set-saved = 保存
+set-done = 完了
+set-show-more = もっと見る
+set-need-help = お手伝いが必要ですか？
+set-visit-help = ヘルプセンターを訪問
+set-try-another-way = 別の方法を試す
+set-title-game-handle = ゲームハンドル
+set-title-personal-info = 個人情報のアクセス
+set-title-speed-test = インターネット速度テスト
+set-title-testing = テスト参加
+set-title-transfer = プロフィールの移行
+set-title-transfer-profile = プロフィールを移行
+set-activity-for = { $name }のアクティビティ
+set-activity-hide = このタイトルを非表示
+set-activity-hide-all = すべて非表示
+set-activity-hidden = 視聴アクティビティから削除されました
+set-activity-download = すべてダウンロード
+set-activity-report = 問題を報告
 set-csv-title = タイトル
 set-csv-season = シーズン
 set-csv-episode = エピソード
@@ -1355,6 +1906,43 @@ email-code-or-link = または、ボタンを使用してサインインして�
 email-code-button = サインイン
 email-change-subject = 新しいメールアドレスを確認してください
 email-change-title = 新しいメールアドレスを確認してください
+email-change-body = あなたのアカウントのメールアドレスを{ $new_email }に変更するよう依頼しました。ボタンで確認してください。
+email-change-button = 新しいアドレスを確認
+email-invite-subject = { $brand }に招待されました
+email-invite-title = 招待されました
+email-invite-body = アカウントを作成するため招待を受け入れてください。
+email-invite-button = 招待を受け入れる
+email-reauth-subject = あなたの{ $brand }確認コード
+email-reauth-title = あなたの確認コード
+email-reauth-body = このコードを入力して、それが本当にあなたであることを確認してください。一度しか有効ではありませんが、すぐに期限切れになります。
+email-device-subject = あなたの { $brand } アカウントに新しいデバイスがサインインしました
+email-device-title = 新しいデバイスがサインインしました
+email-device-body = { $browser } が { $system } でサインインしました。{ $where } から { $time } にサインインしました。これがあなたでしたら、何もさらには必要ありません。そうでなければ、パスワードを変更し、すべてのデバイスからサインアウトしてください。
+email-device-where = から { $country }
+email-device-button = デバイスを確認する
+help-breadcrumb-label = パンくずリスト
+help-pagination-label = ページャー
+age-badge-all = すべて
+age-aria-all = すべての年齢層に適しています
+age-aria-plus = 年齢 { $age } 以上に適しています
+set-rating-system-title = 評価ラベル
+set-rating-system-hint = どの年齢評価ラベルをご覧になっていますか。自動でサインインしたデバイスの国に合わせます。
+set-rating-system-auto = 自動
+set-rating-system-uk = イギリス（U、PG、12、15、18）
+set-rating-system-us = アメリカ（G、PG、PG-13、R、NC-17）
+row-continue-watching = 続きを再生
+row-my-list = マイリスト
+row-because-you-watched = あなたが{ $title }を見てから
+row-more-like = { $title }に似たもの
+row-todays-top-picks = 今日のあなた向けおすすめ
+row-your-next-watch = 次に見るもの
+row-gems-for-you = あなた向けの宝物
+row-we-think-youll-love = あなたがきっと好きになるもの
+row-familiar-favourites = おなじみの favorites
+row-new-releases = 新作
+collection-title = { $label } コレクション
+collection-eyebrow-event = コレクション
+collection-for-every-feeling = すべての感情に
 collection-explore-all = すべてを探索
 badge-recently-added = 最近追加
 event-autumn = 秋
@@ -1520,3 +2108,8 @@ row-np-new-genre = 新作「{ $genre }」
 row-np-under-the-radar = 注目外
 row-np-hidden-gems = 隠れた宝物
 row-np-closer-look = じっくり見てみる価値あり
+row-np-top10-language = 今日の{ $language }上位10タイトル
+row-np-top10-genre = 今日の{ $genre }上位10
+continue-watching-row-for = { $name }の続きを再生
+continue-watching-mark-watched = 視聴済みにマーク
+continue-watching-time-of = { $done }/{ $total }分

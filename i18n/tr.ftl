@@ -1,30 +1,159 @@
 action-buttons-add-to-my-list = Listeme Ekle
+action-buttons-close = Kapat
 action-buttons-i-like-this = Beğendim
 action-buttons-more-info = Daha Fazla Bilgi
+action-buttons-mute-trailer = Trailer sesini kapat
 action-buttons-rate = Puan ver
+action-buttons-replay-trailer = Trailer tekrar oynat
+action-buttons-unmute-trailer = Trailer sesini aç
+add-edit-modal-delete-profile = Profil sil
+add-edit-modal-delete-this-profile-all-viewing = Bu profili sil? Tüm izleme geçmişi ve 'İzle' listesindeki öğeler kalıcı olarak kaldırılacak.
+add-edit-modal-enter-4digit-pin = 4 haneli PIN girin
+add-edit-modal-name = Ad
+add-edit-modal-only-see-childfriendly-series-and = Sadece çocuk dostu dizileri ve filmleri görün
+add-edit-modal-require-a-4digit-pin-to = Bu profili erişmek için 4 haneli bir PIN gerekir
 add-edit-modal-save = Kaydet
+add-edit-modal-yes-delete = Evet, Sil
 browse-action-adventure = Aksiyon ve Macera
+browse-comedies = Komedi
+browse-grid-go-back = Geri dön
 browse-home = Anasayfa
 browse-scifi-fantasy = Bilim Kurgu ve Fantazi
+browse-top-10-in-the-uk = İngiltere'de Bugün En Çok İzlenen 10
 category-sub-nav-mobile-films = Filmler
+category-sub-nav-mobile-new-hot = Yeni & Popüler
 category-sub-nav-mobile-series = Diziler
 choose-icon-back = Geri
+clips-clips = Parçalar
 continue-watching-options-sheet-cancel = İptal
 continue-watching-options-sheet-remove-from-continue-watching = 'İzlemeye devam et'ten kaldır
+continue-watching-row-continue-watching = Devam Et
+continue-watching-row-scroll-left = Sola Kaydır
+continue-watching-row-scroll-right = Sağa Kaydır
 controls-overlay-audio-subtitles = Ses ve altyazı
+controls-overlay-back-to-browse = Brows'e Geri Dön
+controls-overlay-episode-selector = Bölüm Seçici
+controls-overlay-forward-10-seconds-right-arrow = İleri 10 saniye (Sağ Ok)
 controls-overlay-fullscreen-f = Tam ekran (F)
 controls-overlay-next-episode = Sonraki Bölüm
+controls-overlay-playback-speed = Oynatma Hızı
+controls-overlay-rewind-10-seconds-left-arrow = Geri 10 saniye (Sol Ok)
+episode-drawer-no-episodes-available-for-this = Bu sezon için bölüm bulunmuyor.
 games-coming-soon = Yakında
 info-modal-episodes-no-image = Resim yok
+info-modal-error-loading-details = Detaylar yüklenirken hata oluştu.
+language-browse-by-language = Dil ile Arama
+language-select-your-preferences = Tercihlerinizi seçin
 login-email-address = E-posta adresi
 login-get-started = Başla
 login-password = Şifre
+login-ready-to-watch-enter-your = İzlemeye Hazır? E-postanızı girerek abonelik oluşturun veya yeniden başlatın.
 login-sign-in = Oturum Aç
+login-unlimited-films-series-and-more = Sınırsız film, diziler ve daha fazlası
+mod-finding-optimal-stream = En iyi akış bulunuyor...
+mod-retry = Yeniden Dene
+movie-card-popup-hd = HD
+navbar-exit-kids = Çocuk Modundan Çık
+navbar-menu-current-profile = Mevcut Profil
+navbar-mobile-avatar = Avatar
 navbar-mobile-cast = Oyuncu Kadrosu
+navbar-mobile-cast-to-tv = TV'ye Gönder
+navbar-mobile-profile = Profil
+navbar-mobile-profile-menu = Profil Menüsü
+navbar-switch-to-kids-profile = Çocuk Profiline Geç
+new-popular-coming-to-the-collection-soon = Koleksiyona Yakında Geliyor
+new-popular-new-and-acclaimed = Yeni ve Övünçlendirici
+new-popular-new-series-everyone-is-watching = Herkesin İzlediği Yeni Diziler
+new-popular-newly-added-to-the-collection = Yeni Eklenen Koleksiyona
+new-popular-rising-stars-under-the-radar = Yükselen Yıldızlar: Dikkat Çekenler
+new-popular-the-best-of-2026-so = 2026'nın En İyi Oyuncuları
+new-popular-the-films-everyone-is-discussing = Herkesin Tartıştığı Filmler
+new-popular-top-10-films-in-the = İngiltere'de En İyi 10 Film
+new-popular-top-10-series-in-the = İngiltere'de En İyi 10 Seri
 new-popular-worth-the-wait = Beklemeye Değer
+not-found-alternate-dimensions = Alternatif Boyutlar
+not-found-alternate-dimensions-more-like-this = Alternatif Boyutlar: Benzeri Bu
+not-found-cinematic-background = Sinematik Arka Plan
+not-found-diagnostic-report = Tanılama Raporu
+not-found-the-targeted-router-endpoint-has = Hedeflenen yönlendirici uç noktası veya CDN uzayımızdan yüklenemedi. Lütfen oynatmayı devam ettirmek için güvenli ev akışı ortamına geri yönlendirin.
+notifications-dropdown-notifications = Bildirimler
+notifications-dropdown-youre-all-caught-up-new = Tümü izlendi — yeni gelenler burada görünecek.
+notifications-notifications-arrivals = Bildirimler & Gelenler
+notifications-stay-up-to-date-with = Yeni çıkışlar, trendler ve önerilerle güncel kalın.
+pin-prompt-profile-lock-is-currently-on = Profil Kilidi şu anda açık.
+search-bar-clear-search = Arama Temizle
 search-bar-search = Ara
+search-bar-search-input = Arama Girişi
+search-bar-titles-people-genres = Başlıklar, kişiler, türler
+subtitle-drawer-no-subtitles-detected-for-this = Bu akış için alt yazı tespit edilmedi.
+subtitle-drawer-subtitle-timing-offset = Alt Yazı Zaman Kayması
 subtitle-drawer-subtitles = Altyazı
+vibe-row-scroll-left = Sola Kaydır
+vibe-row-scroll-right = Sağa Kaydır
+video-player-forward-10s = İleri 10 Saniye
+video-player-fullscreen = Tam Ekran
 video-player-rewind-10s = 10s geri sar
+whos-watching-add-profile = Profil Ekle
+whos-watching-kids = ÇOCUKLAR
+help-ui-center = Yardım Merkezi
+help-ui-browse = Gez
+help-ui-signin = Giriş Yap
+help-ui-hero-title = Sizleri nasıl yardımcı olabiliriz?
+help-ui-search-label = Ara
+help-ui-search-placeholder = Soru, konu veya sorun yazın
+help-ui-popular = Popüler Konular
+help-ui-explore = Konuları Keşfet
+help-ui-quick-links = Hızlı Bağlantılar
+help-ui-need-more = Daha Fazla Yardım mı İstersiniz?
+help-ui-contact-us = Bize Ulaşın
+help-ui-language-label = Tercih ettiğiniz dili seçin:
+help-ui-back = Yardım Ana Sayfasına Dön
+help-ui-related = İlgili Makaleler
+help-ui-helpful = Bu makale faydalı mıydı?
+help-ui-yes = Evet
+help-ui-no = Hayır
+help-ui-thanks = Geribildirim için teşekkür ederiz.
+help-ui-tell-more = Ne eksik olduğunu bize söyle
+help-ui-recommended = Sizin için önerilenler
+help-ui-additional = Ekstra arama sonuçları
+help-ui-read = Makaleyi Oku
+help-ui-results-count =
+    { $count ->
+        [one] 1 sonuç "{ $query }" için
+       *[other] { $count } sonuç "{ $query }" için
+    }
+help-ui-account = Hesap
+help-ui-signout = { $brand } dan çıkış yap
+help-ui-results-count-link = "{ $query }" için tüm sonuçları gör
+help-ui-results-none = "{ $query }" için sonuç yok.
+help-ui-results-hint = Yazım kontrol edin, daha az kelime kullanın veya konuları gezin.
+help-ui-results-empty = Yardım Merkezi'ni aramak için birkaç kelime yazın.
+help-ui-page-prev = Önceki sayfa
+help-ui-page-next = Sonraki sayfa
+help-ui-page-n = Sayfa { $n }
+help-ui-suggestions = Önerilen makaleler
+help-ui-contact-title = Bize Ulaşın
+help-ui-contact-prompt = Daha fazla bilgi verin ve en iyi çözümü bulalım
+help-ui-describe = Sorununuzu tanımlayın
+help-ui-mail-subject = Yardım isteği
+help-ui-mail-intro = Buraya sorununuzu yazın:
+help-ui-mail-details = Otomatik olarak eklenen detaylar
+help-ui-mail-feedback = Makaleye geribildirim: { $title }
+help-ui-ql-profiles = Profilleri Yönet
+help-ui-ql-language = Görüntü dilini değiştir
+help-ui-ql-signin = Giriş Yap
+help-ui-ql-copyright = Telif hakkı ihlali bildir
+help-ui-ql-title = { $brand } da bir başlık hakkında geribildirim
+help-ui-ql-email = { $help_email } adresine e-posta gönderin
+help-ui-not-found-title = O makaleyi bulamadık
+help-ui-not-found-body = Bir yerde kaybolmuş olabilir veya bağlantı yanlış olabilir. Yardım Merkezini arayın veya konuları gezin.
+help-ui-legal-terms = Kullanım Koşulları
+help-ui-legal-privacy = Gizlilik
+help-ui-legal-cookies = Çerez Politikası
+help-ui-legal-dmca = DMCA
+help-ui-legal-disclaimer = Beyanname
+help-ui-doc-title = { $brand } Yardım Merkezi
+help-topic-account = Hesap ve Profiller
 help-topic-fix = Bir sorunu çözmek
 help-topic-watching = İzleme
 help-topic-start = Başlangıç
@@ -65,6 +194,87 @@ help-art-profiles-manage-body =
 help-art-switch-profile-title = Profilleri nasıl değiştirirsiniz
 help-art-switch-profile-summary = Sayfadan ayrılmadan kimin izlediğini değiştirin.
 help-art-switch-profile-keywords = değiştir profil kim izliyor menü değiştir
+help-art-switch-profile-body =
+    1. Sayfada sağ üstteki profilde menüyu açın.
+    2. Kullanmak istediğiniz profili seçin.
+    3. Profil bir PIN ile koruyuluyorsa, devam etmek için dört hane girin.
+
+    Öneriler, <b>Benim Liste'im</b> ve <b>Devam Et</b> seçeneği seçtiğiniz profilde değişir.
+
+    !! Not: Bir profili PIN ile kilitleyebilirsiniz. Daha fazla bilgi için <a=/help/article/profile-pin>Profili PIN ile eklemek, düzenlemek veya kaldırmak nasıl yapılır?</a> bölümüne bakın.
+
+    @@ profiller
+help-art-profile-pin-title = Profili PIN ile eklemek, düzenlemek veya kaldırmak nasıl yapılır?
+help-art-profile-pin-summary = Dört haneli bir PIN ile bir profili kilitleyin, böylece sadece doğru kişi açabilir.
+help-art-profile-pin-keywords = pin kilidi profili kilidi kod şifre dört hane güvenli
+help-art-profile-pin-body =
+    Bir profil PIN'i dört hanelidir. Profili seçeneğini kullanabilmeniz için PIN girilmesi gerekir.
+
+    ## PIN'i aç veya değiştir
+    1. <b>Profilleri Yönet</b> açın ve profili seçin.
+    2. <b>Profil Kilidi</b> özelliğini açın ve dört hane girin.
+    3. <b>Kaydet</b> seçeneğini seçin.
+
+    ## PIN'i kaldır
+    1. <b>Profilleri Yönet</b> açın ve profili seçin, ardından mevcut PIN girin.
+    2. <b>Profil Kilidi</b> özelliğini kapatın ve <b>Kaydet</b> seçeneğini seçin.
+
+    !! Not: PIN bu cihazda saklanır ve bu tarayıcıda diğer insanlardan profilin korunmasını sağlar. Tarayıcınızın ayarlarını açabilmeyen biri için güçlü bir kilitleme değildir. Unuttuysanız <a=/help/article/forgot-pin>Profili PIN'imi unuttum</a> bölümüne bakın.
+
+    @@ profiller
+help-art-kids-profile-title = Çocuk için bir profil oluşturmak nasıl yapılır?
+help-art-kids-profile-summary = Bir Çocuk profili, daha küçük izleyiciler için seçilmiş başlıklar gösterir ve diğerlerini erişilebilir olmaktan çıkarır.
+help-art-kids-profile-keywords = çocuklar çocuklar çocuk aile ebeveyn kontrolleri güvenli genç profil
+help-art-kids-profile-body =
+    Bir Çocuk profili, daha küçük izleyiciler için uygun başlıkların gösterilmesini sınırlar ve sayfalardan yetişkin satırları kaldırır.
+
+    1. <b>Profilleri Yönet</b> açın ve <b>Profil Ekle</b> seçeneğini seçin.
+    2. Bu profilde <b>Çocuk Modu</b> özelliğini açın.
+    3. Bir isim ve simge seçin, ardından <b>Kaydet</b> seçeneğini seçin.
+
+    Bir çocuğun başka bir profilde geçiş yapmasını engellemek için her yetişkin profilde bir PIN oluşturun. Daha fazla bilgi için <a=/help/article/profile-pin>Profili PIN ile eklemek, düzenlemek veya kaldırmak nasıl yapılır?</a> bölümüne bakın.
+
+    !! Not: Başlıklar bağımsız kaynaklardan gelir ve her başlık bir değerlendirme taşımayabilir. Bir Çocuk profili, çocuğun bulabileceği şeyi azaltır. Bu, birlikte izlemeyi yerine getirmeyi de değiştirmez.
+
+    @@ profiller
+help-art-need-account-title = Bir hesaba ihtiyacım var mı?
+help-art-need-account-summary = Bir hesaba sahip olmasanız da gezinebilir ve izleyebilirsiniz. Bir hesap size ekleyeceğinden bahsediyor.
+help-art-need-account-keywords = hesap kayıt giriş oturum açma gerekli üyelik
+help-art-need-account-body =
+    Bir hesaba sahip olmanıza gerek yok { $brand }'da gezinmek, aramak veya izlemek için.
+
+    Bugün profilleriniz, listeleriniz ve izleme ilerlemeniz bu tarayıcıda bu cihazda kaydedilir. Cihazlarınız arasında bu verileri tutan hesaplar geliştirilmektedir. Bu hesaplar kullanılabilir hale gelene kadar giriş sayfası bir önizleme ve gerçek bir hesap oluşturmak için kullanılmaz.
+
+    !! Not: { $brand } bir hesap oluşturmak için kart numarası sormaz. <a=/help/article/free-to-use>{ $brand } ücretsiz mi?</a> için bakın.
+help-art-sign-in-title = Giriş ve çıkış
+help-art-sign-in-summary = Giriş sayfasının şu anda ne yapacağını ve beklenmedik davranışlar gösterdiğinde ne yapacağını anlatır.
+help-art-sign-in-keywords = giriş oturum açma oturum aç login çıkış çıkış şifre e-posta giriş yapamıyorum
+help-art-sign-in-body =
+    Giriş sayfası, geliştirilen hesapların bir önizlemesidir. Devam etmek seçeneğini seçtiğinizde bu cihazdaki profillerinize yönlendirilirsiniz. Şifre veya e-posta henüz kontrol edilmez.
+
+    ## Çıkış
+    Profil menüsünü açın ve <b>Çıkış</b> seçeneğini seçin. Kaydedilen profilleriniz bu cihazda kalır.
+
+    ## Giriş çalışmıyor
+    - Sayfayı yeniden yükleyin ve tekrar deneyin.
+    - Tarayıcının bu siteye veri depolamasına izin verdiğinden emin olun. <a=/help/article/saved-data>Profilleriniz, listeleriniz ve ilerlemeniz nerede kaydedilir?</a> için bakın.
+    - Sorun devam ederse, <a=/help/contact>İletişim</a> sayfasından bize yazın.
+help-art-saved-data-title = Profilleriniz, listeleriniz ve ilerlemeniz nerede kaydedilir?
+help-art-saved-data-summary = Profiller, PIN'ler ve izleme ilerlemeleri bu tarayıcıda bu cihazda bulunur.
+help-art-saved-data-keywords = kaydedilen veri depolama yerel tarayıcı cihaz kaybolmuş senkronizasyon ilerleme tarihçe profiller çerezler
+help-art-saved-data-body =
+    { $brand } profillerinizi, PIN'lerinizi ve izleme ilerlemenizi kullanmakta olduğunuz cihazdaki tarayıcınızın yerel depolama alanında tutar. Bunların hiçbirisi henüz bir hesaba yüklenmemiştir.
+
+    ## Bu ne anlama gelir
+    - Farklı bir tarayıcı veya cihaz başlangıçta hiçbir profil ve ilerleme içermez.
+    - Özel veya gizli pencere kapatıldığında her şeyi unutur.
+    - Tarayıcınızda site verilerini temizlediğinizde profilleriniz ve ilerlemeniz silinir.
+    - Sayfa açık kalma süresince listeleriniz geçerlidir, hesaplar kullanılabilir hale gelene kadar.
+
+    ## Hangi veriler sunucularımıza gönderilir
+    Bir başlık açtıysanız veya başlatırsanız, uygulama öneri hizmetine bu başlığın adını ve bir şifresiz oturum numarasını bildirir. Bu numara isminizle ilişkilendirilmemiştir. Durdunuzdan sonra yaklaşık bir gün boyunca satır takibi yapılır. <a=/help/article/recommendations>Öneriler nasıl çalışır?</a> için bakın.
+
+    @@ data
 help-art-clear-data-title = Kaydedilen verilerin nasıl temizlendiğini öğrenin
 help-art-clear-data-summary = Bu tarayıcıdaki profillerinizi, PIN'lerinizi ve izleme ilerleme durumunu kaldırın.
 help-art-clear-data-keywords = temizle sil reset kaldır veri tarih önbellek depolama çerez baştan başla
@@ -132,6 +342,134 @@ help-art-wont-play-body =
 help-art-playback-unavailable-title = { $brand } "Oynatma Kullanılamıyor" diyor
 help-art-playback-unavailable-summary = Mesajın ne anlama geldiğini ve ne yapmanız gerektiğini gösterir.
 help-art-playback-unavailable-keywords = oynatma kullanılamıyor hata mesajı akış sağlayıcılar desteklenmeyen
+help-art-playback-unavailable-body =
+    Bazı <b>Oynatma Mevcut Değil</b> veya <b>Video akışı başlatılamadı. Tüm kaynak sağlayıcılar mevcut değil veya tarayıcınız tarafından desteklenmiyor.</b>
+
+    Oyuncu bu başlık için bildirdiği tüm kaynakları denedi ve hiçbirinden tarayıcınız oynatabileceği bir akış döndürmedi.
+
+    1. Bir dakika bekleyin ve oynatmayı tekrar deneyin. Kaynaklar zaman zaman değişebilir.
+    2. Engelleri kapatın. <a=/help/article/extensions-blockers>Engelleyen eklentiler</a> hakkında bilgi edinin.
+    3. Farklı bir tarayıcı deneyin. Bazı akışlar, eski tarayıcılar tarafından desteklenmeyen özelliklere ihtiyaç duyar.
+    4. Başka bir başlık deneyin, sorunun sadece bu başlıktan kaynaklandığını kontrol edin.
+
+    Aynı başlık bir gün boyunca başarısız olursa, <a=/help/article/report-bug>bağlantı kurun</a>. Başlık, yıl ve kullandığınız tarayıcıyı belirtin.
+
+    @@ diagnostics
+help-art-black-screen-title = Sessiz ekran
+help-art-black-screen-summary = Görüntü yok ancak başlık sesi duyulur.
+help-art-black-screen-keywords = kara ekran no image audio only video missing blank green screen
+help-art-black-screen-body =
+    1. <b>F</b> tuşuna basarak tam ekranı terk edip tekrar girin veya <b>Esc</b> tuşuna basıp tekrar oynatın.
+    2. Sayfayı yeniden yükleyin.
+    3. Tarayıcınızın ayarlarından donanım hızlandırmasını kapatın, tarayıcıyı yeniden başlatın ve tekrar deneyin.
+    4. Tarayıcınızı ve grafik sürücünüzü güncelleyin.
+    5. Farklı bir tarayıcı deneyin.
+
+    !! Not: Bazı sayfa renklerini değiştirip medya bloke eden tarayıcı eklentileri de görüntüyü gizleyebilir. <a=/help/article/extensions-blockers>Engelleyen eklentiler</a> hakkında bilgi edinin.
+
+    @@ diagnostics
+help-art-buffering-title = Oynatma gecikmeli, donmuş veya yavaş başlatma
+help-art-buffering-summary = Oynatmayı kesintisiz hale getirin.
+help-art-buffering-keywords = gecikme gecikme yavaş donma çatlama yükleme yıldızı bağlantı hızı kalite
+help-art-buffering-body =
+    İnternet bağlantınızın veri gönderme hızı videoya ihtiyaç duyduğundan daha yavaşsa oynatma durur.
+
+    - Aynı ağdan kullanan diğer sekme, indirme ve cihazları kapatın.
+    - Rötuşuza daha yakın olun veya kablo kullanın.
+    - Oynatmayı duraklatın ve bir dakika bekleyin, ardından oynatmayı tekrar basarak oyuncu öne yükleyebilsin.
+    - Bir VPN'yi kapatın veya VPN'de daha yakın bir sunucu seçin.
+    - Daha sonra tekrar deneyin. Kaynaklar yoğun saatlerde daha yavaş çalışır.
+
+    Kaynak, sunulan kalite seviyesini belirler, bu yüzden oynatma sırasında görüntü keskinliği değişebilir.
+
+    @@ diagnostics
+help-art-subtitles-missing-title = Altyazılar eksik veya senkronizasyon sorunu
+help-art-subtitles-missing-summary = Görünmeyen, yanlış dili gösteren veya konuşmaya geride kalan altyazıları düzeltin.
+help-art-subtitles-missing-keywords = altyazı alt yazı eksik yanlış dil senkron bozuk gecikme cc metin
+help-art-subtitles-missing-body =
+    1. Oynatıcıda <b>Audios & Altyazı</b> seçeneğini seçin ve bir altyazı dili seçili olduğundan emin olun.
+    2. Listede başka bir izleme yolunun varsa bunu seçin. İzleme yolları kaynaklardan gelir ve başlık başlık farklı olabilir.
+    3. <b>Ayarlar</b> kısmında tercih ettiğiniz altyazı diliyi ayarlayın. Daha fazla bilgi için <a=/help/article/language>Dil değiştirme</a> sayfasına bakın.
+    4. Metin erken veya geçse, yeniden başlatın ve tekrar oynatın. Zamanlama kaynak tarafından ayarlanır ve tek bir başlık için ayarlamamız mümkün değildir.
+
+    Hiç altyazı bulunmayan bir başlık varsa, kaynak altyazı sağlamamıştır.
+
+    @@ language
+help-art-supported-browsers-title = Desteklenen tarayıcılar
+help-art-supported-browsers-summary = En iyi çalışan tarayıcılar ve sürümler.
+help-art-supported-browsers-keywords = tarayıcı chrome firefox safari edge brave opera internet explorer sürüm güncelleme uyumlu
+help-art-supported-browsers-body =
+    { $brand } şu tarayıcıların en güncel sürümlerinde en iyi çalışır:
+
+    - Google Chrome ve diğer Chromium tarayıcıları, Edge ve Brave gibi
+    - Mozilla Firefox
+    - Apple Safari, macOS, iPhone ve iPad üzerinde
+
+    Internet Explorer desteklenmez. Tarayıcınızı güncel tutun ve sitenin JavaScript ve yerel depolama kullanmasına izin verin.
+
+    @@ tanımlama
+
+    >> Sayfa yüklenmeden önce tarayıcı bir hata gösteriyor
+    Sayfayı <b>Ctrl + Shift + R</b> (<b>Cmd + Shift + R</b> Mac'te) ile en son sürümünü almak için yeniden başlatın ve tekrar deneyin.
+help-art-fix-phone-title = Cihazınızda bir sorunu çözmek
+help-art-fix-phone-summary = iPhone, iPad ve Android için adımlar.
+help-art-fix-phone-keywords = telefon tablet android iphone ipad mobil sorun çözmek uygulama
+help-art-fix-phone-body =
+    1. Sekmeyi kapatın ve { $brand }'ı tekrar açın.
+    2. Uygulama mağazısından tarayıcınızı güncelleyin.
+    3. İzlerken veri tasarrufu veya düşük güç modunu kapatın.
+    4. Kararlı bir bağlantı olduğundan emin olun. Daha fazla bilgi için <a=/help/article/buffering>Buffering, donma veya yavaş başlatma</a> sayfasına bakın.
+    5. { $brand }'ı ev ekrana eklediyseniz ve eski görünüyor ise, kaldırın ve tekrar ekleyin. Daha fazla bilgi için <a=/help/article/install-app>{ $brand }'ı uygulama olarak nasıl kurarım</a> sayfasına bakın.
+
+    @@ tanımlama
+
+    @@ yenile
+help-art-fix-tv-title = TV'nizde bir sorunu çözmek
+help-art-fix-tv-summary = TV tarayıcısı veya cast üzerinden izlerken adımlar.
+help-art-fix-tv-keywords = TV televizyon akıllı TV chromecast cast sorun çözmek HDMI stick tarayıcı
+help-art-fix-tv-body =
+    { $brand } TV uygulaması yok. TV'nizdeki web tarayıcısı üzerinden izleyebilir veya bilgisayar veya telefonundan bir tarayıcı sekmesi göndererek izleyebilirsiniz.
+
+    - TV'nin yazılımını ve tarayıcısını güncelleyin.
+    - TV'yi veya akıllı çubuğu yeniden başlatın.
+    - Bir sekme gönderirseniz, gönderme cihazını aynı ağa bağlı tutun ve diğer sekmeleri kapatın.
+    - TV tarayıcısı yavaşsa, yerine bilgisayardan sekme gönderin.
+
+    <a=/help/article/watch-on-tv>TV'de nasıl izlenecek</a> sayfasına bakın.
+
+    @@ diagnostics
+help-art-extensions-blockers-title = Oynatıcıyı engelleyen eklentiler
+help-art-extensions-blockers-summary = Reklam engelleyiciler ve gizlilik araçları akışın yüklenmesini engelleyebilir.
+help-art-extensions-blockers-keywords = eklenti reklam engelleyici ublock fantom gizlilik engelleyici script engelleyici vpn dns filtre
+help-art-extensions-blockers-body =
+    Oynatıcı üçüncü taraf kaynaklardan akışları yükler. Diğer sitelerden betikleri, çerçeveleri veya medyayı engelleyen araçlar bu işlemi durdurabilir.
+
+    1. Eklentinizi bu site için duraklatın ve ardından sayfayı yeniden yükleyin.
+    2. Ağa yayılmış bir filtre kullanıyorsanız, örneğin bir DNS filtresi veya okul veya iş ağı kullanıyorsanız, başka bir ağa geçin.
+    3. Oynatma işlemi sonrasında çalışıyorsa, { $brand }'ı eklentinin izin verilen listesine ekleyin.
+
+    !! Not: Akış izlemek için bir tarayıcı eklentisi veya kod çözücü yüklememizi istemeyiz. Bu işlemi yapan herhangi bir sayfayı kapatın.
+
+    @@ diagnostics
+help-art-rows-wont-load-title = Satırlar veya resimler yüklenmiyor
+help-art-rows-wont-load-summary = Sayfa boş satırlar, bir dönüştürücü veya eksik resimler gösteriyor.
+help-art-rows-wont-load-keywords = satırlar boş yükleme boş sayfa resimler resimler afişler yüklenmiyor ana sayfa hata öneriler aşağı
+help-art-rows-wont-load-body =
+    Ana sayfa satırları önerme hizmetinden gelir. Afişler ve detaylar kataloğundan gelir. Herhangi biri ulaşılabilir değilse, boş satırlar veya yükleme dönüştürücüsü görebilirsiniz.
+
+    1. Sayfayı yeniden yükleyin.
+    2. Bağlantınızı kontrol edin.
+    3. Bu site için engelleyicileri kapatın. <a=/help/article/extensions-blockers>Oynatıcıyı engelleyen eklentiler</a> sayfasına bakın.
+    4. Birkaç dakika sonra tekrar deneyin.
+
+    Önerme hizmeti çalışmazsa, arama sayfası ve kaydettikleriniz hâlâ çalışır. Sorun bir saat boyunca devam ederse, <a=/help/article/report-bug>bağlantı kurun</a>.
+
+    @@ diagnostics
+
+    @@ refresh
+help-art-list-missing-title = İzleme Listem veya ilerleme kayboldu
+help-art-list-missing-summary = Bir liste veya 'Devam Et' satırının boş olmasının nedeni ve ne yapmanız gerektiğini anlatır.
+help-art-list-missing-keywords = izleme listem kayboldu kaybolmuş boş kayıp devam et izleme ilerleme sıfırlanmış
 help-art-list-missing-body =
     { $brand } bu tarayıcıda profilleri ve ilerlemeyi saklar. Kaybolabilir:
 
@@ -318,6 +656,61 @@ help-art-new-popular-body =
 help-art-recommendations-title = Öneriler nasıl çalışır
 help-art-recommendations-summary = Satırlar nasıl seçilir ve sizin bunları değiştirmeniz için ne yapabileceğinizi anlatır.
 help-art-recommendations-keywords = öneriler satırlar öneriler çünkü izlediniz tercih algoritma sizin için kişiselleştirilmiş kişiselleştirilmiş
+help-art-trailers-clips-title = Bildirimler ve parçalar
+help-art-trailers-clips-summary = Başlıkla ilgili bir şey yapmadan önce bir önizleme alın.
+help-art-trailers-clips-keywords = bildirim parçaları önizleme kısa videolar ön izleme susturmak sesi otomatik oynatma önizleme
+help-art-trailers-clips-body =
+    - Bilgisayarda bir başlık kartı üzerine gelin veya ayrıntılarını açın, bir bildirim önizlemesi görürsünüz.
+    - <b>Parçalar</b> kısa dikey önizleme parçalarını kaydırarak görebilirsiniz.
+    - Ses butonunu kullanarak önizleme sesini açıp kapatabilirsiniz. Seçiminiz profiliniz için saklanır.
+
+    Önizleme otomatik başlamaması için <b>Ayarlar</b> açın, ardından <b>Oynatma Ayarları</b> ve <b>Otomatik önizleme</b> seçeneğini kapatın.
+help-art-what-is-title = Ne demektir { $brand }?
+help-art-what-is-summary = { $brand } hakkında kısa bir açıklama ve ne yapar, ne yapmaz.
+help-art-what-is-keywords = ne demektir streams hizmeti açıklama indeks bağlantı kataloğu netflix benzeri
+help-art-what-is-body =
+    { $brand } bir sonraki film veya dizinizi bulmanıza yardımcı olur. Ne kadar beğendiğinizi öğrenir ve kataloğu bilinen akıllı akış hizmetlerine benzer bir sayfada satırlara ayırır.
+
+    { $brand } bağlantılar indeksidir. Video barındırma veya yükleme yapmaz. Oynat butonuna basıldığında, oynatıcı bağımsız kaynaklardan akış isteyerek ilk çalışabilecek olanı oynatır. <a=/help/article/sources>Başlıklar nereden gelir?</a> hakkında daha fazla bilgi için bakın.
+
+    Alışveriş yapmak gerekmez ve abonelik yoktur. <a=/help/article/free-to-use>{ $brand } ücretsiz mi?</a> hakkında daha fazla bilgi için bakın.
+help-art-getting-started-title = { $brand } ile başlangıç
+help-art-getting-started-summary = İlk beş dakikanız: profiller, bir başlık bulma ve kaydetme.
+help-art-getting-started-keywords = başlangıç başlamak ilk kez tur yeni kullanıcı nasıl kullanılır rehber temel bilgiler
+help-art-getting-started-body =
+    1. <b>Profil seçin veya oluşturun.</b> <a=/help/article/profiles-manage>Profil oluşturmak, düzenlemek veya silmek için</a> bakın.
+    2. <b>Ana sayfayı keşfedin.</b> Satırlar temaya göre gruplandırılır ve en üstteki büyük başlık değişir.
+    3. <b>Arama</b> yapmak için ok simgesini kullanın. <a=/help/article/search-browse>Arama ve gezinme</a> hakkında bakın.
+    4. <b>Bir başlık seçin</b> başlık hakkında bilgi edinmek, trailer izlemek ve oynatmak için.
+    5. <b>My List'e başlıklar ekleyin</b> için <b>+</b> butonunu kullanın.
+
+    İzlerken yardımcı olabilecek tuşları öğrenin: <a=/help/article/shortcuts>Klavye kısayolları</a>.
+help-art-sources-title = Başlıklar nereden gelir
+help-art-sources-summary = İçeriklerin { $brand } tarafından nasıl bulunacağı ve bir başlığın bir günde çalışması, bir başka günde çalışmayabilmesinin nedeni.
+help-art-sources-keywords = kaynak sağlayıcılar barındıran bağlantılar üçüncü taraf nereden kataloğu tmdb meta veri mevcutluk
+help-art-sources-body =
+    Detaylar, afişler ve puanlar bir açık film ve televizyon kataloğundan gelir. Video kendisi { $brand }'da değildir. Oynat butonuna bastığınızda, oynatıcı bağımsız üçüncü taraf kaynaklardan bir akış ister.
+
+    - Bir başlık bir kaynaktan mevcut olabilir, diğerinden olmayabilir.
+    - Bir kaynak uyarı vermeden çevrimdışı olabilir.
+    - Kalite, ses yolları ve alt metinler kaynaktan gelir.
+
+    Bu kaynakları kontrol edemeyiz veya onları kontrol ederiz. <a=/disclaimer>İhdasname</a> sayfasına bakın. Eğer hak sahibiyseniz, <a=/help/article/copyright>Bir kopya hakkı sorunu bildirmek için</a> sayfasına bakın.
+help-art-contribute-title = Ne şekilde katkıda bulunabilirim?
+help-art-contribute-summary = İdealar, düzeltmeler, çeviriler ve hata bildirimleri hoş geldiniz.
+help-art-contribute-keywords = katkıda bulunmak katkıda bulunmak gönüllü çevirmek çeviri kod github yardım iyileştirme öneriler
+help-art-contribute-body =
+    { $brand } açık kaynakla geliştirilir. Birden fazla şekilde katkıda bulunabilirsiniz:
+
+    - <b>Çeviriler.</b> Arayüz metni düz metin dosyalarında bulunur, her dil için bir dosya olduğu için çeviri bir düz metin dosyasıdır ve düzenleyebilirsiniz.
+    - <b>Hata bildirimleri.</b> <a=/help/article/report-bug>Bir sorunu bildir</a> sayfasına bakın.
+    - <b>Düzeltmeler ve özellikler.</b> Açıklama veya bir düzeltme gönderin.
+    - <b>İdealar.</b> Yardım Merkezi veya uygulama hakkında ne istiyorsanız bize söyleyin.
+
+    Ne yapmak istediğini belirterek <a=mailto:{ $contribute_email }>{ $contribute_email }</a> adresine birkaç satır yazın.
+help-art-install-app-title = { $brand }'ı bir uygulama olarak nasıl kurarım?
+help-art-install-app-summary = { $brand }'ı ev ekranına veya masaüstüne ekleyerek kendi penceresinde açmasını sağlayın.
+help-art-install-app-keywords = kur uygulama pwa ev ekranına ekleyin masaüstü kısayol simge web uygulaması
 help-art-install-app-body =
     { $brand } bir web uygulamasıdır. Uygulama mağazısından indirme yoktur. Tarayıcınız, kendi penceresinde açılıp kendi simgesiyle çalışacak şekilde kurulum yapabilir.
 
@@ -354,6 +747,127 @@ help-art-watch-on-tv-body =
 help-art-copyright-title = Telif hakkı sorunu nasıl bildireceksiniz
 help-art-copyright-summary = Telif hakkı sahipleri, bir bağlantının kaldırılması için istekte bulunabilirler.
 help-art-copyright-keywords = telif hakkı DMCA kaldırma ihlal hakkı sahibi kaldır bildir bildirme yasal
+help-art-copyright-body =
+    { $brand } video dosyalarını barındırmaz. Diğer hizmetler tarafından barındırılan başlıkların bağlantılarını listeler. Başlık haklarını sahip olduğunuzu düşünüyorsanız ve bir bağlantı bu hakları ihlal ettiğini düşünüyorsanız, bir bildirim gönderin ve inceleyeceğiz.
+
+    Bildirim şu içeriği içermelidir:
+    1. Adınız ve iletişim detayları.
+    2. Sahip olduğunuz eseri tanımlayın.
+    3. { $brand } üzerinde bu esere bağlantı olan sayfanın adresi.
+    4. Bu hakları sahibi olduğunuz veya onlar için işlem yapmaya yetkili olduğunuz ifadesi.
+
+    Bildirimi <a=mailto:{ $help_email }>{ $help_email }</a> adresine gönderin ve konu olarak <b>DMCA bildirimi</b> yazın. Tam süreç <a=/dmca>DMCA sayfası</a>nda yer alıyor.
+help-art-title-feedback-summary = Yanlış açıklama, eksik başlık veya asla oynatılmayan bir başlık raporla.
+help-art-title-feedback-keywords = geri bildirim başlık yanlış açıklama eksik istek film dizi ekle rapor yanlış afiş
+help-art-report-bug-title = Bir sorun bildir
+help-art-report-bug-summary = Bir hata için hızlıca bulup düzeltebilmemiz için neyi içermesi gerektiğini.
+help-art-report-bug-keywords = bildir hata sorun sorun issue hata çökme bozuk çalışmıyor geri bildirim iletişim
+help-art-report-bug-body =
+    Bildiriminiz ne kadar detaylı olursa, hata düzeltilmesi o kadar hızlı olur. Lütfen şu bilgileri ekleyin:
+
+    1. Yapmış olduğunuz şey ve beklendiği şey.
+    2. Gerçekleştirdiğiniz şey ve gördüğünüz herhangi bir mesaj.
+    3. Oynatma ile ilgiliyse başlık.
+    4. Cihazınız ve tarayıcınız.
+
+    <a=/help/contact>Kontak</a> sayfasında bir buton, tarayıcınızın detaylarını doldurarak bir e-posta açar.
+
+    @@ tanılama
+cookie-sheet = <b>{ $brand }</b> profillerinizi ve tercihlerinizi korumak ve izin verirseniz, önerileri kişiselleştirmek için çerezler kullanır.
+cookie-learn = Daha fazla bilgi
+cookie-reject = Reddet
+cookie-accept = Kabul et
+cookie-dismiss = Kapat
+cookie-link = Çerez Tercihleri
+cookie-center-title = Gizlilik Tercih Merkezi
+cookie-save = Tercihleri Kaydet
+cookie-always-active = Her Zaman Etkin
+cookie-details = Çerez Detayları
+cookie-hide-details = Detayları gizle
+cookie-nav-general = Genel Açıklama
+cookie-nav-essential = Gerekli Çerezler
+cookie-nav-personal = Kişiselleştirme Çerezleri
+cookie-nav-third = Üçüncü Taraf Çerezleri
+cookie-nav-ads = Reklam Çerezleri
+cookie-general =
+    Bu araç, { $brand }'ın tarayıcınızda ne tür verileri sakladığını açıklar ve isteğe bağlı kısmını kontrol etmenizi sağlar.
+
+    Çoğu tarayıcı, çerezleri ve sitenin verilerini engellemeyi veya silmeyi sağlar. Eğer bunu yaparsanız, { $brand }'ın bazı bölümleri çalışmayacak ve profilleriniz ve ilerlemeniz kaybolacak.
+
+    Buradaki seçimleriniz tarayıcınızda saklanır, bu yüzden sitenin verilerini temizlemek bu seçimleri sıfırlar.
+
+    Daha fazlası için, <a=/cookies>Çerez Politikası</a> ve <a=/privacy>Gizlilik Politikası</a> sayfalarını inceleyin.
+cookie-essential =
+    Bu öğeler, sizi talep ettiğiniz hizmeti vermek için gerekli olanlardır. Profillerinizi ve PIN'lerinizi, izlediğiniz konumları, dilinizi ve burada yaptığınız seçimleri saklarlar. Bu çerezler, cihazınıza kalır ve sunucularımıza gönderilmez. Bu çerezlerden kaçınmak mümkün değildir.
+
+    Ömür süresi: bu site verilerini temizlediğinizde kalırlar.
+cookie-essential-list =
+    - <b>streams_profiles</b> ve <b>streams_active_profile</b>: profilleriniz ve kullanmakta olan profil.
+    - <b>streams_watch_progress_v1</b>: her başlık için izlediğiniz konum.
+    - <b>streams_session</b>: giriş yaptığınızda, girişinizi.
+    - <b>streams_language</b>: seçtiğiniz dil.
+    - <b>streams_consent</b>: bu pencerede yaptığınız seçimler.
+    - <b>streams_help_votes</b>: "Bu makale faydalı mıydı?" sorusuna verdiğiniz cevaplar.
+    - <b>streams-notifications-read:default</b>: açmış olduğunuz bildirimler.
+cookie-personal =
+    Bu öğeler, { $brand }'ın satırı sizin tercihinize göre ayarlamasını sağlar. Başlık başlatıldığında, uygulama başlığı ve rastgele bir oturum numarasını öneri hizmetimize gönderir. Hizmet, yaklaşık bir gün boyunca küçük bir tercih profili tutar ve sonra bu profili siler.
+
+    Bu özelliği kapatırsanız, satırlar kişiselleştirilmez, hiçbir şey gönderilmez ve hiçbir oturum numarası saklanmaz.
+
+    Ömür süresi: bu site verilerini temizlediğinizde veya bu özelliği kapatırsanız geçerli olur.
+cookie-personal-list =
+    - <b>streams_session_id</b>: isminizle ilişkili olmayan rastgele bir sayı.
+    - <b>streams_user_affinity</b>: seçtiğiniz türler.
+cookie-third =
+    Poster ve detaylar, bir açık film kataloğundan gelir ve akışlar bağımsız kaynaklardan gelir. Bu siteler, tarayıcınızdan onlara yüklediğinizde IP adresinizi alır ve kendi çerezlerini ayarlayabilirler. Bu çerezleri buradan kapatamayız.
+
+    <a=/help/article/sources>Basliklar nereden gelir</a> sayfasını inceleyin.
+cookie-ads = Reklam çerezleri, izleyiciler veya analitikler kullanmıyoruz.
+help-ui-foryou = Bu cihaz için size özel yardım
+help-ui-recommended-inline = Sizin için öneriler
+help-card-diagnostics-title = Bu cihazı kontrol edin
+help-card-diagnostics-body = Bağlantınızı, tarayıcınızı ve hizmetlerimizi test edin.
+help-card-profiles-title = Profilleriniz
+help-card-profiles-body = Hangi profillerin bir PIN veya Kids Modu olduğunu görün.
+help-card-data-title = Kaydettiğiniz veriler
+help-card-data-body = İlerleme durumunu temizleyin, önerileri sıfırlayın veya baştan başlayın.
+help-card-language-title = Dil
+help-card-language-body = Bir dil seçin veya tarayıcınızın dilini kullanın.
+help-card-cookies-title = Çerez tercihleri
+help-card-cookies-body = Ne kaydedildiğini ve ne paylaşıldığını gözden geçirin.
+help-card-refresh-title = En son sürüm
+help-card-refresh-body = Yeniden yükleme yaparak en yeni sürümü alın.
+help-act-run = Kontrolü başlat
+help-act-running = Kontrol ediliyor…
+help-act-copy = Sonuçları kopyala
+help-act-copied = Kopyalandı
+help-act-email = Sonuçları e-posta ile gönder
+help-act-fix = Çözümü nasıl bulurum?
+help-act-summary-ok = Bu cihazda her şey düzgün görünüyor.
+help-act-summary-issues =
+    { $count ->
+        [one] 1 öğe dikkat gerektiriyor.
+       *[other] { $count } öğe dikkat gerektiriyor.
+    }
+help-act-d-connection = İnternet bağlantısı
+help-act-d-browser = Tarayıcı
+help-act-d-video = Video oynatma
+help-act-d-storage = Kaydedilen veri
+help-act-d-fullscreen = Tam ekran
+help-act-d-engine = Öneri hizmeti
+help-act-d-sources = Akış kaynakları
+help-act-d-catalog = Film ve diziler kataloğu
+help-act-v-online = Çevrimiçi
+help-act-v-offline = Çevrimdışı
+help-act-v-speed = { $type }, yaklaşık { $mbps } Mbps
+help-act-v-supported = Destekleniyor
+help-act-v-unsupported = Desteklenmiyor
+help-act-v-hls-native = Yerel HLS
+help-act-v-mse = Medya Kaynak Eklentileri
+help-act-v-blocked = Engellenmiş veya dolu
+help-act-v-reachable = { $ms } ms'de ulaşılabilir
+help-act-v-unreachable = Ulaşılabilir değil
+help-act-v-timeout = { $s } saniyede yanıt gelmedi
 help-act-data-title = Bu cihazdaki verileriniz
 help-act-data-profiles =
     { $count ->
@@ -634,6 +1148,30 @@ nf-dim6-synopsis = Kozmik bulutlarda, eski uzay kabloları, yıldız bulutları 
 nf-zone-1 = Donanım Bozuklukları
 nf-zone-2 = Sinyal Başarısızlıkları
 nf-zone-3 = Kayıp Veri Dosyaları
+nf-zone-4 = Analog Corruption
+nf-zone-5 = Void Sentinels
+nf-zone-6 = Cosmic Drift
+legal-privacy-title = Gizlilik Politikası
+legal-privacy-updated = Son güncelleme: Ağustos 2026
+legal-privacy-1-title = 1. Giriş
+legal-privacy-1-body = { $brand } bir bağlantı toplayıcı ve arama motorudur. Bu Gizlilik Politikası, hizmetimizi kullanırken kişisel bilgilerinizi nasıl topladığımızı, kullandığımızı ve koruduğumuzu açıklar.
+legal-privacy-2-title = 2. Topladığımız Bilgiler
+legal-privacy-2-body = Hizmeti sunmak ve geliştirmek için sınırlı miktarda kişisel bilgi toplarız:
+legal-privacy-2-b1 = <strong>Hesap Bilgileri:</strong> Hesap oluşturduğunuzda e-posta adresi ve görüntü adı.
+legal-privacy-2-b2 = <strong>Kullanım Verileri:</strong> Profilinize özgü anonimleştirilmiş izleme geçmişi ve tercihler.
+legal-privacy-2-b3 = <strong>Oturum Çerezleri:</strong> Güvenli şekilde oturumunuzu korumak için kullanılır.
+legal-privacy-3-title = 3. Ne Yapmıyoruz
+legal-privacy-3-body = Gizliliğiniz için kararlıyız:
+legal-privacy-3-b1 = <strong>Kişisel Verilerinizi Paylaşmıyoruz:</strong> Reklamcılar veya veri aracı sağlayıcılarla kişisel verilerinizi paylaşmıyoruz.
+legal-privacy-3-b2 = <strong>Kişisel Verilerinizi Satmıyoruz:</strong> Asla üçüncü taraflara kişisel verilerinizi satmaz, kiralamaz veya satmaz.
+legal-privacy-3-b3 = <strong>Tarayıcınızı Parmakizi Yapmıyoruz:</strong> Tarayıcı parmakizi veya cihaz tanımlama gibi herhangi bir formu kullanmıyoruz.
+legal-privacy-4-title = 4. İşleme Yasal Temeli (UK GDPR)
+legal-privacy-4-body = UK Genel Veri Koruma Kanunu (UK GDPR) kapsamında bu bilgileri işleme için güvenilir temellerimiz şunlardır:
+legal-privacy-4-b1 = <strong>Contratual Necessity:</strong> Size bağladığınız bağlantı toplama ve profil özellikleri sunmak için.
+legal-privacy-4-b2 = <strong>Legitimate Interests:</strong> Genel platform kullanımını analiz etmek ve performansı geliştirmek için, tamamen anonimleştirilmiş ve toplu verileri kullanıyoruz.
+legal-privacy-5-title = 5. Verilerinizi Nasıl Saklıyoruz
+legal-privacy-5-body = Verileriniz, Supabase (backend altyapı sağlayıcımız) kullanılarak güvenli bir şekilde saklanır. Verilerinize sadece sizin erişebileceğiniz şekilde, Satır Seviyesi Güvenlik (RLS) politikaları ile erişimi kontrol ederiz.
+legal-privacy-6-title = 6. Üçüncü Taraflar Hizmetleri
 legal-privacy-6-body = TMDB (metaveri için) ve Cloudflare Turnstile (bot koruması için) gibi üçüncü taraf API'leri kullanıyoruz. Bu hizmetler kendi gizlilik politikalarına göre çalışır.
 legal-privacy-7-title = 7. Veri Koruma Haklarınız
 legal-privacy-7-body = UK GDPR'ye göre, aşağıdaki haklara sahipsiniz:
@@ -655,8 +1193,30 @@ legal-terms-4-title = 4. Kabul Edilebilir Kullanım
 legal-terms-4-body = Hizmeti şu şekilde kullanmayacağınızı kabul edersiniz:
 legal-terms-4-b1 = Hizmetin güvenlik ile ilgili özelliklerini geçersiz kılma, devre dışı bırakma veya bozma.
 legal-terms-4-b2 = Otomatik araçlar (botlar, tarayıcılar veya tarama araçları) ile hizmete erişim veya sorgu yapmayı, performansı etkileyebilecek bir hızda yapma.
+legal-terms-4-b3 = Hizmetin altyapısının zafiyetini araştırmaya, tarayıcıya veya test etmeye çalışın.
+legal-terms-4-b4 = Herhangi bir yasal, zararlı veya bizim tarafından uygun olmayan olarak değerlendirilen davranışa girmeyin.
+legal-terms-5-title = 5. Telif Hakkı
+legal-terms-5-body = { $brand } markası, arayüz tasarımı ve orijinal yazılım kodları telif hakkı korunmaktadır. { $brand } üzerinden erişilebilen tüm medya içerikleri, ilgili hak sahiplerinin mülkiyetindedir.
+legal-terms-6-title = 6. Beyanatlar ve Sorumluluk Sınırlamaları
+legal-terms-6-body = Hizmet, herhangi bir garanti olmadan "geliştirilmiş" ve "mevcut" olarak sağlanmaktadır. { $brand }, sürekli kullanılabilirlik garantisini vermez ve doğrudan veya dolaylı zararlara karşı sorumluluk üstlenmez.
+legal-terms-7-title = 7. Üçüncü Taraf İçerikleri
+legal-terms-7-body = { $brand }, bağımsız üçüncü taraf sunucularında barındırılan içeriklere işaret eden bağlantılar sağlar. Üçüncü taraf sitelerin içeriklerini, gizlilik politikalarını veya uygulamalarını kontrol edemeyiz ve bunlarla ilgili sorumluluk üstlenmeyiz.
+legal-terms-8-title = 8. Bitirme
+legal-terms-8-body = Hizmetin kullanımını ve hesabınızı, bu Kullanım Koşullarını ihlal ettiğimizi veya diğer kullanıcılar, biz veya üçüncü taraflar için zararlı olduğumuzu düşünüldüğünde, önceden bildirim olmadan kendi isteğimizle durdurabilir veya sona erdirebiliriz.
+legal-terms-9-title = 9. Hukuki Düzenleme
+legal-terms-9-body = Bu Hizmet Kullanım Koşulları, İngiltere ve Galway'in yasalarına göre düzenlenir ve uygulanır, yasal çatışma hükümlerine bakılmaksızın.
+legal-terms-10-title = 10. İletişim
+legal-terms-10-body = Bu Hizmet Kullanım Koşulları ile ilgili herhangi bir soru veya talep için lütfen İletişim sayfamız üzerinden bize ulaşın.
+legal-cookie-policy-title = Çerez Politikası
+legal-cookie-policy-updated = Son Güncellenme Tarihi: 16 Ağustos 2026
+legal-cookie-policy-1-title = Çerezlerin Kullanımı
+legal-cookie-policy-1-body = Çerezleri ve benzeri izleme teknolojilerini kullanarak hizmetimizdeki etkinliği izleyebilir ve belirli bilgileri saklayabiliriz. Çerezler, küçük miktarda veri içeren dosyalardır ve bu veriler arasında anonim bir benzersiz tanımlayıcı olabilir.
+legal-dmca-title = DMCA Güvenlik Sahip Kırmızı Duyuru
+legal-dmca-updated = Son Güncellenme Tarihi: Ağustos 2026
+legal-dmca-1-title = 1. Rolümüz — Bağlantı Toplayıcısı, Bir Sunucu Değil
 legal-dmca-1-body = { $brand } bir bağlantı toplayıcısı ve arama motorudur. Video veya medya içeriğini barındırmaz, yüklemez, saklamaz, aktarım yapmaz veya kontrol eder. Tüm içerik, tamamen kontrolümüzden dışarıda kalan üçüncü taraf sunucularından sunulur.
 legal-dmca-2-title = 2. Bildirme ve Kaldırma Süreci
+legal-dmca-2-body = Eğer bir kopya hakkı sahibiyseniz veya kopya hakkı sahibi adına işlem yapmaya yetkili bir temsilcisiyseniz ve bizim indeksimizdeki bir bağlantı kopya hakkınızı ihlal ettiğini düşünüyorsanız, lütfen { $support_email } adresine yazılı bir bildirim gönderin:
 legal-dmca-2-b1 = <strong>Patent sahibi veya onun yetkili temsilcisinin</strong> fiziksel veya elektronik imzası.
 legal-dmca-2-b2 = <strong>Patentli eser</strong> hakkında kimin ihlali olduğunu belirtin, veya birden fazla eser tek bir bildirimle kapsandığında, bu tür eserlerin temsilcili bir listesi.
 legal-dmca-2-b3 = <strong>Materyal</strong> (yani özel { $brand } bağlantısı veya URL) hakkında ihlal olduğunu iddia eden, bizi bu materyale ulaşmamızı sağlayacak yeterli bilgi içeren.
@@ -669,6 +1229,86 @@ legal-dmca-3-b4 = <strong>Bildirimleri gönderin:</strong> { $support_email }
 legal-dmca-3-b5 = Tüm bildirimleri inceleyeceğiz ve yukarıdaki yasal gereklilikleri karşılayan bağlantıları indeksimizden kaldıracağız.
 legal-dmca-3-b6 = <strong>İptal Bildirimi:</strong> Bağlantınız yanlış olarak kaldırıldığını düşünüyorsanız, 17 U.S.C. § 512(g) kapsamında bir iptal bildirimi göndermek mümkündür.
 legal-dmca-4-title = 4. Önemli Sınırlama — Sadece Bağlantıları Kaldırabiliriz
+legal-dmca-4-body = Çünkü { $brand } hiçbir medya dosyası barındırmaz, sadece arama indeksimizden bağlantıyı kaldırma imkanımız vardır. Sunucuda barındırıldığı sunucudan altındaki içerikleri kaldıramayız.
+legal-dmca-5-title = 5. Tekrarlı İhlal Politikası
+legal-dmca-5-body = Uygun durumlarda ve kendi isteğimiz doğrultusunda, { $brand } tekrarlı ihlal yapan kullanıcıları veya hesapları devre dışı bırakma veya erişimini sonlandırma hakkına sahiptir.
+legal-dmca-6-title = 6. Sorumluluk Tanımlama
+legal-dmca-6-body = DMCA bildirimi sonucu indeksimizden bir bağlantının kaldırılması, { $brand } tarafından herhangi bir ihlalin meydana gelmiş olduğuna dair bir tanım değildir.
+legal-disclaimer-title = Bildirim
+legal-disclaimer-updated = Son güncelleme: Ağustos 2026
+legal-disclaimer-1-title = 1. İçerik Barındırma
+legal-disclaimer-1-body = { $brand }, halka açık gömülü medya bağlantıları için bir bağlantı toplayıcısı ve arama motorudur. Biz, videoları, sesleri veya medya içeriklerini sunucularımızda barındırır, yükler, depolar, iletir veya kontrol ederiz.
+legal-disclaimer-2-title = 2. Üçüncü Taraf İçerik — Sorumluluk Yok
+legal-disclaimer-2-body = { $brand } tarafından indekslenen bağlantılar aracılığıyla erişilebilen tüm içerik, dışarıdan bağımsız üçüncü taraf kaynaklarından gelir. { $brand }, bu içeriklerin yasal durumu, doğruluğu, kalitesi veya mevcut olma durumu hakkında kontrolü olmaz ve sorumluluk üstlenmez.
+legal-disclaimer-3-title = 3. Kullanıcı Riski
+legal-disclaimer-3-body = Kullanıcı, { $brand } kullanmanız ve dışarıdan gömülü bağlantılar aracılığıyla içeriklere erişiminiz tamamen kendi riskinizde olduğunu kabul ve onay edersiniz. { $brand }, tüm yazılım ve yazılım garantilerini açıkça reddeder.
+legal-disclaimer-4-title = 4. Bağlantı Mevcutluğu
+legal-disclaimer-4-body = { $brand } tarafından indekslenen gömülü bağlantılar, üçüncü taraf sunuculara işaret eder. Bağlantılı içeriklerin sürekli mevcutluğunu, kalitesini veya tamamlanmasını garanti edemeyiz ve bağlantılar haber vermeden kırılabilir veya kullanılamaz hale gelebilir.
+legal-disclaimer-5-title = 5. Bilgi Doğruluğu
+legal-disclaimer-5-body = Gösterilen meta veri { $brand } (başlıklar, açıklamalar, puanlamalar ve resimler dahil) TMDB gibi üçüncü taraf veri sağlayıcılarından gelir. Bu meta verinin doğruluğunu veya tamamlanmasını garanti etmeyiz.
+help-ui-kind-policy = Politika
+help-ui-filter-all = Tümü
+help-ui-filter-articles = Yardım makaleleri
+help-ui-filter-policies = Politikalar
+help-ui-recent = Son aramalar
+help-ui-clear = Temizle
+help-ui-did-you-mean = ‘{ $query }’ demek mi istediniz?
+help-ui-viewed = Son görüntülenenler
+help-ui-on-this-page = Bu sayfada
+help-ui-other-policies = Diğer politikalar
+help-ui-section-link = Bu bölüme bağlantı
+help-ui-policy-questions = Bu politika hakkında sorularınız var mı?
+help-topic-legal = Yasal ve Politikalar
+help-group-policies = Politikalar
+help-art-fake-sites-title = Yanlış { $brand } sitelerini ve mesajları nasıl fark edersiniz?
+help-art-fake-sites-summary = Resmi adresler, asla istemediğimiz şeyler ve kopya ile ilgili ne yapmanız gerektiğini anlatır.
+help-art-fake-sites-keywords = sahte dolandırıcı fakirlik kopya kopyalama resmi adres güvenli indirme şifre ödeme e-posta
+help-art-fake-sites-body =
+    Popüler sitelerin kopyaları her zaman ortaya çıkar. Bu adresler sadece { $brand } a aittir:
+
+    - <b>streams.watch</b>, uygulama
+    - <b>help.streams.watch</b>, bu Yardım Merkezi
+    - <b>@streams.watch</b> e-posta adresleri, örneğin <a=mailto:{ $help_email }>{ $help_email }</a>
+
+    ## Asla istemediğimiz şeyler
+    - Kart numarası, banka detayları veya herhangi bir ödeme. { $brand } ücretsizdir. <a=/help/article/free-to-use>{ $brand } ücretsiz mi?</a>
+    - E-posta, sohbet veya giriş sayfası dışındaki bir form aracılığıyla şifrenizi.
+    - Bir indirme, bir eklenti, bir kodlayıcı veya izlemek için bir güncelleme.
+
+    ## Kopya bulduysanız
+    1. Sayfayı kapatın ve herhangi bir detay girmeyin.
+    2. Şifre girdiyseniz, o siteye ait şifreyi değiştirin.
+    3. Adresi <a=mailto:{ $help_email }>{ $help_email }</a> adresine gönderin böylece rapor edebiliriz.
+help-art-security-report-title = Güvenlik sorununu bildirin
+help-art-security-report-summary = Bizimle güvenli bir şekilde bir zayıflık hakkında bilgi vermek için nasıl olacağını anlatır.
+help-art-security-report-keywords = güvenlik zayıflığı bug bounty sorumluluk bildirimi exploit hack bildirim zayıflık
+help-art-security-report-body =
+    Eğer başkasının verilerini okuyabilir, bir profil PIN'ini atlamayı veya siteyi çözebileceğin bir yolu bulduysan, başkalarına söylemeden bize bildirmelisin.
+
+    1. <a=mailto:{ $help_email }>{ $help_email }</a> adresine <b>Güvenlik</b> konusuyla yaz.
+    2. Bulduğun şeyi, tekrar edilebilecek adımları ve etkilediği sayfa veya adresi açıkla.
+    3. Başkasının verilerine erişmeyin ve otomatik istemci isteklerle test yapmayın.
+
+    Her bildiriyi okuyoruz. Aynı detaylar <a=/.well-known/security.txt>/.well-known/security.txt</a> adresindeki makine okuyabilir dosyada da mevcuttur.
+help-art-translate-title = Yardım et { $brand }'i çevirmek
+help-art-translate-summary = Arayüz metinleri düz dosyalarda, her dil için birer dosyada bulunur ve herkes bunlardan birini geliştirebilir.
+help-art-translate-keywords = çevir çevirme yerelleştirme yerelleştirme dil katkı ftl akıcı dil dil bilgisi cinsiyet çoğul
+help-art-cookies-explained-title = Çerezler ve yerel depolama açıklaması
+help-art-cookies-explained-summary = { $brand } için tarayıcınızın sakladığı şeyleri, basit bir dille anlatıyoruz.
+help-art-cookies-explained-keywords = çerez yerel depolama tarayıcı veri izleme izin bildirimi tercihler oturum üçüncü taraf
+help-art-cookies-explained-body =
+    <b>Cookies</b> küçük notlar bir web sitesi tarayıcınızda tutmasını isteyen küçük notlardır. <b>Yerel depolama</b> benzer bir yerdir ancak sadece site tarafından okunabilir ve her istekte gönderilmez.
+
+    { $brand } profilleriniz, PIN'leriniz, izleme ilerlemeleriniz ve dilinizi yerel depolama kullanır. Bu bilgiler cihazınızda kalır. Bizden görseller veya videolar sunan diğer siteler kendi çerezlerini ayarlayabilir ve bunları kontrol edemeyiz. <a=/help/article/sources>Basliklar nereden gelir</a> sayfasına bakın.
+
+    ## Seçiminiz
+    - İlk ziyaretinizde bir banner, önerilerin size izlediğiniz şeyi kullanmasına izin verip vermediğini sorar. Her zaman değiştirebilirsiniz.
+    - <b>Reddet</b> seçeneği, sitesi kullanmak için gerekli olan her şeyi korur ve kişiselleştirmeyi kapatır.
+    - Tarayıcınız çerezleri ve site verilerini engelleyebilir veya silebilir. Eğer bu yapılır ise profilleriniz ve ilerlemeniz kaybolur.
+
+    @@ cookies
+help-art-stuck-loading-title = Sayfa logoyu veya boş ekran üzerinde kalır
+help-art-stuck-loading-summary = Ne yapmanız gerektiğini { $brand } asla başlatamazken
 help-art-stuck-loading-keywords = yükleniyor logo boş beyaz ekran splash başlamıyor webassembly wasm donmuş başlatma
 help-art-stuck-loading-body =
     While { $brand } başlatılırken, küp logoyu ve bir satırda hareket eden noktaları görürsünüz. Bu birkaç saniye alabilir. { $brand }, WebAssembly uygulaması olarak çalıştığından, WebAssembly'yi devre dışı bırakmış bir tarayıcı veya ayar, bu ekranı size bırakır.
@@ -695,6 +1335,71 @@ help-art-slow-pages-body =
 help-art-vpn-network-title = VPN, okul ve iş ağları
 help-art-vpn-network-summary = Bazı ağların başlıklar veya resimleri engellemesinin nedeni ve ne yapmanız gerektiğini anlatır.
 help-art-vpn-network-keywords = vpn proxy okul iş ağ firewall dns filtre engellenmiş safedns kısıtlı wifi
+help-art-vpn-network-body =
+    { $brand } halka açık bir film kataloğundan detaylar ve görseller yükler ve bağımsız kaynaklardan akış sağlar. Bazı ağlar bu siteleri engeller ve bazı kaynaklar belirli adresleri reddeder.
+
+    - <b>VPN veya proxy.</b> Bazı kaynaklar VPN adreslerine yanıt vermez. Devre dışı bırakın veya başka bir ülkeyi seçin.
+    - <b>Okul, iş veya halka açık Wi-Fi.</b> Filtreler akış veya kataloğu engelleyebilir. Telefonunuzun mobil verisini deneyin.
+    - <b>DNS filtreleri.</b> Filtreleme DNS hizmeti kataloğu ve satır veya görselleri boş bırakabilir. Bu site için farklı bir DNS kullanın veya filtreyi kapatın.
+
+    Cihaz kontrolü, ağınızın hangi hizmete ulaşamadığını gösterir.
+
+    @@ diagnostics
+help-art-is-down-title = { $brand } down mu?
+help-art-is-down-summary = Cihazınızdan hangi kısımlar çalıştığını kontrol edin.
+help-art-is-down-keywords = down kesinti durumu çalışmıyor offline kullanılamaz sunucu bakım hatası site
+help-art-is-down-body =
+    { $brand } üç parçadan oluşur ve bu parçalar ayrı ayrı başarısız olabilir:
+
+    - <b>Uygulama</b>, şu anda bakmakta olduğunuz şeydir.
+    - <b>Film ve diziler kataloğu</b>, detaylar ve görseller sağlar.
+    - <b>Akış kaynakları</b>, videoları sağlar.
+
+    Denetimi çalıştırarak hangi parçanın cihazınızdan yanıt verdiğini görün. Kataloğun veya kaynakların herkes için yanıt vermediyse birkaç dakika bekleyin ve tekrar deneyin. Sadece sizin için ulaşılamsa <a=/help/article/vpn-network>VPN, okul ve iş ağları</a> sayfasına bakın.
+
+    @@ diagnostics
+help-art-no-sound-title = Ses yok
+help-art-no-sound-summary = Bir başlık ses olmadan oynuyorsa onu düzeltecek.
+help-art-no-sound-keywords = ses yok ses susturuldu sessizlik ses seviyesi mikrofon kulaklık otomatik oynatma
+help-art-no-sound-body =
+    1. <b>M</b> tuşuna basınız veya oynatıcıdaki ses butonunu seçerek susturmayı kaldırın. Tarayıcılar genellikle kendiliğinden başlayan bir videonun başlangıcında sesi susturur, bunu <a=/help/article/autoplay-blocked>Video başlangıçta susturuldu</a> sayfasına bakın.
+    2. <b>Yukarı ok</b> tuşuna basarak ses seviyesini artırın ve cihazınızın ses seviyesini kontrol edin.
+    3. Tarayıcı sekmesinin susturulmuş olup olmadığını kontrol edin. Sekmenin üzerine sağ tıklayarak kontrol edin.
+    4. <b>Ses & Altyazı</b> kısmını açın ve başka bir ses yolu varsa bunu seçin.
+    5. Bluetooth kullanıyorsanız kulaklıklarınızı bağlantıyı kesip yeniden kurun.
+help-art-autoplay-blocked-title = Video başlangıçta susturuldu veya kendiliğinden başlamadı
+help-art-autoplay-blocked-summary = Tarayıcılar neden başlangıçta sesi kapatır ve { $brand } bunu nasıl işler.
+help-art-autoplay-blocked-keywords = otomatik oynatma engellendi susturuldu başlangıç politika tarayıcı ses otomatik oynatma önizleme trailer
+help-art-autoplay-blocked-body =
+    Tarayıcılar, sayfanın sesli bir videonun başlamasına izin vermeden önce bir tıklama veya dokunma yapmanızı bekler. { $brand } öncelikle sesli olarak başlatmayı deneyebilir. Tarayıcı reddederse, susturulmuş olarak başlatır ve susturulmuş ses butonunu gösterir, bu durumda <b>M</b> tuşu veya ses butonu ile susturmayı kaldırabilirsiniz.
+
+    - Önizleme ve trailer videoların kendiliğinden başlamamasını engellemek için <b>Otomatik Önizleme</b> seçeneğini <b>Ayarlar</b> altında <b>Oynatma Ayarları</b> kısmında kapatın.
+    - Bir başlık asla başlamıyorsa <a=/help/article/wont-play>Bir başlık oynatılmıyor</a> sayfasına bakın.
+help-art-clips-title = Klipsleri Kullanma
+help-art-clips-summary = Kısa önizlemleri kaydırarak ve beğenilenleri listenize ekleyin.
+help-art-clips-keywords = klips kısa önizleme kaydırma dikey trailer susturmak bilgi benim liste
+help-art-clips-body =
+    <b>Klips</b>, telefonun alt çubuğunda sırayla kısa önizlemleri gösterir.
+
+    1. Bir sonraki klips için kaydırın veya kaydırın.
+    2. Ses butonunu seçerek sesi açın veya kapatın. Klipsler başlangıçta susturulur.
+    3. Başlığı <b>Benim Liste</b> olarak kaydedin, <b>Oynat</b> ile izleyin veya <b>Bilgi</b> ile hakkında bilgi edinin.
+help-art-genres-title = Kategoriye Göre Arama
+help-art-genres-summary = Filmleri ve dizileri istenen başlık türüne daraltın.
+help-art-genres-keywords = kategoriler türleri komedi dram korku eylem filtre arama filmler diziler alt menü
+help-art-genres-body =
+    1. <b>Films</b> veya <b>Series</b> menüsünü üst çubakta açın.
+    2. Sayfa başlığına yanındaki <b>Genres</b> seçeneğini seçin.
+    3. Bir kategori seçin. Sayfa bu kategoriye göre sadece o kategorideki filmleri gösterir.
+
+    Tüm içeriklere dönmek için <b>Films</b> veya <b>Series</b> menüsünü tekrar açın. Telefonlarda kategori listesi alttan açılır.
+help-art-top-10-title = Top 10 satırı nedir?
+help-art-top-10-summary = Şu an en çok izlenen on başlık satırı.
+help-art-top-10-keywords = top 10 top ten popüler trend ranking sayı satır en çok izlenen
+help-art-top-10-body = <b>Top 10</b> satırı, şu an en çok izlenen on başlığı gösterir ve her biri büyük bir sayı içerir. Kataloğundaki mevcut popülerliği takip eder ve gün geçtikçe değişebilir. Herkes için aynıdır ve profiline dayanmaz.
+help-art-episodes-title = Sezonlar ve bölümler
+help-art-episodes-summary = Ayrıntı penceresinden veya oynatıcıdan bir sezon ve bölüm seçin.
+help-art-episodes-keywords = sezonlar bölümler diziler liste bir sonraki bölüm çekmece binge seçici televizyon programları
 help-art-episodes-body =
     ## Oynatmadan önce
     Bir diziyi açın ve <b>Epizodalar</b> seçeneğini seçin. Mevsim menüsünü kullanarak mevsimi değiştirin, ardından bir epizoda tıklayın.
@@ -725,6 +1430,44 @@ help-art-title-details-body =
 help-art-accessibility-title = Erişilebilirlik { $brand } üzerinde
 help-art-accessibility-summary = Alt yazılar, klavye denetimi ve görüntü ayarları gibi yardımcı olan özellikler.
 help-art-accessibility-keywords = erişilebilirlik ekran okuyucu klavye alt yazılar alt yazı boyutu kontrast yakınlaştırma azaltılmış hareket engelli
+help-art-accessibility-body =
+    - <b>Altyazı.</b> <b>Settings</b> içinde dili, boyutu, rengi ve arka planı seçin. <a=/help/article/subtitles>Altyazı, altyazı veya ses dili seçme</a> hakkında bilgi için bkz.
+    - <b>Klavye.</b> Kontroller arasında <b>Tab</b> tuşunu kullanın ve pencereyi kapatmak için <b>Esc</b> tuşunu kullanın. Oynatıcı kendi klavye tuşlarını kullanır, <a=/help/article/shortcuts>Klavye kısayolları</a> hakkında bilgi için bkz.
+    - <b>Metin boyutu.</b> Tarayıcıda <b>Ctrl</b> ve <b>+</b> (<b>Cmd</b> ve <b>+</b> Mac'te) ile yakınlaştırın. Düzenlemeler otomatik olarak ayarlanır.
+    - <b>Hareket.</b> Cihazınız hareketi azaltmaya isteyebilir, bu durumda animasyonlu logolar durur.
+
+    Kullanmakta zorlanıyorsanız, <a=/help/article/report-bug>Sorunu Bildir</a> sayfasında bize bildirin. Bu bildirimleri ciddiye alırız.
+help-art-profile-icons-title = Profil simgesi nasıl seçilir?
+help-art-profile-icons-summary = Bir profil için bir avatar seçin.
+help-art-profile-icons-keywords = profil simgesi avatar resim görüntü değiştirme seçme karakter
+help-art-profile-icons-body =
+    1. <b>Profil Yönetimi</b> açın ve profilinizi seçin.
+    2. Simgeyi seçin.
+    3. Gruplardan birini seçin ve sonra <b>Kaydet</b> seçeneğini seçin.
+
+    Bir Çocuk profili, başka bir simge seçmedikçe çizgili Çocuk simgesini kullanır. Ayrıca <b>Settings</b> üzerinden de simge seçiciye ulaşabilirsiniz.
+auth-questions = Sorular mı var?
+auth-email = E-posta adresi
+auth-password = Şifre
+auth-continue = Devam
+auth-next = İleri
+auth-show-password = Şifreyi göster
+auth-hide-password = Şifreyi gizle
+auth-login-title = Giriş yapmak için bilgilerinizi girin
+auth-login-subtitle = Ya da yeni bir hesapla başla.
+auth-new-here = { $brand }'a yeni misiniz?
+auth-signup-link = Kayıt ol
+auth-welcome-back = Hoş geldiniz
+auth-not-you = Sen değil misin?
+auth-signing-in = Giriş yapılıyor…
+auth-remember = Beni hatırla
+auth-forgot-link = Şifrenizi mi unuttunuz?
+auth-get-help = Yardım al
+auth-resend = Onay e-postasını tekrar gönder
+auth-resent = Yeni bir onay e-postası { $email } adresine gönderildi.
+auth-error-email = Geçerli bir e-posta adresi girin.
+auth-error-invalid = Yanlış e-posta veya şifre. Tekrar deneyin veya şifrenizi sıfırlayın.
+auth-error-unconfirmed = E-posta adresinizi önce doğrulayın. { $email } adresine bir bağlantı gönderildi.
 auth-error-rate = Çok fazla deneme. Bir dakika bekleyin ve tekrar deneyin.
 auth-error-network = Sunucuya bağlanamadık. Bağlantınızı kontrol edin ve tekrar deneyin.
 auth-error-generic = Bir şey ters gitti. Lütfen tekrar deneyin.
@@ -758,6 +1501,30 @@ landing-promo-title = { $brand } ücretsizdir.
 landing-promo-body = Abonelik, kart, sözleşme yok.
 landing-learn-more = Daha fazla bilgi
 landing-faq = Sık Sorulan Sorular
+landing-read-more = Tam makaleyi oku
+legal-credits-title = Lisanslar ve krediler
+legal-credits-updated = Son güncelleme: Ekim 2026
+legal-credits-1-title = 1. Fontlar
+legal-credits-1-body = Logo'daki metin bir piksel fontu ile yazılmıştır. Diğer tüm arayüz metinleri Inter fontu ile yazılmıştır.
+legal-credits-1-b1 = <strong>Baby Blocks</strong> Colorful Typhoon tarafından geliştirilmiştir ve kişisel, ticari amaçlı olmayan kullanım için { $brand } logosu için linkware koşulları altında kullanılmıştır. Daha fazla bilgi için <a href="http://www.geocities.jp/kitschlabo/" target="_blank" rel="noopener">Colorful Typhoon</a> adresine bakın.
+legal-credits-1-b2 = <strong>Inter</strong> Rasmus Andersson tarafından geliştirilmiştir ve SIL Open Font License 1.1 altında kullanılmıştır.
+legal-credits-2-title = 2. Simgeler
+legal-credits-2-body = Arayüz simgeleri Phosphor Icons'tan alınmıştır ve MIT Lisansı altında kullanılmıştır.
+legal-credits-3-title = 3. Film ve diziler bilgisi
+legal-credits-3-body = Bu ürün TMDB API'sini kullanır ancak TMDB tarafından onaylanmamış veya sertifikalandırılmamıştır. Başlıklar, özeti, afişler, puanlar ve oyuncu bilgileri <a href="https://www.themoviedb.org" target="_blank" rel="noopener">The Movie Database</a> adresinden alınmıştır.
+legal-credits-4-title = 4. Yazılım
+legal-credits-4-body = { $brand } açık kaynak yazılımları ile geliştirilmiştir, her biri kendi lisansı altında kullanılmıştır:
+legal-credits-4-b1 = <strong>Rust</strong> ve <strong>Leptos</strong> uygulama için (MIT ve Apache 2.0).
+legal-credits-4-b2 = <strong>Tailwind CSS</strong> stillendirme için (MIT).
+legal-credits-4-b3 = <strong>hls.js</strong> adaptif video oynatımı için (Apache 2.0).
+legal-credits-4-b4 = <strong>Project Fluent</strong> çevrilen arayüz metinleri için (Apache 2.0 ve MIT).
+legal-credits-5-title = 5. Markalar ve sanat eserleri
+legal-credits-5-body = { $brand } üzerinde gösterilen filmler, diziler ve hizmetlerin isimleri, logoları, afişleri ve sanat eserleri sahiplerine aittir. Bu, başlık tanımını sağlamak amacıyla gösterilir ve sahiplerin { $brand }'ı desteklediğini göstermez.
+legal-credits-6-title = 6. İletişim
+legal-credits-6-body = Burada bir şey yanlış bildirildiğine veya değişiklik gerektirdiğine inanıyorsanız, lütfen { $support_email } adresine yazın.
+help-ui-legal-credits = Lisanslar ve krediler
+landing-browse-guest = Bir hesaba gerek olmadan sadece dolaşabilirsiniz
+landing-slide-everyone = Herkes için bir yer
 landing-slide-place = Tam olarak bıraktığınız yerden devam edin.
 auth-login-app-title = İzlemeye hazırsınız mı?
 auth-login-app-subtitle = Giriş yapmak veya yeni bir hesap oluşturmak için bilgilerinizi girin.
@@ -945,6 +1712,179 @@ set-spec-none = Mevcut değil
 set-app-legal = Yasal
 set-app-licences = Açık kaynak lisansları
 set-licences-hint = Uygulama { $count } açık kaynak paketiyle oluşturulmuştur.
+set-licences-tmdb = Film ve dizi verileri ve görseller TMDB'den gelir. Bu ürün, TMDB API'sini kullanır ancak TMDB tarafından onaylanmamış veya sertifikalandırılmamıştır.
+set-account-security = Güvenlik
+set-account-devices = Cihazlar
+set-account-profiles = Profiller
+set-verify-title = İlk olarak, senin olduğundan emin olalım
+set-verify-body = Herhangi bir şeyi değiştirmeden önce hesabınızın şifresini doğrulayın.
+set-password-current = Mevcut şifre
+set-forgot-password = Şifremi unuttum?
+set-password-hint = Hesabınızı korumak için en az { $min } karakter uzunluğunda bir şifre kullanın.
+set-password-new = Yeni şifre
+set-password-again = Yeni şifreyi tekrar girin
+set-password-signout-all = Tüm cihazlardan çıkış yap
+set-password-short = Şifre en az { $min } karakterden oluşmalıdır.
+set-password-mismatch = İki şifre eşleşmiyor.
+set-password-saved = Şifreniz değiştirildi.
+set-email-hint = Giriş yapmak ve hesabınız hakkında mesaj almak için kullandığınız e-posta adresini değiştirin.
+set-email-current = Mevcut e-posta
+set-email-new = Yeni e-posta
+set-email-invalid = Geçerli bir e-posta adresi girin.
+set-email-sent = Yeni adresinize bir mesaj gönderildi. Değişikliği tamamlamak için mesajdaki bağlantıyı açın.
+set-phone-hint = Hesabınıza geri dönmek için bir mobil numara ekleyin.
+set-phone-invalid = Geçerli bir telefon numarası girin.
+set-phone-saved = Numaranız kaydedildi.
+set-devices-hint = Bu tarayıcıdan veya hesabınız açık olan her tarayıcıdan çıkış yapın.
+set-devices-current = Bu cihaz
+set-devices-note = Diğer tarayıcılar listelenmez. Tüm cihazlardan çıkış yapmak, tüm açık oturumları, bunun da dahil olmak üzere bu cihazı kapatır.
+set-devices-signout-all = Tüm cihazlardan çıkış yap
+set-devices-signout-body = Hesabınız açık olan her tarayıcıdan çıkış yapılacaktır, bunun da dahil olmak üzere bu tarayıcıdan.
+set-for-profile = İçin { $name }
+set-privacy-viewing = Görünüm gizliliği
+set-privacy-lock-hint = Bu profili açmak için bir PIN gerekir
+set-privacy-activity-hint = İzleme geçmişinizi yönetin
+set-privacy-data = Veri ayarları
+set-privacy-personalization = Kişiselleştirilmiş öneriler
+set-privacy-personalization-hint = İzlediğiniz şeyleri kullanarak başlıklar önerin. Kapatıldığında genel önerileri görürsünüz.
+set-activity-clear-body = İzleme geçmişi ve devam noktanız bu tarayıcıdan kaldırılacak.
+set-delete-account-body = Hesabınızı silmek, profillerinizi, ayarlarınızı ve izleme geçmişinizi kalıcı olarak kaldırır.
+set-delete-account-confirm = Hesabınızı ve içindeki tüm verileri silmek istedğinizden emin misiniz? Bu işlem geri alınamaz.
+set-err-invalid = O parola yanlış. Tekrar deneyin.
+set-err-weak = O parola çok zayıf. Harfler ve sayılar içeren uzun bir parola kullanın.
+set-err-rate = Çok fazla deneme. Bir dakika bekleyin ve tekrar deneyin.
+set-err-network = Bağlantı başarısız oldu. Ağınızı kontrol edin ve tekrar deneyin.
+set-err-other = Bir şey ters gitti. Bir an sonra tekrar deneyin.
+set-audio-subtitles-hint = Dizileri ve filmleri izlemek için tercih ettiğiniz dilleri seçin. Tercih etmezseniz, görüntüleme dili kullanılır.
+set-audio-language = Ses dili
+set-subtitle-language = Altyazı dili
+set-lang-follow = Görüntüleme diliyle aynı
+set-subtitles-off = Kapalı
+set-name-taken = Diğer bir profil bu ismi zaten kullanıyor.
+set-main-profile = Bu ana profili yap
+set-main-profile-hint = Ana profili silinemez.
+set-main-profile-body = { $name } bu hesabın ana profili olacak. Ana profil silinemez.
+set-lock-create = Profil kilidi oluştur
+set-lock-current = Mevcut PIN
+set-lock-wrong = O PIN doğru değil.
+set-lock-forgot = PIN'inizi unuttunuz mu?
+set-lock-reset-body = Bu profili PIN'i kaldırılacak. Daha sonra yeni bir tane ayarlayabilirsiniz.
+set-name-hint = Hesabın arkasındaki kişinin adı. Ana profil ilk isim izler.
+set-name-first = İsim
+set-name-last = Soyisim
+set-name-required = Bir isim ve soyisim girin.
+set-name-saved = Adınız kaydedildi.
+set-err-recent = Güvenliğinizi sağlamak için devam etmek için şifrenizi tekrar girin.
+set-events-title = Son güvenlik etkinliği
+set-privacy-export = Verilerimi indir
+set-nav-overview = Genel bakış
+set-back-to-app =  { $brand }'a geri dön
+set-title-playback = Oynatma ayarları
+set-title-notifications = Bildirim ayarları
+set-playback-hint = Otomatik oynatma ve önceden izleme ayarları.
+set-playback-autoplay = Otomatik oynatma ve geçişler
+set-notifications-hint = E-posta ve push bildirimlerini yönetin.
+set-notifications-body = Bu profilin yeni filmler ve güncellemeler hakkında nasıl haberdar olacağını seçin.
+set-notify-email = E-posta
+set-notify-push = Push bildirimleri
+set-account-details = Hesap detayları
+set-access-hint = Giriş yapmış cihazları yönetin
+set-overview-quick = Hızlı bağlantılar
+set-overview-update-password = Şifreyi güncelle
+set-overview-edit = Ayarları düzenle
+set-overview-edit-hint = Dil, alt metin, otomatik oynatma, bildirimler, gizlilik ve daha fazlası
+set-security-access = Erişim ve gizlilik
+set-privacy-hint = Kişisel bilgilerin kullanımını yönetin
+set-profiles-parental = Ebeveyn kontrolleri ve izinler
+set-profiles-parental-hint = Matürite seviyesini ayarla, başlıklar bloke et
+set-profiles-settings = Profil ayarları
+set-now-watching = Şimdi izleniyor
+set-activity-episode = S{ $season }:E{ $episode }
+set-activity-title = { $title } · { $episode }
+set-device-line = { $platform } · { $browser }
+set-saved = Kaydedildi
+set-done = Bitir
+set-show-more = Daha fazla göster
+set-need-help = Yardım mı gerekiyor?
+set-visit-help = Yardım Merkezini ziyaret et
+set-try-another-way = Başka bir şekilde deneyin
+set-title-game-handle = Oyun ismi
+set-title-personal-info = Kişisel bilgi erişimi
+set-title-speed-test = İnternet hız testi
+set-title-testing = Test katılımı
+set-title-transfer = Profil transferi
+set-title-transfer-profile = Bir profil transfer edin
+set-activity-for = Aktivite { $name } için
+set-activity-hide = Bu başlık'ı gizle
+set-activity-hide-all = Hepsini gizle
+set-activity-hidden = İzleme aktivitenizden kaldırıldı
+set-activity-download = Hepsini indir
+set-activity-report = Bir sorunu bildir
+set-csv-title = Başlık
+set-csv-season = Sezon
+set-csv-episode = Bölüm
+set-csv-date = Tarih
+set-notify-email-hint = Yeni gelenler ve güncellemeler hakkında mesajlar
+set-notify-push-hint = Bu cihazda bildirimler
+set-topics-title = Ne hakkında duyuyorsunuz
+set-push-denied = Tarayıcınızda bu site için bildirimler engellenmiş. Tarayıcı ayarlarında izin verin ve tekrar deneyin.
+set-push-unsupported = Bu tarayıcı bildirimleri gösteremez.
+set-usage-title = Ekran başına veri kullanımı
+set-usage-auto = Otomatik
+set-usage-auto-hint = Bağlantınızla uyumlu kaliteyi seçer.
+set-usage-low = Düşük
+set-usage-low-hint = En az veri kullanır. Temel görüntü kalitesi.
+set-usage-medium = Orta
+set-usage-medium-hint = Standart görüntü kalitesi, yüksekten daha az veri kullanır.
+set-usage-high = Yüksek
+set-usage-high-hint = En iyi görüntü kalitesi. En çok veri kullanır.
+set-handle-body = Bu benzersiz isim, diğer oyunlarda oyununuzun nasıl görüneceğini belirler.
+set-handle-change = Oyun isminizi her zaman değiştirebilirsiniz.
+set-handle-create = Oyun elinizle oluşturun
+set-handle-suggest = Bir isim önerin
+set-handle-invalid = Lütfen { $min } ile { $max } harf ve rakam kullanın ve boşluklar olmasın.
+set-transfer-row-hint = Bir profilin başka bir hesaba kopyalanmasına izin verin
+set-transfer-on-title = Profil taşıma açık
+set-transfer-on-body = Bu hesaptan profil kaydedilebilir ve başka bir hesaba eklenir. Devre dışı bırakmak, profilin bu hesaptan ayrılmamasını sağlar. Bu hesaba zaten eklenen profiller etkilenmez.
+set-transfer-off-title = Profil taşıma kapalı
+set-transfer-off-body = Bu hesaptan profil kopyalanamaz. Açmak için devre dışı bırakın.
+set-transfer-profile-hint = Bu profili başka bir hesaba kopyalayın
+set-transfer-profile-body = Bu profili bir dosya olarak kaydedin ve başka bir hesaba ekleyin. Kopya, isim, resim, ayarlar ve izleme geçmişi korunur.
+set-transfer-step-1 = Profil dosyasını indirin ve dosyayı güvenli bir şekilde saklayın.
+set-transfer-step-2 = Diğer hesaba giriş yapın ve Profilleri Yönet'ini açın.
+set-transfer-step-3 = Bir profili içe aktar seçeneğini seçin ve dosyayı seçin.
+set-transfer-download = Profil dosyasını indir
+set-transfer-saved = Profil dosyası kaydedildi
+set-transfer-note = Dosya, profili kilitleyen PIN kodu içermez. Dosyaya sahip olan herkes bu profili hesabına ekleyebilir, bu yüzden paylaşmayın.
+set-transfer-blocked-body = Bu hesap için profil taşıma devre dışı bırakıldı, bu yüzden bu profil kopyalanamaz.
+set-transfer-open-setting = Profil taşıma ayarlarını aç
+set-import-title = Bir profili içe aktar
+set-import-hint = Diğer bir hesaptan kaydedilmiş bir profili ekleyin.
+set-import-done = { $name } eklendi
+set-import-invalid = Bu dosya kaydedilmiş bir profil değildir.
+set-import-newer = Bu dosya uygulamanın daha yeni bir sürümünden gelir ve henüz okunamaz.
+set-import-full = Bu hesap, tutabileceği en fazla profili zaten içeriyor.
+set-privacy-cookies-hint = Kullanılan çerezler ve benzeri depolama seçeneklerini seçin.
+set-personal-info-hint = Kişisel bilgilerinizi isteyin
+set-personal-info-body = Hesabınızla ilgili tuttuğumuz kişisel bilgilerin bir kopyasını isteyebilirsiniz. Dosya şu listeler:
+set-personal-info-done = Dosyanız kaydedildi.
+set-personal-info-note = Dosya cihazınızda kalır. Kişisel bilgiler içerebilir, bu yüzden güvenli tutun.
+set-testing-row-hint = Testler ve önizlemlerde beni dahil et
+set-testing-body = Bazen yeni özellikler küçük bir grupla denenir, herkesin erişimine önce gelir.
+set-testing-switch = Testler ve önizlemlerde beni dahil et
+set-testing-hint = Bu özelliği kapatarak her özelliğin güncel sürümünde kalacaksınız.
+set-code-email = Kod e-posta ile gönder
+set-code-title = Lütfen gönderdiğimiz kodu girin
+set-code-body = Lütfen { $target } adresine gönderdiğimiz kodu girin, hesabınızı korumamızı sağlar. Kod { $minutes } dakika sonra geçerli olmaz.
+set-code-label = Kod
+set-code-submit = Gönder
+set-code-resend = Kodu tekrar gönder
+set-code-wrong = O kadar doğru değildi. Lütfen tekrar deneyin.
+set-password-confirm = Şifreyi onayla
+set-password-show = Şifreyi göster
+set-password-hide = Şifreyi gizle
+set-device-name = { $browser } üzerinde { $system }
+set-device-unknown = Bilinmeyen cihaz
 set-device-last = Son etkinlik { $time }
 set-device-sign-out = Bu cihazdan çıkış yap
 set-device-sign-out-body = Bu tarayıcı, hesabınızdan çıkış yapacaktır.
@@ -984,6 +1924,76 @@ set-rating-15-hint = 15 yaş ve üzeri için uygun.
 set-rating-18 = 18
 set-rating-18-hint = Yetişkinler için. 18 yaş ve üzeri için uygun.
 auth-confirm-title = E-postanızı onaylıyor
+auth-confirm-working = Onaylanıyor…
+auth-confirm-working-body = Başka bir an bekleyin, bağlantınızı kontrol ediyoruz.
+auth-confirm-failed-title = Bu bağlantı işe yaramadı
+auth-confirm-failed-body = Bağlantı geçersiz olabilir veya zaten kullanılmış olabilir. Giriş yapın veya yeni bir bağlantı isteyin.
+auth-confirm-new-link = Benim için yeni bir bağlantı gönder
+set-device-kind = Cihaz türü
+set-device-first-seen = İlk giriş tarihi
+set-device-timezone = Saat dilimi
+set-device-screen = Ekran
+set-device-language = Dil
+set-device-countries-note = Bu cihaz birden fazla ülkeden bağlanmıştır: { $countries }. Bir VPN veya seyahat bu durumun nedeni olabilir. Cihaz tarayıcıya göre tanımlanır, bağlanma noktasına göre değil, bu yüzden hâlâ aynı cihazdır.
+email-footer = { $brand } tarafından gönderildi. Sorular mı? Yardım Merkezini okuyun veya { $help_email } adresine yazın.
+email-help-center = Yardım Merkezi
+email-ignore = Bu e-postayı istemediyseniz, bu e-postayı görmezden gelebilirsiniz.
+email-button-fallback = Düğme işe yaramazsa, bu adresi tarayıcınıza kopyalayın:
+email-greeting = Merhaba { $name },
+email-greeting-plain = Merhaba,
+email-for-profile = Bu mesaj { $profile } profili için.
+email-confirm-subject = E-postanızı onaylayın
+email-confirm-title = E-postanızı onaylayın
+email-confirm-body = Hoş geldiniz { $brand }. Bu adresi onaylamak için hesabınızı tamamlamak üzere olur.
+email-confirm-button = E-posta adresini onayla
+email-recovery-subject = { $brand } şifrenizi sıfırlayın
+email-recovery-title = Şifrenizi sıfırlayın
+email-recovery-body = Hesabınızın şifresini sıfırlamak için bir istek aldık. Yeni birini seçmek için düğmeyi kullanın. Bağlantı sadece bir kez çalışır ve kısa sürede sona erer.
+email-recovery-button = Yeni bir şifre seçin
+email-code-subject =  { $brand } giriş kodunuz
+email-code-title = Giriş kodunuz
+email-code-body = Devam etmek için bu kodu girin. Sadece bir kez çalışır ve { $minutes } dakika içinde sona erer.
+email-code-or-link = Veya giriş için düğmeyi kullanın.
+email-code-button = Giriş yap
+email-change-subject = Yeni e-posta adresinizi onaylayın
+email-change-title = Yeni e-posta adresinizi onaylayın
+email-change-body = Hesabınızın e-posta adresini { $new_email } olarak değiştirmek istediğini belirttik. Onaylamak için düğmeyi kullanın.
+email-change-button = Yeni adresi onayla
+email-invite-subject = { $brand }'a davet edildiniz
+email-invite-title = Davet edildiniz
+email-invite-body = Hesabınızı oluşturmak için davetiye kabul edin.
+email-invite-button = Davetiye kabul et
+email-reauth-subject =  { $brand } doğrulama kodunuz
+email-reauth-title = Doğrulama kodunuz
+email-reauth-body = Bu kodu girmekle kim olduğunuzu doğruluyorsunuz. Sadece bir kez çalışır ve kısa sürede sona erer.
+email-device-subject = Yeni cihaz { $brand } hesabınıza giriş yaptı
+email-device-title = Yeni cihaz giriş yaptı
+email-device-body = { $browser } { $system } üzerinde hesabınıza giriş yaptı { $where } { $time }'da. Bu sizseniz hiçbir şey yapmanıza gerek yok. Bu siz değilse şifrenizi değiştirin ve tüm cihazlardan çıkış yapın.
+email-device-where =  { $country }'dan
+email-device-button = Cihazlarınızı gözden geçirin
+help-breadcrumb-label = Yol gösterici
+help-pagination-label = Sayfalama
+age-badge-all = Tümü
+age-aria-all = Her yaştan uygun
+age-aria-plus = Yaş grubu { $age } ve üzeri uygun
+set-rating-system-title = Değerlendirme etiketleri
+set-rating-system-hint = Okuyabileceğiniz yaş sınırlama etiketlerini seçin. Otomatik olarak cihazınızın bulunduğu ülkeyi takip eder.
+set-rating-system-auto = Otomatik
+set-rating-system-uk = Birleşik Krallık (U, PG, 12, 15, 18)
+set-rating-system-us = Amerika Birleşik Devletleri (G, PG, PG-13, R, NC-17)
+row-continue-watching = Devam Et
+row-my-list = Benim Liste'im
+row-because-you-watched = Siz { $title } izlediğiniz için
+row-more-like = Benzer { $title }
+row-todays-top-picks = Bugünkü En İyi Seçenekler
+row-your-next-watch = Bir Sonraki İzleme
+row-gems-for-you = Sizin İçin Kıymetli Olanlar
+row-we-think-youll-love = Bunları Seveceksiniz
+row-familiar-favourites = Tanıdık Favoriler
+row-new-releases = Yeni Çıkışlar
+collection-title = { $label } Koleksiyonu
+collection-eyebrow-event = Koleksiyon
+collection-for-every-feeling = Her His İçin
 collection-explore-all = Tümünü keşfet
 badge-recently-added = Yeni Eklendi
 event-autumn = Kış
@@ -1148,3 +2158,8 @@ row-np-new-genre = Yeni { $genre }
 row-np-under-the-radar = Dikkat Çekenler
 row-np-hidden-gems = Gizli Kıymetler
 row-np-closer-look = Daha Yakından Bak
+row-np-top10-language = Bugünkü En İyi { $language } Başlıkları
+row-np-top10-genre = Bugünkü En İyi { $genre } Başlıkları
+continue-watching-row-for = { $name } için devam et
+continue-watching-mark-watched = İzlenen olarak işaretle
+continue-watching-time-of = { $done }/{ $total }m

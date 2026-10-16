@@ -1,30 +1,154 @@
 action-buttons-add-to-my-list = Adicionar à minha lista
+action-buttons-close = Fechar
 action-buttons-i-like-this = Gosto disto
 action-buttons-more-info = Mais informações
+action-buttons-mute-trailer = Mutar trailer
 action-buttons-rate = Avaliar
+action-buttons-replay-trailer = Repetir trailer
+action-buttons-unmute-trailer = Desmutar trailer
+add-edit-modal-delete-profile = Excluir perfil
+add-edit-modal-delete-this-profile-all-viewing = Excluir este perfil? Todos os históricos de visualização e itens da Minha Lista serão permanentemente removidos.
+add-edit-modal-enter-4digit-pin = Digite um PIN de 4 dígitos
+add-edit-modal-name = Nome
+add-edit-modal-only-see-childfriendly-series-and = Apenas ver séries e filmes adequados para crianças
+add-edit-modal-require-a-4digit-pin-to = Requerir um PIN de 4 dígitos para acessar este perfil
 add-edit-modal-save = Guardar
+add-edit-modal-yes-delete = Sim, Excluir
 browse-action-adventure = Ação e aventura
+browse-comedies = Comédias
+browse-grid-go-back = Voltar
 browse-home = Início
 browse-scifi-fantasy = Ficção Científica e Fantasia
+browse-top-10-in-the-uk = Top 10 no Reino Unido Hoje
 category-sub-nav-mobile-films = Filmes
+category-sub-nav-mobile-new-hot = Novo & Quente
 category-sub-nav-mobile-series = Séries
 choose-icon-back = Voltar
+clips-clips = Clips
 continue-watching-options-sheet-cancel = Cancelar
 continue-watching-options-sheet-remove-from-continue-watching = Remover de 'Continuar a ver'
+continue-watching-row-continue-watching = Continuar Assistindo
+continue-watching-row-scroll-left = Rolagem para a Esquerda
+continue-watching-row-scroll-right = Rolagem para a Direita
 controls-overlay-audio-subtitles = Áudio e legendas
+controls-overlay-back-to-browse = Voltar para Navegar
+controls-overlay-episode-selector = Selecionador de Episódios
+controls-overlay-forward-10-seconds-right-arrow = Avançar 10 segundos (Seta para a Direita)
 controls-overlay-fullscreen-f = Ecrã inteiro (F)
 controls-overlay-next-episode = Próximo episódio
+controls-overlay-playback-speed = Velocidade de Reprodução
+controls-overlay-rewind-10-seconds-left-arrow = Retroceder 10 segundos (Seta para a Esquerda)
+episode-drawer-no-episodes-available-for-this = Nenhum episódio disponível para esta temporada.
 games-coming-soon = Brevemente
 info-modal-episodes-no-image = Sem imagem
+info-modal-error-loading-details = Erro ao carregar detalhes.
+language-browse-by-language = Navegar por Idioma
+language-select-your-preferences = Selecione suas preferências
 login-email-address = Endereço de e-mail
 login-get-started = Começar
 login-password = Senha
+login-ready-to-watch-enter-your = Pronto para assistir? Insira seu e-mail para criar ou reiniciar sua assinatura.
 login-sign-in = Entrar
+login-unlimited-films-series-and-more = Filmes, séries e muito mais ilimitados
+mod-finding-optimal-stream = Encontrando a melhor transmissão...
+mod-retry = Tentar novamente
+movie-card-popup-hd = HD
+navbar-exit-kids = Sair do Modo Criança
+navbar-menu-current-profile = Perfil Atual
+navbar-mobile-avatar = Avatar
 navbar-mobile-cast = Elenco
+navbar-mobile-cast-to-tv = Caster para TV
+navbar-mobile-profile = Perfil
+navbar-mobile-profile-menu = Menu do Perfil
+navbar-switch-to-kids-profile = Alternar para Perfil de Criança
+new-popular-coming-to-the-collection-soon = Chegando à Coleção em Breve
+new-popular-new-and-acclaimed = Novo e Reconhecido
+new-popular-new-series-everyone-is-watching = Nova Série que Todos Estão Assistindo
+new-popular-newly-added-to-the-collection = Novamente adicionado à coleção
+new-popular-rising-stars-under-the-radar = Estrelas emergentes: Fora do radar
+new-popular-the-best-of-2026-so = O melhor de 2026 até agora
+new-popular-the-films-everyone-is-discussing = Os filmes que todos estão discutindo
+new-popular-top-10-films-in-the = Top 10 Filmes no Reino Unido Hoje
+new-popular-top-10-series-in-the = Top 10 Séries no Reino Unido Hoje
 new-popular-worth-the-wait = Vale a pena esperar
+not-found-alternate-dimensions = Dimensões alternativas
+not-found-alternate-dimensions-more-like-this = Dimensões alternativas: Mais como este
+not-found-cinematic-background = Cenário cinematográfico
+not-found-diagnostic-report = Relatório diagnóstico
+not-found-the-targeted-router-endpoint-has = O endpoint do roteador alvo foi desreferenciado ou falhou em carregar do nosso espaço CDN. Por favor, redirecione de volta ao nosso ambiente de streaming seguro para retomar a reprodução.
+notifications-dropdown-notifications = Notificações
+notifications-dropdown-youre-all-caught-up-new = Você está tudo atualizado — novas chegadas aparecerão aqui.
+notifications-notifications-arrivals = Notificações & Chegadas
+notifications-stay-up-to-date-with = Fique atualizado com novos lançamentos, hits em alta e recomendações.
+pin-prompt-profile-lock-is-currently-on = Bloqueio de perfil está atualmente ativado.
+search-bar-clear-search = Limpar busca
 search-bar-search = Pesquisar
+search-bar-search-input = Entrada de busca
+search-bar-titles-people-genres = Títulos, pessoas, gêneros
+subtitle-drawer-no-subtitles-detected-for-this = Nenhuma legenda detectada para este streaming.
+subtitle-drawer-subtitle-timing-offset = Offset de sincronização das legendas
 subtitle-drawer-subtitles = Legendas
+vibe-row-scroll-left = Rolagem para a esquerda
+vibe-row-scroll-right = Rolagem para a direita
+video-player-forward-10s = Avançar 10 segundos
+video-player-fullscreen = Tela cheia
 video-player-rewind-10s = Recuar 10s
+whos-watching-add-profile = Adicionar perfil
+whos-watching-kids = CRIANÇAS
+help-ui-center = Centro de Ajuda
+help-ui-browse = Navegar
+help-ui-signin = Entrar
+help-ui-hero-title = Como podemos ajudar?
+help-ui-search-label = Buscar
+help-ui-search-placeholder = Digite uma pergunta, tópico ou problema
+help-ui-popular = Tópicos populares
+help-ui-explore = Explorar Tópicos
+help-ui-quick-links = Links Rápidos
+help-ui-need-more = Precisa de mais ajuda?
+help-ui-contact-us = Contate-nos
+help-ui-language-label = Selecione seu idioma preferido:
+help-ui-back = Voltar para a Home da Ajuda
+help-ui-related = Artigos Relacionados
+help-ui-helpful = Este artigo foi útil?
+help-ui-yes = Sim
+help-ui-no = Não
+help-ui-thanks = Obrigado pelo seu feedback.
+help-ui-tell-more = Diga-nos o que faltou
+help-ui-recommended = Recomendado para você
+help-ui-additional = Resultados de busca adicionais
+help-ui-read = Ler Artigo
+help-ui-account = Conta
+help-ui-signout = Sair da { $brand }
+help-ui-results-count-link = Ver todos os resultados para "{ $query }"
+help-ui-results-none = Nenhum resultado para "{ $query }".
+help-ui-results-hint = Verifique a ortografia, tente menos palavras ou navegue pelos tópicos.
+help-ui-results-empty = Digite algumas palavras para pesquisar no Centro de Ajuda.
+help-ui-page-prev = Página anterior
+help-ui-page-next = Próxima página
+help-ui-page-n = Página { $n }
+help-ui-suggestions = Artigos sugeridos
+help-ui-contact-title = Contate-nos
+help-ui-contact-prompt = Diga-nos mais e encontraremos a melhor solução para você
+help-ui-describe = Descreva seu problema
+help-ui-mail-subject = Solicitação de ajuda
+help-ui-mail-intro = Descreva o problema aqui:
+help-ui-mail-details = Detalhes adicionados automaticamente
+help-ui-mail-feedback = Feedback sobre o artigo: { $title }
+help-ui-ql-profiles = Gerenciar perfis
+help-ui-ql-language = Alterar idioma de exibição
+help-ui-ql-signin = Entrar
+help-ui-ql-copyright = Relatar um problema de direitos autorais
+help-ui-ql-title = Feedback sobre um título na { $brand }
+help-ui-ql-email = Envie-nos um e-mail para { $help_email }
+help-ui-not-found-title = Não encontramos esse artigo
+help-ui-not-found-body = Ele pode ter se movido ou o link pode estar errado. Pesquise no Centro de Ajuda ou navegue pelos tópicos.
+help-ui-legal-terms = Termos de Uso
+help-ui-legal-privacy = Privacidade
+help-ui-legal-cookies = Política de Cookies
+help-ui-legal-dmca = DMCA
+help-ui-legal-disclaimer = Disclaimer
+help-ui-doc-title = { $brand } Centro de Ajuda
+help-topic-account = Conta e Perfis
 help-topic-fix = Corrigir um problema
 help-topic-watching = Assistindo
 help-topic-start = Começando
@@ -65,6 +189,87 @@ help-art-profiles-manage-body =
 help-art-switch-profile-title = Como alternar perfis
 help-art-switch-profile-summary = Mude quem está assistindo sem sair da página.
 help-art-switch-profile-keywords = alternar mudar perfil quem está assistindo menu
+help-art-switch-profile-body =
+    1. Abra o menu de perfil no canto superior direito da página.
+    2. Selecione o perfil que deseja usar.
+    3. Se o perfil tiver um PIN, digite os quatro dígitos para continuar.
+
+    Recomendações, <b>Minha Lista</b> e <b>Continuar Assistindo</b> mudam conforme o perfil que você escolher.
+
+    !! Observação: Você pode bloquear um perfil com um PIN. Consulte <a=/help/article/profile-pin>Como adicionar, editar ou remover um PIN de perfil</a>.
+
+    @@ profiles
+help-art-profile-pin-title = Como adicionar, editar ou remover um PIN de perfil
+help-art-profile-pin-summary = Bloqueie um perfil com um PIN de quatro dígitos para que apenas a pessoa certa possa abri-lo.
+help-art-profile-pin-keywords = pin bloqueio perfil bloqueio código senha quatro dígitos seguro
+help-art-profile-pin-body =
+    Um PIN de perfil é de quatro dígitos. Qualquer pessoa que selecionar o perfil precisa digitar o PIN antes de abri-lo.
+
+    ## Ativar ou alterar um PIN
+    1. Abra <b>Gerenciar Perfis</b> e selecione o perfil.
+    2. Ative <b>Bloqueio de Perfil</b> e digite quatro dígitos.
+    3. Escolha <b>Salvar</b>.
+
+    ## Remover um PIN
+    1. Abra <b>Gerenciar Perfis</b> e selecione o perfil, depois digite o PIN atual.
+    2. Desative <b>Bloqueio de Perfil</b> e escolha <b>Salvar</b>.
+
+    !! Observação: O PIN é armazenado neste dispositivo e impede que outras pessoas acessem o perfil neste navegador. Não é um bloqueio forte contra alguém que possa abrir as configurações do seu navegador. Se você esquecer, consulte <a=/help/article/forgot-pin>Esqueci meu PIN de perfil</a>.
+
+    @@ profiles
+help-art-kids-profile-title = Como criar um perfil para crianças
+help-art-kids-profile-summary = Um perfil para crianças exibe títulos escolhidos para espectadores mais jovens e mantém o resto fora do alcance.
+help-art-kids-profile-keywords = crianças crianças família controles parentais seguro jovem perfil
+help-art-kids-profile-body =
+    Um perfil para crianças limita o que é exibido a títulos adequados para espectadores mais jovens e remove as linhas maduras das páginas.
+
+    1. Abra <b>Gerenciar Perfis</b> e escolha <b>Adicionar Perfil</b>.
+    2. Ative <b>Modo para Crianças</b> para este perfil.
+    3. Escolha um nome e um ícone, depois <b>Salvar</b>.
+
+    Para impedir que uma criança mude para outro perfil, coloque um PIN em todos os perfis de adulto. Consulte <a=/help/article/profile-pin>Como adicionar, editar ou remover um PIN de perfil</a>.
+
+    !! Observação: Os títulos vêm de fontes independentes e nem todos os títulos possuem classificação. Um perfil para crianças reduz o que uma criança pode encontrar. Não substitui assistir juntos.
+
+    @@ profiles
+help-art-need-account-title = Preciso de uma conta?
+help-art-need-account-summary = Você pode navegar e assistir sem uma. Aqui está o que uma conta adiciona.
+help-art-need-account-keywords = conta cadastro login registro login necessário associação
+help-art-need-account-body =
+    Você não precisa de uma conta para navegar, pesquisar ou assistir no { $brand }.
+
+    Hoje suas perfis, lista e progresso de visualização são salvos neste navegador neste dispositivo. Contas que os mantêm sincronizados entre seus dispositivos estão sendo construídas. Até que estejam disponíveis, a página de login é uma pré-visualização e não cria uma conta real.
+
+    !! Observação: O { $brand } nunca pedirá um número de cartão para criar uma conta. Veja <a=/help/article/free-to-use>É o { $brand } gratuito?</a>
+help-art-sign-in-title = Entrar e sair
+help-art-sign-in-summary = O que a página de login faz hoje e o que fazer quando ela não funcionar como esperado.
+help-art-sign-in-keywords = entrar login logar sair deslogar senha e-mail não consegue entrar
+help-art-sign-in-body =
+    A página de login é uma pré-visualização das contas que estão sendo construídas. Escolher continuar leva você para seus perfis neste dispositivo. Nenhuma senha ou e-mail é verificada ainda.
+
+    ## Sair
+    Abra o menu de perfil e escolha <b>Sair</b>. Seus perfis salvos permanecem neste dispositivo.
+
+    ## Entrar não funciona
+    - Recarregue a página e tente novamente.
+    - Certifique-se de que o navegador permite que este site armazene dados. Veja <a=/help/article/saved-data>Onde seus perfis, lista e progresso são salvos</a>.
+    - Se o problema continuar, escreva para nós da página <a=/help/contact>Contate-Nos</a>.
+help-art-saved-data-title = Onde seus perfis, lista e progresso são salvos
+help-art-saved-data-summary = Perfis, PINs e progresso de visualização vivem neste navegador, neste dispositivo.
+help-art-saved-data-keywords = dados salvos armazenamento local navegador dispositivo perdido sincronização progresso histórico perfis cookies
+help-art-saved-data-body =
+    O { $brand } mantém seus perfis, PINs e progresso de visualização no armazenamento local do navegador no dispositivo que você está usando. Nada sobre eles é enviado para uma conta ainda.
+
+    ## O que isso significa
+    - Um navegador diferente ou dispositivo começa com nenhum perfil e nenhum progresso.
+    - Janelas privadas ou incógnitas esquecem tudo quando fecham.
+    - Limpar dados do site no navegador remove seus perfis e progresso.
+    - Sua lista dura pelo tempo que a página estiver aberta até que as contas estejam disponíveis.
+
+    ## O que é enviado para nossos servidores
+    Quando você abre ou inicia um título, o app informa ao serviço de recomendações qual título foi, com um número de sessão aleatório que não está vinculado ao seu nome. Linhas se adaptam por cerca de um dia após você parar. Veja <a=/help/article/recommendations>Como funcionam as recomendações</a>.
+
+    @@ data
 help-art-clear-data-title = Como apagar seus dados salvos
 help-art-clear-data-summary = Remova seus perfis, PINs e progresso de visualização deste navegador.
 help-art-clear-data-keywords = apagar deletar resetar remover dados histórico cache armazenamento cookies começar do zero
@@ -132,6 +337,134 @@ help-art-wont-play-body =
 help-art-playback-unavailable-title = { $brand } diz "Reprodução Indisponível"
 help-art-playback-unavailable-summary = O que a mensagem significa e o que fazer em seguida.
 help-art-playback-unavailable-keywords = reprodução indisponível mensagem de erro não pode transmitir provedores não suportados
+help-art-playback-unavailable-body =
+    Você pode ver <b>Reprodução Indisponível</b> ou <b>Não é possível transmitir o vídeo. Todos os provedores de origem estavam indisponíveis ou não suportados pelo seu navegador.</b>
+
+    Isso significa que o player pediu a todos os seus provedores de origem para esse título e nenhum retornou uma transmissão que o seu navegador pode reproduzir.
+
+    1. Aguarde um minuto e pressione play novamente. Os provedores subem e descem.
+    2. Desative os bloqueadores. Veja <a=/help/article/extensions-blockers>Extensões que bloqueiam o player</a>.
+    3. Tente um navegador diferente. Algumas transmissões precisam de recursos que estão faltando em navegadores mais antigos.
+    4. Tente outro título para verificar se o problema é apenas nesse.
+
+    Se o mesmo título falhar por um dia, <a=/help/article/report-bug>informe-nos</a>. Inclua o título, o ano e o navegador que você usou.
+
+    @@ diagnostics
+help-art-black-screen-title = Tela preta com som
+help-art-black-screen-summary = A imagem está ausente, mas você pode ouvir o título.
+help-art-black-screen-keywords = tela preta sem imagem som apenas vídeo ausente tela verde
+help-art-black-screen-body =
+    1. Pressione <b>F</b> para sair e reentrar em tela cheia, ou pressione <b>Esc</b> e reproduza novamente.
+    2. Recarregue a página.
+    3. Desative a aceleração de hardware nas configurações do seu navegador, reinicie o navegador e tente novamente.
+    4. Atualize o seu navegador e o driver de gráficos.
+    5. Tente outro navegador.
+
+    !! Observação: Algumas extensões do navegador que alteram as cores da página ou bloqueiam mídia também podem esconder a imagem. Veja <a=/help/article/extensions-blockers>Extensões que bloqueiam o player</a>.
+
+    @@ diagnostics
+help-art-buffering-title = Buffering, travamento ou início lento
+help-art-buffering-summary = Melhore uma transmissão que continua pausando para carregar.
+help-art-buffering-keywords = buffering atraso lento travamento travado carregamento spinner velocidade conexão qualidade
+help-art-buffering-body =
+    Uma transmissão pausa quando sua conexão entrega dados mais lentamente do que o vídeo precisa.
+
+    - Feche outras abas, downloads e dispositivos que usam a mesma rede.
+    - Se aproxime do roteador ou use um cabo.
+    - Pausa por um minuto para que o player possa carregar adiante, depois pressione play.
+    - Desative um VPN, ou escolha um servidor mais próximo no VPN.
+    - Tente novamente mais tarde. As fontes são mais lentas em horas de pico.
+
+    A fonte decide qual nível de qualidade é oferecido, então a nitidez da imagem pode mudar durante a reprodução.
+
+    @@ diagnostics
+help-art-subtitles-missing-title = Legendas estão ausentes ou fora de sincronia
+help-art-subtitles-missing-summary = Corrija legendas que não aparecem, mostram a língua errada ou atrasam em relação à fala.
+help-art-subtitles-missing-keywords = legendas legendas ausentes idioma errado fora de sincronia atraso texto cc
+help-art-subtitles-missing-body =
+    1. Selecione <b>Áudio e Legendas</b> no player e certifique-se de que um idioma de legenda esteja selecionado.
+    2. Escolha outro track se a lista oferecer. Os tracks vêm da fonte e diferem entre títulos.
+    3. Defina seu idioma preferido de legendas em <b>Configurações</b>. Veja <a=/help/article/language>Como mudar o idioma</a>.
+    4. Se o texto estiver cedo ou tarde, recarregue e assista novamente. O timing é definido pela fonte e não podemos ajustá-lo para um título específico.
+
+    Se um título não tem legendas em absoluto, a fonte não forneceu nenhuma.
+
+    @@ language
+help-art-supported-browsers-title = Navegadores compatíveis
+help-art-supported-browsers-summary = Quais navegadores e versões funcionam melhor.
+help-art-supported-browsers-keywords = navegador chrome firefox safari edge brave opera internet explorer versão atualizar compatível
+help-art-supported-browsers-body =
+    { $brand } funciona melhor nas versões atuais desses navegadores:
+
+    - Google Chrome e outros navegadores Chromium, como Edge e Brave
+    - Mozilla Firefox
+    - Apple Safari no macOS, iPhone e iPad
+
+    O Internet Explorer não é compatível. Mantenha seu navegador atualizado e permita que o site use JavaScript e armazenamento local.
+
+    @@ diagnostics
+
+    >> O navegador mostra um erro antes que a página carregue
+    Recarregue com <b>Ctrl + Shift + R</b> (<b>Cmd + Shift + R</b> no Mac) para obter a versão mais recente do aplicativo, depois tente novamente.
+help-art-fix-phone-title = Corrija um problema no seu celular ou tablet
+help-art-fix-phone-summary = Passos para iPhone, iPad e Android.
+help-art-fix-phone-keywords = celular tablet android iphone ipad móvel corrigir problema aplicativo
+help-art-fix-phone-body =
+    1. Feche a aba e abra { $brand } novamente.
+    2. Atualize seu navegador da loja de aplicativos.
+    3. Desative o modo economia de dados ou modo de baixa potência enquanto assiste.
+    4. Verifique se você tem uma conexão estável. Veja <a=/help/article/buffering>Buffering, travamento ou início lento</a>.
+    5. Se você adicionou { $brand } à tela inicial e parece estar desatualizado, remova-o e adicione novamente. Veja <a=/help/article/install-app>Como instalar { $brand } como um aplicativo</a>.
+
+    @@ diagnostics
+
+    @@ refresh
+help-art-fix-tv-title = Corrija um problema no seu TV
+help-art-fix-tv-summary = Passos quando você assiste por meio de um navegador de TV ou um cast.
+help-art-fix-tv-keywords = tv televisão smart tv chromecast cast corrigir problema hdmi stick navegador
+help-art-fix-tv-body =
+    { $brand } não tem um app para TV. Você assiste através do navegador da TV ou enviando uma aba do navegador de um computador ou telefone.
+
+    - Atualize o software da TV e seu navegador.
+    - Reinicie a TV ou o stick de streaming.
+    - Se você estiver enviando uma aba, mantenha o dispositivo de envio na mesma rede e feche outras abas nele.
+    - Se o navegador da TV estiver lento, envie a aba de um computador em vez disso.
+
+    Veja <a=/help/article/watch-on-tv>Como assistir na sua TV</a>.
+
+    @@ diagnostics
+help-art-extensions-blockers-title = Extensões que bloqueiam o player
+help-art-extensions-blockers-summary = Bloqueadores de anúncios e ferramentas de privacidade podem impedir que um streaming carregue.
+help-art-extensions-blockers-keywords = extensão adblock ublock ghostery privacidade bloqueador script bloqueio vpn filtro dns
+help-art-extensions-blockers-body =
+    O player carrega streams de fontes de terceiros. Ferramentas que bloqueiam scripts, frames ou mídia de outros sites podem impedir isso.
+
+    1. Abra sua extensão e pause-a para este site, depois recarregue.
+    2. Se você usar um filtro de rede abrangente, como um filtro DNS ou uma rede de escola ou trabalho, tente outra rede.
+    3. Se a reprodução funcionar depois disso, adicione { $brand } à lista de permissões da extensão.
+
+    !! Observação: Nós nunca pedimos para você instalar uma extensão do navegador ou um codec para assistir. Feche qualquer página que faça isso.
+
+    @@ diagnostics
+help-art-rows-wont-load-title = Linhas ou imagens não carregam
+help-art-rows-wont-load-summary = A página mostra linhas vazias, um spinner ou imagens ausentes.
+help-art-rows-wont-load-keywords = linhas vazias carregamento página em branco imagens fotos posters não carregando home erro recomendações down
+help-art-rows-wont-load-body =
+    As linhas da página inicial vêm de um serviço de recomendações. Posters e detalhes vêm de um serviço de catálogo. Se qualquer um estiver inacessível, você pode ver linhas vazias ou um spinner de carregamento.
+
+    1. Recarregue a página.
+    2. Verifique sua conexão.
+    3. Desative bloqueadores para este site. Veja <a=/help/article/extensions-blockers>Extensões que bloqueiam o player</a>.
+    4. Tente novamente em alguns minutos.
+
+    A página de busca e seus itens salvos ainda funcionam se o serviço de recomendações estiver com problema. Se o problema durar mais de uma hora, <a=/help/article/report-bug>nos avise</a>.
+
+    @@ diagnostics
+
+    @@ refresh
+help-art-list-missing-title = Minha Lista ou progresso desapareceu
+help-art-list-missing-summary = Por que uma lista ou a linha Continue Assistindo pode estar vazia e o que fazer.
+help-art-list-missing-keywords = minha lista desaparecida perdida vazia perdida continue assistir progresso reset
 help-art-list-missing-body =
     { $brand } armazena perfis e progresso nesse navegador. Eles estão ausentes quando:
 
@@ -318,6 +651,72 @@ help-art-new-popular-body =
 help-art-recommendations-title = Como funcionam as recomendações
 help-art-recommendations-summary = Como as linhas são escolhidas e o que você pode fazer para alterá-las.
 help-art-recommendations-keywords = recomendações linhas sugestões porque você assistiu gosto algoritmo para você personalizado personalizado
+help-art-recommendations-body =
+    As linhas na página inicial são construídas a partir das descrições, gêneros e créditos dos títulos. Títulos que são semelhantes em significado são agrupados em uma linha, por exemplo uma década e um gênero, ou <b>Like</b> seguido por um título que você assistiu.
+
+    ## O que muda suas linhas
+    - Iniciar um título. O serviço de recomendação aprende quais gêneros você busca e adapta as linhas por cerca de um dia.
+    - O perfil que você usa. Um perfil para crianças só mostra títulos para espectadores mais jovens.
+
+    ## O que não muda
+    As linhas não são influenciadas por quanto você paga, onde você mora ou quem você é. Nós não usamos seu nome ou e-mail, pois o serviço só vê um número de sessão aleatório. Veja <a=/help/article/privacy-data>O que { $brand } coleta de dados?</a>
+
+    @@ data
+help-art-trailers-clips-title = Trailer e clips
+help-art-trailers-clips-summary = Visualize um título antes de comprometer-se.
+help-art-trailers-clips-keywords = trailers clips pré-visualização vídeos curtos teaser desligar som reprodução automática pré-visualizações
+help-art-trailers-clips-body =
+    - Passar o mouse sobre uma carta de título em um computador, ou abrir seus detalhes, para ver uma pré-visualização do trailer.
+    - <b>Clips</b> mostra pré-visualizações verticais curtas que você pode rolar.
+    - Use o botão de som para ligar ou desligar o som da pré-visualização. Sua escolha é lembrada para o perfil.
+
+    Para parar as pré-visualizações de começarem sozinhas, abra <b>Configurações</b>, depois <b>Configurações de reprodução</b>, e desligue <b>Reprodução automática de pré-visualizações</b>.
+help-art-what-is-title = O que é { $brand }?
+help-art-what-is-summary = Uma breve descrição de { $brand } e o que ela faz e não faz.
+help-art-what-is-keywords = o que é sobre streams serviço explicar índice links catálogo netflix como
+help-art-what-is-body =
+    { $brand } ajuda você a encontrar seu próximo filme ou série. Ela aprende o que você gosta e organiza o catálogo em linhas para você, em uma página que se sente como os serviços de streaming que você conhece.
+
+    { $brand } é um índice de links. Ela não hospeda ou carrega vídeos. Quando você pressiona play, o player pede fontes independentes para uma transmissão e reproduz a primeira que funciona. Veja <a=/help/article/sources>De onde os títulos vêm</a>.
+
+    Não há nada para comprar e nenhuma assinatura. Veja <a=/help/article/free-to-use>{ $brand } é grátis?</a>
+help-art-getting-started-title = Começando com { $brand }
+help-art-getting-started-summary = Seus primeiros cinco minutos: perfis, encontrar um título e salvá-lo.
+help-art-getting-started-keywords = começando guia início primeira vez tour novo usuário como usar diretrizes básicos
+help-art-getting-started-body =
+    1. <b>Escolha ou crie um perfil.</b> Veja <a=/help/article/profiles-manage>Como criar, editar ou excluir perfis</a>.
+    2. <b>Explore a página inicial.</b> As linhas são agrupadas por tema e o título grande no topo muda.
+    3. <b>Busque</b> por um título com a lupa. Veja <a=/help/article/search-browse>Como buscar e navegar</a>.
+    4. <b>Selecione um título</b> para ler sobre ele, assistir ao trailer e pressionar play.
+    5. <b>Adicione títulos à Minha Lista</b> com o botão <b>+</b>.
+
+    Aprenda as teclas que ajudam enquanto assiste: <a=/help/article/shortcuts>Atalhos do teclado</a>.
+help-art-sources-title = De onde os títulos vêm
+help-art-sources-summary = Como { $brand } encontra streams e por que um título pode funcionar um dia e falhar no outro.
+help-art-sources-keywords = fontes provedores links hospedados terceiros de onde vem catálogo tmdb metadados disponibilidade
+help-art-sources-body =
+    Detalhes, posters e avaliações vêm de um catálogo público de filmes e TV. O vídeo em si não está em { $brand }. Quando você pressiona play, o player pede a streams de fontes de terceiros independentes.
+
+    - Um título pode estar disponível de uma fonte e não de outra.
+    - Uma fonte pode sair do ar sem aviso.
+    - Qualidade, trilhas sonoras e legendas vêm da fonte.
+
+    Nós não controlamos ou verificamos essas fontes. Veja o <a=/disclaimer>Disclaimer</a>. Se você é um detentor de direitos, veja <a=/help/article/copyright>Como relatar um problema de direitos autorais</a>.
+help-art-contribute-title = Como posso contribuir?
+help-art-contribute-summary = Ideias, correções, traduções e relatos de bugs são bem-vindos.
+help-art-contribute-keywords = contribuir contribuindo voluntário traduzir tradução código github ajuda melhorar sugestões
+help-art-contribute-body =
+    { $brand } é construído de forma aberta. Você pode ajudar de várias formas:
+
+    - <b>Traduções.</b> O texto da interface está em arquivos de texto puro, um por idioma, então uma tradução é um arquivo de texto que você pode editar.
+    - <b>Relatos de bugs.</b> Veja <a=/help/article/report-bug>Relatar um problema</a>.
+    - <b>Correções e funcionalidades.</b> Envie uma descrição ou um patch.
+    - <b>Ideias.</b> Nos diga o que você deseja que o Centro de Ajuda ou o aplicativo fizesse.
+
+    Escreva para <a=mailto:{ $contribute_email }>{ $contribute_email }</a> com algumas linhas sobre o que você quer fazer.
+help-art-install-app-title = Como instalar { $brand } como um aplicativo
+help-art-install-app-summary = Adicione { $brand } à tela inicial ou ao desktop para que abra em sua própria janela.
+help-art-install-app-keywords = instalar aplicativo pwa adicionar à tela inicial atalho do desktop ícone aplicativo web
 help-art-install-app-body =
     { $brand } é um aplicativo web. Não há download em loja. Seu navegador pode instalá-lo para que abra em sua própria janela e tenha seu próprio ícone.
 
@@ -354,6 +753,131 @@ help-art-watch-on-tv-body =
 help-art-copyright-title = Como relatar um problema de direitos autorais
 help-art-copyright-summary = Titulares de direitos podem pedir que um link seja removido.
 help-art-copyright-keywords = direitos autorais dmca solicitação de remoção infração direito titular remover relatar aviso legal
+help-art-copyright-body =
+    { $brand } não hospeda arquivos de vídeo. Ele lista links para títulos hospedados por outros serviços. Se você possui os direitos de um título e acredita que um link viola-os, envie-nos uma notificação e revisaremos.
+
+    Uma notificação deve incluir:
+    1. Seu nome e detalhes de contato.
+    2. Uma descrição da obra que você possui.
+    3. O endereço da página em { $brand } que linka para ela.
+    4. Uma declaração de que você é o detentor dos direitos ou é autorizado a agir em seu nome.
+
+    Envie para <a=mailto:{ $help_email }>{ $help_email }</a> com o assunto <b>aviso DMCA</b>. O processo completo está na <a=/dmca> página DMCA </a>.
+help-art-title-feedback-title = Feedback sobre um título em { $brand }
+help-art-title-feedback-summary = Relate uma descrição errada, um título ausente ou um título que nunca reproduz.
+help-art-title-feedback-keywords = feedback título descrição errada título ausente solicitação filme série adicionar relatar incorreto poster
+help-art-title-feedback-body =
+    Escreva para <a=mailto:{ $help_email }>{ $help_email }</a> e inclua:
+
+    - o título e o ano
+    - o endereço da página do título em { $brand }
+    - o que está errado, por exemplo, um poster errado, uma temporada ausente ou um título que nunca reproduz
+
+    Detalhes vêm de um catálogo público, então uma descrição errada é melhor corrigida na fonte. Podemos passar correções que recebemos.
+help-art-report-bug-title = Relatar um problema
+help-art-report-bug-summary = O que incluir para que possamos encontrar e corrigir um bug rapidamente.
+help-art-report-bug-keywords = relatar bug problema erro crash quebrado não funciona feedback contato
+help-art-report-bug-body =
+    Quanto mais sabemos, mais rápido podemos corrigir. Por favor inclua:
+
+    1. O que você estava fazendo e o que esperava.
+    2. O que aconteceu em vez disso, e qualquer mensagem que você viu.
+    3. O título, se for sobre reprodução.
+    4. Seu dispositivo e navegador.
+
+    A página <a=/help/contact>Contate-nos</a> tem um botão que abre um e-mail com seus detalhes do navegador preenchidos.
+
+    @@ diagnósticos
+cookie-sheet = <b>{ $brand }</b> usa cookies para manter seus perfis e preferências e, se você permitir, para personalizar recomendações.
+cookie-learn = Saiba mais
+cookie-reject = Recusar
+cookie-accept = Aceitar
+cookie-dismiss = Fechar
+cookie-link = Preferências de Cookies
+cookie-center-title = Centro de Preferências de Privacidade
+cookie-save = Salvar configurações
+cookie-always-active = Ativo Sempre
+cookie-details = Detalhes dos Cookies
+cookie-hide-details = Ocultar detalhes
+cookie-nav-general = Descrição Geral
+cookie-nav-essential = Cookies Essenciais
+cookie-nav-personal = Cookies de Personalização
+cookie-nav-third = Cookies de Terceiros
+cookie-nav-ads = Cookies de Anúncios
+cookie-general =
+    Este ferramenta explica o que { $brand } mantém no seu navegador e permite que você controle a parte opcional.
+
+    A maioria dos navegadores permite que você bloquee ou exclua cookies e dados do site. Se você fizer isso, partes do { $brand } pararão de funcionar e seus perfis e progresso serão perdidos.
+
+    Suas escolhas aqui são salvas no seu navegador, então limpar dados do site redefinirá elas.
+
+    Para mais informações, consulte a <a=/cookies>Política de Cookies</a> e a <a=/privacy>Política de Privacidade</a>.
+cookie-essential =
+    Esses itens são necessários para fornecer o serviço solicitado. Eles mantêm seus perfis e PINs, até onde você assistiu, sua língua e as escolhas que você faz aqui. Eles ficam no seu dispositivo e não são enviados para nossos servidores. Você não pode optar por não usá-los.
+
+    Duração: eles ficam até você limpar os dados deste site.
+cookie-essential-list =
+    - <b>streams_profiles</b> e <b>streams_active_profile</b>: seus perfis e o que está em uso.
+    - <b>streams_watch_progress_v1</b>: até onde você assistiu cada título.
+    - <b>streams_session</b>: seu login, quando você tem um.
+    - <b>streams_language</b>: a língua que você escolheu.
+    - <b>streams_consent</b>: as escolhas que você faz nesta janela.
+    - <b>streams_help_votes</b>: suas respostas a 'Este artigo foi útil?'
+    - <b>streams-notifications-read:default</b>: quais notificações você abriu.
+cookie-personal =
+    Esses itens permitem que { $brand } adapte as listas para o seu gosto. Quando você começa um título, o aplicativo envia o título e um número de sessão aleatório para nosso serviço de recomendação. O serviço mantém um pequeno perfil de gosto por cerca de um dia e depois o descarta.
+
+    Se você desativar isso, as listas não serão personalizadas, nada será enviado e nenhum número de sessão será mantido.
+
+    Duração: até você limpar os dados deste site ou desativar isso.
+cookie-personal-list =
+    - <b>streams_session_id</b>: um número aleatório que não está ligado ao seu nome.
+    - <b>streams_user_affinity</b>: os gêneros que você escolheu.
+cookie-third =
+    Poster e detalhes vêm de um catálogo público de filmes, e streams vêm de fontes independentes. Aquelas websites recebem seu endereço IP quando seu navegador carrega deles e podem definir seus próprios cookies. Nós não podemos desativá-los aqui.
+
+    Veja <a=/help/article/sources>De onde os títulos vêm</a>.
+cookie-ads = Nós não usamos cookies de publicidade, rastreadores ou análise.
+help-ui-foryou = Ajuda para você neste dispositivo
+help-ui-recommended-inline = Recomendado para você
+help-card-diagnostics-title = Verifique este dispositivo
+help-card-diagnostics-body = Teste sua conexão, navegador e nossos serviços.
+help-card-profiles-title = Seus perfis
+help-card-profiles-body = Veja quais perfis possuem um PIN ou Modo Kids.
+help-card-data-title = Seus dados salvos
+help-card-data-body = Limpe o progresso, reinicie as recomendações ou comece do zero.
+help-card-language-title = Idioma
+help-card-language-body = Escolha um idioma ou use o do seu navegador.
+help-card-cookies-title = Escolhas de cookies
+help-card-cookies-body = Revise o que é armazenado e o que é compartilhado.
+help-card-refresh-title = Versão mais recente
+help-card-refresh-body = Recarregue para obter a versão mais nova.
+help-act-run = Execute a verificação
+help-act-running = Verificando…
+help-act-copy = Copiar resultados
+help-act-copied = Copiado
+help-act-email = Enviar resultados por e-mail
+help-act-fix = Como resolver
+help-act-summary-ok = Tudo parece estar bem neste dispositivo.
+help-act-d-connection = Conexão com a internet
+help-act-d-browser = Navegador
+help-act-d-video = Reprodução de vídeo
+help-act-d-storage = Dados salvos
+help-act-d-fullscreen = Tela cheia
+help-act-d-engine = Serviço de recomendações
+help-act-d-sources = Fontes de streaming
+help-act-d-catalog = Catálogo de filmes e séries
+help-act-v-online = Online
+help-act-v-offline = Offline
+help-act-v-speed = { $type }, aproximadamente { $mbps } Mbps
+help-act-v-supported = Suportado
+help-act-v-unsupported = Não suportado
+help-act-v-hls-native = HLS integrado
+help-act-v-mse = Extensões de Fonte de Mídia
+help-act-v-blocked = Bloqueado ou cheio
+help-act-v-reachable = Atingível em { $ms } ms
+help-act-v-unreachable = Não atingível
+help-act-v-timeout = Nenhuma resposta em { $s } segundos
 help-act-data-title = Seus dados neste dispositivo
 help-act-data-lang = Idioma: { $lang }
 help-act-clear-progress = Limpar progresso de visualização
@@ -649,6 +1173,27 @@ legal-terms-4-title = 4. Uso Aceitável
 legal-terms-4-body = Você concorda em não usar o serviço para:
 legal-terms-4-b1 = Contornar, desativar ou interferir com recursos de segurança do serviço.
 legal-terms-4-b2 = Usar ferramentas automatizadas (como bots, raspadores ou crawlers) para acessar ou consultar o serviço em uma taxa que possa prejudicar o desempenho.
+legal-terms-4-b3 = Tentar explorar, escanear ou testar a vulnerabilidade da infraestrutura do serviço.
+legal-terms-4-b4 = Participar de qualquer conduta que seja ilegal, prejudicial ou que determinemos ser inadequada.
+legal-terms-5-title = 5. Propriedade Intelectual
+legal-terms-5-body = A marca { $brand }, o design da interface e o código de software original são protegidos por direitos autorais. Todos os conteúdos midiáticos acessíveis via { $brand } permanecem a propriedade de seus respectivos detentores de direitos.
+legal-terms-6-title = 6. Exclusões de Responsabilidade e Limitação de Responsabilidade
+legal-terms-6-body = O serviço é fornecido "como é" e "como está disponível" sem qualquer garantia de qualquer tipo. A { $brand } não garante disponibilidade contínua e não é responsável por quaisquer danos indiretos ou consequentes.
+legal-terms-7-title = 7. Conteúdo de Terceiros
+legal-terms-7-body = A { $brand } fornece acesso a links que apontam para conteúdo hospedado em servidores independentes de terceiros. Não temos controle sobre, e não assumimos responsabilidade pelo conteúdo, políticas de privacidade ou práticas de qualquer site de terceiros.
+legal-terms-8-title = 8. Terminação
+legal-terms-8-body = Reservamos o direito de suspender ou encerrar sua conta e acesso ao serviço a nosso exclusivo critério, sem aviso prévio, por conduta que acreditamos violar esses Termos ou ser prejudicial a outros usuários, a nós ou a terceiros.
+legal-terms-9-title = 9. Lei Aplicável
+legal-terms-9-body = Esses Termos de Serviço serão regidos e interpretados de acordo com as leis da Inglaterra e do País de Gales, sem prestar atenção às disposições de conflito de leis.
+legal-terms-10-title = 10. Contato
+legal-terms-10-body = Para quaisquer dúvidas sobre esses Termos de Serviço, por favor entre em contato conosco através da página de Contato.
+legal-cookie-policy-title = Política de Cookies
+legal-cookie-policy-updated = Última atualização: 16 de agosto de 2026
+legal-cookie-policy-1-title = Como usamos cookies
+legal-cookie-policy-1-body = Usamos cookies e tecnologias semelhantes de rastreamento para rastrear a atividade em nosso serviço e armazenar certa informação. Cookies são arquivos com uma pequena quantidade de dados que podem incluir um identificador anônimo único.
+legal-dmca-title = Aviso de Refúgio Seguro DMCA
+legal-dmca-updated = Última atualização: agosto de 2026
+legal-dmca-1-title = 1. Nosso Papel — Agregador de Links, Não um Anfitrião
 legal-dmca-1-body = { $brand } é um agregador de links e motor de busca. Nós não hospedamos, carregamos, armazenamos, transmitimos ou controlamos qualquer conteúdo de vídeo ou mídia. Todos os conteúdos são servidos por servidores terceiros que estão totalmente fora do nosso controle.
 legal-dmca-2-title = 2. Procedimento de Notificação e Remoção
 legal-dmca-2-body = Se você é um proprietário de direitos autorais, ou um agente autorizado a agir em nome de um proprietário de direitos autorais, e acredita que um link em nosso índice viola seus direitos autorais, por favor envie uma notificação escrita para { $support_email } contendo:
@@ -664,6 +1209,97 @@ legal-dmca-3-b4 = <strong>Envie notificações para:</strong> { $support_email }
 legal-dmca-3-b5 = Revisaremos todas as notificações e removeremos links de nosso índice que satisfaçam os requisitos legais acima mencionados.
 legal-dmca-3-b6 = <strong>Notificação Contrária:</strong> Se você acredita que seu link foi removido por erro, você pode submeter uma notificação contrária conforme previsto no 17 U.S.C. § 512(g).
 legal-dmca-4-title = 4. Limitação Importante — Podemos Remover Apenas Links
+legal-dmca-4-body = Como { $brand } não hospeda nenhum arquivo de mídia, somente conseguimos remover o link do nosso índice de busca. Não podemos remover o conteúdo subjacente do servidor no qual ele está hospedado.
+legal-dmca-5-title = 5. Política de Infrator Repetitivo
+legal-dmca-5-body = Em circunstâncias apropriadas e a nosso exclusivo critério, { $brand } desativará ou encerrará o acesso para usuários ou contas que são infratores repetitivos.
+legal-dmca-6-title = 6. Nenhuma Admissão de Responsabilidade
+legal-dmca-6-body = A remoção de um link do nosso índice em resposta a um aviso DMCA não constitui uma admissão por { $brand } de que ocorreu qualquer violação.
+legal-disclaimer-title = Disclaimer
+legal-disclaimer-updated = Última atualização: agosto de 2026
+legal-disclaimer-1-title = 1. Nenhum Hospedagem de Conteúdo
+legal-disclaimer-1-body = { $brand } é um agregador de links e motor de busca para links embutidos de mídia publicamente disponíveis. Não hospedamos, carregamos, armazenamos, transmitimos ou controlamos qualquer conteúdo de vídeo, áudio ou mídia em nossos servidores.
+legal-disclaimer-2-title = 2. Conteúdo de Terceiros — Nenhuma Responsabilidade
+legal-disclaimer-2-body = Todo conteúdo acessível por meio de links indexados por { $brand } origina-se de fontes externas, independentes e de terceiros. { $brand } não tem controle sobre, e não assume responsabilidade por, a legalidade, precisão, qualidade ou disponibilidade desse conteúdo.
+legal-disclaimer-3-title = 3. Assunção de Risco do Usuário
+legal-disclaimer-3-body = Você reconhece e concorda que o uso de { $brand } e o acesso a qualquer conteúdo por meio de links embutidos externos é totalmente de sua própria responsabilidade. { $brand } expressamente nega todas as garantias, expressas ou implícitas.
+legal-disclaimer-4-title = 4. Disponibilidade dos Links
+legal-disclaimer-4-body = Links embutidos indexados por { $brand } apontam para recursos em servidores de terceiros. Não garantimos a disponibilidade contínua, qualidade ou completude de qualquer conteúdo vinculado, e os links podem quebrar ou tornar-se indisponíveis sem aviso.
+legal-disclaimer-5-title = 5. Apreciação da Informação
+legal-disclaimer-5-body = Metadados exibidos em { $brand } (incluindo títulos, descrições, classificações e imagens) são provenientes de fornecedores de dados de terceiros, como TMDB. Não garantimos a precisão ou completude desses metadados.
+help-ui-kind-policy = Política
+help-ui-filter-all = Tudo
+help-ui-filter-articles = Artigos de ajuda
+help-ui-filter-policies = Políticas
+help-ui-recent = Buscas recentes
+help-ui-clear = Limpar
+help-ui-did-you-mean = Você quis dizer "{ $query }"?
+help-ui-viewed = Visualizados recentemente
+help-ui-on-this-page = Nesta página
+help-ui-other-policies = Outras políticas
+help-ui-section-link = Link para esta seção
+help-ui-policy-questions = Perguntas sobre esta política?
+help-topic-legal = Legal e Políticas
+help-group-policies = Políticas
+help-art-fake-sites-title = Como identificar sites e mensagens falsas de { $brand }
+help-art-fake-sites-summary = Endereços oficiais, o que nunca pedimos e o que fazer sobre uma cópia.
+help-art-fake-sites-keywords = falso golpe phishing cópia falsa imitação endereço oficial download seguro senha pagamento e-mail
+help-art-fake-sites-body =
+    Cópias de sites populares aparecem constantemente. Esses são os únicos endereços que pertencem a { $brand }:
+
+    - <b>streams.watch</b>, o aplicativo
+    - <b>help.streams.watch</b>, este Centro de Ajuda
+    - <b>@streams.watch</b> endereços de e-mail, como <a=mailto:{ $help_email }>{ $help_email }</a>
+
+    ## O que nunca pedimos
+    - Um número de cartão, detalhes bancários ou qualquer pagamento. { $brand } é gratuito. Veja <a=/help/article/free-to-use>É gratuito usar { $brand }?</a>
+    - Sua senha por e-mail, chat ou um formulário fora da página de login.
+    - Um download, uma extensão, um codec ou uma atualização para assistir.
+
+    ## Se você encontrar uma cópia
+    1. Feche a página e não entre em nenhum detalhe.
+    2. Se você já inseriu uma senha, mude-a no site ao qual pertence.
+    3. Envie o endereço para <a=mailto:{ $help_email }>{ $help_email }</a> para que possamos reportá-lo.
+help-art-security-report-title = Relatar um problema de segurança
+help-art-security-report-summary = Como nos informar sobre uma fraqueza de forma segura.
+help-art-security-report-keywords = vulnerabilidade de segurança bug bounty divulgação responsável exploração hack relatório fraqueza
+help-art-security-report-body =
+    Se você encontrou uma forma de ler dados de alguém else, contornar um PIN de perfil ou quebrar o site, por favor nos avise antes de contar para alguém mais.
+
+    1. Escreva para <a=mailto:{ $help_email }>{ $help_email }</a> com o assunto <b>Segurança</b>.
+    2. Descreva o que você encontrou, os passos para repeti-lo e a página ou endereço que ele afeta.
+    3. Não acesse dados de outras pessoas e não teste com floods automatizados de solicitações.
+
+    Lemos cada relatório. Os mesmos detalhes estão no arquivo legível por máquina em <a=/.well-known/security.txt>/.well-known/security.txt</a>.
+help-art-translate-title = Ajude a traduzir { $brand }
+help-art-translate-summary = O texto da interface vive em arquivos planos, um por idioma, e qualquer um pode melhorar um.
+help-art-translate-keywords = traduzir tradução localização localização idioma contribuir ftl fluente gramática gênero plural
+help-art-translate-body =
+    Todo o texto da interface é armazenado em um arquivo de texto plano por idioma. Uma tradução não precisa de programação.
+
+    ## O que saber
+    - As mensagens parecem como <b>chave = texto</b>. Só mude o texto depois do sinal de igual.
+    - Palavras entre chaves, como <b>{ "{ $brand }" }</b>, são preenchidas pelo aplicativo. Mantenha-as como estão e mova-as para onde seu idioma as precisa.
+    - Algumas mensagens têm formas para um e para muitos (<b>1 temporada</b>, <b>2 temporadas</b>). Idiomas com mais de duas formas podem adicionar todas elas.
+    - Onde seu idioma muda uma palavra para gênero ou caso, escreva a forma que se encaixa na frase.
+
+    ## Como enviar uma
+    Escreva para <a=mailto:{ $contribute_email }>{ $contribute_email }</a> com o idioma e ou o arquivo ou um link para sua alteração. Falantes nativos que revisam o trabalho um do outro são a melhor verificação que temos.
+help-art-cookies-explained-title = Cookies e armazenamento local explicados
+help-art-cookies-explained-summary = O que seu navegador mantém para { $brand }, em palavras simples.
+help-art-cookies-explained-keywords = cookies armazenamento local dados do navegador rastreamento consentimento banner preferências sessão terceiros
+help-art-cookies-explained-body =
+    <b>Cookies</b> são pequenos registros que um site pede ao seu navegador para manter. <b>Armazenamento local</b> é um lugar semelhante que apenas o site pode ler e que não é enviado com cada solicitação.
+
+    { $brand } usa armazenamento local para seus perfis, PINs, progresso de visualização e idioma. Esses ficam no seu dispositivo. Outros sites que nos servem imagens ou vídeos podem definir seus próprios cookies, que não podemos controlar. Veja <a=/help/article/sources>Onde os títulos vêm</a>.
+
+    ## Suas escolhas
+    - A primeira vez que você visitar, um banner pergunta se recomendações podem usar o que você assiste. Você pode mudar de ideia a qualquer momento.
+    - Escolher <b>Rejeitar</b> mantém tudo o que é necessário para usar o site e desativa a personalização.
+    - Seu navegador pode bloquear ou excluir cookies e dados do site também. Se fizer isso, seus perfis e progresso serão perdidos.
+
+    @@ cookies
+help-art-stuck-loading-title = A página fica no logotipo ou em uma tela em branco
+help-art-stuck-loading-summary = O que tentar quando { $brand } nunca termina de carregar.
 help-art-stuck-loading-keywords = carregamento travado logotipo tela branca tela de splash não iniciando webassembly wasm inicialização congelada
 help-art-stuck-loading-body =
     Enquanto { $brand } inicia, você vê o logotipo do cubo com uma linha de pontos em movimento. Isso deve levar alguns segundos. { $brand } funciona como uma aplicação WebAssembly, então um navegador ou configuração que desative o WebAssembly deixará você naquela tela.
@@ -690,6 +1326,71 @@ help-art-slow-pages-body =
 help-art-vpn-network-title = VPNs, redes de escola e trabalho
 help-art-vpn-network-summary = Por que algumas redes bloqueiam títulos ou imagens e o que tentar.
 help-art-vpn-network-keywords = vpn proxy escola trabalho rede firewall dns filtro bloqueado safedns restrito wifi
+help-art-vpn-network-body =
+    { $brand } carrega detalhes e imagens de um catálogo público de filmes e transmite de fontes independentes. Alguns redes bloqueiam esses sites e algumas fontes recusam endereços específicos.
+
+    - <b>VPN ou proxy.</b> Algumas fontes não respondem a endereços de VPN. Desative-o ou escolha outro país.
+    - <b>Wi-Fi de escola, trabalho ou público.</b> Filtros frequentemente bloqueiam streaming ou o catálogo. Tente os dados móveis do seu telefone.
+    - <b>Filtros DNS.</b> Um serviço DNS de filtragem pode bloquear o catálogo e deixar linhas ou imagens vazias. Use um DNS diferente ou desative o filtro para este site.
+
+    O check do dispositivo mostra qual serviço da sua rede não pode ser alcançado.
+
+    @@ diagnostics
+help-art-is-down-title = O { $brand } está down?
+help-art-is-down-summary = Verifique quais partes estão funcionando do seu dispositivo.
+help-art-is-down-keywords = down interrupção status não funcionando offline indisponível servidor manutenção erro site
+help-art-is-down-body =
+    { $brand } tem três partes que podem falhar separadamente:
+
+    - <b>O aplicativo</b>, que você está vendo agora.
+    - <b>O catálogo de filmes e séries</b>, que fornece detalhes e imagens.
+    - <b>As fontes de streaming</b>, que fornecem o vídeo.
+
+    Execute o check para ver qual delas responde do seu dispositivo. Se o catálogo ou as fontes não responderem para todos, espere alguns minutos e tente novamente. Se uma estiver inacessível apenas para você, veja <a=/help/article/vpn-network>VPNs, redes de escola e trabalho</a>.
+
+    @@ diagnostics
+help-art-no-sound-title = Não há som
+help-art-no-sound-summary = Corrija um título que reproduz sem áudio.
+help-art-no-sound-keywords = sem som áudio mudo silencioso volume alto fone de ouvido bluetooth fones de ouvido reprodução automática
+help-art-no-sound-body =
+    1. Pressione <b>M</b>, ou selecione o botão de alto-falante no player, para desmutar. Navegadores geralmente iniciam um vídeo mudo quando ele começa por si só, veja <a=/help/article/autoplay-blocked>Vídeo começa mudo</a>.
+    2. Pressione a <b>Flecha para cima</b> para aumentar o volume e verifique o volume do seu dispositivo.
+    3. Verifique se a aba do navegador não está muda. Clique com o botão direito na aba para ver.
+    4. Abra <b>Áudio e Legendas</b> e escolha outra faixa de áudio, se houver.
+    5. Se você usar Bluetooth, desconecte e reconecte seus fones de ouvido.
+help-art-autoplay-blocked-title = Vídeo começa mudo ou não começa por si só
+help-art-autoplay-blocked-summary = Por que navegadores param o som de iniciar sozinho, e como { $brand } lida com isso.
+help-art-autoplay-blocked-keywords = reprodução automática bloqueada mudo iniciar política navegador som automático reprodução prévia trailer
+help-art-autoplay-blocked-body =
+    Navegadores não permitem que uma página inicie um vídeo com som até que você clique ou toque nele. { $brand } tenta iniciar primeiro com som. Se o navegador recusar, ele inicia mudo e mostra o ícone de alto-falante mudo, e você pode desmutar com <b>M</b> ou o botão de alto-falante.
+
+    - Para impedir que trailers e pré-visualizações iniciem por si só, desative <b>Reprodução automática de pré-visualizações</b> em <b>Configurações</b>, sob <b>Configurações de reprodução</b>.
+    - Se um título nunca iniciar, veja <a=/help/article/wont-play>Um título não reproduz</a>.
+help-art-clips-title = Usando Clips
+help-art-clips-summary = Rolle pré-visualizações curtas e adicione o que gosta à sua lista.
+help-art-clips-keywords = clips shorts pré-visualizações rolar vertical trailers tocar mudo informações minha lista
+help-art-clips-body =
+    <b>Clips</b> mostra pré-visualizações curtas uma após a outra, na barra inferior em um telefone.
+
+    1. Rolo ou arraste para o próximo clip.
+    2. Selecione o botão de alto-falante para ligar ou desligar o som. Clips começam mudo.
+    3. Selecione <b>Minha Lista</b> para salvar o título, <b>Reproduzir</b> para assistir ou <b>Informações</b> para ler sobre ele.
+help-art-genres-title = Navegue por gênero
+help-art-genres-summary = Enfocar Filmes e Séries no tipo de título que você quer.
+help-art-genres-keywords = gêneros categorias comédia drama terror ação filtro navegar filmes séries submenu
+help-art-genres-body =
+    1. Abra <b>Filmes</b> ou <b>Séries</b> na barra superior.
+    2. Selecione <b>Gêneros</b> ao lado do título da página.
+    3. Escolha um gênero. A página então mostra apenas esse gênero, com linhas criadas para ele.
+
+    Para voltar a tudo, abra <b>Filmes</b> ou <b>Séries</b> novamente. Em um telefone, a lista de gêneros abre como uma folha do fundo.
+help-art-top-10-title = O que são as linhas Top 10?
+help-art-top-10-summary = Uma linha dos dez títulos mais assistidos no momento.
+help-art-top-10-keywords = top 10 top ten popular tendência classificação números linha mais assistidos
+help-art-top-10-body = Uma <b>Top 10</b> mostra os dez títulos mais assistidos no momento, com um grande número em cada um. Ela segue a popularidade atual no catálogo e muda de dia para dia. É a mesma para todos e não se baseia no seu perfil.
+help-art-episodes-title = Temporadas e episódios
+help-art-episodes-summary = Escolha uma temporada e um episódio da janela de detalhes ou do player.
+help-art-episodes-keywords = temporadas episódios séries lista próximo episódio drawer binge seleção programas de TV
 help-art-episodes-body =
     ## Antes de pressionar play
     Abra uma série e selecione <b>Episódios</b>. Use o menu de temporadas para mudar de temporada, depois selecione um episódio.
@@ -791,6 +1492,30 @@ landing-promo-title = { $brand } é grátis.
 landing-promo-body = Sem assinatura, sem cartão, sem compromissos.
 landing-learn-more = Saiba mais
 landing-faq = Perguntas Frequentes
+landing-read-more = Leia o artigo completo
+legal-credits-title = Licenças e créditos
+legal-credits-updated = Última atualização: Outubro de 2026
+legal-credits-1-title = 1. Fontes
+legal-credits-1-body = O texto no logotipo está em uma fonte pixel. Todos os outros textos da interface estão em Inter.
+legal-credits-1-b1 = <strong>Baby Blocks</strong> por Colorful Typhoon, usado para o logotipo { $brand } sob seus termos de linkware para uso pessoal, não comercial. Veja <a href="http://www.geocities.jp/kitschlabo/" target="_blank" rel="noopener">Colorful Typhoon</a>.
+legal-credits-1-b2 = <strong>Inter</strong> por Rasmus Andersson, usado sob a Licença SIL Open Font License 1.1.
+legal-credits-2-title = 2. Ícones
+legal-credits-2-body = Ícones da interface vêm de Phosphor Icons, usados sob a Licença MIT.
+legal-credits-3-title = 3. Informações sobre filmes e séries
+legal-credits-3-body = Este produto usa a API TMDB, mas não é endossado ou certificado pela TMDB. Títulos, resumos, posters, avaliações e informações sobre elenco vêm de <a href="https://www.themoviedb.org" target="_blank" rel="noopener">The Movie Database</a>.
+legal-credits-4-title = 4. Software
+legal-credits-4-body = { $brand } é construído com software de código aberto, cada um usado sob sua própria licença:
+legal-credits-4-b1 = <strong>Rust</strong> e <strong>Leptos</strong> para a aplicação (MIT e Apache 2.0).
+legal-credits-4-b2 = <strong>Tailwind CSS</strong> para estilo (MIT).
+legal-credits-4-b3 = <strong>hls.js</strong> para reprodução de vídeo adaptativa (Apache 2.0).
+legal-credits-4-b4 = <strong>Project Fluent</strong> para texto de interface traduzido (Apache 2.0 e MIT).
+legal-credits-5-title = 5. Marcas e arte
+legal-credits-5-body = Nomes, logotipos, posters e arte de filmes, séries e serviços exibidos em { $brand } pertencem aos seus proprietários. Eles são exibidos para identificar o título e não significam que o proprietário apoia { $brand }.
+legal-credits-6-title = 6. Contato
+legal-credits-6-body = Se você acredita que algo aqui está creditado incorretamente ou precisa ser alterado, por favor escreva para { $support_email }.
+help-ui-legal-credits = Licenças e créditos
+landing-browse-guest = Ou apenas explore sem uma conta
+landing-slide-everyone = Um lugar para todos
 landing-slide-place = Pegue exatamente onde deixou.
 auth-login-app-title = Pronto para assistir?
 auth-login-app-subtitle = Digite suas informações para entrar ou começar com uma nova conta.
@@ -1045,6 +1770,80 @@ set-events-title = Atividade de segurança recente
 set-privacy-export = Baixar meus dados
 set-nav-overview = Visão geral
 set-back-to-app = Voltar para { $brand }
+set-title-playback = Configurações de reprodução
+set-title-notifications = Configurações de notificações
+set-playback-hint = Defina reprodução automática e pré-visualizações.
+set-playback-autoplay = Reprodução automática e transições
+set-notifications-hint = Gerencie notificações para e-mail e push.
+set-notifications-body = Escolha como esse perfil será informado sobre novos lançamentos e atualizações.
+set-notify-email = E-mail
+set-notify-push = Notificações push
+set-account-details = Detalhes da conta
+set-access-hint = Gerencie dispositivos conectados
+set-overview-quick = Links rápidos
+set-overview-update-password = Atualizar senha
+set-overview-edit = Editar configurações
+set-overview-edit-hint = Idiomas, legendas, reprodução automática, notificações, privacidade e mais
+set-security-access = Acesso e privacidade
+set-privacy-hint = Gerencie o uso das suas informações pessoais
+set-profiles-parental = Controles parentais e permissões
+set-profiles-parental-hint = Defina o nível de maturidade e bloquee títulos
+set-profiles-settings = Configurações do perfil
+set-now-watching = Agora assistindo
+set-activity-episode = S{ $season }:E{ $episode }
+set-activity-title = { $title } · { $episode }
+set-device-line = { $platform } · { $browser }
+set-saved = Salvo
+set-done = Feito
+set-show-more = Mostrar mais
+set-need-help = Precisa de ajuda?
+set-visit-help = Visite o Centro de Ajuda
+set-try-another-way = Tente outro método
+set-title-game-handle = Nome de jogo
+set-title-personal-info = Acesso a informações pessoais
+set-title-speed-test = Teste de velocidade da internet
+set-title-testing = Participação no teste
+set-title-transfer = Transferência de perfil
+set-title-transfer-profile = Transferir um perfil
+set-activity-for = Atividade de { $name }
+set-activity-hide = Ocultar este título
+set-activity-hide-all = Ocultar tudo
+set-activity-hidden = Removido da sua atividade de visualização
+set-activity-download = Baixar tudo
+set-activity-report = Relatar um problema
+set-csv-title = Título
+set-csv-season = Temporada
+set-csv-episode = Episódio
+set-csv-date = Data
+set-notify-email-hint = Mensagens sobre novos lançamentos e atualizações
+set-notify-push-hint = Notificações neste dispositivo
+set-topics-title = O que você ouve sobre
+set-push-denied = As notificações estão bloqueadas para este site no seu navegador. Permita-as nas configurações do navegador, depois tente novamente.
+set-push-unsupported = Este navegador não pode exibir notificações.
+set-usage-title = Uso de dados por tela
+set-usage-auto = Auto
+set-usage-auto-hint = Escolhe a qualidade que se adapta à sua conexão.
+set-usage-low = Baixo
+set-usage-low-hint = Usa o menor consumo de dados. Qualidade de imagem básica.
+set-usage-medium = Médio
+set-usage-medium-hint = Qualidade de imagem padrão, menos dados que alto.
+set-usage-high = Alto
+set-usage-high-hint = Melhor qualidade de imagem. Usa o maior consumo de dados.
+set-handle-body = Este nome único é como seu jogo será exibido para outros em jogos.
+set-handle-change = Você pode alterar seu nome de jogo a qualquer momento.
+set-handle-create = Crie seu nome de jogo
+set-handle-suggest = Sugira um nome
+set-handle-invalid = Use { $min } a { $max } letras e números, sem espaços.
+set-transfer-row-hint = Permitir cópia de um perfil para outra conta
+set-transfer-on-title = Transferência de perfil está ativada
+set-transfer-on-body = Perfis podem ser salvos desta conta e adicionados a outra. Desative para parar perfis de deixar sua conta. Perfis já adicionados a esta conta não são afetados.
+set-transfer-off-title = Transferência de perfil está desativada
+set-transfer-off-body = Perfis não podem ser copiados desta conta. Ative para permitir.
+set-transfer-profile-hint = Copiar este perfil para outra conta
+set-transfer-profile-body = Salve este perfil como um arquivo e adicione-o a outra conta. A cópia mantém o nome, a foto, as configurações e o histórico de visualização.
+set-transfer-step-1 = Selecione 'Baixar arquivo de perfil' e mantenha o arquivo seguro.
+set-transfer-step-2 = Faça login na outra conta e abra 'Gerenciar perfis'.
+set-transfer-step-3 = Escolha 'Importar um perfil' e selecione o arquivo.
 set-transfer-download = Arquivo de perfil para download
 set-transfer-saved = Arquivo de perfil salvo
 set-transfer-note = O arquivo não contém o PIN do perfil. Qualquer pessoa com o arquivo pode adicionar o perfil à sua conta, então não o compartilhe.
@@ -1116,6 +1915,76 @@ set-rating-15-hint = Apropriado para idades acima de 15 anos.
 set-rating-18 = 18
 set-rating-18-hint = Apenas para adultos. Apropriado para idades acima de 18 anos.
 auth-confirm-title = Confirmando seu e-mail
+auth-confirm-working = Confirmando…
+auth-confirm-working-body = Um momento enquanto verificamos seu link.
+auth-confirm-failed-title = Este link não funcionou
+auth-confirm-failed-body = O link pode ter expirado ou já ter sido usado. Faça login ou peça um novo link.
+auth-confirm-new-link = Enviar um novo link
+set-device-kind = Tipo de dispositivo
+set-device-first-seen = Primeiro login
+set-device-timezone = Fuso horário
+set-device-screen = Tela
+set-device-language = Idioma
+set-device-countries-note = Este dispositivo conectou-se de mais de um país: { $countries }. Um VPN ou viagem pode causar isso. Um dispositivo é reconhecido pelo seu navegador, não por onde ele se conecta, então ainda é o mesmo dispositivo.
+email-footer = Enviado por { $brand }. Perguntas? Leia o Centro de Ajuda ou escreva para { $help_email }.
+email-help-center = Centro de Ajuda
+email-ignore = Se você não solicitou isso, pode ignorar este e-mail.
+email-button-fallback = Se o botão não funcionar, copie este endereço para seu navegador:
+email-greeting = Olá { $name },
+email-greeting-plain = Olá,
+email-for-profile = Este mensagem é para o perfil { $profile }.
+email-confirm-subject = Confirme seu endereço de e-mail
+email-confirm-title = Confirme seu endereço de e-mail
+email-confirm-body = Bem-vindo ao { $brand }. Confirme este endereço para finalizar a criação da sua conta.
+email-confirm-button = Confirme endereço de e-mail
+email-recovery-subject = Redefina sua senha do { $brand }
+email-recovery-title = Redefina sua senha
+email-recovery-body = Recebemos uma solicitação para redefinir a senha da sua conta. Use o botão para escolher uma nova. O link funciona uma vez e expira em breve.
+email-recovery-button = Escolha uma nova senha
+email-code-subject = Seu código de login do { $brand }
+email-code-title = Seu código de login
+email-code-body = Digite este código para continuar. Ele funciona uma vez e expira em { $minutes } minutos.
+email-code-or-link = Ou use o botão para fazer login.
+email-code-button = Fazer login
+email-change-subject = Confirme seu novo endereço de e-mail
+email-change-title = Confirme seu novo endereço de e-mail
+email-change-body = Você solicitou alterar o endereço de e-mail da sua conta para { $new_email }. Confirme-o com o botão.
+email-change-button = Confirmar novo endereço
+email-invite-subject = Você foi convidado para o { $brand }
+email-invite-title = Você foi convidado
+email-invite-body = Aceite o convite para criar sua conta.
+email-invite-button = Aceitar convite
+email-reauth-subject = Seu código de confirmação do { $brand }
+email-reauth-title = Seu código de confirmação
+email-reauth-body = Digite este código para confirmar que é você. Ele funciona uma vez e expira em breve.
+email-device-subject = Novo dispositivo logado na sua conta do { $brand }
+email-device-title = Novo dispositivo logado
+email-device-body = { $browser } no { $system } logou na sua conta { $where } no { $time }. Se foi você, nada mais é necessário. Se não foi, mude sua senha e saia de todos os dispositivos.
+email-device-where = de { $country }
+email-device-button = Revisar seus dispositivos
+help-breadcrumb-label = Breadcrumb
+help-pagination-label = Paginação
+age-badge-all = Todos
+age-aria-all = Adequado para todas as idades
+age-aria-plus = Adequado para idades { $age } e acima
+set-rating-system-title = Etiquetas de classificação
+set-rating-system-hint = Quais etiquetas de classificação de idade você lê. Automático segue o país do dispositivo do qual você se conectou.
+set-rating-system-auto = Automático
+set-rating-system-uk = Reino Unido (U, PG, 12, 15, 18)
+set-rating-system-us = Estados Unidos (G, PG, PG-13, R, NC-17)
+row-continue-watching = Continuar Assistindo
+row-my-list = Minha Lista
+row-because-you-watched = Porque Você Assistiu { $title }
+row-more-like = Mais Como { $title }
+row-todays-top-picks = Escolhas do Dia para Você
+row-your-next-watch = Seu Próximo Assistir
+row-gems-for-you = Joias para Você
+row-we-think-youll-love = Acreditamos que Você Ama Essas
+row-familiar-favourites = Favoritos Conhecidos
+row-new-releases = Lançamentos Novos
+collection-title = { $label } Coletânea
+collection-eyebrow-event = Coletânea
+collection-for-every-feeling = Para Cada Sentimento
 collection-explore-all = Explorar tudo
 badge-recently-added = Adicionado recentemente
 event-autumn = Outono
@@ -1281,3 +2150,8 @@ row-np-new-genre = Novos { $genre }
 row-np-under-the-radar = Fora do Radar
 row-np-hidden-gems = Joias Ocultas
 row-np-closer-look = Pertos de uma Visão
+row-np-top10-language = Top 10 Títulos { $language } Hoje
+row-np-top10-genre = Top 10 { $genre } Hoje
+continue-watching-row-for = Continuar assistindo para { $name }
+continue-watching-mark-watched = Marcar como assistido
+continue-watching-time-of = { $done } de { $total }m

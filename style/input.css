@@ -87,7 +87,7 @@
 /* From tablet width up the digits are narrower, as the numerals of the app are, and tuck right against the poster ("10" has its own squeeze in the component). */
 .topten-card .topten-svg { display: none; }
 @media (min-width: 600px) {
-  .topten-card .topten-svg { display: block; height: 100%; width: auto; max-width: none; overflow: visible; margin-right: -3cqw; }
+  .topten-card .topten-svg { display: block; height: 100%; width: auto; max-width: none; overflow: visible; margin-right: -6cqw; }
   .topten-card .topten-rank > .topten-spans { display: none; }
 }
 

@@ -53,12 +53,12 @@ fn RankNumber(index: usize) -> impl IntoView {
             <svg class="topten-svg" viewBox=svg_box preserveAspectRatio="xMaxYMid meet" aria-hidden="true">
                 <defs>
                     <linearGradient id=gradient_id x1="0" y1="0" x2="1" y2="0">
-                        <stop offset="0" stop-color="#9e9e9e" />
-                        <stop offset="0.55" stop-color="#5c5c5c" />
-                        <stop offset="1" stop-color="#2d2d2d" />
+                        <stop offset="0" stop-color="#aaaaaa" />
+                        <stop offset="0.5" stop-color="#666666" />
+                        <stop offset="1" stop-color="#262626" />
                     </linearGradient>
                 </defs>
-                <text x=view_w y="97.5" text-anchor="end" fill="var(--color-page)" stroke=grad_ref stroke-width="1.1" stroke-linejoin="round" font-size="135" font-weight="700" font-family="var(--font-brand)" textLength=text_w lengthAdjust="spacingAndGlyphs">
+                <text x=view_w y="99" text-anchor="end" fill="var(--color-page)" stroke=grad_ref stroke-width="1.1" stroke-linejoin="round" font-size="141" font-weight="700" font-family="var(--font-brand)" textLength=text_w lengthAdjust="spacingAndGlyphs">
                     {num_for_svg}
                 </text>
             </svg>
@@ -245,7 +245,7 @@ fn TopTenCard(
 
                 // "Recently Added" (the engine's `new` badge): a red tab at the bottom of the poster, centred, as in the app
                 {is_new.then(|| view! {
-                    <span class="absolute bottom-0 left-1/2 -translate-x-1/2 z-10 whitespace-nowrap rounded-[1.2cqw] bg-red-600 px-[3.2cqw] py-[1.5cqw] text-[4.4cqw] font-bold leading-none text-white pointer-events-none">
+                    <span class="absolute bottom-0 left-1/2 -translate-x-1/2 z-10 whitespace-nowrap rounded-[1.2cqw] bg-red-600 px-[4.2cqw] py-[1.8cqw] text-[5.4cqw] font-bold leading-none text-white pointer-events-none">
                         {crate::i18n::t("badge-recently-added")}
                     </span>
                 })}

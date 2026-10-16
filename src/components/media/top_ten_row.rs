@@ -42,11 +42,15 @@ fn RankNumber(index: usize) -> impl IntoView {
     let num_str = (index + 1).to_string();
 
     // From tablet width up the numeral is drawn as an outline whose line fades from light on the left to dark on the right (`topten-svg`); phones keep the text numeral (`topten-spans`)
-    let gradient_id = format!("tt-grad-{}", index);
+    let gradient_id = {
+        use std::sync::atomic::{AtomicUsize, Ordering};
+        static NEXT: AtomicUsize = AtomicUsize::new(0);
+        format!("tt-grad-{}-{}", index, NEXT.fetch_add(1, Ordering::Relaxed))
+    };
     let (view_w, text_w) = if is_ten { (112.0, 108.0) } else { (62.0, 60.0) };
     let svg_box = format!("0 0 {} 100", view_w);
     let num_for_svg = num_str.clone();
-    let grad_ref = format!("url(#{})", gradient_id);
+    let grad_ref = format!("url(#{}) #777", gradient_id);
 
     view! {
         <div class=format!("topten-rank absolute left-0 top-0 bottom-0 w-1/2 flex justify-end items-center pointer-events-none z-0{}", if is_ten { " topten-rank-ten" } else { "" })>
@@ -87,6 +91,8 @@ fn TopTenCard(
     item: MediaItem,
     index: usize,
     is_tv: bool,
+    /// 1 for the first card of the row, 2 for the first card of its copy at the end (see row_scroll.rs), 3 for the other cards of the copy (the copy is for desktop only), 0 otherwise
+    #[prop(default = 0)] loop_role: u8,
 ) -> impl IntoView {
     let ui_store = use_ui_store();
     let movie_id = item.id;
@@ -222,7 +228,9 @@ fn TopTenCard(
         <div
             data-card="true"
             data-card-id=my_card_id
-            class="relative flex-none flex items-end tile-width topten-card cursor-pointer"
+            data-loop-first=(loop_role == 1).then_some("1")
+            data-loop-clone=(loop_role == 2).then_some("1")
+            class=format!("relative flex-none flex items-end tile-width topten-card cursor-pointer{}", if loop_role >= 2 { " max-md:hidden" } else { "" })
             // a finger is not a hover: touch browsers fire mouse events after a tap, so only a mouse or pen opens the popup
             on:pointerenter=move |e: leptos::ev::PointerEvent| if e.pointer_type() != "touch" { mouse_enter_cb.run(()) }
             on:pointerleave=move |e: leptos::ev::PointerEvent| if e.pointer_type() != "touch" { mouse_leave_cb.run(()) }
@@ -234,11 +242,11 @@ fn TopTenCard(
             // not the outer div (which includes the wide number padding-left).
             <div
                 node_ref=card_ref
-                class="topten-poster relative flex-none ml-auto w-1/2 aspect-[5/7] z-10 rounded-[3.6cqw] overflow-hidden">
+                class="topten-poster relative flex-none ml-auto w-1/2 aspect-[5/7] z-10 rounded-l-none rounded-r-[3.6cqw] overflow-hidden">
                 <img
                     src=poster_src
                     alt=title_for_img.clone()
-                    class="w-full h-full object-cover object-top rounded-[3.6cqw]"
+                    class="w-full h-full object-cover object-top rounded-l-none rounded-r-[3.6cqw]"
                     loading="lazy"
                     draggable="false"
                 />
@@ -415,6 +423,11 @@ pub fn TopTenRow(
                 let current_scroll = el.scroll_left() as f64;
                 let scroll_width = el.scroll_width() as f64;
                 let step = client_width * 0.9;
+                if crate::components::media::row_scroll::turn_page(&el, direction != "left", step, crate::utils::layout::app_x()) {
+                    let update_c = update.clone();
+                    let _ = set_timeout_ms(move || { update_c.run(()); }, 600);
+                    return;
+                }
                 let target = crate::components::media::row_scroll::page_target(direction != "left", current_scroll, client_width, scroll_width, step);
                 el.scroll_to_with_x_and_y(target, 0.0);
 
@@ -457,11 +470,15 @@ pub fn TopTenRow(
                         }).collect::<Vec<_>>() }
                     }>
                         {move || items_res.get().map(|media| {
-                            media.into_iter().enumerate().map(|(idx, item)| {
-                                view! {
-                                    <TopTenCard item=item index=idx is_tv=is_tv />
-                                }
-                            }).collect::<Vec<_>>()
+                            // the cards, then a copy of the first ones so that paging forward from the last page goes on (see row_scroll.rs)
+                            let copies: Vec<MediaItem> = if media.len() > 6 { media.iter().take(8).cloned().collect() } else { Vec::new() };
+                            let mut views: Vec<_> = media.into_iter().enumerate().map(|(idx, item)| {
+                                view! { <TopTenCard item=item index=idx is_tv=is_tv loop_role=if idx == 0 { 1 } else { 0 } /> }
+                            }).collect();
+                            views.extend(copies.into_iter().enumerate().map(|(idx, item)| {
+                                view! { <TopTenCard item=item index=idx is_tv=is_tv loop_role=if idx == 0 { 2 } else { 3 } /> }
+                            }));
+                            views
                         })}
                     </Suspense>
 

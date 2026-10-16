@@ -54,13 +54,14 @@ fn RankNumber(index: usize) -> impl IntoView {
         "<svg class=\"topten-svg\" viewBox=\"{svg_box}\" preserveAspectRatio=\"xMaxYMid meet\" aria-hidden=\"true\">\
          <defs><linearGradient id=\"{gradient_id}\" x1=\"0\" y1=\"0\" x2=\"1\" y2=\"0\">\
          <stop offset=\"0\" stop-color=\"#aaaaaa\"/><stop offset=\"0.5\" stop-color=\"#666666\"/><stop offset=\"1\" stop-color=\"#262626\"/></linearGradient></defs>\
-         <text x=\"{view_w}\" y=\"99\" text-anchor=\"end\" style=\"fill:var(--color-page);font-family:var(--font-brand)\" stroke=\"url(#{gradient_id})\" stroke-width=\"1.1\" stroke-linejoin=\"round\" \
-         font-size=\"141\" font-weight=\"700\" textLength=\"{text_w}\" lengthAdjust=\"spacingAndGlyphs\">{num_for_svg}</text></svg>"
+         <text x=\"{view_w}\" y=\"97.5\" text-anchor=\"end\" style=\"fill:var(--color-page);font-family:var(--font-brand)\" stroke=\"url(#{gradient_id})\" stroke-width=\"2.2\" stroke-linejoin=\"round\" paint-order=\"stroke\" \
+         font-size=\"134\" font-weight=\"700\" textLength=\"{text_w}\" lengthAdjust=\"spacingAndGlyphs\">{num_for_svg}</text></svg>"
     );
 
     view! {
         <div class=format!("topten-rank absolute left-0 top-0 bottom-0 w-1/2 flex justify-end items-center pointer-events-none z-0{}", if is_ten { " topten-rank-ten" } else { "" })>
-            // built as text so that the gradient keeps its <stop> children (the view macro wraps them in <g>, which makes the gradient empty)
+            // built as text so that the gradient keeps its <stop> children (the view macro wraps them in <g>, which makes the gradient empty). The line is drawn under the fill (`paint-order="stroke"`),
+    // so only its outer half shows and the overlapping inner contours of the font stay hidden (no skeleton lines); hence the doubled width.
             <div class="topten-svgwrap" inner_html=svg_markup></div>
             <div class="topten-spans relative flex items-center justify-center">
                 // Background thick stroke
@@ -419,7 +420,7 @@ pub fn TopTenRow(
                 let current_scroll = el.scroll_left() as f64;
                 let scroll_width = el.scroll_width() as f64;
                 let step = client_width * 0.9;
-                if crate::components::media::row_scroll::turn_page(&el, direction != "left", step, crate::utils::layout::app_x()) {
+                if crate::components::media::row_scroll::turn_page(&el, direction != "left", crate::utils::layout::app_x()) {
                     let update_c = update.clone();
                     let _ = set_timeout_ms(move || { update_c.run(()); }, 600);
                     return;
@@ -451,7 +452,7 @@ pub fn TopTenRow(
                     class="flex overflow-x-scroll [scrollbar-width:none] [-ms-overflow-style:none] [&::-webkit-scrollbar]:hidden pt-2 pb-10 -mb-10 w-full items-end pointer-events-auto relative z-10"
                     style="scroll-behavior: smooth;"
                 >
-                    <div class="flex-none h-full pointer-events-none" style="width: var(--app-x, 56px);" />
+                    <div data-loop-spacer="1" class="flex-none h-full pointer-events-none" style="width: var(--app-x, 56px);" />
 
                     <Suspense fallback=move || view! {
                         { (0..6).map(|_| view! {
@@ -466,14 +467,20 @@ pub fn TopTenRow(
                         }).collect::<Vec<_>>() }
                     }>
                         {move || items_res.get().map(|media| {
-                            // the cards, then a copy of the first ones so that paging forward from the last page goes on (see row_scroll.rs)
-                            let copies: Vec<MediaItem> = if media.len() > 6 { media.iter().take(8).cloned().collect() } else { Vec::new() };
-                            let mut views: Vec<_> = media.into_iter().enumerate().map(|(idx, item)| {
-                                view! { <TopTenCard item=item index=idx is_tv=is_tv loop_role=if idx == 0 { 1 } else { 0 } /> }
+                            // the cards, with a copy of the last ones in front (`order: -2`, so it comes first whatever its place in the markup) and a copy of the first ones behind,
+                            // so that the row can be paged round (see row_scroll.rs)
+                            let n = media.len();
+                            let k = if n > 6 { n.min(8) } else { 0 };
+                            let leads: Vec<(usize, MediaItem)> = media[n - k..].iter().cloned().enumerate().map(|(i, it)| (n - k + i, it)).collect();
+                            let copies: Vec<MediaItem> = media[..k].iter().cloned().collect();
+                            let mut views: Vec<AnyView> = media.into_iter().enumerate().map(|(idx, item)| {
+                                view! { <TopTenCard item=item index=idx is_tv=is_tv loop_role=if idx == 0 { 1 } else { 0 } /> }.into_any()
                             }).collect();
                             views.extend(copies.into_iter().enumerate().map(|(idx, item)| {
-                                view! { <TopTenCard item=item index=idx is_tv=is_tv loop_role=if idx == 0 { 2 } else { 3 } /> }
+                                view! { <TopTenCard item=item index=idx is_tv=is_tv loop_role=if idx == 0 { 2 } else { 3 } /> }.into_any()
                             }));
+                            let lead_views: Vec<AnyView> = leads.into_iter().map(|(idx, item)| view! { <TopTenCard item=item index=idx is_tv=is_tv loop_role=3 /> }.into_any()).collect();
+                            views.push(view! { <div data-loop-lead="1" class="flex-none flex" style="display: none; order: -2;">{lead_views}</div> }.into_any());
                             views
                         })}
                     </Suspense>

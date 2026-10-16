@@ -74,7 +74,7 @@ pub fn VibeRow(
                 let margin = if client_width >= 1750.0 { 60.0 } else if client_width >= 1350.0 { 56.0 } else if client_width >= 800.0 { 48.0 } else { 16.0 };
                 let step = (client_width - 2.0 * margin + 6.0).max(100.0);
                 
-                if crate::components::media::row_scroll::turn_page(&el, direction != "left", step, crate::utils::layout::app_x()) {
+                if crate::components::media::row_scroll::turn_page(&el, direction != "left", crate::utils::layout::app_x()) {
                     let update_c = update.clone();
                     set_timeout_ms(move || { update_c.run(()); }, 600);
                     return;
@@ -138,18 +138,7 @@ pub fn VibeRow(
                     } else {
                         let scroll_left = scroll.clone();
                         let scroll_right = scroll.clone();
-                        
-                        view! {
-                            <>
-                                <div
-                                    node_ref=scroll_ref
-                                    on:scroll=on_scroll
-                                    class="row-scroll-strip flex overflow-x-scroll scrollbar-hide w-full pointer-events-auto relative z-10 py-[2px] gap-[var(--tile-gap)]"
-                                    style="scroll-behavior: smooth;"
-                                >
-                                    <div class="flex-none h-full pointer-events-none" style="width: var(--app-x, 56px);" />
-
-                                    {
+                        let (lead_views, card_views) = {
                                         let card = move |item: crate::services::tmdb::MediaItem, role: u8| {
                                             let movie_id = item.id;
                                             let is_tv = item.is_tv();
@@ -185,12 +174,29 @@ pub fn VibeRow(
                                                 </div>
                                             }
                                         };
-                                        // the cards, then a copy of the first ones so that paging forward from the last page goes on (see row_scroll.rs)
-                                        let copies: Vec<_> = if m.len() > 7 { m.iter().take(m.len().min(12)).cloned().collect() } else { Vec::new() };
+                                        // the cards, with a copy of the last ones in front and a copy of the first ones behind, so that the row can be paged round (see row_scroll.rs)
+                                        let n = m.len();
+                                        let k = if n > 7 { n.min(12) } else { 0 };
+                                        let leads: Vec<_> = m[n - k..].iter().cloned().collect();
+                                        let copies: Vec<_> = m[..k].iter().cloned().collect();
                                         let mut views: Vec<_> = m.into_iter().enumerate().map(|(i, item)| card(item, if i == 0 { 1 } else { 0 })).collect();
                                         views.extend(copies.into_iter().enumerate().map(|(i, item)| card(item, if i == 0 { 2 } else { 3 })));
-                                        views
-                                    }
+                                        let lead_views: Vec<_> = leads.into_iter().map(|item| card(item, 3)).collect();
+                                        (lead_views, views)
+                                    };
+                        view! {
+                            <>
+                                <div
+                                    node_ref=scroll_ref
+                                    on:scroll=on_scroll
+                                    class="row-scroll-strip flex overflow-x-scroll scrollbar-hide w-full pointer-events-auto relative z-10 py-[2px] gap-[var(--tile-gap)]"
+                                    style="scroll-behavior: smooth;"
+                                >
+                                    // the copy of the last cards in front of the row: not shown until the row is paged for the first time (see row_scroll.rs)
+                                    <div data-loop-lead="1" class="flex-none gap-[var(--tile-gap)]" style="display: none;">{lead_views}</div>
+                                    <div data-loop-spacer="1" class="flex-none h-full pointer-events-none" style="width: var(--app-x, 56px);" />
+
+                                    {card_views}
 
                                     <div class="flex-none h-full pointer-events-none" style="width: var(--app-x, 56px);" />
                                 </div>

@@ -53,20 +53,41 @@ pub fn EdgeButton(
 }
 
 // ── The endless row ────────────────────────────────────────────────────────────────────────────────
-// A row that loops carries a copy of its first cards after its last card (`data-loop-clone` on the first card of the copy, `data-loop-first` on the first real card). Paging forward from the last
-// page goes on into the copy, which looks exactly like the start; when the move has ended the row is put back to the start without animation. Paging back from the start first jumps to the
-// same view in the copy, then pages back to the last page. So the row always moves in the direction of the button.
+// A row that loops carries a copy of its last cards in front (`data-loop-lead`, hidden at first), a copy of its first cards behind (`data-loop-clone` marks the first of them, `data-loop-first` marks
+// the first real card) and the empty margin before its first card (`data-loop-spacer`). The first page turn starts the loop: the copy in front is shown and the empty margin goes, so the end of the
+// row shows at the left edge as a sliver, as on every other page. From then on a page turn that runs into a copy is put back, when it has ended, to the same view among the real cards
+// without animation, so the row always moves in the direction of the button and never shows a cut.
 
 use wasm_bindgen::JsCast;
 
-/// (distance from the first card to the copy, scroll position at which the last real card ends flush with the right margin), or None for a row without a copy.
-fn loop_geometry(strip: &web_sys::HtmlElement, margin: f64) -> Option<(f64, f64)> {
-    let clone: web_sys::HtmlElement = strip.query_selector("[data-loop-clone]").ok()??.dyn_into().ok()?;
-    let first: web_sys::HtmlElement = strip.query_selector("[data-loop-first]").ok()??.dyn_into().ok()?;
+struct Geometry {
+    /// scroll position of the first page (the first real card at the margin)
+    first_page: f64,
+    /// distance from the first real card to the first card of the copy behind
+    length: f64,
+    /// scroll position at which the last real card ends flush with the right margin
+    last_page: f64,
+    /// width of a page turn
+    step: f64,
+}
+
+fn element(strip: &web_sys::HtmlElement, selector: &str) -> Option<web_sys::HtmlElement> {
+    strip.query_selector(selector).ok()??.dyn_into().ok()
+}
+
+fn geometry(strip: &web_sys::HtmlElement, margin: f64) -> Option<Geometry> {
+    let clone = element(strip, "[data-loop-clone]")?;
+    let first = element(strip, "[data-loop-first]")?;
     let prev: web_sys::HtmlElement = clone.previous_element_sibling()?.dyn_into().ok()?;
-    let l = (clone.offset_left() - first.offset_left()) as f64;
     let end_of_last = (prev.offset_left() + prev.offset_width()) as f64;
-    Some((l, (end_of_last - strip.client_width() as f64 + margin).max(0.0)))
+    let gap = clone.offset_left() as f64 - end_of_last;
+    let client = strip.client_width() as f64;
+    Some(Geometry {
+        first_page: first.offset_left() as f64 - margin,
+        length: (clone.offset_left() - first.offset_left()) as f64,
+        last_page: (end_of_last - client + margin).max(0.0),
+        step: (client - 2.0 * margin + gap).max(100.0),
+    })
 }
 
 fn go(strip: &web_sys::HtmlElement, x: f64, instant: bool) {
@@ -76,30 +97,50 @@ fn go(strip: &web_sys::HtmlElement, x: f64, instant: bool) {
     strip.scroll_to_with_scroll_to_options(&opts);
 }
 
+/// Starts the loop of a row (once): shows the copy in front, takes the empty margin away and keeps the first card where it was on the screen.
+fn start_loop(strip: &web_sys::HtmlElement) {
+    if strip.get_attribute("data-loop-on").is_some() { return; }
+    let (Some(lead), Some(spacer)) = (element(strip, "[data-loop-lead]"), element(strip, "[data-loop-spacer]")) else { return };
+    let Some(first) = element(strip, "[data-loop-first]") else { return };
+    let before = strip.scroll_left() as f64;
+    let first_before = first.offset_left() as f64;
+    let _ = lead.style().set_property("display", "flex");
+    let _ = spacer.style().set_property("display", "none");
+    // the first card has moved by the width of the copy (and its gap) less the margin that went: scroll by as much, so that it stays where it was on the screen
+    go(strip, before + (first.offset_left() as f64 - first_before), true);
+    let _ = strip.set_attribute("data-loop-on", "1");
+}
+
+/// A position in the copy in front or in the copy behind, as the same view among the real cards.
+fn settle(strip: &web_sys::HtmlElement, margin: f64) {
+    let Some(g) = geometry(strip, margin) else { return };
+    if strip.get_attribute("data-loop-on").is_none() { return; }
+    let cur = strip.scroll_left() as f64;
+    if cur < g.first_page - 2.0 {
+        go(strip, cur + g.length, true);
+    } else if cur > g.first_page + g.length - 2.0 {
+        go(strip, cur - g.length, true);
+    }
+}
+
 /// One page turn of an endless row. Returns false when the row has no copy (the caller then uses `page_target`).
-pub fn turn_page(strip: &web_sys::HtmlElement, forward: bool, step: f64, margin: f64) -> bool {
-    let Some((l, e)) = loop_geometry(strip, margin) else { return false };
-    let mut cur = strip.scroll_left() as f64;
-    if cur >= l - 2.0 {
-        // inside the copy (dragged there): the same view at the start
-        cur -= l;
-        go(strip, cur, true);
-    }
-    if forward {
-        go(strip, if cur < e - 4.0 { (cur + step).min(e) } else { l }, false);
-    } else if cur <= 4.0 {
-        go(strip, l, true);
-        go(strip, e, false);
+pub fn turn_page(strip: &web_sys::HtmlElement, forward: bool, margin: f64) -> bool {
+    if element(strip, "[data-loop-clone]").is_none() || element(strip, "[data-loop-lead]").is_none() { return false; }
+    start_loop(strip);
+    settle(strip, margin);
+    let Some(g) = geometry(strip, margin) else { return false };
+    let cur = strip.scroll_left() as f64;
+    let target = if forward {
+        // the last page ends flush; one more turn goes on into the copy behind, which looks like the first page
+        if cur < g.last_page - 4.0 { (cur + g.step).min(g.last_page) } else { g.first_page + g.length }
+    } else if cur > g.first_page + 4.0 {
+        (cur - g.step).max(g.first_page)
     } else {
-        go(strip, (cur - step).max(0.0), false);
-    }
+        // back from the first page: into the copy in front, which looks like the last page
+        g.first_page - g.step
+    };
+    go(strip, target, false);
     let strip = strip.clone();
-    leptos::leptos_dom::helpers::set_timeout(
-        move || {
-            let c = strip.scroll_left() as f64;
-            if c >= l - 2.0 { go(&strip, c - l, true); }
-        },
-        std::time::Duration::from_millis(900),
-    );
+    leptos::leptos_dom::helpers::set_timeout(move || settle(&strip, margin), std::time::Duration::from_millis(900));
     true
 }

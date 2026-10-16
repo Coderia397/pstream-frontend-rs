@@ -7,7 +7,7 @@ use crate::models::movie::Movie;
 use crate::components::media::movie_card_badges::RatingBadge;
 use crate::components::media::info_modal_episodes::InfoModalEpisodes;
 use crate::components::media::info_modal_recommendations::InfoModalRecommendations;
-use crate::components::media::action_buttons::{PlayPillButton, MyListButton, RatingButton, MuteReplayButton, CloseButton};
+use crate::components::media::action_buttons::{PlayPillButton, MyListButton, RatingPill, MuteReplayButton, CloseButton};
 use crate::components::media::movie_card_rating::MovieRating;
 use crate::components::trailer_player::TrailerPlayer;
 
@@ -419,17 +419,6 @@ pub fn InfoModal() -> impl IntoView {
                             };
 
                             let (modal_rating, set_modal_rating) = signal(crate::store::ratings::get(current_movie_id, is_tv_val));
-                            let on_rate_cb = Callback::new(move |_| {
-                                set_modal_rating.update(|r| {
-                                    *r = match *r {
-                                        None => Some(MovieRating::Like),
-                                        Some(MovieRating::Like) => Some(MovieRating::Love),
-                                        Some(MovieRating::Love) => Some(MovieRating::Dislike),
-                                        Some(MovieRating::Dislike) => None,
-                                    };
-                                });
-                                crate::store::ratings::set(current_movie_id, is_tv_val, modal_rating.get_untracked());
-                            });
 
                             let watch_store = crate::store::use_watch_store();
                             let watch_record = watch_store.get_record(current_movie_id, is_tv_val);
@@ -563,11 +552,13 @@ pub fn InfoModal() -> impl IntoView {
                                                 }}
 
                                                 // Thumbs Up / Rate Button
-                                                <RatingButton
+                                                <RatingPill
                                                     rating=modal_rating
-                                                    on_rate=on_rate_cb
+                                                    on_set=Callback::new(move |r: Option<MovieRating>| {
+                                                        set_modal_rating.set(r);
+                                                        crate::store::ratings::set(current_movie_id, is_tv_val, r);
+                                                    })
                                                     size="md".to_string()
-                                                    show_tooltip=true
                                                 />
                                             </div>
                                         </div>

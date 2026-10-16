@@ -5,7 +5,7 @@ use crate::models::movie::Movie;
 use crate::components::media::movie_card_badges::RatingBadge;
 use crate::components::media::movie_card_rating::MovieRating;
 use crate::components::media::action_buttons::{
-    PlayCircleButton, MyListButton, RatingButton, MoreInfoCaretButton, MuteReplayButton,
+    PlayCircleButton, MyListButton, RatingPill, MoreInfoCaretButton, MuteReplayButton,
 };
 use crate::components::trailer_player::TrailerPlayer;
 
@@ -415,18 +415,11 @@ pub fn MovieCardPopup(
                             }}
 
                             // Rating Pill button
-                            <RatingButton
+                            <RatingPill
                                 rating=rating
-                                on_rate=Callback::new(move |_| {
-                                    set_rating.update(|r| {
-                                        *r = match *r {
-                                            None => Some(MovieRating::Like),
-                                            Some(MovieRating::Like) => Some(MovieRating::Love),
-                                            Some(MovieRating::Love) => Some(MovieRating::Dislike),
-                                            Some(MovieRating::Dislike) => None,
-                                        };
-                                    });
-                                    crate::store::ratings::set(movie_id, movie_stored.get_value().is_tv(), rating.get_untracked());
+                                on_set=Callback::new(move |r: Option<MovieRating>| {
+                                    set_rating.set(r);
+                                    crate::store::ratings::set(movie_id, movie_stored.get_value().is_tv(), r);
                                 })
                                 size="md".to_string()
                             />

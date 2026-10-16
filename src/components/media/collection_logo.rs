@@ -62,14 +62,14 @@ fn ring(n: usize, r: f32, color: &str) -> String {
 
 /// The finish, from the hue `h`. Returns the CSS for the letters and the CSS of the highlighter swipe behind them (empty unless the finish has one).
 fn finish(f: usize, h: u32) -> (String, String) {
-    let accent = (h + 190) % 360;
+    let accent = h;
     match f {
         // die cut sticker: dark letters, a cream border, a coloured edge outside it, a soft shadow
         0 => (
             format!(
                 "color: hsl({h} 35% 10%); text-shadow: {}, {}, 0 6px 14px hsl({h} 50% 4% / 0.55);",
                 ring(20, 5.0, "hsl(45 70% 96%)"),
-                ring(20, 8.0, &format!("hsl({} 70% 72%)", (h + 330) % 360))
+                ring(20, 8.0, &format!("hsl({h} 35% 30%)"))
             ),
             String::new(),
         ),
@@ -85,7 +85,7 @@ fn finish(f: usize, h: u32) -> (String, String) {
         ),
         // ink stamp: the colour of the collection, roughened edges, a little ghost
         3 => (
-            format!("color: hsl({h} 70% 62%); text-shadow: 2px 2px 0 hsl({h} 60% 30% / 0.55), -1px -1px 0 hsl(45 60% 96% / 0.35); filter: url(#logo-rough);"),
+            format!("color: hsl({h} 40% 66%); text-shadow: 2px 2px 0 hsl({h} 40% 26% / 0.55), -1px -1px 0 hsl(45 60% 96% / 0.35); filter: url(#logo-rough);"),
             String::new(),
         ),
         // double outline: cream letters, a coloured border, a cream border outside it
@@ -128,7 +128,7 @@ pub fn CollectionLogo(
     let finish_index = (design % DESIGNS) % FINISHES;
     let style = format!("{} font-size: {:.1}px;", design_style(design, hue), size * design_size(design));
     // the last word in a second colour (not on the finishes that already use two)
-    let accent = format!("hsl({} 80% 60%)", (hue + 190) % 360);
+    let accent = format!("hsl({hue} 55% 72%)");
     let mut words = text.split_whitespace().map(str::to_string).collect::<Vec<_>>();
     let body = if words.len() > 1 && finish_index != 4 {
         let last = words.pop().unwrap_or_default();

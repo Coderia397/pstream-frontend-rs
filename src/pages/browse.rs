@@ -164,7 +164,8 @@ pub fn BrowseHome(#[prop(optional)] event: Option<(u32, &'static str)>, #[prop(o
                 </Suspense>
 
                 <div class="relative z-30 rows-stack">
-                    <ContinueWatchingRow />
+                    // Continue Watching belongs to Home, not to the page of a collection or an event
+                    {(event.is_none() && collection.is_none()).then(|| view! { <ContinueWatchingRow /> })}
 
                     <Suspense fallback=move || view! {
                         <div class="space-y-6">

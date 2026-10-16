@@ -271,6 +271,67 @@ pub fn RatingButton(
     }
 }
 
+// ── Rating pill ───────────────────────────────────────────────────────────────
+// The rating control of the app: a round button showing the rating that is set; while the pointer rests on it, it opens into a dark pill of three round options (Not for me, I like this,
+// Love this!) laid over its neighbours, each with a light bubble above it saying what it does ("Rated" over the one that is set). The set option is solid, the others are outlines;
+// choosing the set option again takes the rating back.
+#[component]
+pub fn RatingPill(
+    #[prop(into)] rating: Signal<Option<MovieRating>>,
+    on_set: Callback<Option<MovieRating>>,
+    #[prop(default = "md".to_string(), into)] size: String,
+) -> impl IntoView {
+    let (dim_classes, _, icon_px) = circular_button_specs(&size);
+    let options = [
+        (MovieRating::Dislike, "rating-not-for-me"),
+        (MovieRating::Like, "rating-like"),
+        (MovieRating::Love, "rating-love"),
+    ];
+    view! {
+        <div class="rating-pill-wrap group/pill relative inline-flex shrink-0 hover:z-50">
+            // the closed button: the rating that is set, or the outline thumb
+            <button type="button" aria-label=crate::i18n::t("action-buttons-rate") class=circular_button_classes(dim_classes, "")>
+                {move || match rating.get() {
+                    Some(MovieRating::Love) => view! { <crate::components::media::movie_card_rating::DoubleThumbsUpIcon size=icon_px filled=true /> }.into_any(),
+                    Some(MovieRating::Dislike) => view! { <i class="ph-fill ph-thumbs-down" style=format!("font-size: {icon_px}px;")></i> }.into_any(),
+                    Some(MovieRating::Like) => view! { <i class="ph-fill ph-thumbs-up" style=format!("font-size: {icon_px}px;")></i> }.into_any(),
+                    None => view! { <i class="ph-bold ph-thumbs-up" style=format!("font-size: {icon_px}px;")></i> }.into_any(),
+                }}
+            </button>
+            // the opened pill, centred on the button
+            <div class="rating-pill absolute left-1/2 top-1/2 z-50 flex items-center gap-1 rounded-full bg-[#262626] p-[3px] shadow-[0_6px_18px_rgba(0,0,0,0.55)]">
+                {options.into_iter().map(|(option, label_key)| {
+                    let is_set = move || rating.get() == Some(option);
+                    view! {
+                        <div class="group/opt relative">
+                            <button
+                                type="button"
+                                on:click=move |e: leptos::ev::MouseEvent| { e.stop_propagation(); on_set.run(if rating.get_untracked() == Some(option) { None } else { Some(option) }); }
+                                aria-label=crate::i18n::t(label_key)
+                                class=format!("flex items-center justify-center rounded-full text-ink transition-colors hover:bg-[#3b3b3b] cursor-pointer {dim_classes}")
+                            >
+                                {move || {
+                                    let on = is_set();
+                                    match option {
+                                        MovieRating::Love => view! { <crate::components::media::movie_card_rating::DoubleThumbsUpIcon size=icon_px filled=on /> }.into_any(),
+                                        MovieRating::Dislike => view! { <i class=if on { "ph-fill ph-thumbs-down" } else { "ph-bold ph-thumbs-down" } style=format!("font-size: {icon_px}px;")></i> }.into_any(),
+                                        MovieRating::Like => view! { <i class=if on { "ph-fill ph-thumbs-up" } else { "ph-bold ph-thumbs-up" } style=format!("font-size: {icon_px}px;")></i> }.into_any(),
+                                    }
+                                }}
+                            </button>
+                            // the bubble over the option
+                            <span class="rating-bubble pointer-events-none absolute bottom-[calc(100%+10px)] left-1/2 -translate-x-1/2 whitespace-nowrap rounded-[4px] bg-[#e6e6e6] px-3 py-1.5 text-[15px] font-semibold leading-none text-black opacity-0 transition-opacity duration-150 group-hover/opt:opacity-100">
+                                {move || if is_set() { crate::i18n::t("rating-rated") } else { crate::i18n::t(label_key) }}
+                                <span class="absolute left-1/2 top-full h-0 w-0 -translate-x-1/2 border-x-[6px] border-t-[6px] border-x-transparent border-t-[#e6e6e6]"></span>
+                            </span>
+                        </div>
+                    }
+                }).collect::<Vec<_>>()}
+            </div>
+        </div>
+    }
+}
+
 // ── Mute / Replay Button ──────────────────────────────────────────────────────
 // "mute/add mute that doubles as a reload button"
 // Used in Hero, InfoModal, MovieCardPopup.

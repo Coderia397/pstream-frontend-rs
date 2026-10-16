@@ -7,31 +7,31 @@ pub enum MovieRating {
     Love,
 }
 
+/// The "Love this!" icon: two thumbs up, the one in front low on the left, the one behind high on the right and cut away round the front one, so a gap shows between them
+/// (a mask, so it needs no background colour and works on any button state).
 #[component]
 pub fn DoubleThumbsUpIcon(
     #[prop(default = 22)] size: u32,
-    #[prop(default = "var(--color-panel)".to_string())] mask_color: String,
+    /// the solid icon (a rating that is set) instead of the outline
+    #[prop(default = false)] filled: bool,
+    /// kept for callers that passed a background colour; the gap is cut with a mask now
+    #[prop(default = String::new())] mask_color: String,
 ) -> impl IntoView {
-    let offset_x = (size as f64 * 0.38).round() as i32;
-    let offset_y = (size as f64 * 0.32).round() as i32;
-    let bite_r = (size as f64 * 0.44).round() as i32;
-
-    let width = size as i32 + offset_x;
-    let height = size as i32 + offset_y;
-
-    let mask_style = format!(
-        "width: {}px; height: {}px; left: {}px; top: {}px; background: {}; z-index: 2;",
-        bite_r * 2, bite_r * 2, offset_x - bite_r + 4, offset_y - bite_r + 5, mask_color
-    );
-
+    let _ = mask_color;
+    let s = size as f64;
+    let (dx, dy) = ((s * 0.42).round(), (s * 0.34).round());
+    let gap = s * 0.60;
+    // centre of the front thumb, in the coordinates of the thumb behind it
+    let (cx, cy) = (s / 2.0 - dx + s * 0.02, s / 2.0 + dy - s * 0.02);
+    let class = if filled { "ph-fill ph-thumbs-up" } else { "ph-bold ph-thumbs-up" };
+    let behind_mask = format!("radial-gradient(circle at {cx:.1}px {cy:.1}px, transparent {gap:.1}px, #000 {:.1}px)", gap + 0.6);
     view! {
-        <div class="relative inline-flex" style=format!("width: {}px; height: {}px;", width, height)>
-            <div class="absolute" style=format!("left: {}px; top: {}px; z-index: 1;", offset_x, offset_y)>
-                <i class="ph-bold ph-thumbs-up" style=format!("font-size: {}px;", size)></i>
+        <div class="relative inline-flex" style=format!("width: {}px; height: {}px;", s + dx, s + dy)>
+            <div class="absolute" style=format!("left: {dx}px; top: 0; -webkit-mask-image: {behind_mask}; mask-image: {behind_mask};")>
+                <i class=class style=format!("font-size: {size}px;")></i>
             </div>
-            <div class="absolute rounded-full" style=mask_style></div>
-            <div class="absolute" style="left: 0; top: 0; z-index: 3;">
-                <i class="ph-bold ph-thumbs-up" style=format!("font-size: {}px;", size)></i>
+            <div class="absolute" style=format!("left: 0; top: {dy}px;")>
+                <i class=class style=format!("font-size: {size}px;")></i>
             </div>
         </div>
     }

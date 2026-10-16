@@ -2334,3 +2334,8 @@ continue-watching-row-for = Continue watching for { $name }
 continue-watching-mark-watched = Mark as watched
 continue-watching-time-of = { $done } of { $total }m
 collection-topic = Streams Collection
+
+rating-not-for-me = Not for me
+rating-like = I like this
+rating-love = Love this!
+rating-rated = Rated

@@ -61,7 +61,7 @@ pub fn Navbar(
             "new"
         } else if p.starts_with("/browse/my-list") {
             "list"
-        } else if p.starts_with("/browse/language") {
+        } else if p.starts_with("/browse/original-audio") || p.starts_with("/browse/language") {
             "language"
         } else if p == "/browse" || p == "/" || p.is_empty() {
             "home"
@@ -74,12 +74,12 @@ pub fn Navbar(
     let games_on = move || features.get().is_some_and(|f| f.get("games") == Some(&true));
     let nav_items = vec![
         ("home", "nav-home", "/browse"),
-        ("tv", "nav-series", "/browse/series"),
-        ("movies", "nav-films", "/browse/films"),
+        ("tv", "nav-series", "/browse/genre/83"),
+        ("movies", "nav-films", "/browse/genre/34399"),
         ("games", "nav-games", "/browse/games"),
         ("new", "nav-new-popular", "/latest"),
         ("list", "nav-my-list", "/browse/my-list"),
-        ("language", "nav-browse-language", "/browse/language"),
+        ("language", "nav-browse-language", "/browse/original-audio"),
     ];
 
     view! {

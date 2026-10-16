@@ -35,8 +35,8 @@ pub fn CategorySubNavMobile(
     let season_chips = LocalResource::new(|| async { crate::services::ai_engine::fetch_season_chips().await });
 
     let to = |url: &'static str| { let nav = navigate.clone(); move |_| nav(url, Default::default()) };
-    let on_series = to("/browse/series");
-    let on_films = to("/browse/films");
+    let on_series = to("/browse/genre/83");
+    let on_films = to("/browse/genre/34399");
     let on_latest = to("/latest");
     let navigate_event = StoredValue::new_local(navigate.clone());
 

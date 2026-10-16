@@ -7,7 +7,7 @@ SITE = "https://streams.watch"
 data = (ROOT / "src/data/help.rs").read_text()
 slugs = re.findall(r'Article \{ slug: "([a-z0-9-]+)"', data)
 docs = re.findall(r'LegalDoc \{ id: "[a-z0-9-]+", path: "([^"]+)"', data)
-pages = ["/browse", "/browse/films", "/browse/series", "/latest", "/", "/login", "/signup", "/help", "/help/contact"] + docs
+pages = ["/browse", "/browse/genre/34399", "/browse/genre/83", "/latest", "/", "/login", "/signup", "/help", "/help/contact"] + docs
 today = datetime.date.today().isoformat()
 def url(path, priority):
     return f"  <url><loc>{SITE}{path}</loc><lastmod>{today}</lastmod><priority>{priority}</priority></url>"

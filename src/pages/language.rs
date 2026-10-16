@@ -140,7 +140,7 @@ pub fn BrowseLanguagePage() -> impl IntoView {
                             <div node_ref=pref_container_ref class="relative" class:hidden=(PREF_TYPES.len() <= 1)>
                                 <button
                                     on:click=toggle_pref_dropdown
-                                    class="flex items-center justify-between min-w-[160px] md:min-w-[170px] px-3.5 py-1.5 text-label md:text-body-sm font-bold tracking-tight text-ink bg-void border border-line-strong hover:border-ink transition-colors gap-x-2.5 cursor-pointer select-none rounded-hairline"
+                                    class="flex items-center justify-between min-w-[160px] md:min-w-[170px] px-3.5 py-1.5 text-label md:text-body-sm font-bold tracking-tight text-ink bg-ink/10 hover:bg-ink/20 border border-ink/20 backdrop-blur-md rounded-full transition-all active:scale-95 gap-x-2.5 cursor-pointer select-none rounded-hairline"
                                 >
                                     <span>{move || crate::i18n::t(selected_pref_type.get())}</span>
                                     <i class="ph-fill ph-caret-down text-ink text-micro transition-transform duration-(--motion-base)"
@@ -150,7 +150,7 @@ pub fn BrowseLanguagePage() -> impl IntoView {
                                 {move || {
                                     if pref_dropdown_open.get() {
                                         view! {
-                                            <div class="absolute top-[calc(100%+4px)] left-0 w-full min-w-[170px] bg-void/95 border border-line shadow-2xl z-50 py-1 scrollbar-hide rounded-hairline">
+                                            <div class="absolute top-[calc(100%+8px)] left-0 w-full min-w-[170px] bg-page/95 backdrop-blur-2xl border border-ink/15 shadow-2xl z-50 p-2 scrollbar-hide rounded-sheet">
                                                 {PREF_TYPES.iter().map(|&t| {
                                                     let is_selected = selected_pref_type.get() == t;
                                                     view! {
@@ -160,9 +160,9 @@ pub fn BrowseLanguagePage() -> impl IntoView {
                                                                 set_pref_dropdown_open.set(false);
                                                             }
                                                             class=if is_selected {
-                                                                "w-full text-left px-3.5 py-1.5 text-label md:text-body-sm text-ink font-bold bg-ink/10 cursor-pointer"
+                                                                "w-full text-left px-3.5 py-1.5 text-label md:text-body-sm text-ink font-bold bg-ink/10 rounded-card cursor-pointer"
                                                             } else {
-                                                                "w-full text-left px-3.5 py-1.5 text-label md:text-body-sm text-ink-soft hover:text-ink hover:bg-ink/5 transition-colors cursor-pointer"
+                                                                "w-full text-left px-3.5 py-1.5 text-label md:text-body-sm text-ink-soft hover:text-ink hover:bg-ink/15 rounded-card transition-colors cursor-pointer"
                                                             }
                                                         >
                                                             {crate::i18n::t(t)}
@@ -181,7 +181,7 @@ pub fn BrowseLanguagePage() -> impl IntoView {
                             <div node_ref=lang_container_ref class="relative">
                                 <button
                                     on:click=toggle_lang_dropdown
-                                    class="flex items-center justify-between min-w-[130px] md:min-w-[150px] px-3.5 py-1.5 text-label md:text-body-sm font-bold tracking-tight text-ink bg-void border border-line-strong hover:border-ink transition-colors gap-x-2.5 cursor-pointer select-none rounded-hairline"
+                                    class="flex items-center justify-between min-w-[130px] md:min-w-[150px] px-3.5 py-1.5 text-label md:text-body-sm font-bold tracking-tight text-ink bg-ink/10 hover:bg-ink/20 border border-ink/20 backdrop-blur-md rounded-full transition-all active:scale-95 gap-x-2.5 cursor-pointer select-none rounded-hairline"
                                 >
                                     <span>{active_label}</span>
                                     <i class="ph-fill ph-caret-down text-ink text-micro transition-transform duration-(--motion-base)"
@@ -191,7 +191,7 @@ pub fn BrowseLanguagePage() -> impl IntoView {
                                 {move || {
                                     if lang_dropdown_open.get() {
                                         view! {
-                                            <div class="absolute top-[calc(100%+4px)] left-0 w-full min-w-[150px] max-h-64 overflow-y-auto bg-void/95 border border-line shadow-2xl z-50 py-1 scrollbar-hide rounded-hairline">
+                                            <div class="absolute top-[calc(100%+8px)] left-0 w-full min-w-[150px] max-h-64 overflow-y-auto bg-page/95 backdrop-blur-2xl border border-ink/15 shadow-2xl z-50 p-2 scrollbar-hide rounded-sheet">
                                                 {BROWSE_LANGUAGES.iter().filter(|lang| !hidden_langs.get().unwrap_or_default().contains(lang.code) || selected_lang.get_untracked() == lang.code).map(|lang| {
                                                     let code = lang.code;
                                                     let label = crate::i18n::language_name(lang.code);
@@ -203,9 +203,9 @@ pub fn BrowseLanguagePage() -> impl IntoView {
                                                                 set_lang_dropdown_open.set(false);
                                                             }
                                                             class=if is_selected {
-                                                                "w-full text-left px-3.5 py-1.5 text-label md:text-body-sm text-ink font-bold bg-ink/10 cursor-pointer"
+                                                                "w-full text-left px-3.5 py-1.5 text-label md:text-body-sm text-ink font-bold bg-ink/10 rounded-card cursor-pointer"
                                                             } else {
-                                                                "w-full text-left px-3.5 py-1.5 text-label md:text-body-sm text-ink-soft hover:text-ink hover:bg-ink/5 transition-colors cursor-pointer"
+                                                                "w-full text-left px-3.5 py-1.5 text-label md:text-body-sm text-ink-soft hover:text-ink hover:bg-ink/15 rounded-card transition-colors cursor-pointer"
                                                             }
                                                         >
                                                             {label}

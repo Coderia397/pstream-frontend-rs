@@ -68,17 +68,19 @@ pub fn App() -> impl IntoView {
                 <Route path=path!("/help/article/:slug") view=crate::pages::help::ArticlePage />
                 <Route path=path!("/search") view=crate::pages::search::SearchPage />
                 <Route path=path!("/browse/my-list") view=crate::pages::my_list::MyListPage />
-                <Route path=path!("/browse/movies") view=|| view! { <crate::pages::category::CategoryPage kind="movie" /> } />
-                <Route path=path!("/browse/films") view=|| view! { <crate::pages::category::CategoryPage kind="movie" /> } />
-                <Route path=path!("/browse/shows") view=|| view! { <crate::pages::category::CategoryPage kind="tv" /> } />
-                <Route path=path!("/browse/series") view=|| view! { <crate::pages::category::CategoryPage kind="tv" /> } />
+                // the addresses of the app: Series is genre 83 and Films is genre 34399; the named addresses of before lead there
+                <Route path=path!("/browse/movies") view=|| view! { <leptos_router::components::Redirect path="/browse/genre/34399" /> } />
+                <Route path=path!("/browse/films") view=|| view! { <leptos_router::components::Redirect path="/browse/genre/34399" /> } />
+                <Route path=path!("/browse/shows") view=|| view! { <leptos_router::components::Redirect path="/browse/genre/83" /> } />
+                <Route path=path!("/browse/series") view=|| view! { <leptos_router::components::Redirect path="/browse/genre/83" /> } />
                 <Route path=path!("/browse/games") view=crate::pages::games::GamesPage />
                 <Route path=path!("/games") view=crate::pages::games::GamesPage />
                 <Route path=path!("/tv") view=|| view! { <leptos_router::components::Redirect path="/browse/shows" /> } />
                 <Route path=path!("/movies") view=|| view! { <leptos_router::components::Redirect path="/browse/movies" /> } />
                 <Route path=path!("/new") view=|| view! { <leptos_router::components::Redirect path="/latest" /> } />
                 <Route path=path!("/list") view=|| view! { <leptos_router::components::Redirect path="/browse/my-list" /> } />
-                <Route path=path!("/browse/language") view=crate::pages::language::BrowseLanguagePage />
+                <Route path=path!("/browse/original-audio") view=crate::pages::language::BrowseLanguagePage />
+                <Route path=path!("/browse/language") view=|| view! { <leptos_router::components::Redirect path="/browse/original-audio" /> } />
                 <Route path=path!("/latest") view=crate::pages::new_popular::NewPopularPage />
                 <Route path=path!("/clips") view=crate::pages::clips::ClipsPage />
                 <Route path=path!("/reads") view=crate::pages::reads::ReadsPage />

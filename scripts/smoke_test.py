@@ -49,7 +49,7 @@ async def main():
             await call("Page.enable"); await call("Runtime.enable")
             await call("Emulation.setDeviceMetricsOverride", {"width": 1792, "height": 1400, "deviceScaleFactor": 1, "mobile": False})
 
-            for path in ("/browse", "/latest", "/search", "/browse/series", "/browse/films"):
+            for path in ("/browse", "/latest", "/search", "/browse/genre/83", "/browse/genre/34399", "/browse/series", "/browse/films"):
                 await call("Page.navigate", {"url": BASE + path})
                 await asyncio.sleep(12)
                 title = await js("document.title")

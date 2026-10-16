@@ -9,8 +9,8 @@ pub fn Footer() -> impl IntoView {
                 // Links Grid
                 <nav class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-y-4 gap-x-8 mb-8 text-xs md:text-sm">
                     <a href="/browse" class="hover:underline hover:text-ink transition-colors">{crate::i18n::t("nav-home")}</a>
-                    <a href="/browse/shows" class="hover:underline hover:text-ink transition-colors">{crate::i18n::t("footer-tv-shows")}</a>
-                    <a href="/browse/movies" class="hover:underline hover:text-ink transition-colors">{crate::i18n::t("footer-movies")}</a>
+                    <a href="/browse/genre/83" class="hover:underline hover:text-ink transition-colors">{crate::i18n::t("footer-tv-shows")}</a>
+                    <a href="/browse/genre/34399" class="hover:underline hover:text-ink transition-colors">{crate::i18n::t("footer-movies")}</a>
                     <a href="/latest" class="hover:underline hover:text-ink transition-colors">{crate::i18n::t("nav-new-popular")}</a>
                     <a href="/browse/my-list" class="hover:underline hover:text-ink transition-colors">{crate::i18n::t("nav-my-list")}</a>
                     <a href="/settings" class="hover:underline hover:text-ink transition-colors">{crate::i18n::t("footer-settings")}</a>

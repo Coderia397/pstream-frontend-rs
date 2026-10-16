@@ -129,6 +129,9 @@ pub struct Collection {
     /// Backdrop paths of the lead titles, for the background of the banner
     #[serde(default)]
     pub images: Vec<String>,
+    /// The colour of this collection (hue in degrees), the same on every visit
+    #[serde(default)]
+    pub hue: u32,
 }
 
 /// A chip for the top of the home page: an event that is in season.

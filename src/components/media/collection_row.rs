@@ -27,19 +27,25 @@ pub fn CollectionRow(row: FeedRow) -> impl IntoView {
     let items = row.to_media_items();
     let description = c.description.clone();
     let aria = heading.clone();
+    let h = c.hue;
 
     view! {
-        <section class="collection-row relative isolate overflow-hidden mx-[var(--app-x,56px)] my-6 rounded-card bg-void" aria-label=aria>
-            <div class="absolute inset-0 -z-10 flex" aria-hidden="true">
+        <section
+            class="collection-row relative isolate overflow-hidden mx-[var(--app-x,56px)] my-6 rounded-card ring-1 ring-white/10 shadow-[0_18px_50px_-20px_rgba(0,0,0,0.9)]"
+            aria-label=aria
+            style=format!("background: linear-gradient(110deg, hsl({h} 60% 13%) 0%, hsl({h} 55% 24%) 52%, hsl({h} 50% 15%) 100%);")
+        >
+            // the backdrops of the lead titles, turned into tones of the collection's colour
+            <div class="absolute inset-0 -z-10 flex mix-blend-luminosity opacity-55" aria-hidden="true">
                 {backdrops.into_iter().map(|src| view! {
-                    <img src=src alt="" class="h-full flex-1 min-w-0 object-cover opacity-60" loading="lazy" decoding="async" draggable="false" />
+                    <img src=src alt="" class="h-full flex-1 min-w-0 object-cover" loading="lazy" decoding="async" draggable="false" />
                 }).collect::<Vec<_>>()}
             </div>
-            <div class="absolute inset-0 -z-10 bg-gradient-to-r from-black/95 via-black/75 to-black/35" aria-hidden="true" />
+            <div class="absolute inset-0 -z-10" style=format!("background: radial-gradient(ellipse 70% 120% at 80% 50%, hsl({h} 70% 40% / 0.28) 0%, transparent 70%), linear-gradient(to right, rgba(0,0,0,0.78) 0%, rgba(0,0,0,0.4) 38%, transparent 70%);") aria-hidden="true" />
             <div class="relative flex flex-col md:flex-row md:items-center gap-5 md:gap-8 px-5 py-6 md:px-10 md:py-10 md:min-h-[360px]">
                 <div class="md:w-[34%] md:flex-none">
                     <p class="text-xs md:text-sm font-semibold uppercase tracking-[0.18em] text-ink/70">{eyebrow_text}</p>
-                    <h2 class="mt-2 text-2xl md:text-4xl font-bold leading-tight text-ink">{heading}</h2>
+                    <h2 class="mt-2 text-2xl md:text-4xl font-extrabold leading-tight text-ink drop-shadow-[0_2px_12px_rgba(0,0,0,0.6)]">{heading}</h2>
                     {(!description.is_empty()).then(|| view! { <p class="mt-3 text-sm md:text-base text-ink/80 max-w-[34ch]">{description}</p> })}
                     {link.map(|href| view! {
                         <a href=href class="mt-5 inline-flex items-center rounded-full bg-white px-5 py-2 text-sm font-semibold text-black hover:bg-white/85 transition-colors">

@@ -337,3 +337,27 @@ mod tests {
         assert_eq!(get_home_genre_display_name(9999, None), "Content");
     }
 }
+
+#[cfg(test)]
+mod address_tests {
+    use super::*;
+
+    #[test]
+    fn genre_addresses_follow_the_netflix_shape() {
+        assert_eq!(genre_url("tv", None), "/browse/genre/83");
+        assert_eq!(genre_url("movie", None), "/browse/genre/34399");
+        assert_eq!(genre_url("movie", Some(10016)), "/browse/genre/10016?bc=34399");
+        assert_eq!(genre_url("tv", Some(10018)), "/browse/genre/10018?bc=83");
+    }
+
+    #[test]
+    fn the_page_of_an_address_comes_from_bc_or_the_id() {
+        assert_eq!(page_kind_of_genre_route("/browse/genre/83", ""), Some("tv"));
+        assert_eq!(page_kind_of_genre_route("/browse/genre/34399", ""), Some("movie"));
+        assert_eq!(page_kind_of_genre_route("/browse/genre/10018", "?bc=83"), Some("tv"));
+        assert_eq!(page_kind_of_genre_route("/browse/genre/27", "?bc=34399"), Some("movie"));
+        // without bc a genre only a series page has belongs to the series page
+        assert_eq!(page_kind_of_genre_route("/browse/genre/10759", ""), Some("tv"));
+        assert_eq!(page_kind_of_genre_route("/browse/series", ""), None);
+    }
+}

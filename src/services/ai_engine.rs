@@ -285,6 +285,24 @@ pub async fn fetch_genre_list(kind: &str) -> Option<Vec<GenreEntry>> {
     (!a.genres.is_empty()).then_some(a.genres)
 }
 
+/// An event in season that has a page of its own (Halloween): its label key and label for the chip, and the id of its genre page.
+#[derive(Clone, Debug, Deserialize, PartialEq)]
+pub struct SeasonChip {
+    pub id: String,
+    pub label_key: String,
+    pub label: String,
+    pub genre_id: u32,
+}
+
+/// The chips of the events in season for the mobile top bar, from the engine; empty out of season or when the engine cannot be reached, so nothing about a season stays on screen once it is over.
+pub async fn fetch_season_chips() -> Vec<SeasonChip> {
+    #[derive(Deserialize)]
+    struct Answer { chips: Vec<SeasonChip> }
+    let Ok(resp) = Request::get(&format!("{}/api/season-chips", AI_API_BASE_URL)).send().await else { return Vec::new() };
+    if !resp.ok() { return Vec::new(); }
+    resp.json::<Answer>().await.map(|a| a.chips).unwrap_or_default()
+}
+
 /// The genre pages a limited profile should not be offered (see `hidden_pages`).
 pub async fn hidden_genres(surface: &str, names: &[String]) -> std::collections::HashSet<String> {
     hidden_pages("genre-support", "names", "genres", surface, names).await

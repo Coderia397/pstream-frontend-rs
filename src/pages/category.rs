@@ -11,16 +11,47 @@ use crate::data::{MOVIE_GENRES, TV_GENRES};
 /// is not a genre keeps the older grid of a row.
 #[component]
 pub fn GenreRoute() -> impl IntoView {
-    use crate::data::page_genres::{page_kind_of_genre_route, FILMS_PAGE_ID, SERIES_PAGE_ID};
+    use crate::data::page_genres::{genre_url, page_kind_of_genre_route, FILMS_PAGE_ID, SERIES_PAGE_ID};
     let params = leptos_router::hooks::use_params_map();
     let query = leptos_router::hooks::use_query_map();
+    let navigate = leptos_router::hooks::use_navigate();
+    // A page the engine no longer offers (an event out of season, a genre without enough titles) is not shown: the address goes back to the page it belongs to, so no
+    // reference to a page that is gone stays reachable.
+    let listing = LocalResource::new(move || {
+        let id = params.read().get("id").and_then(|i| i.parse::<u32>().ok());
+        let bc = query.read().get("bc");
+        async move {
+            let (Some(id), Some(_)) = (id, bc.as_ref().or(None)) else { return Some(true) };
+            let kind = if bc.as_deref() == Some("83") { "tv" } else { "movie" };
+            let list = crate::services::ai_engine::fetch_genre_list(kind).await?;
+            Some(list.iter().find(|g| g.id == id).is_none_or(|g| g.supported))
+        }
+    });
+    let chips = LocalResource::new(|| async { crate::services::ai_engine::fetch_season_chips().await });
+    Effect::new(move |_| {
+        let id = params.read().get("id").and_then(|i| i.parse::<u32>().ok());
+        let bc = query.read().get("bc");
+        match (id, bc.as_deref()) {
+            (Some(i), Some(_)) if listing.get() == Some(Some(false)) => {
+                navigate(&genre_url(if bc.as_deref() == Some("83") { "tv" } else { "movie" }, None), Default::default());
+                let _ = i;
+            }
+            (Some(i), None) if crate::data::page_genres::genre_name(i).is_some() && i == 10016 => {
+                if chips.get().is_some_and(|c| !c.iter().any(|x| x.genre_id == i)) { navigate("/browse", Default::default()); }
+            }
+            _ => {}
+        }
+    });
     move || {
         let id = params.read().get("id").unwrap_or_default();
         let bc = query.read().get("bc").map(|b| format!("?bc={b}")).unwrap_or_default();
         let kind = page_kind_of_genre_route(&format!("/browse/genre/{id}"), &bc);
+        let has_bc = !bc.is_empty();
         match (id.parse::<u32>(), kind) {
             (Ok(SERIES_PAGE_ID), _) => view! { <CategoryPage kind="tv" /> }.into_any(),
             (Ok(FILMS_PAGE_ID), _) => view! { <CategoryPage kind="movie" /> }.into_any(),
+            // an event page without a page to belong to (Halloween) mixes films and series, like Home
+            (Ok(10016), _) if !has_bc => view! { <crate::pages::browse::BrowseHome event=(10016, "Halloween") /> }.into_any(),
             (Ok(n), Some(k)) if MOVIE_GENRES.iter().chain(TV_GENRES.iter()).any(|g| g.id == n) => {
                 view! { <CategoryPage kind=if k == "tv" { "tv" } else { "movie" } genre_id=n /> }.into_any()
             }

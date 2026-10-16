@@ -33,6 +33,11 @@ pub fn page_kind_of_genre_route(path: &str, search: &str) -> Option<&'static str
     }
 }
 
+/// The name of a genre page by its address id (either list), for headers.
+pub fn genre_name(id: u32) -> Option<&'static str> {
+    MOVIE_GENRES.iter().chain(TV_GENRES.iter()).find(|g| g.id == id).map(|g| g.name)
+}
+
 /// TMDB Movie Genres following the Netflix naming convention (26 entries).
 pub static MOVIE_GENRES: &[PageGenre] = &[
     PageGenre { id: 28, name: "Action" },

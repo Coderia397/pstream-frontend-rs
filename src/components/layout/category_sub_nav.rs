@@ -17,6 +17,7 @@ pub fn CategorySubNav(
     on_genre_select: Callback<Option<SubNavGenre>>,
     #[prop(optional, default = false)] hide_genres_on_desktop: bool,
     #[prop(optional)] dropdown_label: Option<String>,
+    #[prop(optional, default = true)] show_categories: bool,
 ) -> impl IntoView {
     if hide_genres_on_desktop {
         return view! { <div class="hidden"></div> }.into_any();
@@ -41,6 +42,7 @@ pub fn CategorySubNav(
                         selected_genre=selected_genre
                         on_genre_select=on_genre_select
                         dropdown_label=lbl
+                        show_categories=show_categories
                     />
                 }.into_any()
             } else {
@@ -50,6 +52,7 @@ pub fn CategorySubNav(
                         genres=mobile_genres
                         selected_genre=selected_genre
                         on_genre_select=on_genre_select
+                        show_categories=show_categories
                     />
                 }.into_any()
             }}

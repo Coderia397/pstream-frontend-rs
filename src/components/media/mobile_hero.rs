@@ -41,6 +41,7 @@ pub fn MobileHero(
         }
     }).unwrap_or_default();
 
+    let tags: Vec<String> = movie.vibe_pills.iter().take(3).cloned().collect();
     let movie_c1 = movie.clone();
     let movie_c2 = movie.clone();
     let movie_c3 = movie.clone();
@@ -165,13 +166,13 @@ pub fn MobileHero(
                         </Suspense>
                     </div>
 
-                    // Genre / category chips
+                    // Kind and tags of the title (the engine's tone words and genres), as on the app: Series · Romantic · Social Experiment · Dating
                     <div class="flex items-center justify-center flex-wrap gap-x-2 gap-y-1 mb-3.5 text-body-sm font-medium text-ink-warm select-none">
-                        <span>{crate::i18n::t("media-trending")}</span>
-                        <span class="text-ink/30">"•"</span>
-                        <span>{crate::i18n::t("media-popular")}</span>
-                        <span class="text-ink/30">"•"</span>
-                        <span>{if is_tv { crate::i18n::t("media-series") } else { crate::i18n::t("media-film") }}</span>
+                        <span class="font-bold">{if is_tv { crate::i18n::t("media-series") } else { crate::i18n::t("media-film") }}</span>
+                        {tags.iter().map(|t| view! {
+                            <span class="text-ink/30">"•"</span>
+                            <span>{t.clone()}</span>
+                        }).collect::<Vec<_>>()}
                     </div>
 
                     // Buttons Row
@@ -180,7 +181,7 @@ pub fn MobileHero(
                         <button
                             type="button"
                             on:click=handle_play
-                            class="btn-ink flex-1 flex items-center justify-center h-12 rounded-full text-lg gap-2 transition-all active:scale-95"
+                            class="btn-ink flex-1 flex items-center justify-center h-12 rounded-md text-lg gap-2 transition-all active:scale-95"
                         >
                             <i class="ph-fill ph-play text-2xl"></i>
                             <span>{move || {
@@ -190,7 +191,7 @@ pub fn MobileHero(
                                         return crate::i18n::t("media-resume");
                                     }
                                 }
-                                crate::i18n::t("media-play")
+                                crate::i18n::t(if is_tv { "media-play-series" } else { "media-play-film" })
                             }}</span>
                         </button>
 
@@ -198,7 +199,7 @@ pub fn MobileHero(
                         <button
                             type="button"
                             on:click=toggle_my_list
-                            class="btn-glass flex-1 flex items-center justify-center h-12 rounded-full text-lg gap-2 transition-all active:scale-95"
+                            class="btn-glass flex-1 flex items-center justify-center h-12 rounded-md text-lg gap-2 transition-all active:scale-95"
                         >
                             <i class=move || if is_added.get() { "ph-bold ph-check text-2xl" } else { "ph-bold ph-plus text-2xl" }></i>
                             <span>{crate::i18n::t("nav-my-list")}</span>

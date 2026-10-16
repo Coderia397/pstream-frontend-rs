@@ -7,8 +7,9 @@ use crate::components::media::continue_watching_row::ContinueWatchingRow;
 use crate::components::layout::category_sub_nav::{CategorySubNav, SubNavGenre};
 use crate::data::HOME_MOBILE_GENRES;
 
+/// The Home page; opened for an event in season (`event`: genre id and name, for example Halloween) it is the same page for that event: films and series mixed, with the hero, rows and collections of the event.
 #[component]
-pub fn BrowseHome() -> impl IntoView {
+pub fn BrowseHome(#[prop(optional)] event: Option<(u32, &'static str)>) -> impl IntoView {
     use crate::components::layout::Layout;
     use crate::store::use_ui_store;
 
@@ -23,6 +24,9 @@ pub fn BrowseHome() -> impl IntoView {
     let query_map = leptos_router::hooks::use_query_map();
     let genres_for_init = genres.clone();
     let initial_genre = query_map.with_untracked(|q| {
+        if let Some((id, name)) = event {
+            return Some(SubNavGenre { id, name: name.to_string() });
+        }
         q.get("genre").and_then(|n| {
             let lower = n.to_lowercase();
             genres_for_init.iter().find(|g| g.name.to_lowercase() == lower).cloned()
@@ -116,6 +120,7 @@ pub fn BrowseHome() -> impl IntoView {
                             genres=offered()
                             selected_genre=selected_genre
                             on_genre_select=on_genre_select_cb
+                            show_categories=false
                         />
                     }}
                 </div>

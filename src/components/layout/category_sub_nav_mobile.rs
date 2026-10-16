@@ -9,6 +9,8 @@ pub fn CategorySubNavMobile(
     selected_genre: ReadSignal<Option<SubNavGenre>>,
     on_genre_select: Callback<Option<SubNavGenre>>,
     #[prop(optional)] dropdown_label: Option<String>,
+    /// The Categories chip (a menu of genres): on the Series and Films pages, not on Home
+    #[prop(optional, default = true)] show_categories: bool,
 ) -> impl IntoView {
     let location = use_location();
     let navigate = use_navigate();
@@ -18,6 +20,9 @@ pub fn CategorySubNavMobile(
     let is_tv_active = move || location.pathname.get() == "/browse/series";
     let is_movie_active = move || location.pathname.get() == "/browse/films";
     let is_new_active = move || location.pathname.get() == "/latest";
+    let is_games_active = move || location.pathname.get().starts_with("/browse/games");
+    // events in season with a page of their own (Halloween); the list is empty out of season, so the chip goes away by itself
+    let season_chips = LocalResource::new(|| async { crate::services::ai_engine::fetch_season_chips().await });
 
     let nav_series = navigate.clone();
     let on_series = move |_| {
@@ -38,6 +43,9 @@ pub fn CategorySubNavMobile(
     };
 
     let nav_latest = navigate.clone();
+    let nav_games = navigate.clone();
+    let navigate_event = navigate.clone();
+    let on_games = move |_| nav_games("/browse/games", Default::default());
     let on_latest = move |_| {
         if is_new_active() {
             nav_latest("/browse", Default::default());
@@ -46,12 +54,19 @@ pub fn CategorySubNavMobile(
         }
     };
 
-    let active_genre_label = move || {
+    let active_genre_label = Signal::derive(move || {
         if let Some(g) = selected_genre.get() {
             crate::i18n::genre_label(&g.name)
         } else {
             dropdown_label.clone().unwrap_or_else(|| crate::i18n::t("nav-categories"))
         }
+    });
+
+    // one look for every pill: filled when it is the page in use, a glass pill otherwise
+    let pill = |active: bool| if active {
+        "flex items-center justify-center h-12 px-4 rounded-modal text-body-lg font-medium whitespace-nowrap active:scale-95 transition-all leading-none shrink-0 cursor-pointer bg-ink text-void border border-ink"
+    } else {
+        "flex items-center justify-center h-12 px-4 rounded-modal text-body-lg font-medium whitespace-nowrap active:scale-95 transition-all leading-none shrink-0 cursor-pointer bg-ink/[0.08] text-ink-dim border border-ink/15"
     };
 
     let on_genre_select_stored = on_genre_select;
@@ -61,43 +76,21 @@ pub fn CategorySubNavMobile(
             // Horizontal scrolling pills container (Task 092)
             <div class="pt-2 pb-4 px-4 flex items-center justify-start overflow-x-auto scrollbar-hide max-w-full">
                 <div class="flex items-center gap-[6px] shrink-0">
-                    // Series pill
-                    <button
-                        on:click=on_series
-                        class=move || if is_tv_active() {
-                            "flex items-center justify-center h-12 px-4 rounded-modal text-body-lg font-medium whitespace-nowrap active:scale-95 transition-all leading-none shrink-0 cursor-pointer bg-ink text-void border border-ink"
-                        } else {
-                            "flex items-center justify-center h-12 px-4 rounded-modal text-body-lg font-medium whitespace-nowrap active:scale-95 transition-all leading-none shrink-0 cursor-pointer bg-ink/[0.08] text-ink-dim border border-ink/15"
-                        }
-                    >
-                        {crate::i18n::t("category-sub-nav-mobile-series")}
-                    </button>
-
-                    // Movies pill
-                    <button
-                        on:click=on_films
-                        class=move || if is_movie_active() {
-                            "flex items-center justify-center h-12 px-4 rounded-modal text-body-lg font-medium whitespace-nowrap active:scale-95 transition-all leading-none shrink-0 cursor-pointer bg-ink text-void border border-ink"
-                        } else {
-                            "flex items-center justify-center h-12 px-4 rounded-modal text-body-lg font-medium whitespace-nowrap active:scale-95 transition-all leading-none shrink-0 cursor-pointer bg-ink/[0.08] text-ink-dim border border-ink/15"
-                        }
-                    >
-                        {crate::i18n::t("category-sub-nav-mobile-films")}
-                    </button>
-
-                    // New & Hot pill
-                    <button
-                        on:click=on_latest
-                        class=move || if is_new_active() {
-                            "flex items-center justify-center h-12 px-4 rounded-modal text-body-lg font-medium whitespace-nowrap active:scale-95 transition-all leading-none shrink-0 cursor-pointer bg-ink text-void border border-ink"
-                        } else {
-                            "flex items-center justify-center h-12 px-4 rounded-modal text-body-lg font-medium whitespace-nowrap active:scale-95 transition-all leading-none shrink-0 cursor-pointer bg-ink/[0.08] text-ink-dim border border-ink/15"
-                        }
-                    >
-                        {crate::i18n::t("category-sub-nav-mobile-new-hot")}
-                    </button>
+                    // Series, Films, Games, the events in season, New & Hot: the pills of the app's Home
+                    <button on:click=on_series class=move || pill(is_tv_active())>{crate::i18n::t("category-sub-nav-mobile-series")}</button>
+                    <button on:click=on_films class=move || pill(is_movie_active())>{crate::i18n::t("category-sub-nav-mobile-films")}</button>
+                    <button on:click=on_games class=move || pill(is_games_active())>{crate::i18n::t("nav-games")}</button>
+                    {move || season_chips.get().unwrap_or_default().into_iter().map(|chip| {
+                        let label = crate::services::ai_engine::engine_text(&chip.label_key, None).unwrap_or_else(|| chip.label.clone());
+                        let id = chip.genre_id;
+                        let nav = navigate_event.clone();
+                        let active = move || location.pathname.get() == format!("/browse/genre/{id}");
+                        view! { <button on:click=move |_| nav(&format!("/browse/genre/{id}"), Default::default()) class=move || pill(active())>{label}</button> }
+                    }).collect::<Vec<_>>()}
+                    <button on:click=on_latest class=move || pill(is_new_active())>{crate::i18n::t("category-sub-nav-mobile-new-hot")}</button>
 
                     // Categories / Genre Pill
+                    <Show when=move || show_categories>
                     <button
                         on:click=move |_| {
                             if selected_genre.get().is_some() {
@@ -112,7 +105,7 @@ pub fn CategorySubNavMobile(
                             "flex items-center justify-center space-x-1 h-12 px-4 rounded-modal text-body-lg font-medium whitespace-nowrap active:scale-95 leading-none shrink-0 cursor-pointer bg-ink/[0.08] text-ink-dim border border-ink/15"
                         }
                     >
-                        <span>{active_genre_label}</span>
+                        <span>{move || active_genre_label.get()}</span>
                         {move || {
                             if selected_genre.get().is_some() {
                                 view! {
@@ -125,6 +118,7 @@ pub fn CategorySubNavMobile(
                             }
                         }}
                     </button>
+                    </Show>
                 </div>
             </div>
 

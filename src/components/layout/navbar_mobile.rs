@@ -36,6 +36,13 @@ pub fn NavbarMobile(
         else if p.starts_with("/browse/films") || p.starts_with("/browse/movies") { crate::i18n::t("nav-films") }
         else if p.starts_with("/browse/games") || p.starts_with("/games") { crate::i18n::t("nav-games") }
         else if p.starts_with("/latest") { crate::i18n::t("nav-new-hot") }
+        else if let Some(id) = p.strip_prefix("/browse/genre/").and_then(|r| r.split('/').next()).and_then(|r| r.parse::<u32>().ok()) {
+            match id {
+                crate::data::page_genres::SERIES_PAGE_ID => crate::i18n::t("nav-series"),
+                crate::data::page_genres::FILMS_PAGE_ID => crate::i18n::t("nav-films"),
+                n => crate::data::page_genres::genre_name(n).map(crate::i18n::genre_label).unwrap_or_default(),
+            }
+        }
         else if p == "/browse" || p == "/" || p.is_empty() { crate::i18n::t("nav-home") }
         else { String::new() }
     };
@@ -115,16 +122,16 @@ pub fn NavbarMobile(
                     <span class="ms-1 truncate text-heading font-bold leading-none tracking-tight text-ink">{page_title}</span>
                 </div>
 
-                // Action buttons: Cast & Profile Avatar
+                // Action buttons: notifications and the profile
                 <div class="flex items-center">
-                    // Screencast icon (Task 087)
-                    <button
-                        class="w-11 h-11 flex items-center justify-center text-ink hover:text-gray-300 transition-colors cursor-pointer"
-                        aria-label=crate::i18n::t("navbar-mobile-cast-to-tv")
-                        title=crate::i18n::t("navbar-mobile-cast")
+                    // Notifications (the bell of the app header)
+                    <a
+                        href="/notifications"
+                        class="relative w-11 h-11 flex items-center justify-center text-ink active:scale-95 transition-transform cursor-pointer"
+                        aria-label=crate::i18n::t("navbar-mobile-notifications")
                     >
-                        <i class="ph-bold ph-screencast text-heading"></i>
-                    </button>
+                        <i class="ph-bold ph-bell text-heading"></i>
+                    </a>
 
                     // Profile avatar button (Task 087)
                     <button

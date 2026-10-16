@@ -2293,3 +2293,7 @@ tour-new-title = See what is new
 tour-new-text = New & Popular shows what just arrived, what is coming soon and what everyone is watching.
 tour-list-title = Keep titles for later
 tour-list-text = Save a title to My List and it waits for you here.
+
+navbar-mobile-notifications = Notifications
+media-play-series = Play Series
+media-play-film = Play Film

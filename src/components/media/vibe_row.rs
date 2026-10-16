@@ -22,6 +22,8 @@ pub fn VibeRow(
     let scroll_ref = NodeRef::<leptos::html::Div>::new();
     let (can_scroll_left, set_can_scroll_left) = signal(false);
     let (can_scroll_right, set_can_scroll_right) = signal(true);
+    // the first page turn starts the loop: from then on the row can also be paged back from its start, to its end
+    let (looping, set_looping) = signal(false);
     let (page_index, set_page_index) = signal(0);
 
     let items_stored = StoredValue::new(items);
@@ -64,6 +66,7 @@ pub fn VibeRow(
         let update = update_scroll_state.clone();
         move |direction: &'static str| {
             if let Some(el) = scroll_ref.get() {
+                set_looping.set(true);
                 let client_width = el.client_width() as f64;
                 let current_scroll = el.scroll_left() as f64;
                 let scroll_width = el.scroll_width() as f64;
@@ -179,7 +182,7 @@ pub fn VibeRow(
                                     <div class="flex-none h-full pointer-events-none" style="width: var(--app-x, 56px);" />
                                 </div>
 
-                                <crate::components::media::row_scroll::EdgeButton edge=crate::components::media::row_scroll::Edge::Left visible=can_scroll_left on_click=Callback::new(move |_| scroll_left("left")) label=crate::i18n::t("vibe-row-scroll-left") />
+                                <crate::components::media::row_scroll::EdgeButton edge=crate::components::media::row_scroll::Edge::Left visible=Signal::derive(move || can_scroll_left.get() || looping.get()) on_click=Callback::new(move |_| scroll_left("left")) label=crate::i18n::t("vibe-row-scroll-left") />
                                 <crate::components::media::row_scroll::EdgeButton edge=crate::components::media::row_scroll::Edge::Right visible=can_scroll_right on_click=Callback::new(move |_| scroll_right("right")) label=crate::i18n::t("vibe-row-scroll-right") />
                             </>
                         }.into_any()

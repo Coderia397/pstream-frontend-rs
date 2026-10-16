@@ -373,6 +373,8 @@ pub fn TopTenRow(
     let scroll_ref = NodeRef::<leptos::html::Div>::new();
     let (can_scroll_left, set_can_scroll_left) = signal(false);
     let (can_scroll_right, set_can_scroll_right) = signal(true);
+    // the first page turn starts the loop: from then on the row can also be paged back from its start, to its end
+    let (looping, set_looping) = signal(false);
 
     let update_scroll_state = Callback::new(move |_: ()| {
         if let Some(el) = scroll_ref.get() {
@@ -408,6 +410,7 @@ pub fn TopTenRow(
         let update = update_scroll_state.clone();
         move |direction: &str| {
             if let Some(el) = scroll_ref.get() {
+                set_looping.set(true);
                 let client_width = el.client_width() as f64;
                 let current_scroll = el.scroll_left() as f64;
                 let scroll_width = el.scroll_width() as f64;
@@ -465,7 +468,7 @@ pub fn TopTenRow(
                     <div class="flex-none pointer-events-none" style="width: var(--app-x, 56px);" />
                 </div>
 
-                <crate::components::media::row_scroll::EdgeButton edge=crate::components::media::row_scroll::Edge::Left visible=can_scroll_left on_click=Callback::new({ let sl = scroll.clone(); move |_| sl("left") }) label=crate::i18n::t("continue-watching-row-scroll-left") inset="top-2 bottom-0" />
+                <crate::components::media::row_scroll::EdgeButton edge=crate::components::media::row_scroll::Edge::Left visible=Signal::derive(move || can_scroll_left.get() || looping.get()) on_click=Callback::new({ let sl = scroll.clone(); move |_| sl("left") }) label=crate::i18n::t("continue-watching-row-scroll-left") inset="top-2 bottom-0" />
                 <crate::components::media::row_scroll::EdgeButton edge=crate::components::media::row_scroll::Edge::Right visible=can_scroll_right on_click=Callback::new({ let sr = scroll.clone(); move |_| sr("right") }) label=crate::i18n::t("continue-watching-row-scroll-right") inset="top-2 bottom-0" />
             </div>
         </div>

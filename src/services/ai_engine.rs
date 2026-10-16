@@ -134,6 +134,9 @@ pub struct Collection {
     /// The colour of this collection (hue in degrees), the same on every visit
     #[serde(default)]
     pub hue: u32,
+    /// The name of a mood collection (the page header carries it; the label is then the shared one)
+    #[serde(default)]
+    pub title: String,
 }
 
 /// A chip for the top of the home page: an event that is in season.
@@ -199,6 +202,9 @@ pub struct FeedResponse {
     /// Events in season (home page only)
     #[serde(default)]
     pub chips: Vec<Chip>,
+    /// The collection this page belongs to (the page Explore all opens): label, sentence, pictures and colour, for the header in place of the hero
+    #[serde(default)]
+    pub header: Option<Collection>,
 }
 
 thread_local! {
@@ -482,6 +488,24 @@ pub async fn fetch_dynamic_feed(surface: &str, genre: Option<&str>, limit: Optio
 }
 
 /// As `fetch_dynamic_feed`, with the answer as a whole (rows and chips) and the profile's own titles (`signals`, from `personal_signals`).
+/// The header of the page of an event (Halloween), from the engine, when the page has one.
+pub async fn fetch_page_header(genre: &str) -> Option<Collection> {
+    let encoded: String = js_sys::encode_uri_component(genre).into();
+    let url = format!("{}/api/feed?surface=all&limit=8&genre={}&session_id={}{}", base(), encoded, get_or_create_session_id(), rating_query());
+    let resp = Request::get(&url).send().await.ok()?;
+    if !resp.ok() { return None; }
+    resp.json::<FeedResponse>().await.ok()?.header
+}
+
+/// The page of a mood collection (what Explore all opens): its header and rows, from the engine.
+pub async fn fetch_collection_page(collection: &str, limit: usize, signals: &str) -> Option<FeedResponse> {
+    let encoded: String = js_sys::encode_uri_component(collection).into();
+    let url = format!("{}/api/feed?surface=all&limit={}&collection={}&session_id={}{}{}", base(), limit, encoded, get_or_create_session_id(), rating_query(), signals);
+    let resp = Request::get(&url).send().await.ok()?;
+    if !resp.ok() { return None; }
+    resp.json::<FeedResponse>().await.ok()
+}
+
 pub async fn fetch_feed_page(surface: &str, genre: Option<&str>, limit: Option<usize>, signals: &str) -> Option<FeedResponse> {
     let lim = limit.unwrap_or(18);
     let session_id = get_or_create_session_id();

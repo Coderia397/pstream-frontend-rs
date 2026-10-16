@@ -28,6 +28,23 @@ thread_local! {
     static CACHE: RefCell<HashMap<(u32, bool), RatingInfo>> = RefCell::new(HashMap::new());
 }
 
+/// The certificates of a title if they are already known (from an earlier answer): no waiting, so a badge can be drawn at once.
+pub fn peek(id: u32, is_tv: bool) -> Option<RatingInfo> {
+    CACHE.with(|c| c.borrow().get(&(id, is_tv)).cloned())
+}
+
+/// Keeps certificates that the caller already has, so the next badge of the title is drawn at once.
+pub fn remember(id: u32, is_tv: bool, info: &RatingInfo) {
+    CACHE.with(|c| c.borrow_mut().insert((id, is_tv), info.clone()));
+}
+
+/// Starts asking for the certificates of a title and forgets the answer's value: used while the pointer rests on a card, so that the hover card finds them ready.
+pub fn prefetch(id: u32, is_tv: bool) {
+    if peek(id, is_tv).is_none() {
+        leptos::task::spawn_local(async move { let _ = fetch(id, is_tv).await; });
+    }
+}
+
 /// The certificates of a title from the engine (`/api/rating`). A title the engine does not know, or an engine that cannot be reached,
 /// gives none (shown as NR); an unreachable engine is not remembered.
 pub async fn fetch(id: u32, is_tv: bool) -> RatingInfo {

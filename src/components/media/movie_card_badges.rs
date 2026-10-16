@@ -37,23 +37,30 @@ pub fn RatingBadge(
     #[prop(default = None)] us: Option<String>,
 ) -> impl IntoView {
     let prefs = use_prefs();
+    // what is already known is drawn at once (the caller's certificates, or an earlier answer): the badge never appears as "NR" first and then changes, which showed as a blink on hover
     let known = gb.is_some() || us.is_some();
-    let resource = LocalResource::new(move || {
-        let (gb, us) = (gb.clone(), us.clone());
-        async move {
-            if known {
-                crate::services::rating::RatingInfo { gb, us }
-            } else {
-                crate::services::rating::fetch(id, is_tv).await
-            }
-        }
-    });
+    let initial = if known {
+        let info = crate::services::rating::RatingInfo { gb: gb.clone(), us: us.clone() };
+        crate::services::rating::remember(id, is_tv, &info);
+        Some(info)
+    } else {
+        crate::services::rating::peek(id, is_tv)
+    };
+    let info = RwSignal::new(initial);
+    if info.get_untracked().is_none() {
+        leptos::task::spawn_local(async move { info.set(Some(crate::services::rating::fetch(id, is_tv).await)); });
+    }
     view! {
         {move || {
-            let info = resource.get().unwrap_or_default();
             let system = prefs.rating_system();
-            let label = age_label(system, info.gb.as_deref(), info.us.as_deref());
-            view! { <AgeBadge label=label system=system size=size.clone() /> }
+            match info.get() {
+                Some(i) => {
+                    let label = age_label(system, i.gb.as_deref(), i.us.as_deref());
+                    view! { <AgeBadge label=label system=system size=size.clone() /> }.into_any()
+                }
+                // until the answer comes the place of the badge is held empty (no "NR" that then changes)
+                None => view! { <span class="inline-block invisible"><AgeBadge label=age_label(system, None, None) system=system size=size.clone() /></span> }.into_any(),
+            }
         }}
     }
 }

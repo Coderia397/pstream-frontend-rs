@@ -649,3 +649,15 @@ button,
 /* The description of the hero banner: it fades (700ms) a little faster than it slides down (1000ms) and gives up its space, so the logo and the line under it slide down with it. */
 .hero-synopsis { display: grid; grid-template-rows: 1fr; margin-top: 0.5rem; opacity: 1; transform: translateY(0); transition: grid-template-rows 1000ms cubic-bezier(0.4, 0, 0.2, 1), margin-top 1000ms cubic-bezier(0.4, 0, 0.2, 1), transform 1000ms cubic-bezier(0.4, 0, 0.2, 1), opacity 700ms ease; }
 .hero-synopsis.is-hidden { grid-template-rows: 0fr; margin-top: 0; opacity: 0; transform: translateY(24px); }
+
+/* Hand lettered display fonts of the collection logos (components/media/collection_logo.rs): open licence (SIL OFL), from Google Fonts, self hosted, latin subset. */
+@font-face { font-family: 'Logo Marker'; src: url('/fonts/logo/permanent-marker.woff2') format('woff2'); font-display: swap; }
+@font-face { font-family: 'Logo Brush'; src: url('/fonts/logo/caveat-brush.woff2') format('woff2'); font-display: swap; }
+@font-face { font-family: 'Logo Scrawl'; src: url('/fonts/logo/rock-salt.woff2') format('woff2'); font-display: swap; }
+@font-face { font-family: 'Logo Cutout'; src: url('/fonts/logo/londrina.woff2') format('woff2'); font-display: swap; }
+@font-face { font-family: 'Logo Graffiti'; src: url('/fonts/logo/sedgwick.woff2') format('woff2'); font-display: swap; }
+@font-face { font-family: 'Logo Editorial'; src: url('/fonts/logo/dm-serif-italic.woff2') format('woff2'); font-display: swap; }
+@font-face { font-family: 'Logo Casual'; src: url('/fonts/logo/gochi.woff2') format('woff2'); font-display: swap; }
+@font-face { font-family: 'Logo Hand'; src: url('/fonts/logo/kalam.woff2') format('woff2'); font-display: swap; }
+@font-face { font-family: 'Logo Playfair'; src: url('/fonts/logo/playfair-italic.woff2') format('woff2'); font-display: swap; }
+@font-face { font-family: 'Logo Abril'; src: url('/fonts/logo/abril-fatface.woff2') format('woff2'); font-display: swap; }

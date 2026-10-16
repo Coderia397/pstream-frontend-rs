@@ -9,7 +9,7 @@ use crate::data::HOME_MOBILE_GENRES;
 
 /// The Home page; opened for an event in season (`event`: genre id and name, for example Halloween) it is the same page for that event: films and series mixed, with the hero, rows and collections of the event.
 #[component]
-pub fn BrowseHome(#[prop(optional)] event: Option<(u32, &'static str)>) -> impl IntoView {
+pub fn BrowseHome(#[prop(optional)] event: Option<(u32, &'static str)>, #[prop(optional)] collection: Option<String>) -> impl IntoView {
     use crate::components::layout::Layout;
     use crate::store::use_ui_store;
 
@@ -33,6 +33,20 @@ pub fn BrowseHome(#[prop(optional)] event: Option<(u32, &'static str)>) -> impl 
         })
     });
     let (selected_genre, set_selected_genre) = signal(initial_genre);
+    // the page of a collection: its header (instead of the hero) and its own rows; an event page has its header only
+    let collection_page = LocalResource::new({
+        let collection = collection.clone();
+        move || {
+            let collection = collection.clone();
+            async move {
+                match collection { Some(c) => crate::services::ai_engine::fetch_collection_page(&c, 40, &crate::services::ai_engine::personal_signals()).await, None => None }
+            }
+        }
+    });
+    let event_header = LocalResource::new(move || async move {
+        match event { Some((_, name)) => crate::services::ai_engine::fetch_page_header(name).await, None => None }
+    });
+    let page_header = Signal::derive(move || collection_page.get().flatten().and_then(|p| p.header).or_else(|| event_header.get().flatten()));
     let on_genre_select_cb = Callback::new(move |opt_g: Option<SubNavGenre>| {
         set_selected_genre.set(opt_g.clone());
         if let Some(win) = web_sys::window() {
@@ -81,11 +95,17 @@ pub fn BrowseHome(#[prop(optional)] event: Option<(u32, &'static str)>) -> impl 
     };
 
     // Dynamic Feed: AI-curated polymorphic rows from sovereign intelligence engine
+    let feed_collection = collection.clone();
     let feed = LocalResource::new(move || {
         let g = selected_genre.get().map(|g| g.name);
         // the profile's own titles for the personal rows (read here, where the page's stores are in reach)
         let signals = if g.is_none() { crate::services::ai_engine::personal_signals() } else { String::new() };
+        let collection = feed_collection.clone();
         async move {
+            // the page of a collection lists the collection's own rows
+            if let Some(c) = collection {
+                return crate::services::ai_engine::fetch_collection_page(&c, 40, &signals).await.map(|p| p.rows).unwrap_or_default();
+            }
             crate::services::ai_engine::fetch_feed_page("home", g.as_deref(), Some(24), &signals).await.map(|p| p.rows).unwrap_or_default()
         }
     });
@@ -124,11 +144,14 @@ pub fn BrowseHome(#[prop(optional)] event: Option<(u32, &'static str)>) -> impl 
                     }}
                 </div>
 
+                // The page of a collection (Explore all on Halloween) opens with the collection's own header in place of the hero
+                {move || page_header.get().map(|c| view! { <crate::components::media::collection_row::CollectionHero collection=c /> })}
+
                 // Hero Carousel driven by real TMDB / AI feed
                 <Suspense fallback=move || view! {
                     <crate::components::media::hero_skeleton::HeroSkeleton />
                 }>
-                    {move || hero.get().map(|result| {
+                    {move || hero.get().map(|result| if page_header.get().is_some() { view! { <span /> }.into_any() } else {
                         let movies = result;
                         if movies.is_empty() {
                             view! { <div class="h-[500px] bg-void"></div> }.into_any()

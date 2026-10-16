@@ -48,6 +48,11 @@ pub fn GenreRoute() -> impl IntoView {
         let kind = page_kind_of_genre_route(&format!("/browse/genre/{id}"), &bc);
         let has_bc = !bc.is_empty();
         match (id.parse::<u32>(), kind) {
+            // the page of a mood collection (Explore all): a number made from its id, and the id
+            (Ok(n), _) if n >= 20_000 && query.read().get("c").is_some() => {
+                let id = query.read().get("c").unwrap_or_default();
+                view! { <crate::pages::browse::BrowseHome collection=id /> }.into_any()
+            }
             (Ok(SERIES_PAGE_ID), _) => view! { <CategoryPage kind="tv" /> }.into_any(),
             (Ok(FILMS_PAGE_ID), _) => view! { <CategoryPage kind="movie" /> }.into_any(),
             // an event page without a page to belong to (Halloween) mixes films and series, like Home

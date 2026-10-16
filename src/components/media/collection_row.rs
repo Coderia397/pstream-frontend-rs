@@ -1,16 +1,24 @@
 use leptos::prelude::*;
 use crate::services::ai_engine::{engine_text, FeedRow};
 use super::movie_card::MovieCard;
+use super::collection_logo::{design_of, CollectionLogo, LogoFilters};
+use super::row_scroll::{page_target, Edge, EdgeButton};
 
-/// The page that lists a whole collection: the films page of the genre the engine names (Halloween, Moods), when the page has such a genre.
+/// The page that lists a whole collection: the page of the genre the engine names (Halloween), or for a mood the numbered page of the collection (`/browse/genre/<n>?c=<id>`, the number
+/// is made from the id, as Netflix numbers its clusters).
 pub fn collection_link(target: &serde_json::Value) -> Option<String> {
+    if let Some(id) = target.get("collection").and_then(|v| v.as_str()) {
+        let n = 20_000 + id.bytes().fold(7u32, |h, b| h.wrapping_mul(131).wrapping_add(b as u32)) % 9_000;
+        return Some(format!("/browse/genre/{n}?c={id}"));
+    }
     let name = target.get("genre")?.as_str()?;
     let genre = crate::data::page_genres::MOVIE_GENRES.iter().find(|g| g.name.eq_ignore_ascii_case(name))?;
     Some(crate::data::page_genres::genre_url("movie", Some(genre.id as u32)))
 }
 
-/// A themed row: the backdrops of its lead titles as a darkened background, a panel with the label, a title, a sentence and an Explore all
-/// button on the left, the titles on the right. Everything it shows comes from the row the engine sent (`collection` object).
+/// A themed row, as in the app: the full width of the page, the artwork of the collection (larger than the band, so it can fade into the page above and below) behind a centred panel
+/// (the title drawn as a logo, the label between two thin lines, a sentence, Explore all) and the titles as ordinary tiles that run off the edge of the page, with the same page buttons
+/// as every other row. Everything it shows comes from the row the engine sent (`collection` object).
 #[component]
 pub fn CollectionRow(row: FeedRow) -> impl IntoView {
     let Some(c) = row.collection.clone() else { return view! { <span /> }.into_any() };
@@ -23,62 +31,143 @@ pub fn CollectionRow(row: FeedRow) -> impl IntoView {
     };
     let link = collection_link(&c.target);
     let eyebrow_text = if is_event { crate::i18n::t("collection-eyebrow-event") } else { eyebrow.clone() };
-    let backdrops: Vec<String> = c.images.iter().take(5).map(|p| format!("{}/w780{}", crate::config::TMDB_IMAGE_URL, p)).collect();
+    let artwork = c.images.first().map(|p| format!("{}/w1280{}", crate::config::TMDB_IMAGE_URL, p)).unwrap_or_default();
     let items = row.to_media_items();
     let description = c.description.clone();
     let aria = heading.clone();
     let h = c.hue;
+    let design = design_of(&c.id);
+
+    // the row of titles pages like every other row
+    let strip = NodeRef::<leptos::html::Div>::new();
+    let (can_left, set_can_left) = signal(false);
+    let (can_right, set_can_right) = signal(true);
+    // the first page turn starts the loop (see row_scroll.rs): from then on the row also pages back from its start
+    let (looping, set_looping) = signal(false);
+    let update = Callback::new(move |_: ()| {
+        if let Some(el) = strip.get() {
+            set_can_left.set(el.scroll_left() > 10);
+            set_can_right.set(el.scroll_width() > el.client_width() + 10 && el.scroll_width() - (el.scroll_left() + el.client_width()) > 10);
+        }
+    });
+    let page = Callback::new(move |forward: bool| {
+        if let Some(el) = strip.get() {
+            set_looping.set(true);
+            // from tablet width up the row loops round (a copy of its first cards behind and of its last cards in front); a phone pages once to the end
+            if crate::components::media::row_scroll::turn_page(&el, forward, 0.0) {
+                leptos::leptos_dom::helpers::set_timeout(move || update.run(()), std::time::Duration::from_millis(600));
+                return;
+            }
+            let (client, cur, total) = (el.client_width() as f64, el.scroll_left() as f64, el.scroll_width() as f64);
+            let target = page_target(forward, cur, client, total, (client * 0.9).max(100.0));
+            el.scroll_to_with_x_and_y(target, 0.0);
+            leptos::leptos_dom::helpers::set_timeout(move || update.run(()), std::time::Duration::from_millis(600));
+        }
+    });
+
+    let card = move |item: crate::services::tmdb::MediaItem, role: u8| {
+        let is_tv = item.media_type.as_deref() == Some("tv");
+        let backdrop = item.backdrop_path.as_ref().map(|p| format!("{}/w780{}", crate::config::TMDB_IMAGE_URL, p)).unwrap_or_default();
+        let poster = item.poster_path.as_ref().map(|p| format!("{}/w342{}", crate::config::TMDB_IMAGE_URL, p));
+        let is_new = item.badges.iter().any(|b| b == "new");
+        view! {
+            <div
+                class=format!("relative flex-none tile-width aspect-video max-[599px]:w-[118px] max-[599px]:aspect-[5/7] overflow-visible rounded-tile{}", if role >= 2 { " max-md:hidden" } else { "" })
+                data-loop-first=(role == 1).then_some("1")
+                data-loop-clone=(role == 2).then_some("1")
+            >
+                <MovieCard
+                    movie_id=item.id
+                    is_tv=is_tv
+                    title=item.display_title().to_string()
+                    backdrop_path=backdrop
+                    poster_path=poster.unwrap_or_default()
+                    vote_average=item.vote_average
+                    overview=item.overview.clone()
+                    genre_ids=item.genre_ids.clone()
+                    match_percentage=item.match_percentage
+                    vibe_pills=item.vibe_pills.clone()
+                    is_new=is_new
+                />
+            </div>
+        }
+    };
+    // the titles, with a copy of the last ones in front and of the first ones behind, so that the row can be paged round
+    let n = items.len();
+    let k = if n > 7 { n.min(12) } else { 0 };
+    let lead_views: Vec<_> = items[n - k..].iter().cloned().map(|it| card(it, 3)).collect();
+    let copies: Vec<_> = items[..k].to_vec();
+    let mut card_views: Vec<_> = items.into_iter().enumerate().map(|(i, it)| card(it, if i == 0 { 1 } else { 0 })).collect();
+    card_views.extend(copies.into_iter().enumerate().map(|(i, it)| card(it, if i == 0 { 2 } else { 3 })));
 
     view! {
-        <section
-            class="collection-row relative isolate overflow-hidden mx-[var(--app-x,56px)] my-6 rounded-card ring-1 ring-white/10 shadow-[0_18px_50px_-20px_rgba(0,0,0,0.9)]"
-            aria-label=aria
-            style=format!("background: linear-gradient(110deg, hsl({h} 60% 13%) 0%, hsl({h} 55% 24%) 52%, hsl({h} 50% 15%) 100%);")
-        >
-            // the backdrops of the lead titles, turned into tones of the collection's colour
-            <div class="absolute inset-0 -z-10 flex mix-blend-luminosity opacity-55" aria-hidden="true">
-                {backdrops.into_iter().map(|src| view! {
-                    <img src=src alt="" class="h-full flex-1 min-w-0 object-cover" loading="lazy" decoding="async" draggable="false" />
-                }).collect::<Vec<_>>()}
-            </div>
-            <div class="absolute inset-0 -z-10" style=format!("background: radial-gradient(ellipse 70% 120% at 80% 50%, hsl({h} 70% 40% / 0.28) 0%, transparent 70%), linear-gradient(to right, rgba(0,0,0,0.78) 0%, rgba(0,0,0,0.4) 38%, transparent 70%);") aria-hidden="true" />
-            <div class="relative flex flex-col md:flex-row md:items-center gap-5 md:gap-8 px-5 py-6 md:px-10 md:py-10 md:min-h-[360px]">
-                <div class="md:w-[34%] md:flex-none">
-                    <p class="text-xs md:text-sm font-semibold uppercase tracking-[0.18em] text-ink/70">{eyebrow_text}</p>
-                    <h2 class="mt-2 text-2xl md:text-4xl font-extrabold leading-tight text-ink drop-shadow-[0_2px_12px_rgba(0,0,0,0.6)]">{heading}</h2>
-                    {(!description.is_empty()).then(|| view! { <p class="mt-3 text-sm md:text-base text-ink/80 max-w-[34ch]">{description}</p> })}
+        <section class="collection-row group/row relative isolate w-full my-4 md:my-8" aria-label=aria style="container-type: inline-size;">
+            <LogoFilters />
+            // the artwork: taller than the band and stretched past its sides, so that its edges fade into the page
+            <div
+                class="absolute -inset-x-[6%] -inset-y-[18%] -z-10 bg-cover bg-center"
+                style=format!("background-image: linear-gradient(hsl({h} 55% 14% / 0.7), hsl({h} 55% 14% / 0.7)), url('{artwork}'); -webkit-mask-image: linear-gradient(to bottom, transparent 0%, rgba(0,0,0,0.55) 14%, #000 32%, #000 68%, rgba(0,0,0,0.55) 86%, transparent 100%); mask-image: linear-gradient(to bottom, transparent 0%, rgba(0,0,0,0.55) 14%, #000 32%, #000 68%, rgba(0,0,0,0.55) 86%, transparent 100%);")
+                aria-hidden="true"
+            ></div>
+            <div class="relative flex flex-col md:flex-row md:items-center gap-5 md:gap-6 py-8 md:py-14 md:min-h-[430px]">
+                <div class="px-[var(--app-x,56px)] md:pe-0 md:w-[38%] md:flex-none flex flex-col items-center text-center">
+                    <CollectionLogo text=heading hue=h design=design size=46.0 />
+                    <div class="mt-5 w-[min(260px,70%)] border-y border-ink/40 py-1.5">
+                        <p class="text-[11px] md:text-xs font-semibold uppercase tracking-[0.3em] text-ink/85">{eyebrow_text}</p>
+                    </div>
+                    {(!description.is_empty()).then(|| view! { <p class="mt-5 text-[15px] md:text-[18px] leading-snug text-ink max-w-[30ch]">{description}</p> })}
                     {link.map(|href| view! {
-                        <a href=href class="mt-5 inline-flex items-center rounded-full bg-white px-5 py-2 text-sm font-semibold text-black hover:bg-white/85 transition-colors">
+                        <a href=href class="mt-5 inline-flex h-11 items-center rounded-full bg-white px-6 text-[16px] font-semibold text-black hover:bg-white/85 transition-colors">
                             {crate::i18n::t("collection-explore-all")}
                         </a>
                     })}
                 </div>
-                <div class="flex-1 min-w-0 flex gap-[var(--tile-gap)] overflow-x-auto scrollbar-hide py-2" style="scroll-behavior: smooth;">
-                    {items.into_iter().map(|item| {
-                        let is_tv = item.media_type.as_deref() == Some("tv");
-                        let backdrop = item.backdrop_path.as_ref().map(|p| format!("{}/w780{}", crate::config::TMDB_IMAGE_URL, p)).unwrap_or_default();
-                        let poster = item.poster_path.as_ref().map(|p| format!("{}/w342{}", crate::config::TMDB_IMAGE_URL, p));
-                        let is_new = item.badges.iter().any(|b| b == "new");
-                        view! {
-                            <div class="relative flex-none w-[clamp(150px,17vw,250px)] aspect-video max-[599px]:w-[118px] max-[599px]:aspect-[5/7] overflow-visible rounded-tile">
-                                <MovieCard
-                                    movie_id=item.id
-                                    is_tv=is_tv
-                                    title=item.display_title().to_string()
-                                    backdrop_path=backdrop
-                                    poster_path=poster.unwrap_or_default()
-                                    vote_average=item.vote_average
-                                    overview=item.overview.clone()
-                                    genre_ids=item.genre_ids.clone()
-                                    match_percentage=item.match_percentage
-                                    vibe_pills=item.vibe_pills.clone()
-                                    is_new=is_new
-                                />
-                            </div>
-                        }
-                    }).collect::<Vec<_>>()}
+                <div class="relative flex-1 min-w-0">
+                    <div node_ref=strip on:scroll=move |_| update.run(()) class="flex gap-[var(--tile-gap)] overflow-x-auto scrollbar-hide py-2 ps-[var(--app-x,56px)] md:ps-0" style="scroll-behavior: smooth;">
+                        <div data-loop-lead="1" class="flex-none flex gap-[var(--tile-gap)]" style="display: none;">{lead_views}</div>
+                        <div data-loop-spacer="1" class="flex-none w-0"></div>
+                        {card_views}
+                        <div class="flex-none w-[var(--app-x,56px)]"></div>
+                    </div>
+                    <EdgeButton edge=Edge::Left visible=Signal::derive(move || can_left.get() || looping.get()) on_click=Callback::new(move |_| page.run(false)) label=crate::i18n::t("vibe-row-scroll-left") inset="-top-2 -bottom-2" />
+                    <EdgeButton edge=Edge::Right visible=can_right on_click=Callback::new(move |_| page.run(true)) label=crate::i18n::t("vibe-row-scroll-right") inset="-top-2 -bottom-2" />
                 </div>
             </div>
         </section>
     }.into_any()
+}
+
+/// The top of the page that Explore all opens, in place of the hero: the artwork of the collection over the width of the page, larger than the section and fading into the page
+/// below, with the logo and the sentence at the bottom left, as in the app (`header` of the engine's answer).
+#[component]
+pub fn CollectionHero(collection: crate::services::ai_engine::Collection) -> impl IntoView {
+    let eyebrow = engine_text(&collection.label_key, None).unwrap_or_else(|| collection.label.clone());
+    let is_event = collection.label_key.starts_with("event.");
+    // an event is "<label> Collection"; a mood has a name of its own and the shared label ("For every feeling") above it
+    let heading = if !collection.title.is_empty() {
+        collection.title.clone()
+    } else {
+        engine_text("collection.title", Some(&serde_json::json!({ "label": eyebrow }))).unwrap_or_else(|| eyebrow.clone())
+    };
+    let eyebrow_text = if is_event { crate::i18n::t("collection-eyebrow-event") } else { eyebrow.clone() };
+    let heading_label = heading.clone();
+    let artwork = collection.images.first().map(|p| format!("{}/original{}", crate::config::TMDB_IMAGE_URL, p)).unwrap_or_default();
+    let h = collection.hue;
+    let design = design_of(&collection.id);
+    let description = collection.description.clone();
+    view! {
+        <section class="collection-hero relative isolate w-full h-[78vh] md:h-[680px] -mb-24 md:-mb-32" aria-label=heading_label>
+            <LogoFilters />
+            <div
+                class="absolute -inset-x-[4%] -top-[6%] -bottom-[6%] -z-10 bg-cover bg-center"
+                style=format!("background-image: linear-gradient(hsl({h} 55% 14% / 0.5), hsl({h} 55% 14% / 0.5)), url('{artwork}'); -webkit-mask-image: linear-gradient(to bottom, #000 0%, #000 58%, rgba(0,0,0,0.5) 80%, transparent 100%); mask-image: linear-gradient(to bottom, #000 0%, #000 58%, rgba(0,0,0,0.5) 80%, transparent 100%);")
+                aria-hidden="true"
+            ></div>
+            <div class="absolute inset-x-0 bottom-24 md:bottom-32 px-[var(--app-x,56px)] max-w-[820px]">
+                <div class="inline-block"><CollectionLogo text=heading hue=h design=design size=84.0 /></div>
+                <p class="mt-5 text-[11px] md:text-xs font-semibold uppercase tracking-[0.3em] text-ink/85">{eyebrow_text}</p>
+                {(!description.is_empty()).then(|| view! { <p class="mt-3 text-[17px] md:text-[22px] leading-snug text-ink max-w-[34ch]">{description}</p> })}
+            </div>
+        </section>
+    }
 }

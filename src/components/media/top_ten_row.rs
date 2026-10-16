@@ -150,6 +150,8 @@ fn TopTenCard(
         }
 
         let card_id = my_card_id_for_enter.clone();
+        // the time the pointer must rest on the card is used to get what the hover card shows (the age rating), so that it opens complete
+        crate::services::rating::prefetch(movie_id, is_tv);
         let timer_id = set_timeout_ms(move || {
             show_timer.set_value(None);
             if let Some(el) = card_ref.get() {

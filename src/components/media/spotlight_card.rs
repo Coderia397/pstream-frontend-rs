@@ -134,8 +134,7 @@ pub fn SpotlightCard(
 
             // Spotlight card container
             <div
-                on:click=move |_| on_card_click(())
-                class="relative z-10 w-full min-h-[440px] flex flex-col bg-void border border-ink/25 rounded-[14px] overflow-hidden cursor-pointer select-none"
+                class="relative z-10 w-full min-h-[440px] flex flex-col bg-void border border-ink/25 rounded-[14px] overflow-hidden select-none"
             >
                 // Picture area: the trailer plays by itself while the card is on screen (see SpotlightArtwork)
                 <div class="relative">
@@ -144,7 +143,6 @@ pub fn SpotlightCard(
                         is_tv=is_tv
                         backdrop_src=backdrop_src.clone()
                         title=title.clone()
-                        on_open=Callback::new(move |_| on_card_click(()))
                     />
                     // Maturity badge, the smaller preset
                     <div class="absolute top-3 right-3 z-20 pointer-events-none drop-shadow-md origin-top-right scale-75">
@@ -152,8 +150,8 @@ pub fn SpotlightCard(
                     </div>
                 </div>
 
-                // Below-media content area
-                <div class="px-5 pb-6 pt-4 flex flex-col flex-grow gap-3">
+                // Below-media content area: the only part that opens the details (the picture area plays, pauses and mutes the trailer)
+                <div on:click=move |_| on_card_click(()) class="px-5 pb-6 pt-4 flex flex-col flex-grow gap-3 cursor-pointer">
                     // The title as its logo (a title without one shows its name), then what is happening: coming on a day, or the title's own name when it is out
                     {move || logo.get().flatten().map(|url| view! {
                         <img src=url alt=logo_alt.clone() class="max-h-[74px] max-w-[70%] w-auto object-contain object-left" decoding="async" />

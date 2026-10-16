@@ -12,7 +12,7 @@ fn mmss(seconds: f64) -> String {
 /// card takes over or the card scrolls away. A red line under it shows how far the trailer is, the round button at the bottom right mutes it, and a tap shows the pause button, the
 /// scrubber and the time left for three seconds. A title without a trailer shows a round play button that opens its details.
 #[component]
-pub fn SpotlightArtwork(movie_id: u32, is_tv: bool, #[prop(into)] backdrop_src: String, #[prop(into)] title: String, on_open: Callback<()>) -> impl IntoView {
+pub fn SpotlightArtwork(movie_id: u32, is_tv: bool, #[prop(into)] backdrop_src: String, #[prop(into)] title: String) -> impl IntoView {
     let ui_store = use_ui_store();
     let me = format!("{}-{}", if is_tv { "tv" } else { "movie" }, movie_id);
     let iframe_id = format!("spot-{me}");
@@ -85,7 +85,7 @@ pub fn SpotlightArtwork(movie_id: u32, is_tv: bool, #[prop(into)] backdrop_src: 
     };
     let on_tap = move |e: leptos::ev::MouseEvent| {
         e.stop_propagation();
-        if has_trailer() { show_overlay(); } else { on_open.run(()); }
+        if has_trailer() { show_overlay(); }
     };
     let fraction = move || if duration.get() > 0.0 { (time.get() / duration.get()).clamp(0.0, 1.0) } else { 0.0 };
     let on_scrub = move |e: leptos::ev::MouseEvent| {
@@ -121,18 +121,13 @@ pub fn SpotlightArtwork(movie_id: u32, is_tv: bool, #[prop(into)] backdrop_src: 
                 />
             })}
 
-            // without a trailer: the round play button that opens the details
-            <Show when=move || looked_up.get() && !has_trailer()>
-                <div class="absolute inset-0 flex items-center justify-center pointer-events-none">
-                    <div class="w-[58px] h-[58px] rounded-full bg-void/55 border-2 border-ink/70 flex items-center justify-center">
-                        <i class="ph-fill ph-play text-ink text-2xl ml-1"></i>
-                    </div>
-                </div>
-            </Show>
+            // over the player, so that a tap is ours (the YouTube frame would swallow it)
+            <Show when=has_trailer><div class="absolute inset-0 z-10"></div></Show>
 
+            // without a trailer: nothing to play, the picture stays still
             // a tap on a playing card: pause or play in the middle, the time left and the scrubber
             <Show when=move || overlay.get() && has_trailer()>
-                <div class="absolute inset-0 bg-void/25 flex items-center justify-center">
+                <div class="absolute inset-0 z-20 bg-void/25 flex items-center justify-center">
                     <button on:click=move |e: leptos::ev::MouseEvent| { e.stop_propagation(); set_paused.update(|p| *p = !*p); show_overlay(); } aria-label=crate::i18n::t("media-play") class="text-ink">
                         <i class=move || if playing.get() { "ph-fill ph-pause text-[64px]" } else { "ph-fill ph-play text-[64px]" }></i>
                     </button>
@@ -152,11 +147,11 @@ pub fn SpotlightArtwork(movie_id: u32, is_tv: bool, #[prop(into)] backdrop_src: 
                 <button
                     on:click=move |e: leptos::ev::MouseEvent| { e.stop_propagation(); ui_store.set_preview_muted(!ui_store.preview_muted.get_untracked()); }
                     aria-label=move || if ui_store.preview_muted.get() { crate::i18n::t("media-unmute") } else { crate::i18n::t("media-mute") }
-                    class="absolute right-2.5 bottom-2.5 w-[23px] h-[23px] rounded-full bg-void/70 flex items-center justify-center text-ink"
+                    class="absolute right-2.5 bottom-2.5 z-30 w-[28px] h-[28px] rounded-full bg-void/70 flex items-center justify-center text-ink"
                 >
-                    <i class=move || if ui_store.preview_muted.get() { "ph-fill ph-speaker-slash text-[12px]" } else { "ph-fill ph-speaker-high text-[12px]" }></i>
+                    <i class=move || if ui_store.preview_muted.get() { "ph-fill ph-speaker-slash text-[15px]" } else { "ph-fill ph-speaker-high text-[15px]" }></i>
                 </button>
-                <div class="absolute left-0 bottom-0 h-[3px] bg-red-600" style=move || format!("width:{}%", fraction() * 100.0)></div>
+                <div class="absolute left-0 bottom-0 z-30 h-[3px] bg-red-600" style=move || format!("width:{}%", fraction() * 100.0)></div>
             </Show>
         </div>
     }

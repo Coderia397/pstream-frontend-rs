@@ -25,30 +25,25 @@ pub struct UIStore {
     pub spotlight_hold: RwSignal<bool>,
 }
 
-pub fn get_session_preview_muted(profile_id: Option<&str>, is_kids: bool) -> bool {
-    if is_kids {
-        return true;
-    }
-    let storage = web_sys::window().and_then(|w| w.session_storage().ok().flatten());
-    if let Some(ref s) = storage {
-        if let Some(pid) = profile_id {
-            if let Ok(Some(val)) = s.get_item(&crate::keys::preview_muted_for(&pid)) {
-                return val == "1" || val == "true";
-            }
-        }
-        if let Ok(Some(val)) = s.get_item(crate::keys::PREVIEW_MUTED) {
-            return val == "1" || val == "true";
-        }
-    }
-    true // default to muted on fresh session
+/// The sound choice of the viewer: whatever they set last (kept in the browser across visits), not muted until they mute. The site never starts muted on its own account.
+pub fn get_session_preview_muted(profile_id: Option<&str>, _is_kids: bool) -> bool {
+    let read = |storage: Option<web_sys::Storage>| -> Option<bool> {
+        let s = storage?;
+        let from = |key: String| s.get_item(&key).ok().flatten().map(|v| v == "1" || v == "true");
+        profile_id.and_then(|pid| from(crate::keys::preview_muted_for(pid))).or_else(|| from(crate::keys::PREVIEW_MUTED.to_string()))
+    };
+    let local = web_sys::window().and_then(|w| w.local_storage().ok().flatten());
+    let session = web_sys::window().and_then(|w| w.session_storage().ok().flatten());
+    read(local).or_else(|| read(session)).unwrap_or(false)
 }
 
 pub fn save_session_preview_muted(muted: bool, profile_id: Option<&str>) {
-    if let Some(storage) = web_sys::window().and_then(|w| w.session_storage().ok().flatten()) {
-        let val = if muted { "1" } else { "0" };
+    let val = if muted { "1" } else { "0" };
+    let Some(win) = web_sys::window() else { return };
+    for storage in [win.local_storage().ok().flatten(), win.session_storage().ok().flatten()].into_iter().flatten() {
         let _ = storage.set_item(crate::keys::PREVIEW_MUTED, val);
         if let Some(pid) = profile_id {
-            let _ = storage.set_item(&crate::keys::preview_muted_for(&pid), val);
+            let _ = storage.set_item(&crate::keys::preview_muted_for(pid), val);
         }
     }
 }

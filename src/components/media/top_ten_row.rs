@@ -179,7 +179,7 @@ fn TopTenCard(
                 set_is_hovered.set(true);
                 ui_store.active_popup_id.set(Some(card_id));
             }
-        }, 20);
+        }, crate::utils::layout::CARD_HOVER_DELAY_MS);
         show_timer.set_value(timer_id);
     });
 
@@ -481,8 +481,8 @@ pub fn TopTenRow(
                     <div class="flex-none pointer-events-none" style="width: var(--app-x, 56px);" />
                 </div>
 
-                <crate::components::media::row_scroll::EdgeButton edge=crate::components::media::row_scroll::Edge::Left visible=Signal::derive(move || can_scroll_left.get() || looping.get()) on_click=Callback::new({ let sl = scroll.clone(); move |_| sl("left") }) label=crate::i18n::t("continue-watching-row-scroll-left") inset="top-2 bottom-0" />
-                <crate::components::media::row_scroll::EdgeButton edge=crate::components::media::row_scroll::Edge::Right visible=can_scroll_right on_click=Callback::new({ let sr = scroll.clone(); move |_| sr("right") }) label=crate::i18n::t("continue-watching-row-scroll-right") inset="top-2 bottom-0" />
+                <crate::components::media::row_scroll::EdgeButton edge=crate::components::media::row_scroll::Edge::Left visible=Signal::derive(move || can_scroll_left.get() || looping.get()) on_click=Callback::new({ let sl = scroll.clone(); move |_| sl("left") }) label=crate::i18n::t("continue-watching-row-scroll-left") inset="-top-3 -bottom-4" />
+                <crate::components::media::row_scroll::EdgeButton edge=crate::components::media::row_scroll::Edge::Right visible=can_scroll_right on_click=Callback::new({ let sr = scroll.clone(); move |_| sr("right") }) label=crate::i18n::t("continue-watching-row-scroll-right") inset="-top-3 -bottom-4" />
             </div>
         </div>
     }

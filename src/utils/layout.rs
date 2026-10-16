@@ -17,3 +17,6 @@ fn css_px(name: &str) -> Option<f64> {
 pub fn is_phone() -> bool {
     web_sys::window().and_then(|w| w.match_media("(max-width: 767.98px)").ok().flatten()).is_some_and(|m| m.matches())
 }
+
+/// How long the pointer must rest on a card (a tile, a Top 10 card) before its hover card opens, in milliseconds: moving across a row on the way to a button opens nothing.
+pub const CARD_HOVER_DELAY_MS: i32 = 350;

@@ -24,14 +24,15 @@ pub enum Edge {
 }
 
 /// The control at one edge of a row: a tall area over the margin (and the cards that peek into it), invisible until the row is hovered; hovering the area darkens and blurs the peeking cards,
-/// and leaving it lets them clear again slowly. In its middle a round pill with the arrow. `inset` is the top and bottom offset in Tailwind classes (to stop at the cards).
+/// and leaving it lets them clear again slowly. In its middle a round pill with the arrow. `inset` is the top and bottom offset in Tailwind classes; the area reaches past the cards above and below
+/// and a little way over the card beside it (14px), so the pointer finds the button without crossing a card (which would open its hover card).
 #[component]
 pub fn EdgeButton(
     edge: Edge,
     #[prop(into)] visible: Signal<bool>,
     on_click: Callback<()>,
     #[prop(into)] label: String,
-    #[prop(default = "top-2 bottom-6")] inset: &'static str,
+    #[prop(default = "-top-3 -bottom-8")] inset: &'static str,
 ) -> impl IntoView {
     let side = if edge == Edge::Left { "left-0" } else { "right-0" };
     let icon = if edge == Edge::Left { "ph-bold ph-caret-left" } else { "ph-bold ph-caret-right" };
@@ -42,7 +43,7 @@ pub fn EdgeButton(
                 "edge-btn hidden md:flex absolute {inset} {side} z-30 items-center justify-center cursor-pointer select-none border-none outline-none opacity-0 group-hover/row:opacity-100 {}",
                 if visible.get() { "" } else { "!pointer-events-none !opacity-0" }
             )
-            style="width: var(--app-x, 56px);"
+            style="width: calc(var(--app-x, 56px) + 14px);"
             on:click=move |e: web_sys::MouseEvent| { e.stop_propagation(); on_click.run(()); }
             aria-label=label
         >

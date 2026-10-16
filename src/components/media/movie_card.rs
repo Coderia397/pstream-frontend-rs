@@ -144,7 +144,7 @@ pub fn MovieCard(
                 set_is_hovered.set(true);
                 ui_store.active_popup_id.set(Some(card_id));
             }
-        }, 20);
+        }, crate::utils::layout::CARD_HOVER_DELAY_MS);
         show_timer.set_value(timer_id);
     });
 

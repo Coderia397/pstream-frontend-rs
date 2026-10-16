@@ -8,12 +8,40 @@ pub const TREATMENTS: usize = 10;
 pub const FINISHES: usize = 5;
 pub const DESIGNS: usize = TREATMENTS * FINISHES;
 
-/// The designs a collection may have: the sticker finish (the one the owner chose, #0 and #5) in the lettering treatments that read best on it. The other designs stay in the gallery.
-const CHOSEN: [usize; 6] = [0, 5, 15, 20, 30, 35];
+/// The designs fitting a theme: the sticker finish (#0, #5 and kin) suits drama, romance and warm themes; the rougher stamp and label strips suit dark and tense ones; the clean outlines
+/// suit light, family and seasonal ones. Chosen from the words of the collection id.
+fn pool_for(id: &str) -> &'static [usize] {
+    let has = |words: &[&str]| words.iter().any(|w| id.contains(w));
+    if has(&["horror", "halloween", "eerie", "haunt", "true_crime", "neo_noir", "friday_13", "slow_burn", "mind_bending", "whodunit"]) {
+        &[17, 22, 3, 13, 47, 37]
+    } else if has(&["romance", "love", "date", "valentine", "cozy", "feel_good", "tear", "drama", "mothers", "binge", "family", "friends"]) {
+        &[0, 5, 15, 20, 30, 35]
+    } else if has(&["christmas", "hanukkah", "thanksgiving", "easter", "summer", "spring", "autumn", "winter", "new_year", "diwali", "july4", "pride", "st_patrick", "lunar"]) {
+        &[4, 19, 24, 34, 39, 44]
+    } else {
+        &[0, 5, 10, 15, 20, 25, 30, 35, 40, 45]
+    }
+}
 
-/// The design number of a collection: a hash of its id over the chosen designs, so it never changes between visits.
+thread_local! {
+    /// The designs already used on the page that is open (cleared when the address changes), so two banners of one page do not look alike.
+    static USED: std::cell::RefCell<(String, Vec<(String, usize)>)> = std::cell::RefCell::new((String::new(), Vec::new()));
+}
+
+/// The design number of a collection: from the pool that fits its theme, by a hash of its id (so it is the same on every visit), skipping the designs the page already shows.
 pub fn design_of(id: &str) -> usize {
-    CHOSEN[id.bytes().fold(7usize, |h, b| h.wrapping_mul(131).wrapping_add(b as usize)) % CHOSEN.len()]
+    let pool = pool_for(id);
+    let start = id.bytes().fold(7usize, |h, b| h.wrapping_mul(131).wrapping_add(b as usize));
+    let path = web_sys::window().and_then(|w| w.location().pathname().ok()).unwrap_or_default();
+    USED.with(|u| {
+        let mut u = u.borrow_mut();
+        if u.0 != path { *u = (path, Vec::new()); }
+        // the same collection keeps its design while the page is open
+        if let Some((_, d)) = u.1.iter().find(|(i, _)| i == id) { return *d; }
+        let pick = (0..pool.len()).map(|k| pool[(start + k) % pool.len()]).find(|d| !u.1.iter().any(|(_, x)| x == d)).unwrap_or(pool[start % pool.len()]);
+        u.1.push((id.to_string(), pick));
+        pick
+    })
 }
 
 /// A lettering treatment: the face, the case, the tilt, the slant and the size of the last word compared with the rest.
@@ -52,7 +80,7 @@ const TREATMENTS_TABLE: [Treatment; TREATMENTS] = [
     Treatment { family: "'Logo Abril', ui-serif, Georgia, serif", uppercase: true, rotate: -2.0, skew: 0.0, tracking: "0.01em", size: 0.9, stack: true },
 ];
 
-/// `n` text shadows laid round a circle of radius `r`: a thick rounded border, as the cut edge of a sticker.
+/// `n` text shadows laid round a circle of radius `r`: a thick rounded-control border, as the cut edge of a sticker.
 fn ring(n: usize, r: f32, color: &str) -> String {
     (0..n)
         .map(|i| {
@@ -157,7 +185,7 @@ pub fn CollectionLogo(
     }
 }
 
-/// The SVG filter that turns lettering into a sticker, as in the app's logos: the letters and the gaps between them are grown into one rounded cream shape (grown, smoothed, merged), a
+/// The SVG filter that turns lettering into a sticker, as in the app's logos: the letters and the gaps between them are grown into one rounded-control cream shape (grown, smoothed, merged), a
 /// second, larger shape in the colour of the collection goes behind it as the printed edge, a faint paper grain and a little roughness on the edge, and a soft shadow under all of it.
 fn sticker_filter(h: u32, font_px: f32) -> impl IntoView {
     let r1 = (font_px * 0.24).max(4.0);

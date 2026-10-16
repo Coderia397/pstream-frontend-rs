@@ -8,9 +8,12 @@ pub const TREATMENTS: usize = 10;
 pub const FINISHES: usize = 5;
 pub const DESIGNS: usize = TREATMENTS * FINISHES;
 
-/// The design number (0 to 49) of a collection: a hash of its id, so it never changes between visits.
+/// The designs a collection may have: the sticker finish (the one the owner chose, #0 and #5) in the lettering treatments that read best on it. The other designs stay in the gallery.
+const CHOSEN: [usize; 6] = [0, 5, 15, 20, 30, 35];
+
+/// The design number of a collection: a hash of its id over the chosen designs, so it never changes between visits.
 pub fn design_of(id: &str) -> usize {
-    id.bytes().fold(7usize, |h, b| h.wrapping_mul(131).wrapping_add(b as usize)) % DESIGNS
+    CHOSEN[id.bytes().fold(7usize, |h, b| h.wrapping_mul(131).wrapping_add(b as usize)) % CHOSEN.len()]
 }
 
 /// A lettering treatment: the face, the case, the tilt, the slant and the size of the last word compared with the rest.
@@ -64,15 +67,8 @@ fn ring(n: usize, r: f32, color: &str) -> String {
 fn finish(f: usize, h: u32) -> (String, String) {
     let accent = h;
     match f {
-        // die cut sticker: dark letters, a cream border, a coloured edge outside it, a soft shadow
-        0 => (
-            format!(
-                "color: hsl({h} 35% 10%); text-shadow: {}, {}, 0 6px 14px hsl({h} 50% 4% / 0.55);",
-                ring(20, 5.0, "hsl(45 70% 96%)"),
-                ring(20, 8.0, &format!("hsl({h} 35% 30%)"))
-            ),
-            String::new(),
-        ),
+        // die cut sticker (the filter `sticker_filter` makes the cream shape and the coloured edge): dark letters
+        0 => (format!("color: hsl({h} 40% 7%); filter: url(#logo-sticker-{h});"), String::new()),
         // paper cut out: cream letters, a dark hairline, a hard offset in the colour of the collection
         1 => (
             format!("color: hsl(45 60% 94%); text-shadow: {}, 4px 5px 0 hsl({h} 60% 42%), 7px 9px 12px hsl({h} 50% 4% / 0.5);", ring(14, 2.2, &format!("hsl({h} 40% 12%)"))),
@@ -129,39 +125,77 @@ pub fn CollectionLogo(
     let style = format!("{} font-size: {:.1}px;", design_style(design, hue), size * design_size(design));
     // the last word in a second colour (not on the finishes that already use two)
     let accent = format!("hsl({hue} 55% 72%)");
-    let mut words = text.split_whitespace().map(str::to_string).collect::<Vec<_>>();
-    let body = if words.len() > 1 && finish_index != 4 {
-        let last = words.pop().unwrap_or_default();
-        let first = words.join(" ");
-        let last_style = if finish_index == 0 || finish_index == 3 { format!("color: {accent};") } else { String::new() };
-        if t.stack {
-            view! {
-                <span class="block">{first}</span>
-                <span class="block" style=format!("font-size: 1.22em; {last_style}")>{last}</span>
-            }
-            .into_any()
-        } else {
-            view! { <span>{first}" "</span><span style=last_style>{last}</span> }.into_any()
-        }
+    let words = text.split_whitespace().map(str::to_string).collect::<Vec<_>>();
+    // the word in the second colour: the second of three or more (as "Ya" in "Love Ya Forever"), otherwise the last
+    let accent_at = if words.len() >= 3 { 1 } else { words.len().saturating_sub(1) };
+    let accent_style = if finish_index == 0 {
+        // a blue with a brush stroke under it
+        format!("color: hsl(212 45% 36%); background: url(\"data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 12' preserveAspectRatio='none'><path d='M2 9 C 30 2, 70 2, 98 7' stroke='%23346a96' stroke-width='5' fill='none' stroke-linecap='round'/></svg>\") no-repeat bottom / 100% 0.16em; padding-bottom: 0.14em; display: inline-block; font-size: 1.12em;")
+    } else if finish_index == 3 {
+        format!("color: {accent};")
     } else {
-        view! { <span>{text.clone()}</span> }.into_any()
+        String::new()
     };
+    let word_view = |i: usize, w: &String| {
+        let st = if words.len() > 1 && i == accent_at && finish_index != 4 { accent_style.clone() } else { String::new() };
+        view! { <span style=st>{w.clone()}{" "}</span> }
+    };
+    let body = if t.stack && words.len() > 1 {
+        // two lines: the last word alone on the second, larger
+        let first: Vec<_> = words[..words.len() - 1].iter().enumerate().map(|(i, w)| word_view(i, w)).collect();
+        let last = word_view(words.len() - 1, &words[words.len() - 1]);
+        view! { <span class="block">{first}</span><span class="block" style="font-size: 1.22em;">{last}</span> }.into_any()
+    } else {
+        let all: Vec<_> = words.iter().enumerate().map(|(i, w)| word_view(i, w)).collect();
+        view! { <span>{all}</span> }.into_any()
+    };
+    // the sticker needs a filter of its own for this hue and size (its radii are in px)
+    let sticker = (finish_index == 0).then(|| sticker_filter(hue, size * design_size(design)));
     view! {
+        {sticker}
         <span class="inline-block max-w-full text-center" style=style>{body}</span>
     }
+}
+
+/// The SVG filter that turns lettering into a sticker, as in the app's logos: the letters and the gaps between them are grown into one rounded cream shape (grown, smoothed, merged), a
+/// second, larger shape in the colour of the collection goes behind it as the printed edge, a faint paper grain and a little roughness on the edge, and a soft shadow under all of it.
+fn sticker_filter(h: u32, font_px: f32) -> impl IntoView {
+    let r1 = (font_px * 0.24).max(4.0);
+    let r2 = r1 + (font_px * 0.15).max(3.0);
+    let edge = format!("hsl({h} 55% 66%)");
+    // built as text: the view macro does not make the SVG filter elements as SVG, so the filter would stay empty
+    let markup = format!(
+        r##"<svg width="0" height="0" style="position:absolute" aria-hidden="true"><filter id="logo-sticker-{h}" x="-30%" y="-45%" width="160%" height="190%" color-interpolation-filters="sRGB">
+<feMorphology in="SourceAlpha" operator="dilate" radius="{r1:.1}" result="grow1"/>
+<feGaussianBlur in="grow1" stdDeviation="{s1:.1}" result="soft1"/>
+<feComponentTransfer in="soft1" result="shape1"><feFuncA type="linear" slope="9" intercept="-3.4"/></feComponentTransfer>
+<feMorphology in="SourceAlpha" operator="dilate" radius="{r2:.1}" result="grow2"/>
+<feGaussianBlur in="grow2" stdDeviation="{s2:.1}" result="soft2"/>
+<feComponentTransfer in="soft2" result="shape2"><feFuncA type="linear" slope="9" intercept="-3.4"/></feComponentTransfer>
+<feTurbulence type="fractalNoise" baseFrequency="0.045" numOctaves="2" seed="4" result="rough"/>
+<feDisplacementMap in="shape1" in2="rough" scale="2.4" result="cut1"/>
+<feDisplacementMap in="shape2" in2="rough" scale="3" result="cut2"/>
+<feFlood flood-color="#f1e6cd" result="cream"/>
+<feComposite in="cream" in2="cut1" operator="in" result="paper"/>
+<feFlood flood-color="{edge}" result="ink"/>
+<feComposite in="ink" in2="cut2" operator="in" result="border"/>
+<feTurbulence type="fractalNoise" baseFrequency="0.9" numOctaves="2" seed="9" result="grain"/>
+<feColorMatrix in="grain" type="matrix" values="0 0 0 0 0.62  0 0 0 0 0.45  0 0 0 0 0.30  0 0 0 -1.9 1.0" result="speck"/>
+<feComposite in="speck" in2="cut1" operator="in" result="grained"/>
+<feMerge result="sticker"><feMergeNode in="border"/><feMergeNode in="paper"/><feMergeNode in="grained"/><feMergeNode in="SourceGraphic"/></feMerge>
+<feDropShadow in="sticker" dx="0" dy="4" stdDeviation="6" flood-color="#000" flood-opacity="0.5"/>
+</filter></svg>"##,
+        s1 = r1 * 0.45,
+        s2 = r2 * 0.4,
+    );
+    view! { <span inner_html=markup></span> }
 }
 
 /// An invisible filter that roughens the edges of letters a little, like ink on paper (used by the stamp finish).
 #[component]
 pub fn LogoFilters() -> impl IntoView {
-    view! {
-        <svg width="0" height="0" style="position:absolute" aria-hidden="true">
-            <filter id="logo-rough" x="-5%" y="-5%" width="110%" height="110%">
-                <feTurbulence type="fractalNoise" baseFrequency="0.04" numOctaves="3" seed="7" result="n"></feTurbulence>
-                <feDisplacementMap in="SourceGraphic" in2="n" scale="3.5"></feDisplacementMap>
-            </filter>
-        </svg>
-    }
+    let markup = r##"<svg width="0" height="0" style="position:absolute" aria-hidden="true"><filter id="logo-rough" x="-5%" y="-5%" width="110%" height="110%"><feTurbulence type="fractalNoise" baseFrequency="0.04" numOctaves="3" seed="7" result="n"/><feDisplacementMap in="SourceGraphic" in2="n" scale="3.5"/></filter></svg>"##;
+    view! { <span inner_html=markup></span> }
 }
 
 const GALLERY_TITLE: &str = concat!("Collection", " logos"); // developer page: not translated

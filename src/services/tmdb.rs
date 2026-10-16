@@ -128,6 +128,7 @@ impl MediaItem {
     pub fn poster_url(&self, size: &str) -> Option<String> {
         self.poster_path
             .as_ref()
+            .filter(|p| !p.is_empty())
             .map(|p| format!("{}/{}{}", TMDB_IMAGE_BASE, size, p))
     }
 
@@ -135,6 +136,7 @@ impl MediaItem {
     pub fn backdrop_url(&self, size: &str) -> Option<String> {
         self.backdrop_path
             .as_ref()
+            .filter(|p| !p.is_empty()) // the engine sends "" for a title with no picture: no address, not a broken one
             .map(|p| format!("{}/{}{}", TMDB_IMAGE_BASE, size, p))
     }
 

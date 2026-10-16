@@ -257,8 +257,9 @@ pub fn SearchPage() -> impl IntoView {
 fn tile(item: MediaItem) -> impl IntoView {
     let is_tv = item.is_tv();
     let title = item.display_title().to_string();
-    let backdrop = item.backdrop_url("w780").unwrap_or_default();
     let poster = item.poster_url("w342").unwrap_or_default();
+    // a title without a wide picture shows its poster (cropped to the tile) instead of a broken image
+    let backdrop = item.backdrop_url("w780").or_else(|| item.poster_url("w500")).unwrap_or_default();
     view! {
         <MovieCard
             movie_id=item.id

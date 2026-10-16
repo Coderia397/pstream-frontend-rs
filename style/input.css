@@ -88,7 +88,7 @@
 .topten-card .topten-svgwrap { display: none; }
 .topten-card .topten-svgwrap > svg { height: 100%; width: auto; max-width: none; overflow: visible; }
 @media (min-width: 600px) {
-  .topten-card .topten-svgwrap { display: block; height: 100%; margin-right: -6cqw; }
+  .topten-card .topten-svgwrap { display: block; height: 100%; margin-right: -9cqw; }
   .topten-card .topten-rank > .topten-spans { display: none; }
 }
 

@@ -420,7 +420,7 @@ pub fn TopTenRow(
                 let current_scroll = el.scroll_left() as f64;
                 let scroll_width = el.scroll_width() as f64;
                 let step = client_width * 0.9;
-                if crate::components::media::row_scroll::turn_page(&el, direction != "left", crate::utils::layout::app_x()) {
+                if crate::components::media::row_scroll::turn_page(&el, direction != "left", crate::utils::layout::app_x() - 6.0) {
                     let update_c = update.clone();
                     let _ = set_timeout_ms(move || { update_c.run(()); }, 600);
                     return;
@@ -452,7 +452,7 @@ pub fn TopTenRow(
                     class="flex overflow-x-scroll [scrollbar-width:none] [-ms-overflow-style:none] [&::-webkit-scrollbar]:hidden pt-2 pb-10 -mb-10 w-full items-end pointer-events-auto relative z-10"
                     style="scroll-behavior: smooth;"
                 >
-                    <div data-loop-spacer="1" class="flex-none h-full pointer-events-none" style="width: var(--app-x, 56px);" />
+                    <div data-loop-spacer="1" class="flex-none h-full pointer-events-none" style="width: calc(var(--app-x, 56px) - 6px);" />
 
                     <Suspense fallback=move || view! {
                         { (0..6).map(|_| view! {

@@ -164,7 +164,7 @@ pub fn CollectionHero(collection: crate::services::ai_engine::Collection) -> imp
                 aria-hidden="true"
             ></div>
             <div class="absolute inset-x-0 bottom-24 md:bottom-32 px-[var(--app-x,56px)] max-w-[820px]">
-                <div class="inline-block"><CollectionLogo text=heading hue=h design=design size=84.0 /></div>
+                <div class="inline-block"><CollectionLogo text=heading hue=h design=design size=62.0 /></div>
                 <p class="mt-5 text-[11px] md:text-xs font-semibold uppercase tracking-[0.3em] text-ink/85">{eyebrow_text}</p>
                 {(!description.is_empty()).then(|| view! { <p class="mt-3 text-[17px] md:text-[22px] leading-snug text-ink max-w-[34ch]">{description}</p> })}
             </div>

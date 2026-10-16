@@ -50,22 +50,18 @@ fn RankNumber(index: usize) -> impl IntoView {
     let (view_w, text_w) = if is_ten { (112.0, 108.0) } else { (62.0, 60.0) };
     let svg_box = format!("0 0 {} 100", view_w);
     let num_for_svg = num_str.clone();
-    let grad_ref = format!("url(#{}) #777", gradient_id);
+    let svg_markup = format!(
+        "<svg class=\"topten-svg\" viewBox=\"{svg_box}\" preserveAspectRatio=\"xMaxYMid meet\" aria-hidden=\"true\">\
+         <defs><linearGradient id=\"{gradient_id}\" x1=\"0\" y1=\"0\" x2=\"1\" y2=\"0\">\
+         <stop offset=\"0\" stop-color=\"#aaaaaa\"/><stop offset=\"0.5\" stop-color=\"#666666\"/><stop offset=\"1\" stop-color=\"#262626\"/></linearGradient></defs>\
+         <text x=\"{view_w}\" y=\"99\" text-anchor=\"end\" style=\"fill:var(--color-page);font-family:var(--font-brand)\" stroke=\"url(#{gradient_id})\" stroke-width=\"1.1\" stroke-linejoin=\"round\" \
+         font-size=\"141\" font-weight=\"700\" textLength=\"{text_w}\" lengthAdjust=\"spacingAndGlyphs\">{num_for_svg}</text></svg>"
+    );
 
     view! {
         <div class=format!("topten-rank absolute left-0 top-0 bottom-0 w-1/2 flex justify-end items-center pointer-events-none z-0{}", if is_ten { " topten-rank-ten" } else { "" })>
-            <svg class="topten-svg" viewBox=svg_box preserveAspectRatio="xMaxYMid meet" aria-hidden="true">
-                <defs>
-                    <linearGradient id=gradient_id x1="0" y1="0" x2="1" y2="0">
-                        <stop offset="0" stop-color="#aaaaaa" />
-                        <stop offset="0.5" stop-color="#666666" />
-                        <stop offset="1" stop-color="#262626" />
-                    </linearGradient>
-                </defs>
-                <text x=view_w y="99" text-anchor="end" fill="var(--color-page)" stroke=grad_ref stroke-width="1.1" stroke-linejoin="round" font-size="141" font-weight="700" font-family="var(--font-brand)" textLength=text_w lengthAdjust="spacingAndGlyphs">
-                    {num_for_svg}
-                </text>
-            </svg>
+            // built as text so that the gradient keeps its <stop> children (the view macro wraps them in <g>, which makes the gradient empty)
+            <div class="topten-svgwrap" inner_html=svg_markup></div>
             <div class="topten-spans relative flex items-center justify-center">
                 // Background thick stroke
                 <span

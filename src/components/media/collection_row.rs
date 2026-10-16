@@ -5,11 +5,8 @@ use super::movie_card::MovieCard;
 /// The page that lists a whole collection: the films page of the genre the engine names (Halloween, Moods), when the page has such a genre.
 pub fn collection_link(target: &serde_json::Value) -> Option<String> {
     let name = target.get("genre")?.as_str()?;
-    let known = crate::data::page_genres::MOVIE_GENRES.iter().any(|g| g.name.eq_ignore_ascii_case(name));
-    known.then(|| {
-        let encoded: String = js_sys::encode_uri_component(name).into();
-        format!("/browse/films?genre={encoded}")
-    })
+    let genre = crate::data::page_genres::MOVIE_GENRES.iter().find(|g| g.name.eq_ignore_ascii_case(name))?;
+    Some(crate::data::page_genres::genre_url("movie", Some(genre.id as u32)))
 }
 
 /// A themed row: the backdrops of its lead titles as a darkened background, a panel with the label, a title, a sentence and an Explore all

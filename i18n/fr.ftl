@@ -1,26 +1,2075 @@
 action-buttons-add-to-my-list = Ajouter à ma liste
+action-buttons-close = Fermer
 action-buttons-i-like-this = J'aime
 action-buttons-more-info = Plus d'infos
+action-buttons-mute-trailer = Couper le son de la bande-annonce
 action-buttons-rate = Évaluer
+action-buttons-replay-trailer = Rejouer la bande-annonce
+action-buttons-unmute-trailer = Rétablir le son de la bande-annonce
+add-edit-modal-delete-profile = Supprimer le profil
+add-edit-modal-delete-this-profile-all-viewing = Supprimer ce profil ? Tout l’historique de visionnage et les éléments de Ma Liste seront définitivement supprimés.
+add-edit-modal-enter-4digit-pin = Saisir le code PIN à 4 chiffres
+add-edit-modal-name = Nom
+add-edit-modal-only-see-childfriendly-series-and = Ne voir que des séries et des films adaptés aux enfants
+add-edit-modal-require-a-4digit-pin-to = Exiger un code PIN à 4 chiffres pour accéder à ce profil
 add-edit-modal-save = Enregistrer
+add-edit-modal-yes-delete = Oui, supprimer
 browse-action-adventure = Action & Aventure
+browse-comedies = Comédies
+browse-grid-go-back = Retour
 browse-home = Accueil
 browse-scifi-fantasy = Sci-Fi & Fantastique
+browse-top-10-in-the-uk = Top 10 au Royaume-Uni aujourd’hui
+category-sub-nav-mobile-films = Films
+category-sub-nav-mobile-new-hot = Nouveautés & Tendances
 category-sub-nav-mobile-series = Séries TV
 choose-icon-back = Retour
+clips-clips = Extraits
 continue-watching-options-sheet-cancel = Annuler
 continue-watching-options-sheet-remove-from-continue-watching = Supprimer de 'Continuer à regarder'
+continue-watching-row-continue-watching = Reprendre la lecture
+continue-watching-row-scroll-left = Faire défiler vers la gauche
+continue-watching-row-scroll-right = Faire défiler vers la droite
 controls-overlay-audio-subtitles = Audio & sous-titres
+controls-overlay-back-to-browse = Retour à la navigation
+controls-overlay-episode-selector = Sélecteur d’épisode
+controls-overlay-forward-10-seconds-right-arrow = Avancer de 10 secondes (flèche droite)
 controls-overlay-fullscreen-f = Plein écran (F)
 controls-overlay-next-episode = Épisode suivant
+controls-overlay-playback-speed = Vitesse de lecture
+controls-overlay-rewind-10-seconds-left-arrow = Reculer de 10 secondes (flèche gauche)
+episode-drawer-no-episodes-available-for-this = Aucun épisode disponible pour cette saison.
 games-coming-soon = Prochainement
 info-modal-episodes-no-image = Aucune image
+info-modal-error-loading-details = Erreur lors du chargement des détails.
+language-browse-by-language = Parcourir par langue
+language-select-your-preferences = Sélectionner vos préférences
 login-email-address = Adresse e-mail
 login-get-started = Démarrer
 login-password = Mot de passe
+login-ready-to-watch-enter-your = Prêt à regarder ? Saisissez votre e-mail pour créer ou relancer votre abonnement.
 login-sign-in = S'identifier
+login-unlimited-films-series-and-more = Films, séries et plus encore, sans limite
+mod-finding-optimal-stream = Recherche du flux optimal...
+mod-retry = Réessayer
+movie-card-popup-hd = HD
+navbar-exit-kids = Quitter le profil Enfants
+navbar-menu-current-profile = Profil actuel
+navbar-mobile-avatar = Avatar
 navbar-mobile-cast = Distribution
+navbar-mobile-cast-to-tv = Diffuser sur la TV
+navbar-mobile-profile = Profil
+navbar-mobile-profile-menu = Menu du profil
+navbar-switch-to-kids-profile = Passer au profil Enfants
+new-popular-coming-to-the-collection-soon = Bientôt dans la collection
+new-popular-new-and-acclaimed = Nouveautés et coups de cœur
+new-popular-new-series-everyone-is-watching = Nouvelles séries que tout le monde regarde
+new-popular-newly-added-to-the-collection = Nouveautés de la collection
+new-popular-rising-stars-under-the-radar = Étoiles montantes : à découvrir
+new-popular-the-best-of-2026-so = Le meilleur de 2026 jusqu'ici
+new-popular-the-films-everyone-is-discussing = Les films dont tout le monde parle
+new-popular-top-10-films-in-the = Top 10 des films au Royaume-Uni aujourd'hui
+new-popular-top-10-series-in-the = Top 10 des séries au Royaume-Uni aujourd'hui
 new-popular-worth-the-wait = À ne pas manquer
+not-found-alternate-dimensions = Dimensions alternatives
+not-found-alternate-dimensions-more-like-this = Dimensions alternatives : des titres similaires
+not-found-cinematic-background = Arrière-plan cinématique
+not-found-diagnostic-report = Rapport de diagnostic
+not-found-the-targeted-router-endpoint-has = Le point de terminaison du routeur ciblé a été désactivé ou n'a pas pu être chargé depuis notre espace CDN. Veuillez revenir à notre environnement de streaming sécurisé pour reprendre la lecture.
+notifications-dropdown-notifications = Notifications
+notifications-dropdown-youre-all-caught-up-new = Vous êtes à jour — les nouveautés apparaîtront ici.
+notifications-notifications-arrivals = Notifications et nouveautés
+notifications-stay-up-to-date-with = Restez informé des nouvelles sorties, des tendances et des recommandations.
+pin-prompt-profile-lock-is-currently-on = Le verrouillage du profil est activé.
+search-bar-clear-search = Effacer la recherche
 search-bar-search = Rechercher
+search-bar-search-input = Champ de recherche
+search-bar-titles-people-genres = Titres, personnes, genres
+subtitle-drawer-no-subtitles-detected-for-this = Aucun sous-titre détecté pour ce flux.
+subtitle-drawer-subtitle-timing-offset = Décalage de synchronisation des sous-titres
 subtitle-drawer-subtitles = Sous-titres
+vibe-row-scroll-left = Faire défiler vers la gauche
+vibe-row-scroll-right = Faire défiler vers la droite
+video-player-forward-10s = Avancer de 10 s
+video-player-fullscreen = Plein écran
 video-player-rewind-10s = Reculer de 10s
+whos-watching-add-profile = Ajouter un profil
+whos-watching-kids = ENFANTS
+help-ui-center = Centre d'aide
+help-ui-browse = Parcourir
+help-ui-signin = Se connecter
+help-ui-hero-title = Comment pouvons-nous vous aider ?
+help-ui-search-label = Recherche
+help-ui-search-placeholder = Saisissez une question, un sujet ou un problème
+help-ui-popular = Sujets populaires
+help-ui-explore = Explorer les sujets
+help-ui-quick-links = Liens rapides
+help-ui-need-more = Besoin d'aide supplémentaire ?
+help-ui-contact-us = Nous contacter
+help-ui-language-label = Sélectionnez votre langue préférée :
+help-ui-back = Retour à l'accueil de l'aide
+help-ui-related = Articles liés
+help-ui-helpful = Cet article a-t-il été utile ?
+help-ui-yes = Oui
+help-ui-no = Non
+help-ui-thanks = Merci pour votre retour.
+help-ui-tell-more = Dites-nous ce qui manquait
+help-ui-recommended = Recommandé pour vous
+help-ui-additional = Résultats de recherche supplémentaires
+help-ui-read = Lire l'article
+help-ui-results-count =
+    { $count ->
+        [one] 1 résultat pour « { $query } »
+       *[other] { $count } résultats pour « { $query } »
+    }
+help-ui-account = Compte
+help-ui-signout = Se déconnecter de { $brand }
+help-ui-results-count-link = Voir tous les résultats pour « { $query } »
+help-ui-results-none = Aucun résultat pour « { $query } ».
+help-ui-results-hint = Vérifiez l'orthographe, essayez avec moins de mots ou parcourez les sujets.
+help-ui-results-empty = Saisissez quelques mots pour rechercher dans le Centre d'aide.
+help-ui-page-prev = Page précédente
+help-ui-page-next = Page suivante
+help-ui-page-n = Page { $n }
+help-ui-suggestions = Articles suggérés
+help-ui-contact-title = Nous contacter
+help-ui-contact-prompt = Dites-nous en plus et nous trouverons la meilleure solution pour vous
+help-ui-describe = Décrivez votre problème
+help-ui-mail-subject = Demande d'aide
+help-ui-mail-intro = Décrivez le problème ici :
+help-ui-mail-details = Détails ajoutés automatiquement
+help-ui-mail-feedback = Retour sur l'article : { $title }
+help-ui-ql-profiles = Gérer les profils
+help-ui-ql-language = Changer la langue d'affichage
+help-ui-ql-signin = Se connecter
+help-ui-ql-copyright = Signaler un problème de droits d'auteur
+help-ui-ql-title = Retour sur un titre sur { $brand }
+help-ui-ql-email = Écrivez-nous à { $help_email }
+help-ui-not-found-title = Nous n'avons pas trouvé cet article
+help-ui-not-found-body = Il a peut-être été déplacé ou le lien est incorrect. Recherchez dans le Centre d'aide ou parcourez les sujets.
+help-ui-legal-terms = Conditions d'utilisation
+help-ui-legal-privacy = Confidentialité
+help-ui-legal-cookies = Politique de cookies
+help-ui-legal-dmca = DMCA
+help-ui-legal-disclaimer = Avertissement
+help-ui-doc-title = Centre d'aide { $brand }
+help-topic-account = Compte et profils
+help-topic-fix = Résoudre un problème
+help-topic-watching = Regarder
+help-topic-start = Premiers pas
+help-group-profiles = Profils
+help-group-account-data = Compte et données
+help-group-paying = Paiement de { $brand }
+help-group-playback-issues = Problèmes de lecture
+help-group-device-issues = Navigateurs et appareils
+help-group-page-issues = Pages et listes
+help-group-features = Fonctionnalités et paramètres
+help-group-library = Ma liste et historique
+help-group-finding = Trouver quoi regarder
+help-group-about = À propos de { $brand }
+help-group-setup = Configuration de l'appareil
+help-group-reporting = Signalement et légal
+help-art-profiles-manage-title = Comment créer, modifier ou supprimer des profils
+help-art-profiles-manage-summary = Ajoutez un profil pour chaque personne, modifiez un nom ou une icône, activez un code PIN ou supprimez un profil dont vous n'avez plus besoin.
+help-art-profiles-manage-keywords = profil profils ajouter créer modifier supprimer retirer nom icône avatar qui regarde
+help-art-profiles-manage-body =
+    Chaque personne qui utilise { $brand } sur cet appareil peut avoir un profil avec son propre nom, sa propre icône, sa propre liste et ses propres recommandations.
+
+    ## Ajouter un profil
+    1. Ouvrez le menu du profil en haut à droite et choisissez <b>Gérer les profils</b>, ou ouvrez l'écran <b>Qui regarde ?</b>.
+    2. Sélectionnez <b>Ajouter un profil</b>.
+    3. Saisissez un nom, choisissez une icône et sélectionnez <b>Enregistrer</b>.
+
+    ## Modifier ou supprimer un profil
+    1. Ouvrez <b>Gérer les profils</b>.
+    2. Sélectionnez le profil que vous souhaitez modifier.
+    3. Modifiez le nom ou l'icône, activez ou désactivez le code PIN ou le réglage Enfants, puis choisissez <b>Enregistrer</b>. Pour supprimer le profil, choisissez <b>Supprimer le profil</b>.
+
+    !! Remarque : Les profils sont enregistrés dans ce navigateur, sur cet appareil. Voir <a=/help/article/saved-data>Où sont enregistrés vos profils, votre liste et votre progression</a>.
+
+    @@ profils
+
+    >> Impossible de supprimer un profil
+    Vous devez conserver au moins un profil. Créez-en d'abord un autre, puis supprimez l'ancien.
+help-art-switch-profile-title = Comment changer de profil
+help-art-switch-profile-summary = Changez de profil sans quitter la page.
+help-art-switch-profile-keywords = changer changer de profil qui regarde menu
+help-art-switch-profile-body =
+    1. Ouvrez le menu du profil en haut à droite de la page.
+    2. Sélectionnez le profil que vous souhaitez utiliser.
+    3. Si le profil est protégé par un code PIN, saisissez les quatre chiffres pour continuer.
+
+    Les recommandations, <b>Ma liste</b> et <b>Reprendre la lecture</b> changent selon le profil sélectionné.
+
+    !! Remarque : Vous pouvez verrouiller un profil avec un code PIN. Consultez <a=/help/article/profile-pin>Comment ajouter, modifier ou supprimer un code PIN de profil</a>.
+
+    @@ profiles
+help-art-profile-pin-title = Comment ajouter, modifier ou supprimer un code PIN de profil
+help-art-profile-pin-summary = Verrouillez un profil avec un code PIN à quatre chiffres pour que seule la bonne personne puisse y accéder.
+help-art-profile-pin-keywords = pin verrou profil code mot de passe quatre chiffres sécurisé
+help-art-profile-pin-body =
+    Un code PIN de profil comporte quatre chiffres. Toute personne qui sélectionne le profil doit saisir le code PIN avant qu'il ne s'ouvre.
+
+    ## Activer ou modifier un code PIN
+    1. Ouvrez <b>Gérer les profils</b> et sélectionnez le profil.
+    2. Activez <b>Verrouillage du profil</b> et saisissez quatre chiffres.
+    3. Choisissez <b>Enregistrer</b>.
+
+    ## Supprimer un code PIN
+    1. Ouvrez <b>Gérer les profils</b> et sélectionnez le profil, puis saisissez le code PIN actuel.
+    2. Désactivez <b>Verrouillage du profil</b> et choisissez <b>Enregistrer</b>.
+
+    !! Remarque : Le code PIN est stocké sur cet appareil et empêche les autres d'accéder au profil dans ce navigateur. Ce n'est pas une protection forte contre quelqu'un qui peut ouvrir les paramètres de votre navigateur. Si vous l'oubliez, consultez <a=/help/article/forgot-pin>J'ai oublié mon code PIN de profil</a>.
+
+    @@ profiles
+help-art-kids-profile-title = Comment créer un profil pour enfants
+help-art-kids-profile-summary = Un profil Enfants affiche des titres choisis pour les jeunes spectateurs et met le reste hors de portée.
+help-art-kids-profile-keywords = enfants enfants famille contrôles parentaux sûr jeune profil
+help-art-kids-profile-body =
+    Un profil Enfants limite l'affichage aux titres adaptés aux jeunes spectateurs et supprime les rangées de contenus pour adultes des pages.
+
+    1. Ouvrez <b>Gérer les profils</b> et choisissez <b>Ajouter un profil</b>.
+    2. Activez le <b>Mode Enfants</b> pour ce profil.
+    3. Choisissez un nom et une icône, puis <b>Enregistrez</b>.
+
+    Pour empêcher un enfant de changer de profil, ajoutez un code PIN à chaque profil adulte. Consultez <a=/help/article/profile-pin>Comment ajouter, modifier ou supprimer un code PIN de profil</a>.
+
+    !! Remarque : Les titres proviennent de sources indépendantes et tous les titres ne sont pas classés. Un profil Enfants réduit ce qu'un enfant peut trouver. Il ne remplace pas la visionnage en famille.
+
+    @@ profiles
+help-art-need-account-title = Ai-je besoin d'un compte ?
+help-art-need-account-summary = Vous pouvez parcourir et regarder sans compte. Voici ce qu'un compte ajoute.
+help-art-need-account-keywords = compte inscription s'inscrire connexion obligatoire adhésion
+help-art-need-account-body =
+    Vous n'avez pas besoin de compte pour parcourir, rechercher ou regarder sur { $brand }.
+
+    Actuellement, vos profils, votre liste et votre progression de visionnage sont enregistrés dans ce navigateur sur cet appareil. Les comptes qui synchronisent ces éléments entre vos appareils sont en cours de création. En attendant, la page de connexion est un aperçu et ne crée pas de compte réel.
+
+    !! Remarque : { $brand } ne demandera jamais un numéro de carte pour créer un compte. Voir <a=/help/article/free-to-use>{ $brand } est-il gratuit ?</a>
+help-art-sign-in-title = Connexion et déconnexion
+help-art-sign-in-summary = Ce que fait la page de connexion aujourd'hui et quoi faire si elle ne fonctionne pas comme prévu.
+help-art-sign-in-keywords = connexion se connecter se déconnecter mot de passe e-mail impossible de se connecter
+help-art-sign-in-body =
+    La page de connexion est un aperçu des comptes en cours de création. Choisir de continuer vous amène à vos profils sur cet appareil. Aucun mot de passe ni e-mail n'est vérifié pour le moment.
+
+    ## Déconnexion
+    Ouvrez le menu du profil et choisissez <b>Déconnexion</b>. Vos profils enregistrés restent sur cet appareil.
+
+    ## La connexion ne fonctionne pas
+    - Rechargez la page et réessayez.
+    - Assurez-vous que le navigateur autorise ce site à stocker des données. Voir <a=/help/article/saved-data>Où sont enregistrés vos profils, votre liste et votre progression</a>.
+    - Si le problème persiste, écrivez-nous depuis la page <a=/help/contact>Contactez-nous</a>.
+help-art-saved-data-title = Où sont enregistrés vos profils, votre liste et votre progression
+help-art-saved-data-summary = Les profils, les codes PIN et la progression de visionnage sont stockés dans ce navigateur, sur cet appareil.
+help-art-saved-data-keywords = données enregistrées stockage local navigateur appareil perdu synchronisation progression historique profils cookies
+help-art-saved-data-body =
+    { $brand } conserve vos profils, vos codes PIN et votre progression de visionnage dans le stockage local de votre navigateur sur l'appareil que vous utilisez. Rien n'est encore téléversé vers un compte.
+
+    ## Ce que cela signifie
+    - Un autre navigateur ou appareil démarre sans profils ni progression.
+    - Les fenêtres privées ou en navigation incognito oublient tout à la fermeture.
+    - Effacer les données du site dans votre navigateur supprime vos profils et votre progression.
+    - Votre liste reste valable tant que la page reste ouverte, jusqu'à la disponibilité des comptes.
+
+    ## Ce qui est envoyé à nos serveurs
+    Lorsque vous ouvrez ou lancez un titre, l'application indique au service de recommandations de quel titre il s'agit, avec un numéro de session aléatoire non lié à votre nom. Les rangées s'adaptent pendant environ un jour après votre arrêt. Voir <a=/help/article/recommendations>Comment fonctionnent les recommandations</a>.
+
+    @@ data
+help-art-clear-data-title = Comment effacer vos données enregistrées
+help-art-clear-data-summary = Supprimez vos profils, vos codes PIN et votre progression de visionnage de ce navigateur.
+help-art-clear-data-keywords = effacer supprimer réinitialiser retirer données historique cache stockage cookies recommencer
+help-art-clear-data-body =
+    La suppression des données du site efface tous les profils, codes PIN et historiques de visionnage que { $brand } a enregistrés dans ce navigateur. Cette action est irréversible.
+
+    ## Chrome, Edge et Brave
+    1. Ouvrez l'icône d'informations du site dans la barre d'adresse et choisissez <b>Cookie et données du site</b>, puis <b>Gérer les données du site sur l'appareil</b>.
+    2. Supprimez l'entrée correspondant à ce site.
+
+    ## Firefox
+    1. Ouvrez l'icône du cadenas dans la barre d'adresse et choisissez <b>Effacer les cookies et les données du site</b>.
+
+    ## Safari
+    1. Ouvrez <b>Paramètres</b>, puis <b>Confidentialité</b>, puis <b>Gérer les données des sites Web</b>.
+    2. Trouvez ce site et choisissez <b>Supprimer</b>.
+
+    Pour supprimer uniquement l'historique de visionnage, consultez <a=/help/article/viewing-history>Comment gérer votre historique de visionnage</a>.
+
+    @@ data
+help-art-privacy-data-title = Quelles données { $brand } collecte-t-il ?
+help-art-privacy-data-summary = Un résumé court de ce qui est stocké, de ce qui est envoyé et de l'endroit où lire la politique complète.
+help-art-privacy-data-keywords = confidentialité données collecter informations personnelles suivi vendre partager cookies analyse
+help-art-privacy-data-body =
+    Nous ne vendons pas de données personnelles. Voici la version courte. La <a=/privacy>Politique de confidentialité</a> contient le texte complet.
+
+    ## Stocké sur votre appareil
+    Profils, codes PIN, votre langue choisie et votre progression de visionnage.
+
+    ## Envoyé lorsque vous utilisez l'application
+    - Les demandes de titres, d'images et de détails sont envoyées à un service de catalogue et à notre service de recommandation.
+    - Lorsque vous ouvrez ou lancez un titre, le service de recommandation reçoit le titre et un numéro de session aléatoire. Il conserve un petit profil de goût en mémoire pendant environ un jour, puis le supprime.
+    - Les demandes de lecture sont envoyées à des sources tierces indépendantes, qui voient votre adresse IP comme n'importe quel site Web que vous visitez.
+
+    Pour les cookies, consultez la <a=/cookies>Politique relative aux cookies</a>. Pour supprimer ce qui est stocké sur votre appareil, consultez <a=/help/article/clear-data>Comment effacer vos données enregistrées</a>.
+
+    @@ cookies
+
+    @@ data
+help-art-free-to-use-title = { $brand } est-il gratuit ?
+help-art-free-to-use-summary = Il n'y a rien à payer dans { $brand }.
+help-art-free-to-use-keywords = gratuit prix coût payer paiement abonnement facturation carte crédit essai
+help-art-free-to-use-body =
+    { $brand } ne facture aucun frais, n'offre pas d'abonnement et ne demande pas de coordonnées bancaires. Il n'y a pas d'offres, d'essais ni de dates de facturation.
+
+    Si une page, un e-mail ou un message se présente comme étant { $brand } et vous demande de payer, il ne provient pas de nous. N'entrez pas de coordonnées de paiement. Transmettez-le à <a=mailto:{ $help_email }>{ $help_email }</a> et nous examinerons l'affaire.
+
+    { $brand } est un index de liens vers des titres hébergés par d'autres services. Le fait qu'un service facture ou non son propre contenu relève de sa seule décision. Consultez <a=/help/article/sources>D'où viennent les titres</a>.
+help-art-wont-play-title = Un titre ne se lit pas
+help-art-wont-play-summary = Les solutions les plus rapides lorsque le lecteur affiche une erreur, reste noir ou ne démarre jamais.
+help-art-wont-play-keywords = ne se lit pas erreur impossible de lire vidéo échec chargement spinner bloqué lecteur
+help-art-wont-play-body =
+    Essayez ces étapes dans l'ordre. Testez après chacune d'elles.
+
+    1. Rechargez la page. Une panne temporaire à la source est la cause la plus fréquente.
+    2. Choisissez un autre épisode, ou relancez le titre depuis sa page de détails. Le lecteur essaie les sources disponibles les unes après les autres.
+    3. Désactivez les bloqueurs de publicités et les extensions de confidentialité pour ce site. Consultez <a=/help/article/extensions-blockers>Extensions qui bloquent le lecteur</a>.
+    4. Utilisez une version récente de Chrome, Edge, Firefox ou Safari. Consultez <a=/help/article/supported-browsers>Navigateurs pris en charge</a>.
+    5. Changez de réseau, par exemple du Wi-Fi aux données mobiles, ou désactivez un VPN. Certaines sources refusent certains réseaux.
+
+    @@ diagnostics
+
+    >> Ça ne se lit toujours pas
+    Certains titres ne sont disponibles depuis aucune source à un moment donné. Réessayez plus tard. Si un titre populaire ne se lit jamais, indiquez-nous lequel sur la page <a=/help/article/report-bug>Signaler un problème</a>.
+help-art-playback-unavailable-title = { $brand } indique « Lecture indisponible »
+help-art-playback-unavailable-summary = Ce que signifie ce message et quoi faire ensuite.
+help-art-playback-unavailable-keywords = lecture indisponible message d'erreur impossible de diffuser fournisseurs non pris en charge
+help-art-playback-unavailable-body =
+    Vous pouvez voir <b>Lecture indisponible</b> ou <b>Impossible de diffuser la vidéo. Tous les fournisseurs de sources étaient indisponibles ou non pris en charge par votre navigateur.</b>
+
+    Cela signifie que le lecteur a demandé à toutes les sources connues pour ce titre, et aucune n'a renvoyé de flux que votre navigateur peut lire.
+
+    1. Attendez une minute et appuyez à nouveau sur lecture. Les sources fluctuent.
+    2. Désactivez les bloqueurs. Voir <a=/help/article/extensions-blockers>Extensions qui bloquent le lecteur</a>.
+    3. Essayez un autre navigateur. Certains flux nécessitent des fonctionnalités absentes des navigateurs plus anciens.
+    4. Essayez un autre titre pour vérifier si le problème ne concerne que celui-ci.
+
+    Si le même titre échoue pendant une journée, <a=/help/article/report-bug>signalez-le-nous</a>. Indiquez le titre, l'année et le navigateur utilisé.
+
+    @@ diagnostics
+help-art-black-screen-title = Écran noir avec du son
+help-art-black-screen-summary = L'image est absente, mais vous entendez le titre.
+help-art-black-screen-keywords = écran noir pas d'image audio seul vidéo manquante écran vert
+help-art-black-screen-body =
+    1. Appuyez sur <b>F</b> pour quitter puis réactiver le plein écran, ou appuyez sur <b>Esc</b> et relancez la lecture.
+    2. Rechargez la page.
+    3. Désactivez l'accélération matérielle dans les paramètres de votre navigateur, redémarrez le navigateur et réessayez.
+    4. Mettez à jour votre navigateur et votre pilote graphique.
+    5. Essayez un autre navigateur.
+
+    !! Note : Certaines extensions de navigateur qui modifient les couleurs de la page ou bloquent les médias peuvent aussi masquer l'image. Voir <a=/help/article/extensions-blockers>Extensions qui bloquent le lecteur</a>.
+
+    @@ diagnostics
+help-art-buffering-title = Mise en mémoire tampon, gel ou démarrage lent
+help-art-buffering-summary = Améliorer un flux qui se met en pause en permanence pour se charger.
+help-art-buffering-keywords = mise en mémoire tampon lenteur lent gel saccades chargement indicateur de chargement vitesse de connexion qualité
+help-art-buffering-body =
+    Un flux se met en pause lorsque votre connexion transmet les données plus lentement que la vidéo ne l'exige.
+
+    - Fermez les autres onglets, téléchargements et appareils utilisant le même réseau.
+    - Rapprochez-vous du routeur ou utilisez un câble.
+    - Mettez en pause pendant une minute pour que le lecteur puisse charger à l'avance, puis appuyez sur lecture.
+    - Désactivez un VPN, ou choisissez un serveur plus proche dans le VPN.
+    - Réessayez plus tard. Les sources sont plus lentes aux heures de pointe.
+
+    La source détermine le niveau de qualité proposé, donc la netteté de l'image peut changer pendant la lecture.
+
+    @@ diagnostics
+help-art-subtitles-missing-title = Sous-titres manquants ou désynchronisés
+help-art-subtitles-missing-summary = Corriger les sous-titres qui n'apparaissent pas, affichent la mauvaise langue ou sont en retard sur la voix.
+help-art-subtitles-missing-keywords = sous-titres légendes manquants mauvaise langue désynchronisation retard cc texte
+help-art-subtitles-missing-body =
+    1. Sélectionnez <b>Audio et sous-titres</b> dans le lecteur et assurez-vous qu'une langue de sous-titres est sélectionnée.
+    2. Choisissez une autre piste si la liste en propose une. Les pistes proviennent de la source et varient selon les titres.
+    3. Définissez votre langue de sous-titres préférée dans <b>Paramètres</b>. Consultez <a=/help/article/language>Comment changer la langue</a>.
+    4. Si le texte est en avance ou en retard, rechargez et rejouez. Le minutage est défini par la source et nous ne pouvons pas l'ajuster pour un titre spécifique.
+
+    Si un titre n'a aucun sous-titre, la source n'en a pas fourni.
+
+    @@ language
+help-art-supported-browsers-title = Navigateurs pris en charge
+help-art-supported-browsers-summary = Les navigateurs et versions qui fonctionnent le mieux.
+help-art-supported-browsers-keywords = navigateur chrome firefox safari edge brave opera internet explorer version mise à jour compatible
+help-art-supported-browsers-body =
+    { $brand } fonctionne le mieux dans les versions actuelles de ces navigateurs :
+
+    - Google Chrome et autres navigateurs Chromium tels que Edge et Brave
+    - Mozilla Firefox
+    - Apple Safari sur macOS, iPhone et iPad
+
+    Internet Explorer n'est pas pris en charge. Gardez votre navigateur à jour et autorisez le site à utiliser JavaScript et le stockage local.
+
+    @@ diagnostics
+
+    >> Le navigateur affiche une erreur avant le chargement de la page
+    Rechargez avec <b>Ctrl + Shift + R</b> (<b>Cmd + Shift + R</b> sur Mac) pour récupérer la dernière version de l'application, puis réessayez.
+help-art-fix-phone-title = Résoudre un problème sur votre téléphone ou tablette
+help-art-fix-phone-summary = Étapes pour iPhone, iPad et Android.
+help-art-fix-phone-keywords = téléphone tablette android iphone ipad mobile correction problème application
+help-art-fix-phone-body =
+    1. Fermez l'onglet et rouvrez { $brand }.
+    2. Mettez à jour votre navigateur depuis le magasin d'applications.
+    3. Désactivez l'économie de données ou le mode économie d'énergie pendant la lecture.
+    4. Vérifiez que vous avez une connexion stable. Consultez <a=/help/article/buffering>Buffering, gel ou démarrage lent</a>.
+    5. Si vous avez ajouté { $brand } à votre écran d'accueil et qu'il semble obsolète, supprimez-le et ajoutez-le à nouveau. Consultez <a=/help/article/install-app>Comment installer { $brand } en tant qu'application</a>.
+
+    @@ diagnostics
+
+    @@ refresh
+help-art-fix-tv-title = Résoudre un problème sur votre téléviseur
+help-art-fix-tv-summary = Étapes lorsque vous regardez via un navigateur TV ou un appareil de diffusion.
+help-art-fix-tv-keywords = tv téléviseur smart tv chromecast cast correction problème hdmi stick navigateur
+help-art-fix-tv-body =
+    { $brand } n'a pas d'application TV. Vous regardez via le navigateur web de votre téléviseur ou en envoyant un onglet de navigateur depuis un ordinateur ou un téléphone.
+
+    - Mettez à jour le logiciel du téléviseur et son navigateur.
+    - Redémarrez le téléviseur ou la clé de streaming.
+    - Si vous envoyez un onglet, gardez l'appareil émetteur sur le même réseau et fermez les autres onglets dessus.
+    - Si le navigateur du téléviseur est lent, envoyez l'onglet depuis un ordinateur à la place.
+
+    Voir <a=/help/article/watch-on-tv>Comment regarder sur votre téléviseur</a>.
+
+    @@ diagnostics
+help-art-extensions-blockers-title = Extensions qui bloquent le lecteur
+help-art-extensions-blockers-summary = Les bloqueurs de publicités et les outils de confidentialité peuvent empêcher un flux de se charger.
+help-art-extensions-blockers-keywords = extension adblock ublock ghostery privacy blocker script blocking vpn dns filter
+help-art-extensions-blockers-body =
+    Le lecteur charge les flux depuis des sources tierces. Les outils qui bloquent les scripts, les cadres ou les médias d'autres sites peuvent l'arrêter.
+
+    1. Ouvrez votre extension et mettez-la en pause pour ce site, puis rechargez la page.
+    2. Si vous utilisez un filtre réseau, tel qu'un filtre DNS ou un réseau scolaire ou professionnel, essayez un autre réseau.
+    3. Si la lecture fonctionne ensuite, ajoutez { $brand } à la liste d'autorisation de l'extension.
+
+    !! Note : Nous ne vous demandons jamais d'installer une extension de navigateur ou un codec pour regarder. Fermez toute page qui le fait.
+
+    @@ diagnostics
+help-art-rows-wont-load-title = Les rangées ou images ne se chargent pas
+help-art-rows-wont-load-summary = La page affiche des rangées vides, un indicateur de chargement ou des images manquantes.
+help-art-rows-wont-load-keywords = rows empty loading blank page pictures images posters not loading home error recommendations down
+help-art-rows-wont-load-body =
+    Les rangées de la page d'accueil proviennent d'un service de recommandation. Les affiches et les détails proviennent d'un service de catalogue. Si l'un des deux est inaccessible, vous pouvez voir des rangées vides ou un indicateur de chargement.
+
+    1. Rechargez la page.
+    2. Vérifiez votre connexion.
+    3. Désactivez les bloqueurs pour ce site. Voir <a=/help/article/extensions-blockers>Extensions qui bloquent le lecteur</a>.
+    4. Réessayez dans quelques minutes.
+
+    La page de recherche et vos éléments enregistrés fonctionnent toujours si le service de recommandation est hors ligne. Si le problème dure plus d'une heure, <a=/help/article/report-bug>dites-le-nous</a>.
+
+    @@ diagnostics
+
+    @@ refresh
+help-art-list-missing-title = Ma liste ou la progression a disparu
+help-art-list-missing-summary = Pourquoi une liste ou la rangée Continuer à regarder peut être vide et quoi faire.
+help-art-list-missing-keywords = my list missing gone disappeared empty lost continue watching progress reset
+help-art-list-missing-body =
+    { $brand } stocke les profils et la progression dans ce navigateur. Ils sont absents si :
+
+    - vous avez ouvert { $brand } dans un autre navigateur ou sur un autre appareil
+    - vous avez utilisé une fenêtre privée ou en navigation incognito
+    - vous avez effacé les données du site ou les cookies
+    - vous utilisez un profil différent
+
+    Votre liste ne dure que le temps que la page reste ouverte pour le moment, car les comptes permettant de la sauvegarder ne sont pas encore disponibles. Recharger la page l'efface.
+
+    Basculez sur le profil que vous utilisiez auparavant depuis le menu des profils. Consultez <a=/help/article/saved-data>Où sont stockés vos profils, votre liste et votre progression</a>.
+
+    @@ profiles
+
+    @@ data
+help-art-forgot-pin-title = J'ai oublié le code PIN de mon profil
+help-art-forgot-pin-summary = Nous ne pouvons pas réinitialiser les codes PIN, voici comment vous reconnecter.
+help-art-forgot-pin-keywords = oublié code PIN réinitialiser perdu mot de passe verrouillé profil verrouillé
+help-art-forgot-pin-body =
+    Un code PIN est stocké uniquement sur votre appareil, nous ne pouvons donc pas le retrouver ni le réinitialiser.
+
+    1. Réessayez le code PIN, un chiffre par case.
+    2. Si vous ne vous en souvenez plus, la solution est d'effacer les données de ce site dans votre navigateur. Cela supprime tous les profils, codes PIN et progressions de visionnage. Consultez <a=/help/article/clear-data>Comment effacer vos données enregistrées</a>.
+    3. Recréez vos profils.
+
+    !! Remarque : Choisissez un code PIN que vous pouvez retenir et ne l'utilisez pas pour autre chose.
+
+    @@ profiles
+
+    @@ data
+help-art-page-not-found-title = Je vois une page « 404 »
+help-art-page-not-found-summary = Le lien est incorrect ou la page a été déplacée.
+help-art-page-not-found-keywords = 404 introuvable page manquante lien cassé erreur vide
+help-art-page-not-found-body =
+    Une page 404 signifie que l'adresse ne mène nulle part sur { $brand }. Vérifiez l'adresse pour détecter les erreurs de frappe ou utilisez le menu et la recherche pour trouver ce que vous cherchiez.
+
+    - Utilisez <b>Accueil</b> dans la barre supérieure pour revenir au début.
+    - Utilisez la recherche du <a=/help>Centre d'aide</a> pour trouver un article.
+    - Si un lien sur { $brand } vous a mené ici, <a=/help/article/report-bug>signalez-le-nous</a> en indiquant où vous l'avez trouvé.
+
+    @@ refresh
+help-art-language-title = Comment changer la langue
+help-art-language-summary = Changez la langue de l'interface et votre langue de sous-titres préférée.
+help-art-language-keywords = langue changer traduire interface affichage sous-titres audio anglais espagnol français arabe
+help-art-language-body =
+    ## Langue de l'interface
+    1. Faites défiler jusqu'en bas de n'importe quelle page du Centre d'aide et choisissez une langue dans <b>Sélectionnez votre langue préférée</b>.
+    2. La page se recharge dans cette langue. Votre choix est mémorisé sur cet appareil.
+
+    Vous pouvez également le modifier dans <b>Paramètres</b>, sous <b>Langues</b>, puis <b>Langue d'affichage</b>.
+
+    ## Langue des sous-titres
+    1. Ouvrez <b>Paramètres</b> et choisissez <b>Langues</b>.
+    2. Sous <b>Langue de sous-titres préférée</b>, sélectionnez une langue et choisissez <b>Enregistrer les préférences</b>.
+
+    !! Remarque : Seules les langues entièrement traduites apparaissent dans la liste. Le texte non encore traduit s'affiche en anglais.
+
+    @@ language
+help-art-subtitles-title = Comment utiliser les sous-titres, les légendes ou choisir la langue audio
+help-art-subtitles-summary = Activez les sous-titres, choisissez une piste et modifiez leur apparence.
+help-art-subtitles-keywords = sous-titres légendes cc langue audio piste taille couleur apparence arrière-plan
+help-art-subtitles-body =
+    ## Activer ou désactiver les sous-titres
+    1. Lancez un titre et placez le pointeur sur le lecteur, ou touchez l'écran.
+    2. Sélectionnez <b>Audio et sous-titres</b>.
+    3. Choisissez une langue de sous-titres, ou <b>Désactivé</b>.
+
+    ## Modifier l'apparence des sous-titres
+    1. Ouvrez <b>Paramètres</b> et choisissez <b>Apparence des sous-titres</b>.
+    2. Sélectionnez une taille et une couleur. L'aperçu au-dessus des boutons montre le résultat.
+    3. Choisissez <b>Terminé</b>.
+
+    !! Remarque : Les langues et pistes audio disponibles dépendent de la source du titre. Voir <a=/help/article/subtitles-missing>Les sous-titres sont manquants ou désynchronisés</a>.
+help-art-playback-speed-title = Comment modifier la vitesse de lecture
+help-art-playback-speed-summary = Regardez plus vite ou plus lentement depuis les contrôles du lecteur.
+help-art-playback-speed-keywords = vitesse plus vite plus lentement 2x 1.5x taux de lecture
+help-art-playback-speed-body =
+    1. Lancez un titre et affichez les contrôles du lecteur.
+    2. Sélectionnez le bouton de vitesse en bas à droite.
+    3. Choisissez une vitesse dans le menu.
+
+    La vitesse s'applique au titre que vous regardez et revient à la normale pour le suivant.
+help-art-shortcuts-title = Raccourcis clavier
+help-art-shortcuts-summary = Contrôlez le lecteur sans la souris.
+help-art-shortcuts-keywords = raccourcis clavier touches espace flèche plein écran couper volume sauter rembobiner touches rapides
+help-art-shortcuts-body =
+    Ces touches fonctionnent pendant la lecture d'un titre sur ordinateur.
+
+    - <b>Espace</b> ou <b>K</b> : lecture ou pause
+    - <b>Flèche gauche</b> ou <b>J</b> : reculer de 10 secondes
+    - <b>Flèche droite</b> ou <b>L</b> : avancer de 10 secondes
+    - <b>Flèche haut</b> et <b>Flèche bas</b> : augmenter ou baisser le volume
+    - <b>M</b> : couper ou rétablir le son
+    - <b>F</b> : plein écran activé ou désactivé
+help-art-skip-intro-next-title = Passer l'intro et l'épisode suivant
+help-art-skip-intro-next-summary = Passer l'ouverture ou passer à l'épisode suivant.
+help-art-skip-intro-next-keywords = passer intro épisode suivant lecture automatique marathons épisodes tiroir
+help-art-skip-intro-next-body =
+    - <b>Passer l'intro</b> s'affiche pendant quelques secondes au début de l'ouverture d'un épisode. Sélectionnez-le pour accéder directement à l'histoire.
+    - <b>Épisode suivant</b> dans les contrôles du lecteur lance l'épisode suivant.
+    - <b>Épisodes</b> ouvre la liste de la saison, permettant de choisir n'importe quel épisode.
+
+    Pour contrôler ce qui se passe à la fin d'un épisode, ouvrez <b>Paramètres</b>, puis <b>Paramètres de lecture</b>, et activez ou désactivez <b>Lecture automatique de l'épisode suivant</b>.
+help-art-my-list-title = Comment utiliser Ma liste
+help-art-my-list-summary = Enregistrez des titres pour plus tard et retrouvez-les facilement.
+help-art-my-list-keywords = ma liste ajouter supprimer liste d'attente enregistrer plus tard favoris plus
+help-art-my-list-body =
+    ## Ajouter un titre
+    Sélectionnez le bouton <b>+</b> sur la carte d'un titre, dans sa fenêtre de détails ou dans l'en-tête en haut de la page.
+
+    ## Supprimer un titre
+    Sélectionnez la coche sur le titre, qui se transforme à nouveau en <b>+</b>.
+
+    ## Voir votre liste
+    Ouvrez <b>Ma liste</b> dans la barre supérieure. Sur téléphone, elle se trouve dans la barre inférieure.
+
+    !! Note : Pour l'instant, votre liste est conservée tant que la page reste ouverte et est effacée lors du rechargement. L'enregistrement dans votre profil fait partie des travaux sur les comptes. Voir <a=/help/article/list-missing>Ma liste ou la progression a disparu</a>.
+help-art-continue-watching-title = Comment utiliser Reprendre la lecture
+help-art-continue-watching-summary = Reprenez là où vous vous étiez arrêté et supprimez des titres de la rangée.
+help-art-continue-watching-keywords = reprendre lecture reprendre progression supprimer rangée arrêté moitié vu
+help-art-continue-watching-body =
+    Les titres que vous avez commencés apparaissent dans la rangée <b>Reprendre la lecture</b> sur la page d'accueil, avec une barre de progression indiquant où vous en êtes.
+
+    ## Reprendre
+    Sélectionnez le titre. La lecture reprend là où vous vous étiez arrêté.
+
+    ## Supprimer un titre de la rangée
+    1. Ouvrez le menu des options sur la carte du titre.
+    2. Choisissez <b>Retirer de Reprendre la lecture</b>.
+
+    La rangée est construite à partir de la progression enregistrée dans ce navigateur, donc un autre appareil a sa propre rangée. Voir <a=/help/article/saved-data>Où sont enregistrés vos profils, votre liste et votre progression</a>.
+
+    @@ data
+help-art-viewing-history-title = Comment gérer votre historique de visionnage
+help-art-viewing-history-summary = Ce qui est enregistré lorsque vous regardez et comment le supprimer.
+help-art-viewing-history-keywords = historique de visionnage activité visionnée supprimer effacer retirer notes recommandations
+help-art-viewing-history-body =
+    { $brand } enregistre les titres que vous commencez et jusqu'où vous les avez regardés, dans ce navigateur, afin que Reprendre la lecture fonctionne et que les recommandations suivent vos goûts.
+
+    - Pour masquer un titre de la rangée Reprendre la lecture, voir <a=/help/article/continue-watching>Comment utiliser Reprendre la lecture</a>.
+    - Pour tout supprimer, voir <a=/help/article/clear-data>Comment effacer vos données enregistrées</a>.
+
+    !! Note : La page <b>Activité de visionnage</b> dans <b>Paramètres</b> n'affiche pas encore les titres.
+
+    @@ data
+help-art-notifications-title = Notifications
+help-art-notifications-summary = Ce que la cloche dans la barre supérieure affiche et comment les éléments sont marqués comme lus.
+help-art-notifications-keywords = notifications cloche alertes nouveautés mises à jour lu non lu
+help-art-notifications-body =
+    La cloche dans la barre supérieure liste les titres qui méritent d'être vus, tels que les nouveautés et les choix populaires. Sélectionnez un élément pour ouvrir les détails du titre.
+
+    Les éléments que vous avez ouverts sont marqués comme lus. Cela est mémorisé dans votre navigateur. Le compteur sur la cloche indique combien d'éléments sont encore non lus.
+
+    Les notifications n'apparaissent que dans { $brand }. Nous n'envoyons pas d'e-mails ou de messages push concernant les titres.
+help-art-search-browse-title = Comment rechercher et parcourir
+help-art-search-browse-summary = Trouver un titre par nom, genre ou ambiance.
+help-art-search-browse-keywords = recherche parcourir trouver genre films séries catégorie chercher titre acteur réalisateur
+help-art-search-browse-body =
+    ## Recherche
+    1. Sélectionnez la loupe dans la barre supérieure.
+    2. Saisissez un titre, un acteur ou un réalisateur.
+    3. Appuyez sur <b>Entrée</b> pour voir toutes les correspondances.
+
+    ## Parcourir
+    - <b>Séries</b> et <b>Films</b> dans la barre supérieure ouvrent une page pour chaque type de titre. Utilisez <b>Genres</b> pour affiner la recherche.
+    - Les rangées de la page d'accueil sont regroupées par thème, comme une décennie et un genre, ou des titres similaires à ceux que vous avez regardés.
+    - <b>Parcourir par langue</b> permet de trouver des titres par langue originale, doublage ou sous-titres. Voir <a=/help/article/browse-language>Parcourir par langue</a>.
+help-art-browse-language-title = Parcourir par langue
+help-art-browse-language-summary = Trouver des titres par langue originale, doublage ou sous-titres.
+help-art-browse-language-keywords = parcourir par langue originale doublage sous-titres étranger international anime coréen espagnol
+help-art-browse-language-body =
+    1. Ouvrez <b>Parcourir par langue</b> dans la barre supérieure.
+    2. Choisissez ce que vous voulez : <b>Langue originale</b>, <b>Doublage</b> ou <b>Sous-titres</b>.
+    3. Choisissez une langue pour voir les titres correspondants.
+
+    !! Remarque : La disponibilité des doublages et des sous-titres dépend de la source. Un titre répertorié ici peut offrir moins de pistes lors de la lecture.
+help-art-new-popular-title = Nouveautés et populaires
+help-art-new-popular-summary = Découvrez les nouveautés et ce que les gens regardent actuellement.
+help-art-new-popular-keywords = nouveau populaire tendance dernier top 10 bientôt cette semaine
+help-art-new-popular-body =
+    <b>Nouveautés et populaires</b> dans la barre supérieure répertorie les titres récents ou tendance. Ouvrez un titre pour voir ses détails, puis ajoutez-le à <b>Ma liste</b> pour le retrouver plus tard.
+
+    Les listes sont actualisées depuis le catalogue, elles changent donc d'un jour à l'autre.
+help-art-recommendations-title = Fonctionnement des recommandations
+help-art-recommendations-summary = Comment les rangées sont choisies et ce que vous pouvez faire pour les modifier.
+help-art-recommendations-keywords = recommandations rangées suggestions parce que vous avez regardé goût algorithme pour vous personnalisé
+help-art-recommendations-body =
+    Les rangées de la page d'accueil sont créées à partir des descriptions, des genres et des crédits des titres. Les titres proches par sens sont regroupés dans une même rangée, par exemple une décennie et un genre, ou <b>Similaire à</b> suivi d'un titre que vous avez regardé.
+
+    ## Ce qui modifie vos rangées
+    - Le démarrage d'un titre. Le service de recommandation apprend quels genres vous choisissez et adapte les rangées pendant environ un jour.
+    - Le profil utilisé. Un profil Enfants n'affiche que des titres pour un public jeune.
+
+    ## Ce qui ne compte pas
+    Les rangées ne sont pas influencées par ce que vous payez, votre lieu de résidence ou votre identité. Nous n'utilisons ni votre nom ni votre e-mail, car le service ne voit qu'un numéro de session aléatoire. Voir <a=/help/article/privacy-data>Quelles données { $brand } collecte-t-il ?</a>
+
+    @@ data
+help-art-trailers-clips-title = Bandes-annonces et extraits
+help-art-trailers-clips-summary = Aperçu d'un titre avant de vous lancer.
+help-art-trailers-clips-keywords = bandes-annonces extraits aperçu courtes vidéos teaser couper le son lecture automatique aperçus
+help-art-trailers-clips-body =
+    - Survolez une carte de titre sur ordinateur, ou ouvrez ses détails, pour voir un aperçu de la bande-annonce.
+    - <b>Extraits</b> affiche de courts aperçus verticaux que vous pouvez parcourir.
+    - Utilisez le bouton haut-parleur pour activer ou désactiver le son des aperçus. Votre choix est mémorisé pour le profil.
+
+    Pour empêcher les aperçus de se lancer automatiquement, ouvrez <b>Paramètres</b>, puis <b>Paramètres de lecture</b>, et désactivez <b>Aperçus en lecture automatique</b>.
+help-art-what-is-title = Qu'est-ce que { $brand } ?
+help-art-what-is-summary = Une brève description de { $brand } et de ce qu'il fait ou ne fait pas.
+help-art-what-is-keywords = qu'est-ce que à propos de streams service expliquer index liens catalogue comme netflix
+help-art-what-is-body =
+    { $brand } vous aide à trouver votre prochain film ou série. Il apprend ce que vous aimez et organise le catalogue en rangées pour vous, sur une page qui ressemble aux services de streaming que vous connaissez.
+
+    { $brand } est un index de liens. Il n'héberge ni ne télécharge de vidéo. Lorsque vous appuyez sur lecture, le lecteur demande un flux à des sources indépendantes et lit le premier qui fonctionne. Voir <a=/help/article/sources>D'où viennent les titres</a>.
+
+    Il n'y a rien à acheter et pas d'abonnement. Voir <a=/help/article/free-to-use>{ $brand } est-il gratuit ?</a>
+help-art-getting-started-title = Premiers pas avec { $brand }
+help-art-getting-started-summary = Vos cinq premières minutes : profils, recherche d'un titre et sauvegarde.
+help-art-getting-started-keywords = premiers pas commencer première fois visite nouvel utilisateur comment utiliser guide bases
+help-art-getting-started-body =
+    1. <b>Choisissez ou créez un profil.</b> Consultez <a=/help/article/profiles-manage>Comment créer, modifier ou supprimer des profils</a>.
+    2. <b>Explorez la page d'accueil.</b> Les rangées sont regroupées par thème et le grand titre en haut change.
+    3. <b>Recherchez</b> un titre avec la loupe. Consultez <a=/help/article/search-browse>Comment rechercher et parcourir</a>.
+    4. <b>Sélectionnez un titre</b> pour en savoir plus, regarder la bande-annonce et lancer la lecture.
+    5. <b>Ajoutez des titres à Ma liste</b> avec le bouton <b>+</b>.
+
+    Découvrez les raccourcis qui aident pendant la lecture : <a=/help/article/shortcuts>Raccourcis clavier</a>.
+help-art-sources-title = D'où viennent les titres
+help-art-sources-summary = Comment { $brand } trouve les flux et pourquoi un titre peut fonctionner un jour et échouer le lendemain.
+help-art-sources-keywords = sources fournisseurs hébergés liens tiers d'où catalogue tmdb métadonnées disponibilité
+help-art-sources-body =
+    Les détails, les affiches et les notes proviennent d'un catalogue public de films et de séries. La vidéo elle-même n'est pas hébergée sur { $brand }. Lorsque vous lancez la lecture, le lecteur demande un flux à des sources tierces indépendantes.
+
+    - Un titre peut être disponible sur une source et non sur une autre.
+    - Une source peut devenir indisponible sans préavis.
+    - La qualité, les pistes audio et les sous-titres proviennent de la source.
+
+    Nous ne contrôlons pas et ne vérifions pas ces sources. Consultez le <a=/disclaimer>Avertissement</a>. Si vous êtes titulaire de droits, consultez <a=/help/article/copyright>Comment signaler un problème de droits d'auteur</a>.
+help-art-contribute-title = Comment puis-je contribuer ?
+help-art-contribute-summary = Les idées, corrections, traductions et rapports de bogues sont les bienvenus.
+help-art-contribute-keywords = contribuer contribution bénévole traduire traduction code github aide améliorer suggestions
+help-art-contribute-body =
+    { $brand } est développé en open source. Vous pouvez aider de plusieurs façons :
+
+    - <b>Traductions.</b> Les textes de l'interface sont dans des fichiers texte, un par langue, donc une traduction est un fichier texte que vous pouvez modifier.
+    - <b>Rapports de bogues.</b> Consultez <a=/help/article/report-bug>Signaler un problème</a>.
+    - <b>Corrections et fonctionnalités.</b> Envoyez une description ou un correctif.
+    - <b>Idées.</b> Dites-nous ce que vous aimeriez que le Centre d'aide ou l'application fasse.
+
+    Écrivez à <a=mailto:{ $contribute_email }>{ $contribute_email }</a> avec quelques lignes sur ce que vous souhaitez faire.
+help-art-install-app-title = Comment installer { $brand } en tant qu'application
+help-art-install-app-summary = Ajoutez { $brand } à votre écran d'accueil ou à votre bureau pour qu'il s'ouvre dans sa propre fenêtre.
+help-art-install-app-keywords = installer application pwa ajouter à l'écran d'accueil bureau raccourci icône application web
+help-art-install-app-body =
+    { $brand } est une application web. Il n'existe pas de téléchargement depuis une boutique. Votre navigateur peut l'installer pour qu'elle s'ouvre dans sa propre fenêtre et ait sa propre icône.
+
+    ## Chrome et Edge sur ordinateur
+    Sélectionnez l'icône d'installation à droite de la barre d'adresse, ou ouvrez le menu du navigateur et choisissez <b>Installer { $brand }</b>.
+
+    ## Android
+    Ouvrez le menu du navigateur et choisissez <b>Installer l'application</b> ou <b>Ajouter à l'écran d'accueil</b>.
+
+    ## iPhone et iPad
+    Dans Safari, sélectionnez le bouton <b>Partager</b>, puis <b>Ajouter à l'écran d'accueil</b>.
+
+    !! Remarque : une application installée est le même site web. Elle se met à jour automatiquement et utilise les mêmes profils enregistrés que le navigateur depuis lequel elle a été installée.
+help-art-phone-tablet-title = Comment utiliser { $brand } sur votre téléphone ou votre tablette
+help-art-phone-tablet-summary = La mise en page mobile, la barre inférieure et des conseils pour les petits écrans.
+help-art-phone-tablet-keywords = téléphone tablette mobile android iphone ipad tactile barre inférieure application mise en page
+help-art-phone-tablet-body =
+    Ouvrez le site dans le navigateur de votre téléphone. La page passe à une mise en page conçue pour le tactile, avec une barre en bas pour <b>Accueil</b>, <b>Extraits</b>, <b>Recherche</b> et <b>Ma liste</b>.
+
+    - Touchez une carte pour voir les détails, puis le bouton lecture pour commencer.
+    - Tournez le téléphone en mode paysage pour la meilleure image.
+    - Pour une sensation d'application, voir <a=/help/article/install-app>Comment installer { $brand } en tant qu'application</a>.
+help-art-watch-on-tv-title = Comment regarder sur votre téléviseur
+help-art-watch-on-tv-summary = Utilisez le navigateur de votre téléviseur, ou envoyez un onglet de navigateur depuis un ordinateur ou un téléphone.
+help-art-watch-on-tv-keywords = tv télévision smart tv cast chromecast airplay hdmi fire stick grand écran
+help-art-watch-on-tv-body =
+    Il n'existe pas encore d'application { $brand } pour les téléviseurs. Ces options fonctionnent aujourd'hui :
+
+    - <b>Navigateur TV.</b> Ouvrez l'adresse { $brand } dans le navigateur fourni avec votre téléviseur.
+    - <b>Diffusion d'un onglet.</b> Dans Chrome ou Edge sur ordinateur, ouvrez le menu du navigateur et choisissez <b>Diffuser</b>, puis sélectionnez votre téléviseur ou votre clé de streaming.
+    - <b>Câble.</b> Connectez un ordinateur portable au téléviseur avec un câble HDMI et utilisez le plein écran.
+
+    Si l'image ou le son n'est pas correct, voir <a=/help/article/fix-tv>Résoudre un problème sur votre téléviseur</a>.
+help-art-copyright-title = Comment signaler un problème de droits d'auteur
+help-art-copyright-summary = Les titulaires de droits peuvent demander la suppression d'un lien.
+help-art-copyright-keywords = droits d'auteur dmca retrait infraction titulaire de droits supprimer signaler avis juridique
+help-art-copyright-body =
+    { $brand } n’héberge pas de fichiers vidéo. Il répertorie des liens vers des titres hébergés par d’autres services. Si vous détenez les droits sur un titre et estimez qu’un lien les viole, envoyez-nous un avis et nous l’examinerons.
+
+    Un avis doit inclure :
+    1. Votre nom et vos coordonnées.
+    2. Une description de l’œuvre dont vous êtes propriétaire.
+    3. L’adresse de la page sur { $brand } qui y fait référence.
+    4. Une déclaration indiquant que vous êtes le titulaire des droits ou autorisé à agir en son nom.
+
+    Envoyez-le à <a=mailto:{ $help_email }>{ $help_email }</a> avec l’objet <b>Avis DMCA</b>. Le processus complet est sur la <a=/dmca>page DMCA</a>.
+help-art-title-feedback-title = Commentaires sur un titre sur { $brand }
+help-art-title-feedback-summary = Signaler une description erronée, un titre manquant ou un titre qui ne se lit jamais.
+help-art-title-feedback-keywords = commentaires titre description erronée manquant demande film série ajouter signaler affiche incorrecte
+help-art-title-feedback-body =
+    Écrivez à <a=mailto:{ $help_email }>{ $help_email }</a> et incluez :
+
+    - le titre et l’année
+    - l’adresse de sa page sur { $brand }
+    - ce qui est incorrect, par exemple une affiche erronée, une saison manquante ou un titre qui ne se lit jamais
+
+    Les détails proviennent d’un catalogue public, il est donc préférable de corriger une description erronée à la source. Nous pouvons transmettre les corrections que nous recevons.
+help-art-report-bug-title = Signaler un problème
+help-art-report-bug-summary = Ce qu’il faut inclure pour que nous puissions trouver et corriger un bug rapidement.
+help-art-report-bug-keywords = signaler bug problème erreur plantage cassé ne fonctionne pas commentaires contact
+help-art-report-bug-body =
+    Plus nous en savons, plus nous pouvons le corriger rapidement. Veuillez inclure :
+
+    1. Ce que vous faisiez et ce que vous attendiez.
+    2. Ce qui s’est passé à la place, et tout message que vous avez vu.
+    3. Le titre, s’il s’agit de la lecture.
+    4. Votre appareil et votre navigateur.
+
+    La page <a=/help/contact>Contactez-nous</a> contient un bouton qui ouvre un e-mail avec les détails de votre navigateur préremplis.
+
+    @@ diagnostics
+cookie-sheet = <b>{ $brand }</b> utilise des cookies pour conserver vos profils et préférences et, si vous l’autorisez, pour personnaliser les recommandations.
+cookie-learn = En savoir plus
+cookie-reject = Refuser
+cookie-accept = Accepter
+cookie-dismiss = Fermer
+cookie-link = Préférences de cookies
+cookie-center-title = Centre de préférences de confidentialité
+cookie-save = Enregistrer les paramètres
+cookie-always-active = Toujours actif
+cookie-details = Détails des cookies
+cookie-hide-details = Masquer les détails
+cookie-nav-general = Description générale
+cookie-nav-essential = Cookies essentiels
+cookie-nav-personal = Cookies de personnalisation
+cookie-nav-third = Cookies tiers
+cookie-nav-ads = Cookies publicitaires
+cookie-general =
+    Cet outil explique ce que { $brand } conserve dans votre navigateur et vous permet de contrôler la partie facultative.
+
+    La plupart des navigateurs permettent de bloquer ou de supprimer les cookies et les données du site. Si vous le faites, certaines parties de { $brand } cesseront de fonctionner et vos profils et votre progression seront perdus.
+
+    Vos choix ici sont enregistrés dans votre navigateur, donc la suppression des données du site les réinitialise.
+
+    Pour en savoir plus, consultez la <a=/cookies>Politique relative aux cookies</a> et la <a=/privacy>Politique de confidentialité</a>.
+cookie-essential =
+    Ces éléments sont nécessaires pour vous fournir le service demandé. Ils conservent vos profils et vos codes PIN, votre progression de visionnage, votre langue et les choix effectués ici. Ils restent sur votre appareil et ne sont pas envoyés à nos serveurs. Vous ne pouvez pas les désactiver.
+
+    Durée de vie : ils restent jusqu'à ce que vous supprimiez les données de ce site.
+cookie-essential-list =
+    - <b>streams_profiles</b> et <b>streams_active_profile</b> : vos profils et celui utilisé.
+    - <b>streams_watch_progress_v1</b> : votre progression de visionnage pour chaque titre.
+    - <b>streams_session</b> : votre connexion, si vous en avez une.
+    - <b>streams_language</b> : la langue que vous avez choisie.
+    - <b>streams_consent</b> : les choix effectués dans cette fenêtre.
+    - <b>streams_help_votes</b> : vos réponses à « Cet article a-t-il été utile ? »
+    - <b>streams-notifications-read:default</b> : les notifications que vous avez ouvertes.
+cookie-personal =
+    Ces éléments permettent à { $brand } d'adapter les rangées à vos goûts. Lorsque vous commencez un titre, l'application envoie le titre et un numéro de session aléatoire à notre service de recommandation. Le service conserve un petit profil de goûts pendant environ un jour, puis le supprime.
+
+    Si vous désactivez cette option, les rangées ne sont pas personnalisées, rien n'est envoyé et aucun numéro de session n'est conservé.
+
+    Durée de vie : jusqu'à ce que vous supprimiez les données de ce site ou que vous désactiviez cette option.
+cookie-personal-list =
+    - <b>streams_session_id</b> : un numéro aléatoire non lié à votre nom.
+    - <b>streams_user_affinity</b> : les genres que vous avez choisis.
+cookie-third =
+    Les affiches et les détails proviennent d'un catalogue de films public, et les flux proviennent de sources indépendantes. Ces sites web reçoivent votre adresse IP lorsque votre navigateur charge du contenu depuis eux et peuvent définir leurs propres cookies. Nous ne pouvons pas les désactiver depuis ici.
+
+    Voir <a=/help/article/sources>D'où proviennent les titres</a>.
+cookie-ads = Nous n'utilisons pas de cookies publicitaires, de traceurs ni d'outils d'analyse.
+help-ui-foryou = Aide pour vous sur cet appareil
+help-ui-recommended-inline = Recommandé pour vous
+help-card-diagnostics-title = Vérifier cet appareil
+help-card-diagnostics-body = Testez votre connexion, votre navigateur et nos services.
+help-card-profiles-title = Vos profils
+help-card-profiles-body = Voyez quels profils ont un code PIN ou le mode Enfants.
+help-card-data-title = Vos données enregistrées
+help-card-data-body = Effacer la progression, réinitialiser les recommandations ou repartir de zéro.
+help-card-language-title = Langue
+help-card-language-body = Choisissez une langue ou utilisez celle de votre navigateur.
+help-card-cookies-title = Choix des cookies
+help-card-cookies-body = Consultez ce qui est stocké et ce qui est partagé.
+help-card-refresh-title = Dernière version
+help-card-refresh-body = Rechargez pour obtenir la dernière version.
+help-act-run = Lancer la vérification
+help-act-running = Vérification…
+help-act-copy = Copier les résultats
+help-act-copied = Copié
+help-act-email = Envoyer les résultats par e-mail
+help-act-fix = Comment corriger
+help-act-summary-ok = Tout semble en ordre sur cet appareil.
+help-act-summary-issues =
+    { $count ->
+        [one] 1 élément nécessite une attention.
+       *[other] { $count } éléments nécessitent une attention.
+    }
+help-act-d-connection = Connexion Internet
+help-act-d-browser = Navigateur
+help-act-d-video = Lecture vidéo
+help-act-d-storage = Données enregistrées
+help-act-d-fullscreen = Plein écran
+help-act-d-engine = Service de recommandation
+help-act-d-sources = Sources de flux
+help-act-d-catalog = Catalogue de films et de séries
+help-act-v-online = En ligne
+help-act-v-offline = Hors ligne
+help-act-v-speed = { $type }, environ { $mbps } Mbps
+help-act-v-supported = Pris en charge
+help-act-v-unsupported = Non pris en charge
+help-act-v-hls-native = HLS intégré
+help-act-v-mse = Media Source Extensions
+help-act-v-blocked = Bloqué ou plein
+help-act-v-reachable = Accessible en { $ms } ms
+help-act-v-unreachable = Inaccessible
+help-act-v-timeout = Aucune réponse en { $s } secondes
+help-act-data-title = Vos données sur cet appareil
+help-act-data-profiles =
+    { $count ->
+        [one] 1 profil
+       *[other] { $count } profils
+    }
+help-act-data-progress =
+    { $count ->
+        [one] 1 titre avec progression enregistrée
+       *[other] { $count } titres avec progression enregistrée
+    }
+help-act-data-lang = Langue : { $lang }
+help-act-clear-progress = Effacer la progression de visionnage
+help-act-reset-recs = Réinitialiser les recommandations
+help-act-clear-all = Effacer toutes les données enregistrées
+help-act-confirm = Êtes-vous sûr ? Cette action est irréversible.
+help-act-yes = Oui, faire
+help-act-cancel = Annuler
+help-act-done = Terminé.
+help-act-reloading = Terminé. Rechargement…
+help-act-profiles-title = Vos profils
+help-act-profile-kids = Enfants
+help-act-profile-pin = Code PIN activé
+help-act-open-profiles = Ouvrir « Qui regarde ? »
+help-act-lang-current = Affichage : { $lang }
+help-act-lang-browser = Votre navigateur préfère : { $lang }
+help-act-lang-use-browser = Utiliser la langue de mon navigateur
+help-act-cookies-none = Vous n'avez pas encore choisi.
+help-act-cookies-on = La personnalisation est activée.
+help-act-cookies-off = La personnalisation est désactivée.
+help-act-cookies-open = Ouvrir les préférences de cookies
+help-act-refresh-body = Si une page semble incorrecte ou si une correction ne vous a pas encore atteint, rechargez pour récupérer la dernière version de { $brand }.
+help-act-refresh-now = Recharger maintenant
+help-act-version = Version { $version }
+nav-home = Accueil
+nav-series = Séries
+nav-films = Films
+nav-games = Jeux
+nav-new-popular = Nouveautés et populaires
+nav-my-list = Ma liste
+nav-browse-language = Parcourir par langue
+nav-new-hot = Nouveautés et tendances
+nav-clips = Extraits
+nav-search = Rechercher
+nav-kids = Enfants
+nav-profiles-more = Profils et plus
+nav-account-settings = Paramètres du compte
+nav-genres = Genres
+nav-categories = Catégories
+tabs-everyone-watching = Tout le monde regarde
+tabs-just-landed = Nouveautés
+tabs-top10-movies = Top 10 des films
+tabs-top10-series = Top 10 séries
+tabs-coming-soon = À venir
+footer-tv-shows = Séries TV
+footer-movies = Films
+footer-settings = Paramètres
+footer-privacy = Politique de confidentialité
+footer-terms = Conditions d'utilisation
+footer-dmca = DMCA
+footer-disclaimer = Avertissement
+footer-cookie-policy = Politique relative aux cookies
+footer-contact = Nous contacter
+footer-help = Centre d'aide
+footer-cookie-preferences = Préférences de cookies
+notif-today = Aujourd'hui
+notif-ago-days =
+    { $n ->
+        [one] il y a 1 jour
+       *[other] il y a { $n } jours
+    }
+notif-ago-weeks =
+    { $n ->
+        [one] il y a 1 semaine
+       *[other] il y a { $n } semaines
+    }
+notif-ago-months =
+    { $n ->
+        [one] il y a 1 mois
+       *[other] il y a { $n } mois
+    }
+notif-h-trending = Tendances actuelles
+notif-h-new-arrival = Nouveauté
+notif-h-coming-soon = Bientôt disponible
+notif-title = Notifications
+notif-desc-available = Maintenant disponible dans votre bibliothèque de streaming.
+notif-caught-up = Vous êtes à jour
+notif-caught-up-body = Les nouvelles notifications et nouveautés apparaîtront ici.
+media-resume = Reprendre
+media-play = Lecture
+media-remove-from-list = Retirer de Ma liste
+media-add-to-list = Ajouter à Ma liste
+media-in-list = Dans Ma liste
+media-series = Série
+media-film = Film
+media-trending = Tendances
+media-popular = Populaires
+media-genre-fallback = Action
+media-seasons =
+    { $n ->
+        [one] 1 saison
+       *[other] { $n } saisons
+    }
+media-season-n = Saison { $n }
+media-directed-by = Réalisé par { $name }
+media-created-by = Créé par { $name }
+media-badge-masterpiece = Chef-d'œuvre acclamé par la critique
+media-badge-acclaimed = Acclamé par la critique
+media-badge-trending-now = Tendance actuelle
+media-percent-match = { $pct } % d'adéquation
+media-percent-watched = { $pct } % visionné
+media-coming = Disponible { $when }
+row-explore-all = Tout explorer ›
+row-jump-back-in = Reprendre ›
+media-cast = Distribution :
+media-genres = Genres :
+media-this-show-is = Cette série est :
+media-this-movie-is = Ce film est :
+media-episodes = Épisodes
+media-no-description = Aucune description disponible.
+media-no-episodes = Aucun épisode disponible.
+media-more-like-this = Similaire à ceci
+media-rating-aria = Classification par âge { $rating }
+media-rating-nr = Non classé
+share-copied = Lien copié
+share-copied-instagram = Lien copié — collez-le dans Instagram
+share-copied-snapchat = Lien copié — collez-le dans Snapchat
+share-messages = Messages
+share-copy-link = Copier le lien
+settings-no-history = Aucun historique récent à afficher.
+login-more-reasons = Plus de raisons de rejoindre
+login-reason-screens-title = Regardez sur n'importe quel écran
+login-reason-hd-title = Streaming en HD et 4K
+login-reason-subs-title = Sous-titres à votre goût
+login-reason-place-title = Ne perdez jamais votre place
+login-reason-hd-body = Profitez d'une qualité d'image époustouflante avec des streams HD et Ultra HD, alimentés par les meilleures sources disponibles.
+login-reason-subs-body = Choisissez parmi plus de 40 langues. Personnalisez la taille de la police, la couleur et l'arrière-plan selon vos préférences.
+login-reason-place-body = Reprendre la lecture reprend exactement là où vous vous étiez arrêté — pour chaque série et saison, sur n'importe quel appareil.
+login-ready = Prêt à regarder ? Saisissez votre e-mail pour créer ou vous connecter à votre compte.
+mylist-empty = Votre liste est vide
+mylist-empty-hint = Ajoutez des séries et des films pour suivre ce que vous voulez regarder.
+search-results-for = Résultats pour « { $query } »
+search-no-matches = Aucun résultat trouvé
+search-try-another = Essayez un autre mot-clé.
+search-explore = Explorer les titres
+search-explore-hint = Tapez dans la barre de recherche ci-dessus pour trouver des films, des séries ou des personnes.
+player-loading = Chargement du titre...
+player-not-found = Média introuvable
+player-not-found-hint = Impossible de localiser les informations du titre.
+clips-muted = Muet
+clips-sound = Son
+clips-info = Infos
+lang-original = Langue originale
+lang-no-titles = Aucun titre disponible dans cette langue.
+player-skip-intro = Passer l'intro
+player-next-episode = Épisode suivant
+player-subs-off = Désactivées
+player-unavailable = Lecture indisponible
+player-back = Retour
+profile-manage = Gérer les profils
+profile-transfer = Transférer le profil
+profile-kids = Profil Enfants
+profile-lock = Verrouillage du profil
+profile-choose-icon = Choisir une icône
+profile-choose-icon-hint = Sélectionnez un avatar pour votre profil
+common-done = Terminé
+profile-pin-invalid = Le code PIN doit comporter exactement 4 chiffres.
+login-reason-screens-body = Regardez sur votre smart TV, votre ordinateur portable, votre tablette ou votre téléphone. Où que vous soyez, { $brand } vous accompagne.
+player-pause = Pause (Espace)
+player-play = Lecture (Espace)
+player-unmute = Rétablir le son (M)
+player-mute = Couper le son (M)
+player-error-no-source = Impossible de diffuser la vidéo. Tous les fournisseurs de sources étaient indisponibles ou non pris en charge par votre navigateur.
+player-episode = Épisode
+genre-action = Action
+genre-anime = Anime
+genre-black-stories = Récits noirs
+genre-british = Britanniques
+genre-classics = Classiques
+genre-comedies = Comédies
+genre-crime = Policier
+genre-cult = Culte
+genre-documentaries = Documentaires
+genre-dramas = Dramas
+genre-european = Européens
+genre-fantasy = Fantastique
+genre-halloween = Halloween
+genre-hollywood = Hollywood
+genre-horror = Horreur
+genre-independent = Indépendants
+genre-international = International
+genre-kids-family = Enfants & Famille
+genre-lgbtq = LGBTQ
+genre-music-musicals = Musique & Musicals
+genre-romance = Romance
+genre-sci-fi = Science-fiction
+genre-shorts = Court-métrages
+genre-sports = Sports
+genre-stand-up-comedy = Humour stand-up
+genre-thriller = Thriller
+genre-documentary = Documentaire
+genre-emmys = Emmys
+genre-kids = Enfants
+genre-mystery = Mystère
+genre-reality = Téléréalité
+genre-sci-fi-fantasy = Science-fiction & Fantasy
+genre-science-nature = Science & Nature
+genre-sport = Sport
+genre-stand-up-chat-shows = Stand-up & Émissions
+genre-teen = Ados
+genre-us = États-Unis
+genre-astrology = Astrologie
+genre-book-adaptations = Adaptations de livres
+genre-moods = Ambiances
+genre-pride = Fierté
+genre-documentary-series = Séries documentaires
+genre-mysteries = Mystères
+genre-adventure = Aventure
+genre-children-family = Enfants & Famille
+genre-history = Histoire
+genre-war = Guerre
+genre-western = Western
+genre-animal-time = Temps des animaux
+genre-cars-trucks-trains = Voitures, camions & trains
+genre-dinosaurs = Dinosaures
+genre-feel-good = Feel-good
+genre-for-little-ones = Pour les tout-petits
+genre-friends = Amis
+genre-funny = Comique
+genre-girls-take-the-lead = Les filles en tête
+genre-singing-dancing = Chant & Danse
+genre-spooky-stuff = Choses effrayantes
+genre-watch-with-the-family = À regarder en famille
+genre-animals = Animaux
+genre-animated = Animé
+genre-princess-tales = Contes de princesses
+genre-animation = Animation
+genre-drama = Drame
+genre-comedy = Comédie
+genre-science-fiction = Science-fiction
+genre-music = Musique
+genre-family = Famille
+genre-action-adventure = Action & Aventure
+genre-news = Actualités
+genre-soap = Feuilleton
+genre-talk = Talk-show
+genre-war-politics = Guerre & Politique
+genre-tv-movie = Film TV
+profile-manage-title = Gérer les profils :
+profile-whos-watching = Qui regarde ?
+profile-sign-out = Se déconnecter de { $brand }
+profile-enter-pin = Saisissez votre code PIN pour accéder au profil de { $name }.
+profile-add = Ajouter un profil
+profile-edit-title = Modifier le profil
+profile-edit-hint = Mettez à jour le nom, l'icône et le verrouillage de ce profil.
+profile-add-hint = Ajoutez un profil pour une autre personne qui regarde { $brand }.
+nf-original = UNE ORIGINAL 404 EN ERREUR
+nf-unknown-agent = Agent inconnu
+nf-system-code = Code système
+nf-endpoint = Point de terminaison demandé
+nf-timestamp = Horodatage de l'incident
+nf-agent = Agent de la plateforme
+nf-return-home = Retour à l'accueil
+nf-more-info = Plus d'infos
+nf-system-notice = Avis système :
+nf-dim1-title = 404 : Le Vide de Silicium
+nf-dim2-title = 404 : Signal Hors Ligne
+nf-dim3-title = 404 : Indices Brisés
+nf-dim4-title = 404 : Bobines Perdues
+nf-dim5-title = 404 : L'Observateur
+nf-dim6-title = 404 : Dérive Cosmique
+nf-dim1-synopsis = Au cœur de la carte mère, un cube pixel rougeoyant tombe dans un vortex sombre, observé par un œil écarlate en silhouette qui apparaît depuis les ombres d'une toile déchirée.
+nf-dim2-synopsis = Rangée après rangée, les sièges en velours de la salle de cinéma sont complètement vides. Sur scène, un vieux téléviseur CRT cassé clignote avec des barres de couleur et du bruit de signal sous un ciel glitché.
+nf-dim3-synopsis = Un détective solitaire en trench-coat fouille une pièce sombre, traçant un actif web manquant qui s'est brisé en mille éclats de verre. Chaque piste est une redirection cassée.
+nf-dim4-synopsis = Une immense grille de bobines de films oubliées respire en rouge à fort contraste. Pendant que vous fouillez les archives, la pellicule cède, vous laissant dans l'obscurité cinématographique.
+nf-dim5-synopsis = Un faisceau de projecteur numérique lumineux traverse un trou noir tourbillonnant, brillant à travers un objectif brisé qui vous fixe comme un observateur mécanique géant.
+nf-dim6-synopsis = En dérive dans un nuage cosmique, d'anciens câbles spatiaux flottent à travers une nébuleuse stellaire, essayant de router des paquets à travers une déchirure dans la trame de l'espace-temps. Délai de connexion expiré.
+nf-zone-1 = Pannes Matérielles
+nf-zone-2 = Pannes de Signal
+nf-zone-3 = Fichiers de Données Perdus
+nf-zone-4 = Corruption analogique
+nf-zone-5 = Sentinelles du vide
+nf-zone-6 = Dérive cosmique
+legal-privacy-title = Politique de confidentialité
+legal-privacy-updated = Dernière mise à jour : août 2026
+legal-privacy-1-title = 1. Introduction
+legal-privacy-1-body = { $brand } est un agrégateur de liens et un moteur de recherche. Cette politique de confidentialité explique comment nous collectons, utilisons et protégeons vos données personnelles lorsque vous utilisez notre service.
+legal-privacy-2-title = 2. Informations que nous collectons
+legal-privacy-2-body = Nous collectons des informations personnelles limitées afin de fournir et d'améliorer le service :
+legal-privacy-2-b1 = <strong>Informations du compte :</strong> Adresse e-mail et nom d'affichage lors de la création d'un compte.
+legal-privacy-2-b2 = <strong>Données d'utilisation :</strong> Historique de visionnage et préférences anonymisés, limités à votre profil.
+legal-privacy-2-b3 = <strong>Cookies de session :</strong> Utilisés pour maintenir votre connexion en toute sécurité.
+legal-privacy-3-title = 3. Ce que nous ne faisons pas
+legal-privacy-3-body = Nous nous engageons à respecter votre vie privée :
+legal-privacy-3-b1 = <strong>Partager vos données :</strong> Nous ne partageons pas de données personnelles avec des annonceurs ou des courtiers en données.
+legal-privacy-3-b2 = <strong>Vendre vos données :</strong> Nous ne vendons, ne louons et n'échangeons jamais de données personnelles avec des tiers.
+legal-privacy-3-b3 = <strong>Empreinte numérique du navigateur :</strong> Nous ne réalisons pas d'empreinte numérique du navigateur ni aucune forme d'identification d'appareil.
+legal-privacy-4-title = 4. Base légale du traitement (RGPD du Royaume-Uni)
+legal-privacy-4-body = En vertu du Règlement général sur la protection des données du Royaume-Uni (RGPD du RU), les bases légales sur lesquelles nous nous appuyons pour traiter ces informations sont les suivantes :
+legal-privacy-4-b1 = <strong>Nécessité contractuelle :</strong> Pour vous fournir les fonctionnalités d'agrégation de liens et de profil auxquelles vous vous êtes inscrit.
+legal-privacy-4-b2 = <strong>Intérêts légitimes :</strong> Pour analyser l'utilisation générale de la plateforme et améliorer les performances, en utilisant des données strictement anonymisées et agrégées.
+legal-privacy-5-title = 5. Comment nous stockons vos données
+legal-privacy-5-body = Vos données sont stockées en toute sécurité à l'aide de Supabase (notre fournisseur d'infrastructure backend). Nous utilisons des politiques de sécurité au niveau des lignes (RLS) pour garantir que seul vous pouvez accéder à vos données.
+legal-privacy-6-title = 6. Services tiers
+legal-privacy-6-body = Nous utilisons des API tierces, notamment TMDB (pour les métadonnées) et Cloudflare Turnstile (pour la protection contre les robots). Ces services sont régis par leurs propres politiques de confidentialité.
+legal-privacy-7-title = 7. Vos droits en matière de protection des données
+legal-privacy-7-body = Conformément au RGPD britannique, vous disposez des droits suivants :
+legal-privacy-7-b1 = <strong>Droit d'accès :</strong> Demander une copie des données personnelles que nous détenons à votre sujet.
+legal-privacy-7-b2 = <strong>Droit à l'effacement :</strong> Demander la suppression de vos données personnelles (le « droit à l'oubli »). Vous pouvez supprimer votre compte directement depuis la page Paramètres.
+legal-privacy-7-b3 = <strong>Droit de rectification :</strong> Demander la correction de toute donnée personnelle inexacte que nous détenons.
+legal-privacy-7-b4 = <strong>Droit d'opposition :</strong> Vous opposer au traitement de vos données personnelles lorsque nous nous fondons sur des intérêts légitimes.
+legal-privacy-8-title = 8. Contact
+legal-privacy-8-body = Si vous avez des questions concernant cette politique de confidentialité ou souhaitez exercer vos droits sur vos données, veuillez contacter le mainteneur du dépôt à l'adresse { $support_email }.
+legal-terms-title = Conditions d'utilisation
+legal-terms-updated = Dernière mise à jour : août 2026
+legal-terms-1-title = 1. Acceptation des conditions
+legal-terms-1-body = En accédant à { $brand } ou en l'utilisant, vous acceptez d'être lié par les présentes Conditions d'utilisation et notre politique de confidentialité. Si vous n'êtes pas d'accord, n'utilisez pas le service.
+legal-terms-2-title = 2. Nature du service
+legal-terms-2-body = { $brand } est un agrégateur de liens et un moteur de recherche. Nous n'hébergeons, ne téléchargeons, ne transmettons et ne contrôlons aucun contenu vidéo sur nos serveurs. Tous les médias proviennent de plateformes tierces.
+legal-terms-3-title = 3. Comptes utilisateurs
+legal-terms-3-body = Pour accéder à certaines fonctionnalités (telles que la sauvegarde d'une liste de lecture ou la synchronisation de la progression), vous devez créer un compte. Vous êtes responsable de la sécurité des identifiants de votre compte.
+legal-terms-4-title = 4. Utilisation acceptable
+legal-terms-4-body = Vous vous engagez à ne pas utiliser le service pour :
+legal-terms-4-b1 = Contourner, désactiver ou interférer avec les fonctionnalités liées à la sécurité du service.
+legal-terms-4-b2 = Utiliser des outils automatisés (tels que des robots, des scrapers ou des crawlers) pour accéder au service ou effectuer des requêtes à un rythme susceptible d'altérer les performances.
+legal-terms-4-b3 = Tenter de sonder, d’analyser ou de tester la vulnérabilité de l’infrastructure du service.
+legal-terms-4-b4 = Adopter tout comportement illégal, nuisible ou que nous jugeons inapproprié.
+legal-terms-5-title = 5. Propriété intellectuelle
+legal-terms-5-body = La marque { $brand }, la conception de l’interface et le code source original sont protégés par le droit d’auteur. Tout contenu média accessible via { $brand } reste la propriété de ses titulaires de droits respectifs.
+legal-terms-6-title = 6. Avertissements et limitation de responsabilité
+legal-terms-6-body = Le service est fourni « en l’état » et « selon disponibilité », sans aucune garantie de quelque nature que ce soit. { $brand } ne garantit pas une disponibilité continue et n’est pas responsable des dommages indirects ou consécutifs.
+legal-terms-7-title = 7. Contenu de tiers
+legal-terms-7-body = { $brand } donne accès à des liens pointant vers du contenu hébergé sur des serveurs tiers indépendants. Nous n’avons aucun contrôle sur le contenu, les politiques de confidentialité ou les pratiques des sites tiers, et n’assumons aucune responsabilité à cet égard.
+legal-terms-8-title = 8. Résiliation
+legal-terms-8-body = Nous nous réservons le droit de suspendre ou de résilier votre compte et votre accès au service, à notre seule discrétion et sans préavis, en cas de comportement que nous estimons contraire aux présentes Conditions ou nuisible à d’autres utilisateurs, à nous-mêmes ou à des tiers.
+legal-terms-9-title = 9. Droit applicable
+legal-terms-9-body = Les présentes Conditions d’utilisation sont régies par les lois d’Angleterre et du Pays de Galles et interprétées conformément à celles-ci, sans égard aux dispositions relatives aux conflits de lois.
+legal-terms-10-title = 10. Contact
+legal-terms-10-body = Pour toute question concernant les présentes Conditions d’utilisation, veuillez nous contacter via la page Contact.
+legal-cookie-policy-title = Politique de cookies
+legal-cookie-policy-updated = Dernière mise à jour : 16 août 2026
+legal-cookie-policy-1-title = Comment nous utilisons les cookies
+legal-cookie-policy-1-body = Nous utilisons des cookies et des technologies de suivi similaires pour suivre l’activité sur notre service et conserver certaines informations. Les cookies sont des fichiers contenant une petite quantité de données, qui peuvent inclure un identifiant unique anonyme.
+legal-dmca-title = Avis de port sûr DMCA
+legal-dmca-updated = Dernière mise à jour : août 2026
+legal-dmca-1-title = 1. Notre rôle — Agrégateur de liens, pas un hébergeur
+legal-dmca-1-body = { $brand } est un agrégateur de liens et un moteur de recherche. Nous n'hébergeons, ne téléchargeons, ne stockons, ne transmettons ni ne contrôlons aucun contenu vidéo ou multimédia. Tout le contenu est servi par des serveurs tiers qui sont entièrement hors de notre contrôle.
+legal-dmca-2-title = 2. Procédure de notification et de retrait
+legal-dmca-2-body = Si vous êtes titulaire d'un droit d'auteur, ou un agent autorisé à agir au nom d'un titulaire de droits d'auteur, et que vous estimez qu'un lien de notre index porte atteinte à vos droits d'auteur, veuillez envoyer une notification écrite à { $support_email } contenant :
+legal-dmca-2-b1 = <strong>Signature physique ou électronique</strong> du titulaire des droits d'auteur ou de son agent autorisé.
+legal-dmca-2-b2 = <strong>Identification de l'œuvre protégée</strong> que vous estimez avoir été contrefaite, ou, si plusieurs œuvres sont couvertes par une seule notification, une liste représentative de ces œuvres.
+legal-dmca-2-b3 = <strong>Identification du matériel</strong> (c'est-à-dire le lien ou l'URL spécifique de { $brand }) que vous estimez contrefaisant, avec suffisamment d'informations pour nous permettre de le localiser.
+legal-dmca-3-title = 3. Éléments supplémentaires requis
+legal-dmca-3-body = Votre notification DMCA doit également inclure :
+legal-dmca-3-b1 = <strong>Vos coordonnées</strong> — nom, adresse, numéro de téléphone et adresse e-mail.
+legal-dmca-3-b2 = <strong>Une déclaration de bonne foi</strong> — indiquant que vous avez la conviction de bonne foi que l'utilisation du matériel de la manière dénoncée n'est pas autorisée par le titulaire des droits d'auteur, son agent ou la loi.
+legal-dmca-3-b3 = <strong>Une déclaration d'exactitude</strong> — indiquant que les informations contenues dans la notification sont exactes et que, sous peine de fausse déclaration, vous êtes autorisé à agir au nom du titulaire des droits d'auteur.
+legal-dmca-3-b4 = <strong>Envoyez les notifications à :</strong> { $support_email }
+legal-dmca-3-b5 = Nous examinerons toutes les notifications et retirerons de notre index les liens qui satisfont aux exigences légales ci-dessus.
+legal-dmca-3-b6 = <strong>Notification de contestation :</strong> Si vous estimez que votre lien a été retiré par erreur, vous pouvez soumettre une notification de contestation conformément au 17 U.S.C. § 512(g).
+legal-dmca-4-title = 4. Limitation importante — Nous ne pouvons retirer que des liens
+legal-dmca-4-body = Comme { $brand } n'héberge aucun fichier média, nous ne pouvons que retirer le lien de notre index de recherche. Nous ne pouvons pas supprimer le contenu sous-jacent du serveur sur lequel il est hébergé.
+legal-dmca-5-title = 5. Politique relative aux contrevenants récidivistes
+legal-dmca-5-body = Dans les circonstances appropriées et à notre seule discrétion, { $brand } désactivera ou mettra fin à l'accès des utilisateurs ou des comptes qui sont des contrevenants récidivistes.
+legal-dmca-6-title = 6. Absence d'aveu de responsabilité
+legal-dmca-6-body = Le retrait d'un lien de notre index en réponse à un avis DMCA ne constitue pas un aveu de la part de { $brand } qu'une infraction a eu lieu.
+legal-disclaimer-title = Avertissement
+legal-disclaimer-updated = Dernière mise à jour : août 2026
+legal-disclaimer-1-title = 1. Absence d'hébergement de contenu
+legal-disclaimer-1-body = { $brand } est un agrégateur de liens et un moteur de recherche pour les liens de médias intégrés publiquement disponibles. Nous n'hébergeons, ne téléchargeons, ne stockons, ne transmettons et ne contrôlons aucun contenu vidéo, audio ou média sur nos serveurs.
+legal-disclaimer-2-title = 2. Contenu tiers — Absence de responsabilité
+legal-disclaimer-2-body = Tout le contenu accessible via les liens indexés par { $brand } provient de sources tierces externes et indépendantes. { $brand } n'a aucun contrôle sur ce contenu et n'assume aucune responsabilité quant à sa légalité, son exactitude, sa qualité ou sa disponibilité.
+legal-disclaimer-3-title = 3. Acceptation des risques par l'utilisateur
+legal-disclaimer-3-body = Vous reconnaissez et acceptez que votre utilisation de { $brand } et votre accès à tout contenu via des liens intégrés externes se font entièrement à vos risques et périls. { $brand } décline expressément toute garantie, expresse ou implicite.
+legal-disclaimer-4-title = 4. Disponibilité des liens
+legal-disclaimer-4-body = Les liens intégrés indexés par { $brand } pointent vers des ressources sur des serveurs tiers. Nous ne pouvons garantir la disponibilité continue, la qualité ou l'intégrité de tout contenu lié, et les liens peuvent cesser de fonctionner ou devenir indisponibles sans préavis.
+legal-disclaimer-5-title = 5. Exactitude des informations
+legal-disclaimer-5-body = Les métadonnées affichées sur { $brand } (y compris les titres, descriptions, notes et images) proviennent de fournisseurs de données tiers tels que TMDB. Nous ne garantissons pas l'exactitude ou l'exhaustivité de ces métadonnées.
+help-ui-kind-policy = Politique
+help-ui-filter-all = Tous
+help-ui-filter-articles = Articles d'aide
+help-ui-filter-policies = Politiques
+help-ui-recent = Recherches récentes
+help-ui-clear = Effacer
+help-ui-did-you-mean = Vouliez-vous dire « { $query } » ?
+help-ui-viewed = Vus récemment
+help-ui-on-this-page = Sur cette page
+help-ui-other-policies = Autres politiques
+help-ui-section-link = Lien vers cette section
+help-ui-policy-questions = Des questions sur cette politique ?
+help-topic-legal = Légal et politiques
+help-group-policies = Politiques
+help-art-fake-sites-title = Comment repérer les faux sites et messages { $brand }
+help-art-fake-sites-summary = Les adresses officielles, ce que nous ne demandons jamais, et quoi faire face à une copie.
+help-art-fake-sites-keywords = faux arnaque hameçonnage copie imitation adresse officielle téléchargement sécurisé mot de passe paiement e-mail
+help-art-fake-sites-body =
+    Des copies de sites populaires apparaissent constamment. Voici les seules adresses qui appartiennent à { $brand } :
+
+    - <b>streams.watch</b>, l'application
+    - <b>help.streams.watch</b>, ce Centre d'aide
+    - Les adresses e-mail <b>@streams.watch</b>, telles que <a=mailto:{ $help_email }>{ $help_email }</a>
+
+    ## Ce que nous ne demandons jamais
+    - Un numéro de carte, des coordonnées bancaires ou tout paiement. { $brand } est gratuit. Voir <a=/help/article/free-to-use>{ $brand } est-il gratuit ?</a>
+    - Votre mot de passe par e-mail, chat ou via un formulaire hors de la page de connexion.
+    - Un téléchargement, une extension, un codec ou une mise à jour pour regarder.
+
+    ## Si vous trouvez une copie
+    1. Fermez la page et ne saisissez aucun détail.
+    2. Si vous avez saisi un mot de passe, modifiez-le sur le site concerné.
+    3. Envoyez l'adresse à <a=mailto:{ $help_email }>{ $help_email }</a> afin que nous puissions la signaler.
+help-art-security-report-title = Signaler un problème de sécurité
+help-art-security-report-summary = Comment nous signaler une vulnérabilité en toute sécurité.
+help-art-security-report-keywords = sécurité vulnérabilité bug prime responsable divulgation exploitation piratage signalement faiblesse
+help-art-security-report-body =
+    Si vous avez trouvé un moyen de lire les données d'une autre personne, de contourner le code PIN d'un profil ou de compromettre le site, veuillez nous en informer avant de le dire à quiconque.
+
+    1. Écrivez à <a=mailto:{ $help_email }>{ $help_email }</a> avec l'objet <b>Sécurité</b>.
+    2. Décrivez ce que vous avez trouvé, les étapes pour le reproduire et la page ou l'adresse concernée.
+    3. N'accédez pas aux données d'autres personnes et ne testez pas avec des inondations automatisées de requêtes.
+
+    Nous lisons chaque signalement. Les mêmes détails figurent dans le fichier lisible par machine à l'adresse <a=/.well-known/security.txt>/.well-known/security.txt</a>.
+help-art-translate-title = Aider à traduire { $brand }
+help-art-translate-summary = Le texte de l'interface est dans des fichiers simples, un par langue, et chacun peut l'améliorer.
+help-art-translate-keywords = traduire traduction localisation langue contribuer ftl fluent grammaire genre pluriel
+help-art-translate-body =
+    Tout le texte de l'interface est stocké dans un fichier texte simple par langue. Une traduction ne nécessite pas de programmation.
+
+    ## Ce qu'il faut savoir
+    - Les messages ressemblent à <b>clé = texte</b>. Ne modifiez que le texte après le signe égal.
+    - Les mots entre accolades, comme <b>{ "{ $brand }" }</b>, sont remplis par l'application. Conservez-les tels quels et déplacez-les là où votre langue l'exige.
+    - Certains messages ont des formes pour un et pour plusieurs (<b>1 saison</b>, <b>2 saisons</b>). Les langues avec plus de deux formes peuvent toutes les ajouter.
+    - Si votre langue modifie un mot selon le genre ou le cas, écrivez la forme qui convient à la phrase.
+
+    ## Comment envoyer une traduction
+    Écrivez à <a=mailto:{ $contribute_email }>{ $contribute_email }</a> avec la langue et soit le fichier, soit un lien vers votre modification. Les locuteurs natifs qui se relisent mutuellement sont le meilleur contrôle dont nous disposons.
+help-art-cookies-explained-title = Explication des cookies et du stockage local
+help-art-cookies-explained-summary = Ce que votre navigateur conserve pour { $brand }, en termes simples.
+help-art-cookies-explained-keywords = cookies stockage local données navigateur suivi consentement bannière préférences session tiers
+help-art-cookies-explained-body =
+    Les <b>cookies</b> sont de petites notes qu'un site web demande à votre navigateur de conserver. Le <b>stockage local</b> est un emplacement similaire que seul le site peut lire et qui n'est pas envoyé avec chaque requête.
+
+    { $brand } utilise le stockage local pour vos profils, vos codes PIN, votre progression de visionnage et votre langue. Ceux-ci restent sur votre appareil. D'autres sites web qui nous fournissent des images ou des vidéos peuvent définir leurs propres cookies, ce que nous ne pouvons pas contrôler. Voir <a=/help/article/sources>D'où viennent les titres</a>.
+
+    ## Vos choix
+    - La première fois que vous visitez le site, une bannière demande si les recommandations peuvent utiliser ce que vous regardez. Vous pouvez changer d'avis à tout moment.
+    - En choisissant <b>Refuser</b>, tout ce qui est nécessaire pour utiliser le site est conservé et la personnalisation est désactivée.
+    - Votre navigateur peut également bloquer ou supprimer les cookies et les données du site. S'il le fait, vos profils et votre progression sont perdus.
+
+    @@ cookies
+help-art-stuck-loading-title = La page reste sur le logo ou un écran vide
+help-art-stuck-loading-summary = Que faire si { $brand } ne termine jamais son démarrage.
+help-art-stuck-loading-keywords = chargement bloqué logo écran blanc écran de démarrage splash ne démarre pas webassembly wasm figé démarrage
+help-art-stuck-loading-body =
+    Lors du démarrage de { $brand }, vous voyez le logo en forme de cube avec une rangée de points animés. Cela devrait prendre quelques secondes. { $brand } fonctionne comme une application WebAssembly, donc un navigateur ou un paramètre qui désactive WebAssembly vous laissera bloqué sur cet écran.
+
+    1. Rechargez la page avec <b>Ctrl + Shift + R</b> (<b>Cmd + Shift + R</b> sur Mac) pour récupérer la dernière version.
+    2. Ouvrez la page dans une fenêtre de navigation privée. Si cela fonctionne, une extension est à l'origine du problème. Consultez <a=/help/article/extensions-blockers>Extensions qui bloquent le lecteur</a>.
+    3. Mettez à jour votre navigateur. Consultez <a=/help/article/supported-browsers>Navigateurs pris en charge</a>.
+    4. Désactivez tout mode qui limite les fonctions web, comme un mode verrouillé ou un mode de sécurité strict, pour ce site.
+    5. Effacez les données de ce site. Consultez <a=/help/article/clear-data>Comment effacer vos données enregistrées</a>.
+
+    @@ refresh
+help-art-slow-pages-title = Les pages se chargent lentement
+help-art-slow-pages-summary = Accélérer la navigation sur une connexion lente ou un appareil ancien.
+help-art-slow-pages-keywords = lent lag performance vitesse chargement mémoire vieux téléphone saccadé défilement aperçus
+help-art-slow-pages-body =
+    La première visite télécharge l'application, environ 3 Mo. Ensuite, l'attente est principalement due aux images et aux aperçus.
+
+    - Désactivez <b>Aperçus en lecture automatique</b> dans <b>Paramètres</b>, sous <b>Paramètres de lecture</b>. Les bandes-annonces qui démarrent seules consomment des données et de la mémoire.
+    - Fermez les onglets et les autres applications qui utilisent le réseau ou beaucoup de mémoire.
+    - Utilisez un navigateur récent. Les anciens exécutent l'application plus lentement.
+    - En données mobiles, passez au Wi-Fi si possible.
+
+    @@ diagnostics
+help-art-vpn-network-title = VPN, réseaux scolaires et professionnels
+help-art-vpn-network-summary = Pourquoi certains réseaux bloquent des titres ou des images, et quoi essayer.
+help-art-vpn-network-keywords = vpn proxy école travail réseau pare-feu dns filtre bloqué safedns restreint wifi
+help-art-vpn-network-body =
+    { $brand } charge les détails et les images depuis un catalogue de films public et diffuse depuis des sources indépendantes. Certains réseaux bloquent ces sites, et certaines sources refusent certaines adresses.
+
+    - <b>VPN ou proxy.</b> Certaines sources ne répondent pas aux adresses VPN. Désactivez-le ou choisissez un autre pays.
+    - <b>Wi-Fi scolaire, professionnel ou public.</b> Les filtres bloquent souvent le streaming ou le catalogue. Essayez les données mobiles de votre téléphone.
+    - <b>Filtres DNS.</b> Un service DNS de filtrage peut bloquer le catalogue et laisser les lignes ou les images vides. Utilisez un autre DNS ou désactivez le filtre pour ce site.
+
+    La vérification de l'appareil indique quel service votre réseau ne peut pas atteindre.
+
+    @@ diagnostics
+help-art-is-down-title = { $brand } est-il en panne ?
+help-art-is-down-summary = Vérifiez quelles parties fonctionnent depuis votre appareil.
+help-art-is-down-keywords = panne indisponibilité statut ne fonctionne pas hors ligne indisponible serveur maintenance erreur site
+help-art-is-down-body =
+    { $brand } comporte trois parties qui peuvent tomber en panne séparément :
+
+    - <b>L'application</b>, que vous consultez actuellement.
+    - <b>Le catalogue de films et séries</b>, qui fournit les détails et les images.
+    - <b>Les sources de streaming</b>, qui fournissent la vidéo.
+
+    Lancez la vérification pour voir laquelle répond depuis votre appareil. Si le catalogue ou les sources ne répondent pas pour tout le monde, attendez quelques minutes et réessayez. Si l'une est inaccessible uniquement pour vous, consultez <a=/help/article/vpn-network>VPN, réseaux scolaires et professionnels</a>.
+
+    @@ diagnostics
+help-art-no-sound-title = Il n'y a pas de son
+help-art-no-sound-summary = Corriger un titre qui se lit sans audio.
+help-art-no-sound-keywords = pas de son audio muet silencieux volume haut-parleur bluetooth écouteurs lecture automatique
+help-art-no-sound-body =
+    1. Appuyez sur <b>M</b> ou sélectionnez le bouton du haut-parleur dans le lecteur pour annuler le mode muet. Les navigateurs démarrent souvent une vidéo en mode muet lorsqu'elle commence d'elle-même, voir <a=/help/article/autoplay-blocked>La vidéo démarre en mode muet</a>.
+    2. Appuyez sur la <b>flèche vers le haut</b> pour augmenter le volume et vérifiez le volume de votre appareil.
+    3. Vérifiez que l'onglet du navigateur n'est pas en mode muet. Faites un clic droit sur l'onglet pour voir.
+    4. Ouvrez <b>Audio et sous-titres</b> et choisissez une autre piste audio s'il y en a une.
+    5. Si vous utilisez Bluetooth, déconnectez puis reconnectez vos écouteurs.
+help-art-autoplay-blocked-title = La vidéo démarre en mode muet ou ne démarre pas d'elle-même
+help-art-autoplay-blocked-summary = Pourquoi les navigateurs empêchent le son de démarrer seul, et comment { $brand } gère cela.
+help-art-autoplay-blocked-keywords = lecture automatique bloquée muet démarrage politique navigateur son lecture auto aperçus bande-annonce
+help-art-autoplay-blocked-body =
+    Les navigateurs n'autorisent pas le démarrage d'une vidéo avec le son activé tant que vous n'avez pas cliqué ou touché l'écran. { $brand } tente d'abord de démarrer avec le son. Si le navigateur refuse, la lecture démarre en sourdine avec l'icône haut-parleur barré. Vous pouvez réactiver le son avec <b>M</b> ou le bouton haut-parleur.
+
+    - Pour empêcher les bandes-annonces et aperçus de démarrer automatiquement, désactivez <b>Aperçus automatiques</b> dans <b>Paramètres</b>, sous <b>Paramètres de lecture</b>.
+    - Si un titre ne démarre jamais, consultez <a=/help/article/wont-play>Un titre ne se lit pas</a>.
+help-art-clips-title = Utiliser les Clips
+help-art-clips-summary = Parcourez les courts aperçus et ajoutez vos favoris à votre liste.
+help-art-clips-keywords = clips shorts previews scroll vertical trailers swipe mute info my list
+help-art-clips-body =
+    <b>Clips</b> affiche des courts aperçus les uns après les autres, dans la barre inférieure sur téléphone.
+
+    1. Faites défiler ou balayez l'écran pour passer au clip suivant.
+    2. Sélectionnez le bouton haut-parleur pour activer ou couper le son. Les clips démarrent en sourdine.
+    3. Sélectionnez <b>Ma liste</b> pour enregistrer le titre, <b>Lire</b> pour le regarder, ou <b>Infos</b> pour en savoir plus.
+help-art-genres-title = Parcourir par genre
+help-art-genres-summary = Filtrez Films et Séries pour trouver le type de titre que vous souhaitez.
+help-art-genres-keywords = genres categories comedy drama horror action filter browse films series sub menu
+help-art-genres-body =
+    1. Ouvrez <b>Films</b> ou <b>Séries</b> dans la barre supérieure.
+    2. Sélectionnez <b>Genres</b> à côté du titre de la page.
+    3. Choisissez un genre. La page n'affiche alors que ce genre, avec des rangées dédiées.
+
+    Pour revenir à tout le catalogue, rouvrez <b>Films</b> ou <b>Séries</b>. Sur téléphone, la liste des genres s'ouvre en panneau depuis le bas.
+help-art-top-10-title = Que sont les rangées Top 10 ?
+help-art-top-10-summary = Une rangée des dix titres les plus regardés en ce moment.
+help-art-top-10-keywords = top 10 top ten popular trending ranking numbers row most watched
+help-art-top-10-body = Une rangée <b>Top 10</b> affiche les dix titres les plus regardés du moment, avec un grand numéro sur chacun. Elle suit la popularité actuelle du catalogue et change d'un jour à l'autre. Elle est identique pour tout le monde et n'est pas basée sur votre profil.
+help-art-episodes-title = Saisons et épisodes
+help-art-episodes-summary = Choisissez une saison et un épisode depuis la fenêtre de détails ou le lecteur.
+help-art-episodes-keywords = seasons episodes series list next episode drawer binge selector tv shows
+help-art-episodes-body =
+    ## Avant de lancer la lecture
+    Ouvrez une série et sélectionnez <b>Épisodes</b>. Utilisez le menu des saisons pour changer de saison, puis sélectionnez un épisode.
+
+    ## Pendant la lecture
+    - Sélectionnez <b>Épisodes</b> dans les commandes du lecteur pour ouvrir la liste sans quitter.
+    - Sélectionnez <b>Épisode suivant</b>, ou laissez-le démarrer automatiquement. Voir <a=/help/article/skip-intro-next>Sauter l'intro et épisode suivant</a>.
+help-art-share-title = Comment partager un titre
+help-art-share-summary = Envoyez le lien d'un titre à un ami.
+help-art-share-keywords = partager lien whatsapp messages instagram snapchat copier envoyer ami
+help-art-share-body =
+    1. Ouvrez les détails d'un titre et sélectionnez <b>Partager</b>.
+    2. Choisissez <b>WhatsApp</b> ou <b>Messages</b> pour envoyer le lien, ou <b>Copier le lien</b> pour le coller n'importe où.
+    3. Pour Instagram et Snapchat, le lien est copié et vous le collez dans l'application.
+
+    Le lien ouvre la page du titre sur { $brand }. La personne qui l'ouvre n'a pas besoin d'être connectée.
+help-art-title-details-title = La fenêtre de détails du titre
+help-art-title-details-summary = Ce que vous pouvez lire et faire avant de lancer la lecture.
+help-art-title-details-keywords = plus d'infos détails modal distribution genres synopsis similaires plus comme ça bande-annonce note correspondance
+help-art-title-details-body =
+    Sélectionnez une carte de titre, ou <b>Plus d'infos</b>, pour ouvrir ses détails.
+
+    - <b>Lecture</b> ou <b>Reprendre</b> lance le titre là où vous l'aviez laissé.
+    - <b>Ma liste</b> l'enregistre, et le pouce le note.
+    - Le résumé, la distribution, les genres et quelques mots décrivant l'ambiance vous aident à décider.
+    - Pour les séries, <b>Épisodes</b> liste les saisons.
+    - <b>Similaire</b> affiche des titres proches par sens, ce qui est un bon moyen de découvrir quelque chose de nouveau.
+help-art-accessibility-title = Accessibilité sur { $brand }
+help-art-accessibility-summary = Sous-titres, contrôle au clavier et paramètres d'affichage qui aident.
+help-art-accessibility-keywords = accessibilité lecteur d'écran clavier sous-titres légendes taille contraste zoom mouvement réduit handicap
+help-art-accessibility-body =
+    - <b>Sous-titres.</b> Choisissez la langue, la taille, la couleur et l'arrière-plan dans <b>Paramètres</b>. Voir <a=/help/article/subtitles>Comment utiliser les sous-titres, les légendes ou choisir la langue audio</a>.
+    - <b>Clavier.</b> Utilisez <b>Tab</b> pour naviguer entre les contrôles et <b>Esc</b> pour fermer les fenêtres. Le lecteur a ses propres touches, voir <a=/help/article/shortcuts>Raccourcis clavier</a>.
+    - <b>Taille du texte.</b> Zoomez dans votre navigateur avec <b>Ctrl</b> et <b>+</b> (<b>Cmd</b> et <b>+</b> sur Mac). La mise en page s'adapte.
+    - <b>Mouvement.</b> Si votre appareil demande une réduction des animations, le logo animé reste immobile.
+
+    Si quelque chose est difficile à utiliser, dites-le-nous sur la page <a=/help/article/report-bug>Signaler un problème</a>. Nous prenons ces signalements au sérieux.
+help-art-profile-icons-title = Comment choisir une icône de profil
+help-art-profile-icons-summary = Choisissez un avatar pour un profil.
+help-art-profile-icons-keywords = icône de profil avatar image photo modifier choisir personnage
+help-art-profile-icons-body =
+    1. Ouvrez <b>Gérer les profils</b> et sélectionnez le profil.
+    2. Sélectionnez l'icône.
+    3. Choisissez-en une parmi les groupes, puis sélectionnez <b>Enregistrer</b>.
+
+    Un profil Enfants utilise l'icône Enfants rayée, sauf si vous en choisissez une autre. Vous pouvez également accéder au sélecteur d'icônes depuis <b>Paramètres</b>.
+auth-questions = Des questions ?
+auth-email = Adresse e-mail
+auth-password = Mot de passe
+auth-continue = Continuer
+auth-next = Suivant
+auth-show-password = Afficher le mot de passe
+auth-hide-password = Masquer le mot de passe
+auth-login-title = Saisissez vos informations pour vous connecter
+auth-login-subtitle = Ou commencez avec un nouveau compte.
+auth-new-here = Nouveau sur { $brand } ?
+auth-signup-link = S'inscrire maintenant
+auth-welcome-back = Bon retour
+auth-not-you = Ce n'est pas vous ?
+auth-signing-in = Connexion…
+auth-remember = Se souvenir de moi
+auth-forgot-link = Mot de passe oublié ?
+auth-get-help = Obtenir de l'aide
+auth-resend = Renvoyer l'e-mail de confirmation
+auth-resent = Nous avons envoyé un nouvel e-mail de confirmation à { $email }.
+auth-error-email = Saisissez une adresse e-mail valide.
+auth-error-invalid = E-mail ou mot de passe incorrect. Réessayez ou réinitialisez votre mot de passe.
+auth-error-unconfirmed = Confirmez d'abord votre adresse e-mail. Nous avons envoyé un lien à { $email }.
+auth-error-rate = Trop de tentatives. Attendez une minute et réessayez.
+auth-error-network = Impossible de joindre le serveur. Vérifiez votre connexion et réessayez.
+auth-error-generic = Une erreur s'est produite. Veuillez réessayer.
+auth-error-name = Saisissez votre prénom et votre nom.
+auth-error-password-short = Utilisez un mot de passe d'au moins { $min } caractères.
+auth-error-could-not-create = Impossible de créer un compte avec ces informations. Si vous avez déjà un compte, connectez-vous ou réinitialisez votre mot de passe.
+auth-forgot-title = Réinitialiser votre mot de passe
+auth-forgot-body = Saisissez votre adresse e-mail et nous vous enverrons un lien pour choisir un nouveau mot de passe.
+auth-send-link = Envoyer le lien
+auth-back-to-sign-in = Retour à la connexion
+auth-forgot-sent-title = Vérifiez votre e-mail
+auth-forgot-sent = S'il existe un compte pour { $email }, un lien de réinitialisation du mot de passe est en route.
+auth-step = Étape { $n } sur { $total }
+auth-signup-title = Créer votre compte
+auth-welcome-title = Bienvenue sur { $brand }
+auth-tick-free = Gratuit. Aucune donnée de paiement, aucun engagement.
+auth-tick-devices = Votre liste et votre progression vous suivent sur tous vos appareils.
+auth-tick-profiles = Des profils pour toute la famille, avec un profil Enfants prêt à l'emploi.
+auth-details-title = Créer votre compte
+auth-details-body = Dites-nous qui vous êtes. Votre prénom deviendra le nom de votre profil principal.
+auth-first-name = Prénom
+auth-last-name = Nom
+auth-password-rule = Au moins { $min } caractères.
+auth-create = Créer un compte
+auth-creating = Création de votre compte…
+auth-terms = En créant un compte, vous acceptez les <a=/terms>Conditions d'utilisation</a> et la <a=/privacy>Politique de confidentialité</a>.
+auth-check-title = Vérifiez votre e-mail
+auth-check-body = Nous avons envoyé un lien à { $email }. Ouvrez-le pour confirmer votre adresse, puis connectez-vous.
+auth-check-spam = Pas reçu ? Regardez dans votre dossier de spam.
+landing-promo-title = { $brand } est gratuit.
+landing-promo-body = Pas d'abonnement, pas de carte, pas d'engagement.
+landing-learn-more = En savoir plus
+landing-faq = Questions fréquentes
+landing-read-more = Lire l'article complet
+legal-credits-title = Licences et crédits
+legal-credits-updated = Dernière mise à jour : octobre 2026
+legal-credits-1-title = 1. Polices
+legal-credits-1-body = Le texte du logo utilise une police pixel. Tout le reste de l'interface utilise Inter.
+legal-credits-1-b1 = <strong>Baby Blocks</strong> par Colorful Typhoon, utilisée pour le logo { $brand } selon ses conditions de lien pour un usage personnel et non commercial. Voir <a href="http://www.geocities.jp/kitschlabo/" target="_blank" rel="noopener">Colorful Typhoon</a>.
+legal-credits-1-b2 = <strong>Inter</strong> par Rasmus Andersson, utilisée sous la licence SIL Open Font License 1.1.
+legal-credits-2-title = 2. Icônes
+legal-credits-2-body = Les icônes de l'interface proviennent de Phosphor Icons, utilisées sous la licence MIT.
+legal-credits-3-title = 3. Informations sur les films et séries
+legal-credits-3-body = Ce produit utilise l'API TMDB mais n'est pas approuvé ni certifié par TMDB. Les titres, résumés, affiches, notes et informations sur le casting proviennent de <a href="https://www.themoviedb.org" target="_blank" rel="noopener">The Movie Database</a>.
+legal-credits-4-title = 4. Logiciels
+legal-credits-4-body = { $brand } est développé avec des logiciels open source, chacun utilisé sous sa propre licence :
+legal-credits-4-b1 = <strong>Rust</strong> et <strong>Leptos</strong> pour l'application (MIT et Apache 2.0).
+legal-credits-4-b2 = <strong>Tailwind CSS</strong> pour le style (MIT).
+legal-credits-4-b3 = <strong>hls.js</strong> pour la lecture vidéo adaptative (Apache 2.0).
+legal-credits-4-b4 = <strong>Project Fluent</strong> pour le texte de l'interface traduit (Apache 2.0 et MIT).
+legal-credits-5-title = 5. Marques et visuels
+legal-credits-5-body = Les noms, logos, affiches et visuels des films, séries et services affichés sur { $brand } appartiennent à leurs propriétaires. Ils sont affichés pour identifier le titre et ne signifient pas que le propriétaire soutient { $brand }.
+legal-credits-6-title = 6. Contact
+legal-credits-6-body = Si vous pensez qu'un crédit est incorrect ou doit être modifié, veuillez écrire à { $support_email }.
+help-ui-legal-credits = Licences et crédits
+landing-browse-guest = Ou simplement parcourir sans compte
+landing-slide-everyone = Un endroit pour tous
+landing-slide-place = Reprenez exactement là où vous vous étiez arrêté.
+auth-login-app-title = Prêt à regarder ?
+auth-login-app-subtitle = Saisissez vos informations pour vous connecter ou créer un nouveau compte.
+auth-forgot-email = Adresse e-mail oubliée ?
+auth-learn-signin = En savoir plus sur la connexion
+auth-back = Retour
+mood-mind-bending = Cérébral
+mood-cerebral = Intelligent
+mood-ominous = Sinistre
+mood-chilling = Glacial
+mood-suspenseful = Suspendu
+mood-psychological = Psychologique
+mood-witty = Esprit vif
+mood-irreverent = Irrespectueux
+mood-gritty = Réaliste
+mood-atmospheric = Atmosphérique
+mood-high-octane = Haute tension
+mood-exciting = Exaltant
+mood-heartfelt = Sincère
+mood-emotional = Émotionnel
+mood-imaginative = Imaginatif
+mood-charming = Charmant
+mood-provocative = Provocateur
+mood-eye-opening = Éclairant
+mood-compelling = Captivant
+mood-captivating = Envoûtant
+mood-dystopian = Dystopique
+mood-cyberpunk = Cyberpunk
+mood-edge-of-your-seat = Suspense
+mood-slick = Sophistiqué
+mood-coming-of-age = Initiation
+mood-epic = Épique
+mood-action = Action
+mood-adventurous = Aventurier
+mood-thrilling = Palpitant
+mood-feel-good = Feel-good
+mood-dark = Sombre
+mood-insightful = Pénétrant
+mood-heartwarming = Chaleureux
+mood-family = Familial
+mood-enchanting = Enchanté
+mood-mythical = Mythique
+mood-sweeping = Grandiose
+mood-historical = Historique
+mood-terrifying = Terrifiant
+mood-soulful = Ame
+mood-rhythmic = Rythmé
+mood-mysterious = Mystérieux
+mood-intriguing = Intrigant
+mood-romantic = Romantique
+mood-passionate = Passionné
+mood-sci-fi = Science-fiction
+mood-futuristic = Futuriste
+mood-gripping = Haletant
+mood-visceral = Viscéral
+mood-intense = Intense
+mood-raw = Brut
+mood-playful = Ludique
+mood-wholesome = Chaleureux
+mood-unscripted = Non scénarisé
+mood-dramatic = Dramatique
+mood-political = Politique
+browse-grid-empty = Rien à afficher ici pour le moment.
+category-series = Séries
+category-films = Films
+category-top10-movies = Top 10 des films aujourd'hui
+category-top10-series = Top 10 des séries aujourd'hui
+reads-title = Bandes dessinées & Manga
+reads-empty = Aucune bande dessinée dans la bibliothèque
+profile-default-main = Principal
+profile-default-kids = Enfants
+set-title = Paramètres
+set-back = Retour
+set-cancel = Annuler
+set-save = Enregistrer
+set-add = Ajouter
+set-remove = Retirer
+set-delete = Supprimer
+set-reset = Réinitialiser
+set-continue = Continuer
+set-none = Aucun
+set-nav-profile = Modifier le profil
+set-nav-profiles = Gérer les profils
+set-nav-app = Paramètres de l'application
+set-nav-account = Compte
+set-nav-help = Aide
+set-sign-out = Se déconnecter
+set-sign-out-body = Vous serez déconnecté de ce navigateur. Vos profils et paramètres restent dans votre compte.
+set-signin-needed = Connectez-vous à votre compte pour modifier ces informations.
+set-manage-profiles = Gérer les profils
+set-profiles-hint = Choisissez un profil pour le modifier, ou ajoutez-en un nouveau.
+set-add-profile = Ajouter un profil
+set-kids-profile = Profil Enfants
+set-profile-missing = Ce profil n'a pas pu être trouvé.
+set-profile-name = Nom du profil
+set-title-profiles = Gérer les profils
+set-title-edit-profile = Modifier le profil
+set-title-avatar = Choisir une photo de profil
+set-title-restrictions = Restrictions de visionnage
+set-title-ratings = Classifications par âge
+set-sub-size = Taille du texte
+set-sub-size-small = Texte petit
+set-sub-size-medium = Texte moyen
+set-sub-size-large = Texte grand
+set-sub-color = Couleur du texte
+set-sub-edge = Style de contour du texte
+set-sub-edge-color = Couleur du contour
+set-sub-background = Couleur de fond
+set-sub-window = Couleur de la fenêtre
+set-sub-transparent = Transparence
+set-sub-none = Aucun
+set-color-white = Blanc
+set-color-yellow = Jaune
+set-color-green = Vert
+set-color-cyan = Cyan
+set-color-blue = Bleu
+set-color-magenta = Magenta
+set-color-red = Rouge
+set-color-black = Noir
+set-edge-none = Aucun
+set-edge-raised = Relief
+set-edge-depressed = Enfoncé
+set-edge-uniform = Uniforme
+set-edge-shadow = Ombre portée
+set-app-playback = Lecture vidéo
+set-data-usage = Utilisation des données
+set-data-auto = Automatique
+set-data-save = Économiser les données
+set-data-max = Données maximales
+set-app-notifications = Notifications
+set-allow-notifications = Autoriser les notifications
+set-allow-notifications-hint = M'informer des nouveautés et des mises à jour.
+set-app-about = À propos
+set-app-device = Appareil
+set-app-version = Version
+set-app-diagnostics = Diagnostics
+set-check-network = Vérifier le réseau
+set-check-network-hint = Tester la connexion pour détecter les problèmes pouvant bloquer la lecture.
+set-check-running = Vérification…
+set-playback-spec = Spécifications de lecture
+set-spec-drm = Widevine
+set-spec-codecs = Codecs matériels pris en charge
+set-spec-hdr = Fonctionnalités HDR
+set-spec-screen = Taille de l'écran
+set-spec-yes = Oui
+set-spec-no = Non
+set-spec-none = Non disponible
+set-app-legal = Mentions légales
+set-app-licences = Licences open source
+set-licences-hint = L'application est construite avec { $count } packages open source.
+set-licences-tmdb = Les données et images de films et séries proviennent de TMDB. Ce produit utilise l'API TMDB, mais n'est pas approuvé ni certifié par TMDB.
+set-account-security = Sécurité
+set-account-devices = Appareils
+set-account-profiles = Profils
+set-verify-title = D'abord, vérifions que c'est bien vous
+set-verify-body = Avant de modifier quoi que ce soit, confirmez le mot de passe de votre compte.
+set-password-current = Mot de passe actuel
+set-forgot-password = Mot de passe oublié ?
+set-password-hint = Protégez votre compte avec un mot de passe unique d'au moins { $min } caractères.
+set-password-new = Nouveau mot de passe
+set-password-again = Saisir à nouveau le nouveau mot de passe
+set-password-signout-all = Se déconnecter de tous les appareils
+set-password-short = Le mot de passe doit contenir au moins { $min } caractères.
+set-password-mismatch = Les deux mots de passe ne correspondent pas.
+set-password-saved = Votre mot de passe a été modifié.
+set-email-hint = Modifiez l'adresse e-mail utilisée pour vous connecter et recevoir des messages concernant votre compte.
+set-email-current = E-mail actuel
+set-email-new = Nouvel e-mail
+set-email-invalid = Saisissez une adresse e-mail valide.
+set-email-sent = Nous avons envoyé un message à la nouvelle adresse. Ouvrez le lien qu'il contient pour terminer la modification.
+set-phone-hint = Ajoutez un numéro de mobile pour vous aider à retrouver l'accès à votre compte.
+set-phone-invalid = Saisissez un numéro de téléphone valide.
+set-phone-saved = Votre numéro a été enregistré.
+set-devices-hint = Se déconnecter de ce navigateur ou de tous les navigateurs où votre compte est ouvert.
+set-devices-current = Cet appareil
+set-devices-note = Les autres navigateurs ne sont pas listés. Se déconnecter de tous les appareils ferme toutes les sessions ouvertes, y compris celle-ci.
+set-devices-signout-all = Se déconnecter de tous les appareils
+set-devices-signout-body = Tous les navigateurs où votre compte est ouvert seront déconnectés, y compris celui-ci.
+set-for-profile = Pour { $name }
+set-privacy-viewing = Confidentialité de la visionnage
+set-privacy-lock-hint = Exiger un code PIN pour ouvrir ce profil
+set-privacy-activity-hint = Gérer votre historique de visionnage
+set-privacy-data = Paramètres de données
+set-privacy-personalization = Recommandations personnalisées
+set-privacy-personalization-hint = Utiliser vos visionnages pour suggérer des titres. Si désactivé, vous verrez des suggestions générales.
+set-activity-clear-body = Votre historique de visionnage et vos points de reprise seront supprimés de ce navigateur.
+set-delete-account-body = La suppression de votre compte supprime définitivement vos profils, paramètres et historique de visionnage.
+set-delete-account-confirm = Supprimer votre compte et tout ce qui y est stocké ? Cette action est irréversible.
+set-err-invalid = Ce mot de passe est incorrect. Réessayez.
+set-err-weak = Ce mot de passe est trop faible. Utilisez-en un plus long avec des lettres et des chiffres.
+set-err-rate = Trop de tentatives. Attendez une minute et réessayez.
+set-err-network = La connexion a échoué. Vérifiez votre réseau et réessayez.
+set-err-other = Une erreur s'est produite. Réessayez dans un instant.
+set-audio-subtitles-hint = Choisissez les langues dans lesquelles vous aimez regarder les séries et les films. En l'absence de choix, la langue d'affichage est utilisée.
+set-audio-language = Langue audio
+set-subtitle-language = Langue des sous-titres
+set-lang-follow = Identique à la langue d'affichage
+set-subtitles-off = Désactivé
+set-name-taken = Un autre profil porte déjà ce nom.
+set-main-profile = Rendre ce profil principal
+set-main-profile-hint = Le profil principal ne peut pas être supprimé.
+set-main-profile-body = { $name } deviendra le profil principal de ce compte. Le profil principal ne peut pas être supprimé.
+set-lock-create = Créer un verrouillage de profil
+set-lock-current = PIN actuel
+set-lock-wrong = Ce PIN est incorrect.
+set-lock-forgot = PIN oublié ?
+set-lock-reset-body = Le PIN de ce profil sera supprimé. Vous pourrez en définir un nouveau ensuite.
+set-name-hint = Le nom de la personne derrière le compte. Le profil principal suit le prénom.
+set-name-first = Prénom
+set-name-last = Nom
+set-name-required = Saisissez un prénom et un nom.
+set-name-saved = Votre nom a été enregistré.
+set-err-recent = Pour votre sécurité, saisissez à nouveau votre mot de passe pour continuer.
+set-events-title = Activités de sécurité récentes
+set-privacy-export = Télécharger mes données
+set-nav-overview = Aperçu
+set-back-to-app = Retour à { $brand }
+set-title-playback = Paramètres de lecture
+set-title-notifications = Paramètres de notification
+set-playback-hint = Configurer la lecture automatique et les aperçus.
+set-playback-autoplay = Lecture automatique et transitions
+set-notifications-hint = Gérer les notifications par e-mail et notifications push.
+set-notifications-body = Choisissez comment ce profil est informé des nouveautés et des mises à jour.
+set-notify-email = E-mail
+set-notify-push = Notifications push
+set-account-details = Détails du compte
+set-access-hint = Gérer les appareils connectés
+set-overview-quick = Liens rapides
+set-overview-update-password = Mettre à jour le mot de passe
+set-overview-edit = Modifier les paramètres
+set-overview-edit-hint = Langues, sous-titres, lecture automatique, notifications, confidentialité et plus
+set-overview-profiles =
+    { $count ->
+     [one] 1 profil
+    *[other] { $count } profils
+}
+set-security-access = Accès et confidentialité
+set-privacy-hint = Gérer l'utilisation de vos informations personnelles
+set-profiles-parental = Contrôle parental et autorisations
+set-profiles-parental-hint = Définir le niveau de maturité, bloquer des titres
+set-profiles-settings = Paramètres du profil
+set-now-watching = En cours de visionnage
+set-activity-episode = S{ $season }:E{ $episode }
+set-activity-title = { $title } · { $episode }
+set-device-line = { $platform } · { $browser }
+set-saved = Enregistré
+set-done = Terminé
+set-show-more = Afficher plus
+set-need-help = Besoin d'aide ?
+set-visit-help = Visiter le Centre d'aide
+set-try-another-way = Essayer une autre méthode
+set-title-game-handle = Pseudo de jeu
+set-title-personal-info = Accès aux informations personnelles
+set-title-speed-test = Test de vitesse Internet
+set-title-testing = Participation aux tests
+set-title-transfer = Transfert de profil
+set-title-transfer-profile = Transférer un profil
+set-activity-for = Activité de { $name }
+set-activity-hide = Masquer ce titre
+set-activity-hide-all = Tout masquer
+set-activity-hidden = Supprimé de votre activité de visionnage
+set-activity-download = Tout télécharger
+set-activity-report = Signaler un problème
+set-csv-title = Titre
+set-csv-season = Saison
+set-csv-episode = Épisode
+set-csv-date = Date
+set-notify-email-hint = Messages sur les nouveautés et les mises à jour
+set-notify-push-hint = Notifications sur cet appareil
+set-topics-title = Sujets qui vous intéressent
+set-push-denied = Les notifications sont bloquées pour ce site dans votre navigateur. Autorisez-les dans les paramètres du navigateur, puis réessayez.
+set-push-unsupported = Ce navigateur ne peut pas afficher de notifications.
+set-usage-title = Consommation de données par écran
+set-usage-auto = Auto
+set-usage-auto-hint = Choisit la qualité adaptée à votre connexion.
+set-usage-low = Basse
+set-usage-low-hint = Utilise le moins de données. Qualité d'image basique.
+set-usage-medium = Moyenne
+set-usage-medium-hint = Qualité d'image standard, moins de données que la haute qualité.
+set-usage-high = Haute
+set-usage-high-hint = Meilleure qualité d'image. Utilise le plus de données.
+set-handle-body = Ce nom unique est celui qui apparaîtra pour les autres joueurs dans les jeux.
+set-handle-change = Vous pouvez modifier votre pseudo de jeu à tout moment.
+set-handle-create = Créer votre pseudo de jeu
+set-handle-suggest = Suggérer un nom
+set-handle-invalid = Utilisez de { $min } à { $max } lettres et chiffres, sans espaces.
+set-transfer-row-hint = Autoriser la copie d'un profil vers un autre compte
+set-transfer-on-title = Transfert de profil activé
+set-transfer-on-body = Les profils peuvent être enregistrés depuis ce compte et ajoutés à un autre. Désactivez cette option pour empêcher les profils de quitter votre compte. Les profils déjà ajoutés à ce compte ne sont pas affectés.
+set-transfer-off-title = Transfert de profil désactivé
+set-transfer-off-body = Les profils ne peuvent pas être copiés depuis ce compte. Activez cette option pour l'autoriser.
+set-transfer-profile-hint = Copier ce profil vers un autre compte
+set-transfer-profile-body = Enregistrez ce profil sous forme de fichier et ajoutez-le à un autre compte. La copie conserve le nom, l'image, les paramètres et l'historique de visionnage.
+set-transfer-step-1 = Sélectionnez « Télécharger le fichier de profil » et conservez le fichier en lieu sûr.
+set-transfer-step-2 = Connectez-vous au compte de destination et ouvrez « Gérer les profils ».
+set-transfer-step-3 = Choisissez « Importer un profil » et sélectionnez le fichier.
+set-transfer-download = Télécharger le fichier de profil
+set-transfer-saved = Fichier de profil enregistré
+set-transfer-note = Le fichier ne contient pas le code PIN de verrouillage du profil. Toute personne disposant du fichier peut ajouter le profil à son compte. Ne le partagez donc pas.
+set-transfer-blocked-body = Le transfert de profil est désactivé pour ce compte, ce profil ne peut donc pas être copié.
+set-transfer-open-setting = Ouvrir les paramètres de transfert de profil
+set-import-title = Importer un profil
+set-import-hint = Ajouter un profil enregistré depuis un autre compte.
+set-import-done = { $name } a été ajouté
+set-import-invalid = Ce fichier n'est pas un profil enregistré.
+set-import-newer = Ce fichier provient d'une version plus récente de l'application et ne peut pas encore être lu.
+set-import-full = Ce compte contient déjà le nombre maximum de profils autorisés.
+set-privacy-cookies-hint = Choisissez les cookies et les stockages similaires utilisés.
+set-personal-info-hint = Demander une copie de vos informations personnelles
+set-personal-info-body = Vous pouvez demander une copie des informations personnelles que nous détenons sur votre compte. Le fichier liste :
+set-personal-info-done = Votre fichier a été enregistré.
+set-personal-info-note = Le fichier reste sur votre appareil. Il peut contenir des informations personnelles, conservez-le donc en lieu sûr.
+set-testing-row-hint = M'inclure dans les tests et les aperçus
+set-testing-body = De temps en temps, nous testons de nouvelles fonctionnalités avec un petit groupe avant de les proposer à tout le monde.
+set-testing-switch = M'inclure dans les tests et les aperçus
+set-testing-hint = Désactivez cette option pour rester sur la version actuelle de chaque fonctionnalité.
+set-code-email = Envoyer un code par e-mail
+set-code-title = Veuillez saisir le code que nous venons d'envoyer
+set-code-body = Veuillez saisir le code que nous avons envoyé à { $target } pour protéger votre compte. Le code expire après { $minutes } minutes.
+set-code-label = Code
+set-code-submit = Envoyer
+set-code-resend = Renvoyer le code
+set-code-wrong = Ce n'est pas tout à fait correct. Veuillez réessayer.
+set-password-confirm = Confirmer le mot de passe
+set-password-show = Afficher le mot de passe
+set-password-hide = Masquer le mot de passe
+set-device-name = { $browser } sur { $system }
+set-device-unknown = Appareil inconnu
+set-device-last = Dernière activité { $time }
+set-device-sign-out = Se déconnecter de cet appareil
+set-device-sign-out-body = Ce navigateur sera déconnecté de votre compte.
+set-device-signed-out = Appareil déconnecté
+set-devices-list-note = Cette liste peut être incomplète. Certains appareils ou certaines activités d’appareils peuvent ne pas être affichés.
+set-check-intro = Testez votre connexion Internet pour détecter tout problème susceptible d’empêcher l’utilisation de { $brand }.
+set-check-start = Démarrer le test
+set-check-internet = Connexion Internet
+set-check-service = Service de streaming
+set-check-images = Visuels et affiches
+set-check-engine = Recommandations
+set-check-ms = { $ms } ms
+set-check-all-ok = Tout fonctionne correctement.
+set-check-some-failed = Certains tests ont échoué. Réessayez ou vérifiez votre connexion.
+set-spec-drm-title = Gestion des droits numériques
+set-spec-playback-title = Lecture
+set-spec-resolution = Résolution de lecture maximale
+set-spec-help = Centre d’aide
+set-speed-intro = Ce test télécharge un fichier et mesure la vitesse de votre connexion.
+set-speed-unit = Mbit/s
+set-speed-running = Test en cours…
+set-speed-again = Retester
+set-speed-failed = Le test n’a pas pu se terminer. Vérifiez votre connexion et réessayez.
+set-licences-search = Rechercher des paquets ou des licences
+set-transfer-turn-off = Désactiver le transfert de profil
+set-transfer-turn-on = Activer le transfert de profil
+set-restrictions-none = Aucune restriction
+set-rating-up-to = Jusqu’à { $rating }
+set-rating-u = U
+set-rating-u-hint = Convient à tous les âges.
+set-rating-pg = PG
+set-rating-pg-hint = Conseil parental. Certaines scènes peuvent ne pas convenir aux jeunes enfants.
+set-rating-12 = 12
+set-rating-12-hint = Convient aux 12 ans et plus.
+set-rating-15 = 15
+set-rating-15-hint = Convient aux 15 ans et plus.
+set-rating-18 = 18
+set-rating-18-hint = Réservé aux adultes. Convient aux 18 ans et plus.
+auth-confirm-title = Confirmation de votre e-mail
+auth-confirm-working = Vérification…
+auth-confirm-working-body = Un instant, nous vérifions votre lien.
+auth-confirm-failed-title = Ce lien n'a pas fonctionné
+auth-confirm-failed-body = Le lien a peut-être expiré ou a déjà été utilisé. Connectez-vous ou demandez un nouveau lien.
+auth-confirm-new-link = Envoyez-moi un nouveau lien
+set-device-kind = Type d'appareil
+set-device-first-seen = Première connexion
+set-device-timezone = Fuseau horaire
+set-device-screen = Écran
+set-device-language = Langue
+set-device-countries-note = Cet appareil s'est connecté depuis plusieurs pays : { $countries }. Un VPN ou un voyage peut en être la cause. Un appareil est reconnu par son navigateur, et non par l'endroit où il se connecte, il s'agit donc toujours du même appareil.
+email-footer = Envoyé par { $brand }. Des questions ? Consultez le Centre d'aide ou écrivez à { $help_email }.
+email-help-center = Centre d'aide
+email-ignore = Si vous n'avez pas demandé cela, vous pouvez ignorer cet e-mail.
+email-button-fallback = Si le bouton ne fonctionne pas, copiez cette adresse dans votre navigateur :
+email-greeting = Bonjour { $name },
+email-greeting-plain = Bonjour,
+email-for-profile = Ce message concerne le profil { $profile }.
+email-confirm-subject = Confirmez votre adresse e-mail
+email-confirm-title = Confirmez votre adresse e-mail
+email-confirm-body = Bienvenue sur { $brand }. Confirmez cette adresse pour finaliser la création de votre compte.
+email-confirm-button = Confirmer l'adresse e-mail
+email-recovery-subject = Réinitialiser votre mot de passe { $brand }
+email-recovery-title = Réinitialiser votre mot de passe
+email-recovery-body = Nous avons reçu une demande de réinitialisation du mot de passe de votre compte. Utilisez le bouton pour en choisir un nouveau. Le lien fonctionne une seule fois et expire bientôt.
+email-recovery-button = Choisir un nouveau mot de passe
+email-code-subject = Votre code de connexion { $brand }
+email-code-title = Votre code de connexion
+email-code-body = Saisissez ce code pour continuer. Il fonctionne une seule fois et expire dans { $minutes } minutes.
+email-code-or-link = Ou utilisez le bouton pour vous connecter.
+email-code-button = Se connecter
+email-change-subject = Confirmez votre nouvelle adresse e-mail
+email-change-title = Confirmez votre nouvelle adresse e-mail
+email-change-body = Vous avez demandé à changer l'adresse e-mail de votre compte en { $new_email }. Confirmez avec le bouton.
+email-change-button = Confirmer la nouvelle adresse
+email-invite-subject = Vous avez été invité à rejoindre { $brand }
+email-invite-title = Vous avez été invité
+email-invite-body = Acceptez l'invitation pour créer votre compte.
+email-invite-button = Accepter l'invitation
+email-reauth-subject = Votre code de confirmation { $brand }
+email-reauth-title = Votre code de confirmation
+email-reauth-body = Saisissez ce code pour confirmer votre identité. Il est à usage unique et expire bientôt.
+email-device-subject = Nouvel appareil connecté à votre compte { $brand }
+email-device-title = Nouvel appareil connecté
+email-device-body = { $browser } sur { $system } s'est connecté à votre compte { $where } le { $time }. Si c'était vous, aucune action n'est nécessaire. Sinon, changez votre mot de passe et déconnectez-vous de tous les appareils.
+email-device-where = depuis { $country }
+email-device-button = Vos appareils
+help-breadcrumb-label = Fil d'Ariane
+help-pagination-label = Pagination
+age-badge-all = Tous
+age-aria-all = Convient à tous les âges
+age-aria-plus = Convient aux { $age } ans et plus
+set-rating-system-title = Étiquettes de classification
+set-rating-system-hint = Les étiquettes de classification par âge que vous souhaitez voir. L'option Automatique suit le pays de l'appareil utilisé pour la connexion.
+set-rating-system-auto = Automatique
+set-rating-system-uk = Royaume-Uni (U, PG, 12, 15, 18)
+set-rating-system-us = États-Unis (G, PG, PG-13, R, NC-17)
+row-continue-watching = Reprendre la lecture
+row-my-list = Ma liste
+row-because-you-watched = Parce que vous avez regardé { $title }
+row-more-like = Plus de titres comme { $title }
+row-todays-top-picks = Les meilleures suggestions du jour pour vous
+row-your-next-watch = Votre prochaine vision
+row-gems-for-you = Des pépites pour vous
+row-we-think-youll-love = Nous pensons que vous aimerez ces titres
+row-familiar-favourites = Vos classiques préférés
+row-new-releases = Nouveautés
+collection-title = Collection { $label }
+collection-eyebrow-event = Collection
+collection-for-every-feeling = Pour chaque émotion
+collection-explore-all = Tout explorer
+badge-recently-added = Ajout récent
+event-autumn = Automne
+event-awards = Saison des prix
+event-back-to-school = Retour à l'école
+event-black-history = Mois de l'histoire noire
+event-christmas = Noël
+event-cinco-de-mayo = Cinco de Mayo
+event-diwali = Diwali
+event-easter = Pâques
+event-fathers-day = Fête des Pères
+event-friday-13 = Vendredi 13
+event-halloween = Halloween
+event-hanukkah = Hanoucca
+event-independence-india = Jour de l'Indépendance (Inde)
+event-july4 = 4 juillet
+event-lunar-new-year = Nouvel An lunaire
+event-mothers-day = Fête des Mères
+event-new-year = Nouvel An
+event-pride = Pride
+event-ramadan-eid = Ramadan et Aïd
+event-spring = Printemps
+event-st-patricks = Saint Patrick
+event-summer = Été
+event-summer-blockbuster = Blockbusters d'été
+event-thanksgiving = Action de grâce
+event-valentines = Saint-Valentin
+event-winter-cozy = Hiver cosy
+event-womens-history = Mois de l'histoire des femmes
+hook-recently-added = Ajout récent
+hook-top10-series = #{ $rank } dans les séries aujourd'hui
+hook-top10-films = #{ $rank } dans les films aujourd'hui
+hook-created-by = Créé par { $name }
+hook-directed-by = Réalisé par { $name }
+hook-acclaimed = Acclamé par la critique
+hook-fan-favourite = Coup de cœur du public
+hook-hidden-gem = Une pépite cachée
+hook-timeless-classic = Un classique intemporel
+hook-quick-watch = Un visionnage rapide : { $min } min
+hook-epic = Un épique : { $h }h { $m }m
+hook-true-story = Basé sur une histoire vraie
+hook-from-a-book = Basé sur un livre
+hook-craving = Envie de { $tone } { $genre } ?
+hook-in-the-mood = Envie de { $tone } { $genre } ?
+hook-in-the-mood-for = Envie de { $mood } ?
+hook-late-night = Fait pour les nuits blanches
+hook-for-season = Parfait pour { $label }
+topic-gangsters = Gangsters, parrains et seigneurs de la drogue
+topic-heists = Coulisses et braquages
+topic-animal-tales = Histoires animales
+topic-love-hurts = L'amour fait mal
+topic-slow-burn = Attente amoureuse
+topic-wacky = Bizarre et décalé
+topic-sitcoms = Sitcoms
+topic-competition-reality = Réalité de compétition
+topic-dating-reality = Réalité amoureuse et relations
+topic-adult-animation = Animation pour adultes
+topic-auteur = Cinéma d'auteur
+topic-modern-classics = Classiques modernes
+topic-blockbusters = Blockbusters
+topic-epic-worlds = Mondes épiques
+topic-legal-dramas = Dramas judiciaires et légaux
+topic-medical-dramas = Dramas médicaux
+topic-time-travel = Voyage dans le temps
+topic-road-trips = Road trips et voyages
+topic-revenge = Histoires de vengeance
+topic-found-family = Familles de cœur
+topic-small-town = Histoires de petites villes
+topic-survival = Histoires de survie
+topic-spy = Espions et espionnage
+topic-superheroes = Super-héros
+topic-war-stories = Histoires de guerre
+topic-underdog-sports = Histoires sportives des outsiders
+topic-martial-arts = Arts martiaux
+topic-musicals-dance = Musique, danse et comédies musicales
+topic-space = Espace et extraterrestres
+topic-mind-bending = Mystères vertigineux
+topic-cozy-mysteries = Mystères cosy
+topic-teen-comedies = Comédies adolescentes
+topic-holiday-romance = Romances de vacances

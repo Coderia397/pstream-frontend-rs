@@ -48,7 +48,10 @@ pub fn Navbar(
     // Active tab identification based on route (Task 086)
     let active_tab = move || {
         let p = current_path();
-        if p.starts_with("/browse/shows") || p.starts_with("/browse/series") {
+        let search = web_sys::window().and_then(|w| w.location().search().ok()).unwrap_or_default();
+        if let Some(kind) = crate::data::page_genres::page_kind_of_genre_route(&p, &search) {
+            if kind == "tv" { "tv" } else { "movies" }
+        } else if p.starts_with("/browse/shows") || p.starts_with("/browse/series") {
             "tv"
         } else if p.starts_with("/browse/movies") || p.starts_with("/browse/films") {
             "movies"
@@ -99,6 +102,7 @@ pub fn Navbar(
                         let is_active = move || active_tab() == id;
                         view! {
                             <li
+                                data-tour=format!("nav-{id}")
                                 class=move || if is_active() {
                                     "cursor-pointer transition-all duration-(--motion-base) whitespace-nowrap text-ink font-medium text-body-md rounded-full bg-ink/20 h-[40px] px-4 inline-flex items-center justify-center"
                                 } else {

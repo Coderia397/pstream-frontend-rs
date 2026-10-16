@@ -23,7 +23,5 @@ login-sign-in = ログイン
 navbar-mobile-cast = キャスト
 new-popular-worth-the-wait = 期待の新作
 search-bar-search = 検索
-settings-done = 完了
-settings-preferences = 基本設定
 subtitle-drawer-subtitles = 字幕
 video-player-rewind-10s = 10秒戻る

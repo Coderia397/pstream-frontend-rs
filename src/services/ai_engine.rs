@@ -262,6 +262,26 @@ async fn hidden_pages(route: &str, param: &str, field: &str, surface: &str, name
     hidden
 }
 
+/// One genre page of the engine's list: the id of its address (`/browse/genre/<id>`), its name and whether this profile is offered it.
+#[derive(Clone, Debug, Deserialize, PartialEq)]
+pub struct GenreEntry {
+    pub id: u32,
+    pub name: String,
+    #[serde(default)]
+    pub supported: bool,
+}
+
+/// The genre pages of a surface from the engine (`kind` is "movie" or "tv"), in picker order, for the profile in use. None when the engine cannot be reached: the page then uses its own list.
+pub async fn fetch_genre_list(kind: &str) -> Option<Vec<GenreEntry>> {
+    #[derive(Deserialize)]
+    struct Answer { genres: Vec<GenreEntry> }
+    let url = format!("{}/api/genre-list?surface={}&rating={}", AI_API_BASE_URL, kind, crate::pages::settings::prefs::active_rating().unwrap_or("18"));
+    let resp = Request::get(&url).send().await.ok()?;
+    if !resp.ok() { return None; }
+    let a: Answer = resp.json().await.ok()?;
+    (!a.genres.is_empty()).then_some(a.genres)
+}
+
 /// The genre pages a limited profile should not be offered (see `hidden_pages`).
 pub async fn hidden_genres(surface: &str, names: &[String]) -> std::collections::HashSet<String> {
     hidden_pages("genre-support", "names", "genres", surface, names).await

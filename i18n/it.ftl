@@ -20,7 +20,5 @@ login-get-started = Inizia
 login-sign-in = Accedi
 new-popular-worth-the-wait = Vale l'attesa
 search-bar-search = Cerca
-settings-done = Fatto
-settings-preferences = Preferenze
 subtitle-drawer-subtitles = Sottotitoli
 video-player-rewind-10s = Indietro 10s

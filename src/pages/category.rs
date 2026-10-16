@@ -7,9 +7,33 @@ use crate::components::media::hero::HeroSection;
 use crate::components::layout::category_sub_nav::{CategorySubNav, SubNavGenre};
 use crate::data::{MOVIE_GENRES, TV_GENRES};
 
+/// The page behind `/browse/genre/<id>`: the Series page (83), the Films page (34399), or a genre page of one of them (`?bc=` says which; without it the genre decides). An id that
+/// is not a genre keeps the older grid of a row.
+#[component]
+pub fn GenreRoute() -> impl IntoView {
+    use crate::data::page_genres::{page_kind_of_genre_route, FILMS_PAGE_ID, SERIES_PAGE_ID};
+    let params = leptos_router::hooks::use_params_map();
+    let query = leptos_router::hooks::use_query_map();
+    move || {
+        let id = params.read().get("id").unwrap_or_default();
+        let bc = query.read().get("bc").map(|b| format!("?bc={b}")).unwrap_or_default();
+        let kind = page_kind_of_genre_route(&format!("/browse/genre/{id}"), &bc);
+        match (id.parse::<u32>(), kind) {
+            (Ok(SERIES_PAGE_ID), _) => view! { <CategoryPage kind="tv" /> }.into_any(),
+            (Ok(FILMS_PAGE_ID), _) => view! { <CategoryPage kind="movie" /> }.into_any(),
+            (Ok(n), Some(k)) if MOVIE_GENRES.iter().chain(TV_GENRES.iter()).any(|g| g.id == n) => {
+                view! { <CategoryPage kind=if k == "tv" { "tv" } else { "movie" } genre_id=n /> }.into_any()
+            }
+            _ => view! { <crate::pages::browse_grid::BrowseGridPage /> }.into_any(),
+        }
+    }
+}
+
 #[component]
 pub fn CategoryPage(
     kind: &'static str, // "movie" or "tv"
+    /// The genre of the address (`/browse/genre/<id>`), when the page was opened that way
+    #[prop(optional)] genre_id: Option<u32>,
 ) -> impl IntoView {
     let genres: Vec<SubNavGenre> = if kind == "tv" {
         TV_GENRES.iter().map(|g| SubNavGenre { id: g.id as u32, name: g.name.to_string() }).collect()
@@ -20,7 +44,9 @@ pub fn CategoryPage(
     let query_map = leptos_router::hooks::use_query_map();
     let genres_clone = genres.clone();
     let initial_genre = query_map.with_untracked(|q| {
-        if let Some(gid_str) = q.get("genre") {
+        if let Some(gid) = genre_id {
+            genres_clone.iter().find(|g| g.id == gid).cloned()
+        } else if let Some(gid_str) = q.get("genre") {
             if let Ok(gid) = gid_str.parse::<u32>() {
                 genres_clone.iter().find(|g| g.id == gid).cloned()
             } else {
@@ -54,11 +80,7 @@ pub fn CategoryPage(
         set_selected_genre.set(opt_g.clone());
         if let Some(win) = web_sys::window() {
             if let Ok(history) = win.history() {
-                let pathname = win.location().pathname().unwrap_or_default();
-                let new_url = match opt_g {
-                    Some(g) => format!("{}?genre={}", pathname, g.id),
-                    None => pathname,
-                };
+                let new_url = crate::data::page_genres::genre_url(kind, opt_g.map(|g| g.id));
                 let _ = history.push_state_with_url(&wasm_bindgen::JsValue::NULL, "", Some(&new_url));
             }
         }
@@ -112,16 +134,13 @@ pub fn CategoryPage(
         }
     });
 
-    // Genre pages a limited profile has too few titles for are not offered
-    let genre_names: Vec<String> = genres.iter().map(|g| g.name.clone()).collect();
+    // The genre pages come from the engine (ids, order, and whether this profile is offered the page); the page's own list is the fallback when the engine cannot be reached
     let all_genres = genres.clone();
-    let hidden = LocalResource::new(move || {
-        let names = genre_names.clone();
-        async move { crate::services::ai_engine::hidden_genres(if kind == "tv" { "tv" } else { "movie" }, &names).await }
-    });
-    let offered = move || {
-        let hide = hidden.get().unwrap_or_default();
-        all_genres.iter().filter(|g| !hide.contains(&g.name)).cloned().collect::<Vec<SubNavGenre>>()
+    let listing = LocalResource::new(move || async move { crate::services::ai_engine::fetch_genre_list(if kind == "tv" { "tv" } else { "movie" }).await });
+    let offered = move || match listing.get() {
+        None => Vec::new(), // still asking
+        Some(Some(list)) => list.into_iter().filter(|g| g.supported).map(|g| SubNavGenre { id: g.id, name: g.name }).collect::<Vec<SubNavGenre>>(),
+        Some(None) => all_genres.clone(),
     };
 
     view! {

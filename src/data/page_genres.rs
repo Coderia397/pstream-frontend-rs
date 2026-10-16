@@ -8,6 +8,31 @@ use super::genres::{Genre, MediaType};
 /// Type alias aligning PageGenre with the core Genre definition.
 pub type PageGenre = Genre;
 
+/// Address ids of the two pages the genre pages hang under, as on Netflix: `/browse/genre/83` is the Series page, `/browse/genre/34399` the Films page, and a genre page is
+/// `/browse/genre/<genre id>?bc=<id of the page it belongs to>`.
+pub const SERIES_PAGE_ID: u32 = 83;
+pub const FILMS_PAGE_ID: u32 = 34399;
+
+/// The address of a genre page: `/browse/genre/<id>?bc=<page id>` for a genre, the page's own address for none.
+pub fn genre_url(kind: &str, genre_id: Option<u32>) -> String {
+    let page = if kind == "tv" { SERIES_PAGE_ID } else { FILMS_PAGE_ID };
+    match genre_id {
+        Some(g) => format!("/browse/genre/{g}?bc={page}"),
+        None => format!("/browse/genre/{page}"),
+    }
+}
+
+/// Which page an address under `/browse/genre/` belongs to ("tv" or "movie"), from its `bc` value or, for the two page ids themselves, from the id.
+pub fn page_kind_of_genre_route(path: &str, search: &str) -> Option<&'static str> {
+    let id = path.strip_prefix("/browse/genre/")?.split('/').next()?;
+    let bc = search.trim_start_matches('?').split('&').find_map(|kv| kv.strip_prefix("bc="));
+    match (id.parse::<u32>().ok()?, bc) {
+        (SERIES_PAGE_ID, _) | (_, Some("83")) => Some("tv"),
+        (FILMS_PAGE_ID, _) | (_, Some("34399")) => Some("movie"),
+        (n, _) => Some(if is_tv_only_genre_id(n) { "tv" } else { "movie" }),
+    }
+}
+
 /// TMDB Movie Genres following the Netflix naming convention (26 entries).
 pub static MOVIE_GENRES: &[PageGenre] = &[
     PageGenre { id: 28, name: "Action" },

@@ -35,6 +35,8 @@ pub fn MovieCard(
     #[prop(default = None)] match_percentage: Option<u32>,
     /// A recent release: shows the Recently Added badge
     #[prop(optional, default = false)] is_new: bool,
+    /// A Continue Watching tile: its hover card shows the episode, the progress and the buttons that take it out of the row
+    #[prop(default = None)] resume: Option<crate::components::media::movie_card_popup::ResumeInfo>,
 ) -> impl IntoView {
     let _ = is_grid;
     let ui_store = use_ui_store();
@@ -323,6 +325,7 @@ pub fn MovieCard(
                                 on_mouse_leave=mouse_leave_cb
                                 on_play=on_play_cb
                                 on_open_modal=on_modal_cb
+                                resume=resume.clone()
                             />
                         }.into_any()
                     } else {

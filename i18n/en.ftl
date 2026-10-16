@@ -2329,3 +2329,6 @@ row-np-hidden-gems = Hidden Gems
 row-np-closer-look = Worth a Closer Look
 row-np-top10-language = Top 10 { $language } Titles Today
 row-np-top10-genre = Top 10 { $genre } Today
+
+continue-watching-row-for = Continue watching for { $name }
+continue-watching-mark-watched = Mark as watched

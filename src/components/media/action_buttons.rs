@@ -165,6 +165,24 @@ fn circular_button_classes(dim_classes: &str, extra_class: &str) -> String {
     )
 }
 
+// ── Round icon button ─────────────────────────────────────────────────────────
+// The plain round button of the action rows (mark as watched, remove): an icon and a tooltip text.
+#[component]
+pub fn CircleIconButton(
+    icon: &'static str,
+    on_click: Callback<()>,
+    #[prop(into)] title: String,
+    #[prop(default = "md".to_string(), into)] size: String,
+) -> impl IntoView {
+    let (dim_classes, icon_classes, _) = circular_button_specs(&size);
+    let btn_classes = circular_button_classes(dim_classes, "");
+    view! {
+        <button type="button" on:click=move |e: leptos::ev::MouseEvent| { e.stop_propagation(); on_click.run(()); } class=btn_classes title=title.clone() aria-label=title>
+            <i class=format!("ph-bold {} {}", icon, icon_classes)></i>
+        </button>
+    }
+}
+
 // ── My List Button ────────────────────────────────────────────────────────────
 // Used across InfoModal, MovieCardPopup, InfoModalRecommendations.
 #[component]

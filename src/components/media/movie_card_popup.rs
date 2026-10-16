@@ -155,6 +155,17 @@ pub fn derive_vibe_tags(
     tags
 }
 
+/// What the hover card of a Continue Watching tile shows: the episode, how far the viewer is, and the buttons that take the title out of the row.
+#[derive(Clone)]
+pub struct ResumeInfo {
+    /// `S1:E22 "Blood Brothers"`, or the title of a film
+    pub label: String,
+    /// `16 of 43m`
+    pub time_text: String,
+    pub percent: f32,
+    pub on_remove: Callback<()>,
+}
+
 #[component]
 pub fn MovieCardPopup(
     movie: Movie,
@@ -165,6 +176,7 @@ pub fn MovieCardPopup(
     on_mouse_leave: Callback<()>,
     on_play: Callback<()>,
     on_open_modal: Callback<()>,
+    #[prop(default = None)] resume: Option<ResumeInfo>,
 ) -> impl IntoView {
     let (window_w, window_h) = web_sys::window()
         .map(|w| {
@@ -378,37 +390,48 @@ pub fn MovieCardPopup(
                                 size="md".to_string()
                             />
 
-                            // Add to My List button
-                            <MyListButton
-                                is_in_list=is_in_list
-                                on_toggle=Callback::new(move |_| {
-                                    let m = movie_stored.get_value();
-                                    library_store.my_list.update(|map| {
-                                        if map.contains_key(&movie_id) {
-                                            map.remove(&movie_id);
-                                        } else {
-                                            let entry = crate::store::LibraryEntry {
-                                                media: crate::services::tmdb::MediaItem {
-                                                    id: movie_id,
-                                                    title: m.title.clone(),
-                                                    name: m.name.clone(),
-                                                    overview: m.overview.clone(),
-                                                    poster_path: m.poster_path.clone(),
-                                                    backdrop_path: m.backdrop_path.clone(),
-                                                    vote_average: m.vote_average,
-                                                    release_date: m.release_date.clone(),
-                                                    first_air_date: m.first_air_date.clone(),
-                                                    media_type: m.media_type.clone(),
-                                                    ..Default::default()
-                                                },
-                                                added_at: js_sys::Date::now() as u64,
-                                            };
-                                            map.insert(movie_id, entry);
-                                        }
-                                    });
-                                })
-                                size="md".to_string()
-                            />
+                            // Continue Watching: mark as watched and remove from the row (both take the title out of the row); otherwise Add to My List
+                            {match resume.clone() {
+                                Some(r) => {
+                                    let (done, gone) = (r.on_remove, r.on_remove);
+                                    view! {
+                                        <crate::components::media::action_buttons::CircleIconButton icon="ph-check" on_click=done title=crate::i18n::t("continue-watching-mark-watched") />
+                                        <crate::components::media::action_buttons::CircleIconButton icon="ph-x" on_click=gone title=crate::i18n::t("continue-watching-options-sheet-remove-from-continue-watching") />
+                                    }.into_any()
+                                }
+                                None => view! {
+                                    <MyListButton
+                                        is_in_list=is_in_list
+                                        on_toggle=Callback::new(move |_| {
+                                            let m = movie_stored.get_value();
+                                            library_store.my_list.update(|map| {
+                                                if map.contains_key(&movie_id) {
+                                                    map.remove(&movie_id);
+                                                } else {
+                                                    let entry = crate::store::LibraryEntry {
+                                                        media: crate::services::tmdb::MediaItem {
+                                                            id: movie_id,
+                                                            title: m.title.clone(),
+                                                            name: m.name.clone(),
+                                                            overview: m.overview.clone(),
+                                                            poster_path: m.poster_path.clone(),
+                                                            backdrop_path: m.backdrop_path.clone(),
+                                                            vote_average: m.vote_average,
+                                                            release_date: m.release_date.clone(),
+                                                            first_air_date: m.first_air_date.clone(),
+                                                            media_type: m.media_type.clone(),
+                                                            ..Default::default()
+                                                        },
+                                                        added_at: js_sys::Date::now() as u64,
+                                                    };
+                                                    map.insert(movie_id, entry);
+                                                }
+                                            });
+                                        })
+                                        size="md".to_string()
+                                    />
+                                }.into_any(),
+                            }}
 
                             // Rating Pill button
                             <RatingButton
@@ -445,6 +468,19 @@ pub fn MovieCardPopup(
                         />
                     </div>
 
+                    {match resume.clone() {
+                        Some(r) => view! {
+                            <div class="mt-3 mb-1">
+                                <p class="text-ink text-[18px] font-bold leading-snug">{r.label.clone()}</p>
+                                <div class="mt-3 flex items-center gap-3">
+                                    <div class="h-[3px] flex-1 overflow-hidden rounded-full bg-ink/40">
+                                        <div class="h-full bg-red-600" style=format!("width: {:.1}%;", r.percent.clamp(2.0, 100.0)) />
+                                    </div>
+                                    <span class="text-ink-silver text-[16px] tabular-nums">{r.time_text.clone()}</span>
+                                </div>
+                            </div>
+                        }.into_any(),
+                        None => view! {
                     // Badges & Details Row
                     <div class="flex items-center gap-2 my-[12.8px] min-h-[32px] text-body-md font-normal text-ink-silver flex-wrap">
                         <span class="text-success font-bold">
@@ -458,16 +494,19 @@ pub fn MovieCardPopup(
                             {crate::i18n::t("movie-card-popup-hd")}
                         </span>
                     </div>
+                        }.into_any(),
+                    }}
 
-                    // 3-word vibe descriptors (replacing overview paragraph)
+                    // 3-word vibe descriptors (replacing overview paragraph); not on a Continue Watching card
                     {
+                        let is_resume = resume.is_some();
                         let m = movie_stored.get_value();
                         let vibe_tags = derive_vibe_tags(
                             m.vibe_pills.as_deref(),
                             m.genre_ids.as_deref(),
                             &overview_stored.get_value(),
                         );
-                        view! {
+                        if is_resume { view! { <span /> }.into_any() } else { view! {
                             <div class="flex items-center text-body-md leading-[20.8px] font-normal text-ink flex-wrap mb-2 min-h-[24px]">
                                 {vibe_tags.into_iter().enumerate().map(|(idx, tag)| {
                                     view! {
@@ -480,7 +519,7 @@ pub fn MovieCardPopup(
                                     }
                                 }).collect_view()}
                             </div>
-                        }
+                        }.into_any() }
                     }
                 </div>
             </div>

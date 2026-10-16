@@ -105,7 +105,14 @@ pub fn ContinueWatchingRow() -> impl IntoView {
                     <div class="group relative row-block z-10">
                         <div class="flex items-center justify-between px-[var(--app-x,56px)]">
                             <h2 class="row-title cursor-pointer flex items-center group/title w-fit">
-                                {crate::i18n::t("continue-watching-row-continue-watching")}
+                                {move || {
+                                    let pstore = crate::store::use_profile_store();
+                                    let name = pstore.active_profile_id.get().and_then(|id| pstore.profiles.get().into_iter().find(|p| p.id == id)).map(|p| p.name).filter(|n| !n.trim().is_empty());
+                                    match name {
+                                        Some(n) => crate::i18n::t_args("continue-watching-row-for", &[("name", fluent_bundle::FluentValue::from(n))]),
+                                        None => crate::i18n::t("continue-watching-row-continue-watching"),
+                                    }
+                                }}
                                 <span class="text-xs text-danger ml-2 opacity-0 group-hover/title:opacity-100 transition-opacity duration-(--motion-slow) flex items-center font-semibold">
                                     {crate::i18n::t("row-jump-back-in")}
                                 </span>
@@ -172,29 +179,22 @@ pub fn ContinueWatchingRow() -> impl IntoView {
                                         None
                                     };
 
+                                    let pct_label = crate::i18n::t_args("media-percent-watched", &[("pct", fluent_bundle::FluentValue::from(format!("{:.0}", percentage)))]);
+                                    let _ = (&ep_badge, &episode_title, &handle_open_info);
                                     view! {
                                         <div
-                                            class=format!("relative flex-none {} bg-raised rounded-tile overflow-hidden border border-ink/10 hover:border-ink/30 transition-all duration-(--motion-slow) shadow-lg hover:shadow-2xl group/card cursor-pointer", card_width_class)
+                                            class=format!("relative flex-none {} group/card cursor-pointer", card_width_class)
                                             on:click=handle_play
                                         >
-                                            // Thumbnail image with play overlay
-                                            <div class="relative w-full aspect-video bg-card-alt overflow-hidden">
+                                            // The picture, like every other tile of the page
+                                            <div class="relative w-full aspect-video bg-card-alt rounded-tile overflow-hidden">
                                                 <img
                                                     src=backdrop
                                                     alt=title.clone()
-                                                    class="w-full h-full object-cover object-center group-hover/card:scale-105 transition-transform duration-(--motion-slower)"
+                                                    class="w-full h-full object-cover object-center"
                                                     loading="lazy"
                                                 />
-                                                <div class="absolute inset-0 bg-gradient-to-t from-void/80 via-transparent to-void/20" />
-
-                                                // Centered play button icon
-                                                <div class="absolute inset-0 flex items-center justify-center opacity-80 group-hover/card:opacity-100 group-hover/card:scale-110 transition-all duration-(--motion-slow)">
-                                                    <div class="w-11 h-11 sm:w-12 sm:h-12 rounded-full bg-ink/20 backdrop-blur-md border border-ink/40 flex items-center justify-center text-ink shadow-xl hover:bg-ink/40">
-                                                        <i class="ph-fill ph-play text-xl translate-x-0.5"></i>
-                                                    </div>
-                                                </div>
-
-                                                // Top Right Dismiss Button (hover only)
+                                                // Dismiss (on hover)
                                                 <button
                                                     type="button"
                                                     on:click=handle_remove
@@ -203,56 +203,11 @@ pub fn ContinueWatchingRow() -> impl IntoView {
                                                 >
                                                     <i class="ph-bold ph-x text-xs"></i>
                                                 </button>
-
-                                                // Top Left Episode Badge (if TV)
-                                                {ep_badge.map(|badge| view! {
-                                                    <div class="absolute top-2 left-2 px-2 py-0.5 rounded-control bg-void/70 backdrop-blur-md text-ink/90 text-caption font-bold tracking-wider uppercase border border-ink/10">
-                                                        {badge}
-                                                    </div>
-                                                })}
                                             </div>
 
-                                            // Progress Bar
-                                            <div class="h-1.5 w-full bg-ink/20 relative">
-                                                <div
-                                                    class="h-full bg-brand transition-all duration-(--motion-slow)"
-                                                    style=format!("width: {:.1}%;", percentage)
-                                                />
-                                            </div>
-
-                                            // Card Metadata & Actions footer
-                                            <div class="p-3 flex items-center justify-between bg-page">
-                                                <div class="min-w-0 flex-1 pr-2">
-                                                    <p class="text-ink text-xs sm:text-sm font-semibold truncate leading-tight">
-                                                        {title}
-                                                    </p>
-                                                    {if let Some(ep_t) = episode_title {
-                                                        view! {
-                                                            <p class="text-ink/50 text-caption truncate mt-0.5">
-                                                                {ep_t}
-                                                            </p>
-                                                        }.into_any()
-                                                    } else {
-                                                        let pct_str = crate::i18n::t_args("media-percent-watched", &[("pct", fluent_bundle::FluentValue::from(format!("{:.0}", percentage)))]);
-                                                        view! {
-                                                            <p class="text-ink/40 text-caption truncate mt-0.5">
-                                                                {pct_str}
-                                                            </p>
-                                                        }.into_any()
-                                                    }}
-                                                </div>
-
-                                                <div class="flex items-center gap-1.5 shrink-0">
-                                                    // Info button
-                                                    <button
-                                                        type="button"
-                                                        on:click=handle_open_info
-                                                        class="w-7 h-7 rounded-full border border-ink/30 hover:border-ink text-ink flex items-center justify-center hover:bg-ink/10 transition-all"
-                                                        title=crate::i18n::t("action-buttons-more-info")
-                                                    >
-                                                        <i class="ph-bold ph-info text-xs"></i>
-                                                    </button>
-                                                </div>
+                                            // How far you are: a short bar under the picture, not touching it, red for what is watched and white for what is left
+                                            <div class="mx-auto mt-2 h-[3px] w-[60%] flex overflow-hidden rounded-full bg-ink" aria-label=pct_label.clone()>
+                                                <div class="h-full bg-red-600" style=format!("width: {:.1}%;", percentage.clamp(2.0, 100.0)) />
                                             </div>
                                         </div>
                                     }

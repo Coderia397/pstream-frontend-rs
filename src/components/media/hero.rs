@@ -87,7 +87,7 @@ fn ClapperboardBadgeIcon() -> impl IntoView {
 /// The colour of a banner line's icon by what kind of line it is, so the pair is not always the same colour.
 fn hook_color(kind: &str) -> &'static str {
     match kind {
-        "new" => "text-red-400",
+        "new" => "text-danger-soft",
         "top10" => "text-orange-400",
         "credit" => "text-pink-300",
         "award" | "acclaimed" => "text-amber-300",

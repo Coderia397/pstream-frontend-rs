@@ -275,7 +275,7 @@ pub fn MovieCardPopup(
         <Portal>
             <div
                 data-popup="true"
-                class="absolute z-(--z-screen) pointer-events-auto rounded-sheet overflow-hidden bg-raised text-ink shadow-chip animate-in fade-in zoom-in-95 duration-(--motion-base)"
+                class="absolute z-(--z-screen) pointer-events-auto rounded-[20px] overflow-hidden bg-raised text-ink shadow-chip animate-in fade-in zoom-in-95 duration-(--motion-base)"
                 style=format!(
                     "width: {}px; top: {}px; left: {}px; transform-origin: {};",
                     popup_w(hovered_rect.width()), top, left, transform_origin

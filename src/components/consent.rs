@@ -147,7 +147,7 @@ fn Center() -> impl IntoView {
 }
 
 /// Mounted once in App. Shows the consent sheet until a choice is saved, and the Privacy Preference Center when asked.
-/// On a phone the sheet is a modal that fills the width at the bottom and takes about a fifth of the screen, with rounded top
+/// On a phone the sheet is a modal that fills the width at the bottom and takes about a fifth of the screen, with rounded-control top
 /// corners; from the `sm` width (a foldable or a tablet) it becomes a floating pop-up whose place is a setting (crate::config).
 #[component]
 pub fn CookieManager() -> impl IntoView {

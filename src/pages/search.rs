@@ -60,7 +60,7 @@ fn SearchListRow(item: MediaItem) -> impl IntoView {
     };
     view! {
         <div on:click=open class="flex items-center gap-3 w-full cursor-pointer active:opacity-80">
-            <div class="relative w-[33%] flex-none aspect-video overflow-hidden rounded-[6px] bg-card">
+            <div class="relative w-[33%] flex-none aspect-video overflow-hidden rounded-field bg-card">
                 <img src=picture alt="" class="absolute inset-0 w-full h-full object-cover" loading="lazy" decoding="async" draggable="false" />
             </div>
             <span class="flex-1 min-w-0 text-[16px] font-bold leading-tight text-ink line-clamp-2">{title.clone()}</span>
@@ -161,7 +161,7 @@ pub fn SearchPage() -> impl IntoView {
     view! {
         <Layout>
             // ── The bar of the phone layout ─────────────────────────────────────
-            <div class="sm:hidden fixed top-0 inset-x-0 z-(--z-nav) bg-[#262626] pt-[env(safe-area-inset-top)]">
+            <div class="sm:hidden fixed top-0 inset-x-0 z-(--z-nav) bg-field pt-[env(safe-area-inset-top)]">
                 <div class="flex items-center h-[52px] ps-1 pe-1">
                     <button on:click=on_back aria-label=crate::i18n::t("navbar-mobile-back") class="w-12 h-12 flex items-center justify-center text-ink flex-none">
                         <i class="ph ph-arrow-left text-[26px]"></i>
@@ -200,7 +200,7 @@ pub fn SearchPage() -> impl IntoView {
                 // Nothing typed: the recommendations
                 <Show when=move || q().trim().is_empty()>
                     <h1 class="text-[22px] font-bold text-ink mb-3 mt-1 ps-1">{crate::i18n::t("search-recommended")}</h1>
-                    <Suspense fallback=move || view! { <div class="space-y-3 animate-pulse">{(0..6).map(|_| view! { <div class="h-[84px] bg-card rounded-[6px]"></div> }).collect::<Vec<_>>()}</div> }>
+                    <Suspense fallback=move || view! { <div class="space-y-3 animate-pulse">{(0..6).map(|_| view! { <div class="h-[84px] bg-card rounded-field"></div> }).collect::<Vec<_>>()}</div> }>
                         {move || recommended.get().map(|items| match items {
                             Some(items) if !items.is_empty() => view! {
                                 <div class="sm:hidden flex flex-col gap-3">

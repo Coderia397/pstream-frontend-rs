@@ -177,7 +177,7 @@ pub fn SpotlightCard(
                             view! {
                                 <button
                                     on:click=on_toggle_list
-                                    class="flex items-center justify-center h-[51px] px-5 rounded-[4px] bg-[#e6e6e6] text-black text-[20px] font-semibold gap-2.5 transition-all active:scale-95 w-fit"
+                                    class="flex items-center justify-center h-[51px] px-5 rounded-control bg-[#e6e6e6] text-black text-[20px] font-semibold gap-2.5 transition-all active:scale-95 w-fit"
                                 >
                                     {move || if is_in_my_list() {
                                         view! {
@@ -197,7 +197,7 @@ pub fn SpotlightCard(
                                 <div class="flex items-center gap-2">
                                     <button
                                         on:click=on_play_click
-                                        class="flex items-center justify-center h-[54px] px-5 rounded-[4px] bg-[#e6e6e6] text-black text-[20px] font-semibold gap-2 transition-all active:scale-95"
+                                        class="flex items-center justify-center h-[54px] px-5 rounded-control bg-[#e6e6e6] text-black text-[20px] font-semibold gap-2 transition-all active:scale-95"
                                     >
                                         <i class="ph-fill ph-play text-xl text-black"></i>
                                         <span>{move || {
@@ -212,7 +212,7 @@ pub fn SpotlightCard(
                                     </button>
                                     <button
                                         on:click=on_toggle_list
-                                        class="flex items-center justify-center h-[54px] px-5 rounded-[4px] bg-[#333] text-ink text-[20px] font-semibold gap-2 transition-all active:scale-95"
+                                        class="flex items-center justify-center h-[54px] px-5 rounded-control bg-line text-ink text-[20px] font-semibold gap-2 transition-all active:scale-95"
                                     >
                                         {move || if is_in_my_list() {
                                             view! {

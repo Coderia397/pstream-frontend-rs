@@ -134,8 +134,8 @@ pub fn SpotlightArtwork(movie_id: u32, is_tv: bool, #[prop(into)] backdrop_src: 
                     <div class="absolute left-4 right-4 bottom-3 flex items-center gap-3">
                         <div on:click=on_scrub class="relative flex-1 h-9 flex items-center cursor-pointer">
                             <div class="w-full h-[3px] bg-ink/35 rounded-full"></div>
-                            <div class="absolute left-0 h-[3px] bg-red-600 rounded-full" style=move || format!("width:{}%", fraction() * 100.0)></div>
-                            <div class="absolute w-[22px] h-[22px] -ml-[11px] rounded-full bg-red-600" style=move || format!("left:{}%", fraction() * 100.0)></div>
+                            <div class="absolute left-0 h-[3px] bg-brand rounded-full" style=move || format!("width:{}%", fraction() * 100.0)></div>
+                            <div class="absolute w-[22px] h-[22px] -ml-[11px] rounded-full bg-brand" style=move || format!("left:{}%", fraction() * 100.0)></div>
                         </div>
                         <span class="text-ink text-[17px] tabular-nums w-[58px] text-right">{move || mmss(duration.get() - time.get())}</span>
                     </div>
@@ -151,7 +151,7 @@ pub fn SpotlightArtwork(movie_id: u32, is_tv: bool, #[prop(into)] backdrop_src: 
                 >
                     <i class=move || if ui_store.preview_muted.get() { "ph-fill ph-speaker-slash text-[15px]" } else { "ph-fill ph-speaker-high text-[15px]" }></i>
                 </button>
-                <div class="absolute left-0 bottom-0 z-30 h-[3px] bg-red-600" style=move || format!("width:{}%", fraction() * 100.0)></div>
+                <div class="absolute left-0 bottom-0 z-30 h-[3px] bg-brand" style=move || format!("width:{}%", fraction() * 100.0)></div>
             </Show>
         </div>
     }

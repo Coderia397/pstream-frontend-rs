@@ -345,7 +345,7 @@ pub fn InfoModal() -> impl IntoView {
         >
             // Modal Container
             <div
-                class="relative w-full max-w-[850px] bg-raised rounded-modal mt-6 md:mt-8 mb-8 overflow-hidden h-fit mx-4 transition-transform duration-(--motion-slow) origin-center"
+                class="relative w-full max-w-[850px] bg-raised rounded-sheet mt-6 md:mt-8 mb-8 overflow-hidden h-fit mx-4 transition-transform duration-(--motion-slow) origin-center"
                 class=("scale-100", move || is_open.get())
                 class=("scale-95", move || !is_open.get())
                 on:click=|e| e.stop_propagation()
@@ -538,7 +538,8 @@ pub fn InfoModal() -> impl IntoView {
                                                     href=watch_url
                                                     is_resume=has_progress
                                                     size="lg".to_string()
-                                                    shape="rect".to_string()
+                                                    shape="pill".to_string()
+                                                    class="scale-[0.99]"
                                                 />
 
                                                 // A started title: mark as watched (takes it out of Continue Watching); otherwise the My List button

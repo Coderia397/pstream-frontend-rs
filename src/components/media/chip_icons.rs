@@ -56,7 +56,7 @@ pub fn Controller(#[prop(default = 24)] size: u32) -> impl IntoView {
     }
 }
 
-/// The red TOP 10 label: a rounded square with the word TOP small above a large 10.
+/// The red TOP 10 label: a rounded-control square with the word TOP small above a large 10.
 #[component]
 pub fn Top10(#[prop(default = 24)] size: u32) -> impl IntoView {
     view! {

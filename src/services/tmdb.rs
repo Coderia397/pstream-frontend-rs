@@ -80,6 +80,23 @@ pub struct MediaItem {
     pub rating_gb: Option<String>,
     #[serde(default)]
     pub rating_us: Option<String>,
+    /// Labels from the engine (`new`, `top10`)
+    #[serde(default)]
+    pub badges: Vec<String>,
+    /// The lines of the hero banner the engine chose for this title
+    #[serde(default)]
+    pub hooks: Vec<Hook>,
+}
+
+/// One line of the hero banner: what kind it is (for its icon colour), the icon, the translation key with its arguments, and the English text.
+#[derive(Clone, Debug, Default, PartialEq, serde::Deserialize, serde::Serialize)]
+pub struct Hook {
+    pub kind: String,
+    pub icon: String,
+    pub key: String,
+    #[serde(default)]
+    pub args: serde_json::Value,
+    pub text: String,
 }
 
 impl MediaItem {

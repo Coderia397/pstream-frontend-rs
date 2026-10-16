@@ -186,5 +186,6 @@ pub fn use_library_store() -> LibraryStore {
     use_context::<LibraryStore>().expect("LibraryStore not provided")
 }
 
+pub mod ratings;
 pub mod watch_store;
 pub use watch_store::{provide_watch_store, use_watch_store, WatchRecord, WatchStore};

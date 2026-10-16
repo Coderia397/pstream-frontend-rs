@@ -84,6 +84,26 @@ fn ClapperboardBadgeIcon() -> impl IntoView {
     }
 }
 
+/// The colour of a banner line's icon by what kind of line it is, so the pair is not always the same colour.
+fn hook_color(kind: &str) -> &'static str {
+    match kind {
+        "new" => "text-red-400",
+        "top10" => "text-orange-400",
+        "credit" => "text-pink-300",
+        "award" | "acclaimed" => "text-amber-300",
+        "gem" => "text-cyan-300",
+        "favourite" => "text-rose-400",
+        "classic" => "text-yellow-200",
+        "feel" => "text-amber-200",
+        "mood" => "text-fuchsia-300",
+        "late" => "text-indigo-300",
+        "season" => "text-orange-300",
+        "family" => "text-sky-300",
+        "true_story" | "book" => "text-emerald-300",
+        _ => "text-ink",
+    }
+}
+
 #[component]
 pub fn HeroSection(
     #[prop(optional)] movies: Option<Vec<MediaItem>>,
@@ -290,6 +310,18 @@ pub fn HeroSection(
             crate::services::ai_engine::fetch_hero_highlight(id, Some(&title)).await
         }
     });
+
+    // The lines the engine chose for this title (a mix of news, credits, fame, feel and season); the two old badges below are the fallback
+    let engine_hooks = move || -> Vec<(String, String, String)> {
+        current_item()
+            .hooks
+            .into_iter()
+            .map(|h| {
+                let text = crate::services::ai_engine::engine_text(&h.key, Some(&h.args)).unwrap_or(h.text.clone());
+                (h.kind, h.icon, text)
+            })
+            .collect()
+    };
 
     // Right Badge: Creator Hook (e.g. "Directed by Denis Villeneuve", "From Creator Kane Parsons") or Marquee Stars
     let badge_right = move || {
@@ -730,10 +762,19 @@ pub fn HeroSection(
                         </div>
                     </div>
 
-                    // Right Column: Feature Badges (Intelligent creator & distinction hooks)
+                    // Right Column: the lines of the banner, a different mix for each title
                     <div class="hidden lg:flex items-center gap-2 flex-shrink-0 pointer-events-auto select-none">
                         {move || {
-                            badge_left().map(|(icon_type, text)| view! {
+                            let hooks = engine_hooks();
+                            if !hooks.is_empty() {
+                                return hooks.into_iter().map(|(kind, icon, text)| view! {
+                                    <div class="flex items-center gap-1.5 text-label font-medium text-ink bg-void/50 p-2 rounded-card">
+                                        <i class=format!("ph-bold ph-{} {}", icon, hook_color(&kind)) aria-hidden="true"></i>
+                                        <span>{text}</span>
+                                    </div>
+                                }).collect::<Vec<_>>().into_any();
+                            }
+                            [badge_left(), badge_right()].into_iter().flatten().map(|(icon_type, text)| view! {
                                 <div class="flex items-center gap-1.5 text-label font-medium text-ink bg-void/50 p-2 rounded-card">
                                     {match icon_type.as_str() {
                                         "megaphone" => view! { <MegaphoneBadgeIcon /> }.into_any(),
@@ -741,19 +782,7 @@ pub fn HeroSection(
                                     }}
                                     <span>{text}</span>
                                 </div>
-                            })
-                        }}
-
-                        {move || {
-                            badge_right().map(|(icon_type, text)| view! {
-                                <div class="flex items-center gap-1.5 text-label font-medium text-ink bg-void/50 p-2 rounded-card">
-                                    {match icon_type.as_str() {
-                                        "megaphone" => view! { <MegaphoneBadgeIcon /> }.into_any(),
-                                        _ => view! { <ClapperboardBadgeIcon /> }.into_any(),
-                                    }}
-                                    <span>{text}</span>
-                                </div>
-                            })
+                            }).collect::<Vec<_>>().into_any()
                         }}
                     </div>
                 </div>

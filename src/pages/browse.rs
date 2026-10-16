@@ -55,6 +55,9 @@ pub fn BrowseHome() -> impl IntoView {
                     return items;
                 }
             }
+            if g.is_some() {
+                return Vec::new();
+            }
             fetch_trending("all").await.unwrap_or_default()
         }
     });
@@ -77,8 +80,10 @@ pub fn BrowseHome() -> impl IntoView {
     // Dynamic Feed: AI-curated polymorphic rows from sovereign intelligence engine
     let feed = LocalResource::new(move || {
         let g = selected_genre.get().map(|g| g.name);
+        // the profile's own titles for the personal rows (read here, where the page's stores are in reach)
+        let signals = if g.is_none() { crate::services::ai_engine::personal_signals() } else { String::new() };
         async move {
-            crate::services::ai_engine::fetch_dynamic_feed("home", g.as_deref(), Some(24)).await.unwrap_or_default()
+            crate::services::ai_engine::fetch_feed_page("home", g.as_deref(), Some(24), &signals).await.map(|p| p.rows).unwrap_or_default()
         }
     });
 
@@ -149,27 +154,8 @@ pub fn BrowseHome() -> impl IntoView {
                                     <Row title=crate::i18n::t("browse-scifi-fantasy") genre_id="1492" kind="movie" />
                                 }.into_any()
                             } else {
-                                rows.into_iter().map(|r| {
-                                    let rtype = r.row_type.clone();
-                                    let title = r.title.clone();
-                                    let tagline = r.tagline.clone();
-                                    let mood_pills = r.mood_pills.clone();
-                                    let media_items = r.to_media_items();
-
-                                    if rtype == "top_ten" {
-                                        view! {
-                                            <TopTenRow title=title kind="all" items=Some(media_items) />
-                                        }.into_any()
-                                    } else {
-                                        view! {
-                                            <crate::components::media::vibe_row::VibeRow
-                                                title=title
-                                                tagline=tagline
-                                                mood_pills=mood_pills
-                                                items=media_items
-                                            />
-                                        }.into_any()
-                                    }
+                                rows.into_iter().filter(|r| !crate::components::media::feed_row::is_continue_row(r)).map(|r| {
+                                    view! { <crate::components::media::feed_row::FeedRowView row=r kind="all" /> }
                                 }).collect::<Vec<_>>().into_any()
                             }
                         })}

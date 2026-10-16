@@ -33,6 +33,8 @@ pub fn MovieCard(
     #[prop(optional, default = Vec::new())] genre_ids: Vec<u32>,
     #[prop(optional, default = Vec::new())] vibe_pills: Vec<String>,
     #[prop(default = None)] match_percentage: Option<u32>,
+    /// A recent release: shows the Recently Added badge
+    #[prop(optional, default = false)] is_new: bool,
 ) -> impl IntoView {
     let _ = is_grid;
     let ui_store = use_ui_store();
@@ -195,6 +197,12 @@ pub fn MovieCard(
                         draggable="false"
                     />
                 </picture>
+
+                {is_new.then(|| view! {
+                    <span class="absolute bottom-2 left-2 z-10 rounded-sm bg-red-600 px-1.5 py-0.5 text-[10px] md:text-xs font-semibold uppercase tracking-wide text-white pointer-events-none">
+                        {crate::i18n::t("badge-recently-added")}
+                    </span>
+                })}
 
                 // Watch Progress Bar if user has watched this title
                 {move || {

@@ -201,7 +201,7 @@ pub fn MovieCardPopup(
         library_store.my_list.get().contains_key(&movie_id)
     });
 
-    let (rating, set_rating) = signal(None::<MovieRating>);
+    let (rating, set_rating) = signal(crate::store::ratings::get(movie_id, movie.is_tv()));
 
     // 1200ms debounce auto-preview trailer
     let (is_playing, set_is_playing) = signal(false);
@@ -422,6 +422,7 @@ pub fn MovieCardPopup(
                                             Some(MovieRating::Dislike) => None,
                                         };
                                     });
+                                    crate::store::ratings::set(movie_id, movie_stored.get_value().is_tv(), rating.get_untracked());
                                 })
                                 size="md".to_string()
                             />

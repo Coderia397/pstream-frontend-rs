@@ -418,7 +418,7 @@ pub fn InfoModal() -> impl IntoView {
                                 })
                             };
 
-                            let (modal_rating, set_modal_rating) = signal(None::<MovieRating>);
+                            let (modal_rating, set_modal_rating) = signal(crate::store::ratings::get(current_movie_id, is_tv_val));
                             let on_rate_cb = Callback::new(move |_| {
                                 set_modal_rating.update(|r| {
                                     *r = match *r {
@@ -428,6 +428,7 @@ pub fn InfoModal() -> impl IntoView {
                                         Some(MovieRating::Dislike) => None,
                                     };
                                 });
+                                crate::store::ratings::set(current_movie_id, is_tv_val, modal_rating.get_untracked());
                             });
 
                             let watch_store = crate::store::use_watch_store();

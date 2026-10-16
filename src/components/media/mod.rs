@@ -17,3 +17,5 @@ pub mod spotlight_card;
 pub mod continue_watching_row;
 pub mod action_buttons;
 pub mod vibe_row;
+pub mod collection_row;
+pub mod feed_row;

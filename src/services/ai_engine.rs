@@ -32,6 +32,25 @@ pub struct VibeItem {
     /// Full release date (YYYY-MM-DD) when the engine knows it; New & Popular rows carry it
     #[serde(default)]
     pub release_date: Option<String>,
+    /// Up to three words for how the title feels (then its genres), shown as the tags of the hover card
+    #[serde(default)]
+    pub tags: Vec<String>,
+    /// Labels the engine puts on a title: `top10` with a rank in a chart row, `new` for a recent release
+    #[serde(default)]
+    pub badges: Vec<Badge>,
+    /// Minutes, 0 when unknown
+    #[serde(default)]
+    pub runtime: Option<u32>,
+    /// The lines of the hero banner (hero feed only)
+    #[serde(default)]
+    pub hooks: Vec<crate::services::tmdb::Hook>,
+}
+
+#[derive(Clone, Debug, Default, Deserialize, Serialize, PartialEq)]
+pub struct Badge {
+    pub kind: String,
+    #[serde(default)]
+    pub rank: Option<u32>,
 }
 
 impl VibeItem {
@@ -61,11 +80,12 @@ impl VibeItem {
             first_air_date: self.release_date.clone().or_else(|| self.release_year.clone()),
             media_type: self.media_type.clone(),
             match_percentage: self.match_percentage,
-            vibe_pills: self.vibe_pills.clone(),
+            vibe_pills: if self.vibe_pills.is_empty() { self.tags.clone() } else { self.vibe_pills.clone() },
+            badges: self.badges.iter().map(|b| b.kind.clone()).collect(),
+            hooks: self.hooks.clone(),
             genre_ids: Vec::new(),
             rating_gb: self.rating_gb.clone(),
             rating_us: self.rating_us.clone(),
-            ..Default::default()
         }
     }
 }
@@ -81,6 +101,66 @@ pub struct FeedRow {
     pub mood_pills: Vec<String>,
     #[serde(default)]
     pub items: Vec<VibeItem>,
+    /// What the engine built the row from: personal, new, collection, vibe, mood, calendar, attribute, related
+    #[serde(default, rename = "type")]
+    pub kind: String,
+    /// Translation key of the row title (`row.because_you_watched`) and its arguments; the plain `title` is the English fallback
+    #[serde(default)]
+    pub title_key: Option<String>,
+    #[serde(default)]
+    pub title_args: Option<serde_json::Value>,
+    /// Why the row is shown (`{ kind, title, id, media_type }`)
+    #[serde(default)]
+    pub reason: Option<serde_json::Value>,
+    /// Banner data of a collection row
+    #[serde(default)]
+    pub collection: Option<Collection>,
+}
+
+#[derive(Clone, Debug, Default, Deserialize, Serialize, PartialEq)]
+pub struct Collection {
+    pub id: String,
+    pub label_key: String,
+    pub label: String,
+    #[serde(default)]
+    pub description: String,
+    #[serde(default)]
+    pub target: serde_json::Value,
+    /// Backdrop paths of the lead titles, for the background of the banner
+    #[serde(default)]
+    pub images: Vec<String>,
+}
+
+/// A chip for the top of the home page: an event that is in season.
+#[derive(Clone, Debug, Default, Deserialize, Serialize, PartialEq)]
+pub struct Chip {
+    pub id: String,
+    pub label_key: String,
+    pub label: String,
+    #[serde(default)]
+    pub target: serde_json::Value,
+}
+
+/// The interface text for a key the engine sends (`row.my_list` is `row-my-list` in the language files), None when no language has it.
+pub fn engine_text(key: &str, args: Option<&serde_json::Value>) -> Option<String> {
+    let id = key.replace(['.', '_'], "-");
+    if !crate::i18n::has(&id) {
+        return None;
+    }
+    let pairs: Vec<(String, fluent_bundle::FluentValue<'static>)> = args
+        .and_then(|a| a.as_object())
+        .map(|m| {
+            m.iter()
+                .filter_map(|(k, v)| match (v.as_str(), v.as_i64()) {
+                    (Some(s), _) => Some((k.clone(), fluent_bundle::FluentValue::from(s.to_string()))),
+                    (_, Some(n)) => Some((k.clone(), fluent_bundle::FluentValue::from(n))),
+                    _ => None,
+                })
+                .collect()
+        })
+        .unwrap_or_default();
+    let refs: Vec<(&str, fluent_bundle::FluentValue)> = pairs.iter().map(|(k, v)| (k.as_str(), v.clone())).collect();
+    Some(crate::i18n::t_args(&id, &refs))
 }
 
 fn default_row_type() -> String {
@@ -90,6 +170,11 @@ fn default_row_type() -> String {
 impl FeedRow {
     pub fn is_top_ten(&self) -> bool {
         self.row_type == "top_ten"
+    }
+
+    /// The title in the language of the page: the translation of the engine's key when there is one, the engine's own words otherwise.
+    pub fn display_title(&self) -> String {
+        self.title_key.as_deref().and_then(|k| engine_text(k, self.title_args.as_ref())).unwrap_or_else(|| self.title.clone())
     }
 
     pub fn to_media_items(&self) -> Vec<MediaItem> {
@@ -106,6 +191,9 @@ pub struct FeedResponse {
     pub total_rows: usize,
     #[serde(default)]
     pub rows: Vec<FeedRow>,
+    /// Events in season (home page only)
+    #[serde(default)]
+    pub chips: Vec<Chip>,
 }
 
 thread_local! {
@@ -150,11 +238,11 @@ thread_local! {
     static HIDDEN_PAGES: std::cell::RefCell<std::collections::HashMap<(String, String, String), std::collections::HashSet<String>>> = std::cell::RefCell::new(std::collections::HashMap::new());
 }
 
-/// Asks the engine which of `names` a limited profile has too few titles for (`route` is `genre-support` or `language-support`, `param` the
-/// query field that carries the names, `field` the key of the answer). A profile with no limit, or an engine that cannot be reached, hides
-/// nothing. Answers are kept per limit, route and surface.
+/// Asks the engine which of `names` a profile has too few titles for (`route` is `genre-support` or `language-support`, `param` the
+/// query field that carries the names, `field` the key of the answer). An engine that cannot be reached hides nothing. Answers are kept per limit, route and surface.
 async fn hidden_pages(route: &str, param: &str, field: &str, surface: &str, names: &[String]) -> std::collections::HashSet<String> {
-    let Some(limit) = crate::pages::settings::prefs::active_rating().filter(|l| *l != "18") else { return Default::default() };
+    // a profile without a limit is asked as an adult: a page with too little of its own is not offered to anyone
+    let limit = crate::pages::settings::prefs::active_rating().unwrap_or("18");
     let key = (route.to_string(), limit.to_string(), surface.to_string());
     if let Some(hit) = HIDDEN_PAGES.with(|c| c.borrow().get(&key).cloned()) {
         return hit;
@@ -266,11 +354,53 @@ pub async fn fetch_language_titles(lang: &str) -> Option<Vec<MediaItem>> {
     (!items.is_empty()).then_some(items)
 }
 
+/// The profile's own titles for the personal rows, as query text: `&recent=` (what was watched, newest first), `&saved=` (My List) and the hour
+/// of the day for the late night rows. Empty when personalisation is off. Call it where the page is built (it reads the stores of the page).
+pub fn personal_signals() -> String {
+    use leptos::prelude::WithUntracked;
+    let hour = format!("&hour={}", js_sys::Date::new_0().get_hours());
+    if !crate::consent::personalization_allowed() {
+        return hour;
+    }
+    let key = |id: u32, is_tv: bool| format!("{}:{}", if is_tv { "tv" } else { "movie" }, id);
+    let mut out = hour;
+    if let Some(watch) = leptos::prelude::use_context::<crate::store::WatchStore>() {
+        let recent: Vec<String> = watch.records.with_untracked(|m| {
+            let mut list: Vec<&crate::store::WatchRecord> = m.values().collect();
+            list.sort_by_key(|r| std::cmp::Reverse(r.updated_at));
+            list.into_iter().take(12).map(|r| key(r.media_id, r.is_tv)).collect()
+        });
+        if !recent.is_empty() {
+            out.push_str(&format!("&recent={}", recent.join(",")));
+        }
+    }
+    let liked = crate::store::ratings::liked_keys(12);
+    if !liked.is_empty() {
+        out.push_str(&format!("&liked={}", liked.join(",")));
+    }
+    if let Some(lib) = leptos::prelude::use_context::<crate::store::LibraryStore>() {
+        let saved: Vec<String> = lib.my_list.with_untracked(|m| {
+            let mut list: Vec<&crate::store::LibraryEntry> = m.values().collect();
+            list.sort_by_key(|e| std::cmp::Reverse(e.added_at));
+            list.into_iter().take(12).map(|e| key(e.media.id, e.media.media_type.as_deref() == Some("tv"))).collect()
+        });
+        if !saved.is_empty() {
+            out.push_str(&format!("&saved={}", saved.join(",")));
+        }
+    }
+    out
+}
+
 /// Fetches dynamic feed rows composed by the backend intelligence server
 pub async fn fetch_dynamic_feed(surface: &str, genre: Option<&str>, limit: Option<usize>) -> Option<Vec<FeedRow>> {
+    fetch_feed_page(surface, genre, limit, "").await.map(|d| d.rows)
+}
+
+/// As `fetch_dynamic_feed`, with the answer as a whole (rows and chips) and the profile's own titles (`signals`, from `personal_signals`).
+pub async fn fetch_feed_page(surface: &str, genre: Option<&str>, limit: Option<usize>, signals: &str) -> Option<FeedResponse> {
     let lim = limit.unwrap_or(18);
     let session_id = get_or_create_session_id();
-    let mut url = format!("{}/api/feed?surface={}&limit={}&session_id={}{}", AI_API_BASE_URL, surface, lim, session_id, rating_query());
+    let mut url = format!("{}/api/feed?surface={}&limit={}&session_id={}{}{}", AI_API_BASE_URL, surface, lim, session_id, rating_query(), signals);
     
     if let Some(aff) = get_user_taste_affinity() {
         if !aff.is_empty() {
@@ -295,7 +425,7 @@ pub async fn fetch_dynamic_feed(surface: &str, genre: Option<&str>, limit: Optio
     if data.rows.is_empty() {
         None
     } else {
-        Some(data.rows)
+        Some(data)
     }
 }
 
@@ -384,7 +514,7 @@ pub struct HeroFeedResponse {
 /// Fetches dynamic surface-differentiated hero feed from local recommendation engine
 pub async fn fetch_hero_feed(surface: &str, genre: Option<&str>) -> Option<Vec<MediaItem>> {
     let session_id = get_or_create_session_id();
-    let mut url = format!("{}/api/hero-feed?surface={}&session_id={}{}", AI_API_BASE_URL, surface, session_id, rating_query());
+    let mut url = format!("{}/api/hero-feed?surface={}&session_id={}{}&hour={}", AI_API_BASE_URL, surface, session_id, rating_query(), js_sys::Date::new_0().get_hours());
     if let Some(g) = genre {
         if !g.is_empty() {
             let encoded = js_sys::encode_uri_component(g);

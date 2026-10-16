@@ -7,6 +7,7 @@ pub const PROFILES: &str = "streams_profiles";
 pub const PREVIEW_MUTED: &str = "streams_preview_muted";
 pub const SESSION_ID: &str = "streams_session_id";
 pub const USER_AFFINITY: &str = "streams_user_affinity";
+pub const TITLE_RATINGS: &str = "streams_title_ratings_v1";
 pub const LANGUAGE: &str = "streams_language";
 pub const NOTIFICATIONS_READ: &str = "streams-notifications-read:default";
 pub const AMBIENT_LAST: &str = "streams-ambient:last";

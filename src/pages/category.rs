@@ -80,6 +80,10 @@ pub fn CategoryPage(
                     return items;
                 }
             }
+            // a genre page never borrows the trending titles of the whole site: no title fits better than a wrong one
+            if gid_opt.is_some() {
+                return Vec::new();
+            }
             fetch_trending(k).await.unwrap_or_default()
         }
     });
@@ -173,27 +177,8 @@ pub fn CategoryPage(
                                     <Row title=crate::i18n::t("browse-scifi-fantasy") genre_id="1492" kind=kind.to_string() />
                                 }.into_any()
                             } else {
-                                rows.into_iter().map(|r| {
-                                    let rtype = r.row_type.clone();
-                                    let row_title = r.title.clone();
-                                    let tagline = r.tagline.clone();
-                                    let mood_pills = r.mood_pills.clone();
-                                    let media_items = r.to_media_items();
-
-                                    if rtype == "top_ten" {
-                                        view! {
-                                            <TopTenRow title=row_title kind=kind.to_string() items=Some(media_items) />
-                                        }.into_any()
-                                    } else {
-                                        view! {
-                                            <crate::components::media::vibe_row::VibeRow
-                                                title=row_title
-                                                tagline=tagline
-                                                mood_pills=mood_pills
-                                                items=media_items
-                                            />
-                                        }.into_any()
-                                    }
+                                rows.into_iter().filter(|r| !crate::components::media::feed_row::is_continue_row(r)).map(|r| {
+                                    view! { <crate::components::media::feed_row::FeedRowView row=r kind=kind.to_string() /> }
                                 }).collect::<Vec<_>>().into_any()
                             }
                         })}

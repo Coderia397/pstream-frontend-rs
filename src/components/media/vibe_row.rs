@@ -156,6 +156,7 @@ pub fn VibeRow(
                                         let vibe_pills = item.vibe_pills.clone();
                                         let overview = item.overview.clone();
                                         let genre_ids = item.genre_ids.clone();
+                                        let is_new = item.badges.iter().any(|b| b == "new");
                                         
                                         view! {
                                             <div 
@@ -173,6 +174,7 @@ pub fn VibeRow(
                                                     genre_ids=genre_ids
                                                     match_percentage=match_pct
                                                     vibe_pills=vibe_pills
+                                                    is_new=is_new
                                                 />
                                             </div>
                                         }

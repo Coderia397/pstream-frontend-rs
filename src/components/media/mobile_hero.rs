@@ -41,7 +41,7 @@ pub fn MobileHero(
         }
     }).unwrap_or_default();
 
-    let tags: Vec<String> = movie.vibe_pills.iter().take(3).cloned().collect();
+    let tags: Vec<String> = movie.vibe_pills.clone().unwrap_or_default().into_iter().take(3).collect();
     let movie_c1 = movie.clone();
     let movie_c2 = movie.clone();
     let movie_c3 = movie.clone();

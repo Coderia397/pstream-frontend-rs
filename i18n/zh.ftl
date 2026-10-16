@@ -1670,7 +1670,7 @@ set-blocked-placeholder = 输入剧集或电影名称
 set-blocked-count =
     { $count ->
     *[other] { $count } 部影片
-    }
+}
 set-lock-on = 开启
 set-lock-off = 关闭
 set-lock-title-on = 已开启个人资料锁
@@ -1824,7 +1824,7 @@ set-overview-edit-hint = 语言、字幕、自动播放、通知、隐私等
 set-overview-profiles =
     { $count ->
     *[other] { $count } 个配置文件
-    }
+}
 set-security-access = 访问和隐私
 set-privacy-hint = 管理您的个人信息使用
 set-profiles-parental = 家长控制和权限
@@ -2013,3 +2013,42 @@ set-rating-system-hint = 你阅读的年龄分级标签。自动模式将跟随�
 set-rating-system-auto = 自动
 set-rating-system-uk = 英国 (U, PG, 12, 15, 18)
 set-rating-system-us = 美国 (G, PG, PG-13, R, NC-17)
+tour-back = 返回
+tour-next = 下一步
+tour-done = 明白了
+tour-step-of = { $n } of { $total }
+tour-find-title = 如何找到你想看的内容
+tour-find-text = 打开系列或电影，选择一个类型，或使用搜索查找标题、人物或心情。
+tour-new-title = 看看有什么新内容
+tour-new-text = 新与热门展示了刚刚上线的内容、即将上线的内容以及大家都在看的内容。
+tour-list-title = 保存标题以备后用
+tour-list-text = 将标题保存到我的列表，它会在这里等待你。
+navbar-mobile-notifications = 通知
+media-play-series = 播放系列
+media-play-film = 播放电影
+nav-all-categories = 所有分类
+navbar-mobile-back = 返回
+search-placeholder = 搜索系列、电影、人物…
+search-recommended = 推荐系列 & 电影
+search-top-results = 热门结果
+search-more-like = 类似 { $title } 的内容
+search-voice = 通过语音搜索
+media-mute = 静音
+media-unmute = 取消静音
+new-hot-watch-series = 现在观看系列
+new-hot-watch-film = 现在观看电影
+tabs-top10-films = Top 10 电影
+row-np-top10-movies = 今日 Top 10 电影
+row-np-top10-series = 今日 Top 10 系列
+row-np-trending-today = 今日热门
+row-np-new-movies = 新电影
+row-np-new-episodes = 本周新剧集
+row-np-coming-soon-cinemas = 即将上映到影院
+row-np-new-acclaimed = 新且备受赞誉
+row-np-coming-soon-series = 即将上线：系列
+row-np-new-series = 新系列
+row-np-new-in-language = 新上线的 { $language } 内容
+row-np-new-genre = 新上线的 { $genre }
+row-np-under-the-radar = 低调推荐
+row-np-hidden-gems = 隐藏瑰宝
+row-np-closer-look = 值得仔细一看

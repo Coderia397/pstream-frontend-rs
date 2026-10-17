@@ -6,3 +6,5 @@ pub mod add_edit_modal;
 pub mod choose_icon;
 pub mod switch_overlay;
 pub mod kids_avatar;
+pub mod icon_row;
+pub mod icon_picker;

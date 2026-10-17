@@ -7,7 +7,6 @@ use super::widgets::{is_wide, toast, ConfirmDialog, DigitBoxes, Field, FormButto
 use super::Screen;
 use crate::config::{GAME_HANDLE_MAX, GAME_HANDLE_MIN, PIN_LENGTH, PROFILE_NAME_MAX};
 use crate::data::settings::{rating, HANDLE_ADJECTIVES, HANDLE_NOUNS, PROFILE_DATA_USAGE};
-use crate::data::AVATAR_CATEGORIES;
 use crate::i18n::{t, t_args};
 use crate::models::profile::Profile;
 use crate::store::use_profile_store;
@@ -324,45 +323,22 @@ fn valid_handle(handle: &str) -> bool {
 
 #[component]
 pub fn AvatarPicker(id: String) -> impl IntoView {
+    use crate::components::profiles::icon_picker::IconPicker;
     let navigate = use_navigate();
     let id = StoredValue::new(id);
+    let name = Signal::derive(move || find(&id.get_value()).map(|p| p.name).unwrap_or_default());
+    let current = Signal::derive(move || find(&id.get_value()).and_then(|p| p.avatar_url));
+    let (pick_nav, back_nav) = (navigate.clone(), navigate);
     view! {
-        <div class="space-y-8 pb-12">
-            {AVATAR_CATEGORIES
-                .iter()
-                .map(|cat| {
-                    let navigate = navigate.clone();
-                    view! {
-                        <section>
-                            <h2 class="mb-3 text-heading font-bold">{cat.name}</h2>
-                            <div class="flex gap-3 overflow-x-auto pb-2">
-                                {cat.avatars
-                                    .iter()
-                                    .map(|av| {
-                                        let url = av.url.to_string();
-                                        let navigate = navigate.clone();
-                                        view! {
-                                            <button
-                                                type="button"
-                                                aria-label=av.name
-                                                on:click=move |_| {
-                                                    let u = url.clone();
-                                                    change(&id.get_value(), |p| p.avatar_url = Some(u));
-                                                    navigate(&Screen::Profile(id.get_value()).path(), Default::default());
-                                                }
-                                                class="h-20 w-20 shrink-0 overflow-hidden rounded-field border-2 border-transparent hover:border-ink focus-visible:border-ink focus-visible:outline-none"
-                                            >
-                                                <img src=av.url alt="" class="h-full w-full object-cover" />
-                                            </button>
-                                        }
-                                    })
-                                    .collect_view()}
-                            </div>
-                        </section>
-                    }
-                })
-                .collect_view()}
-        </div>
+        <IconPicker
+            name=name
+            current=current
+            on_pick=Callback::new(move |url: String| {
+                change(&id.get_value(), |p| p.avatar_url = Some(url));
+                pick_nav(&Screen::ProfileEdit(id.get_value()).path(), Default::default());
+            })
+            on_back=Callback::new(move |_| back_nav(&Screen::ProfileEdit(id.get_value()).path(), Default::default()))
+        />
     }
 }
 

@@ -74,7 +74,6 @@ pub fn NetflixVideoPlayer(
     let (current_time, set_current_time) = signal(0.0);
     let (duration, set_duration) = signal(0.0);
     let (buffered_fraction, set_buffered_fraction) = signal(0.0);
-    let (playback_speed, set_playback_speed) = signal(1.0);
     let (is_idle, set_is_idle) = signal(false);
     let (pending_resume_time, set_pending_resume_time) = signal(0.0);
 
@@ -267,15 +266,6 @@ pub fn NetflixVideoPlayer(
         }
     };
 
-    // Set Playback Speed
-    let do_set_speed = move |spd: f64| {
-        reset_idle_timer();
-        if let Some(video) = video_ref.get() {
-            video.set_playback_rate(spd);
-            set_playback_speed.set(spd);
-        }
-    };
-
     // Fullscreen Toggle
     let do_toggle_fullscreen = move || {
         reset_idle_timer();
@@ -436,11 +426,8 @@ pub fn NetflixVideoPlayer(
         >
             {move || match player_state.get() {
                 PlayerState::Resolving => view! {
-                    <div class="absolute inset-0 flex flex-col items-center justify-center bg-void z-30">
-                        <div class="w-16 h-16 rounded-full border-4 border-brand border-t-transparent animate-spin mb-4 shadow-2xl"></div>
-                        <p class="text-ink/90 text-sm font-semibold tracking-wide animate-pulse">
-                            {crate::i18n::t("mod-finding-optimal-stream")}
-                        </p>
+                    <div class="absolute inset-0 flex items-center justify-center bg-void z-30" role="status" aria-label=crate::i18n::t("mod-finding-optimal-stream")>
+                        <div class="aspect-square w-[4vw] animate-spin rounded-full border-[3px] border-transparent border-s-brand"></div>
                     </div>
                 }.into_any(),
 
@@ -525,14 +512,12 @@ pub fn NetflixVideoPlayer(
                                             current_time=current_time
                                             duration=duration
                                             buffered_fraction=buffered_fraction
-                                            playback_speed=playback_speed
                                             is_idle=is_idle
                                             on_toggle_play=Callback::new(move |_| do_toggle_play())
                                             on_seek=Callback::new(move |t| do_seek(t))
                                             on_skip_by=Callback::new(move |d| do_skip_by(d))
                                             on_toggle_mute=Callback::new(move |_| do_toggle_mute())
                                             on_set_volume=Callback::new(move |v| do_set_volume(v))
-                                            on_set_speed=Callback::new(move |s| do_set_speed(s))
                                             on_toggle_episodes=Callback::new(move |_| set_is_episodes_open.update(|o| *o = !*o))
                                             on_toggle_subtitles=Callback::new(move |_| set_is_subtitles_open.update(|o| *o = !*o))
                                             on_next_episode=on_episode_change.map(|cb| Callback::new(move |_| {

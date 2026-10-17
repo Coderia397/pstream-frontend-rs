@@ -2341,3 +2341,4 @@ rating-rated = Rated
 controls-overlay-report-problem = Report a problem
 player-volume = Volume
 player-rating-label = Rating:
+player-watch-credits = Watch credits

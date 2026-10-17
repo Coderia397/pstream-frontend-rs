@@ -97,9 +97,9 @@ pub fn PlayerPage() -> impl IntoView {
     view! {
         <div class="w-full h-screen bg-void overflow-hidden select-none">
             <Suspense fallback=move || view! {
-                <div class="w-full h-full flex flex-col items-center justify-center bg-void">
-                    <div class="w-16 h-16 rounded-full border-4 border-brand border-t-transparent animate-spin mb-4 shadow-2xl"></div>
-                    <p class="text-ink/80 text-sm font-semibold">{crate::i18n::t("player-loading")}</p>
+                <div class="w-full h-full flex items-center justify-center bg-void" role="status" aria-label=crate::i18n::t("player-loading")>
+                    // as on Netflix: black, one thin arc turning in the middle, 4vw wide, no text
+                    <div class="aspect-square w-[4vw] animate-spin rounded-full border-[3px] border-transparent border-s-brand"></div>
                 </div>
             }>
                 {move || {

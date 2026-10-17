@@ -25,24 +25,26 @@ pub fn SkipButton(
         d > 120.0 && t >= d - 45.0 && t < d - 2.0
     };
 
+    // "Watch credits" hides the end of episode offer for the rest of this play
+    let (credits_dismissed, set_credits_dismissed) = signal(false);
+    // laid out as read from the end of episode screen on Netflix (1666 wide page): buttons 2.36vw high, 0.75vw apart, 3vw from the right edge and 3.54vw from the bottom, text 1vw, radius 4px
+    let base = "flex h-[2.36vw] items-center justify-center gap-[0.6vw] rounded-[4px] px-[1.4vw] text-[1vw] font-medium select-none transition-colors duration-(--motion-fast)";
+
     view! {
-        <div class="fixed bottom-24 right-8 z-30 flex flex-col gap-3 pointer-events-auto">
+        <div class="fixed bottom-[3.54vw] right-[3vw] z-30 flex items-center gap-[0.75vw] pointer-events-auto">
             <Show when=show_skip_intro>
-                <button
-                    on:click=move |_| on_skip_intro.run(())
-                    class="flex items-center gap-2.5 px-6 py-3 bg-void/75 hover:bg-void/90 backdrop-blur-md text-ink font-bold text-sm rounded-card border border-ink/20 shadow-2xl hover:scale-105 active:scale-95 transition-all duration-(--motion-fast) select-none group"
-                >
-                    <i class="ph ph-fast-forward text-lg text-ink group-hover:text-brand transition-colors"></i>
+                <button on:click=move |_| on_skip_intro.run(()) class=format!("{base} bg-[rgba(109,109,110,0.7)] text-ink hover:bg-[rgba(109,109,110,0.4)]")>
+                    <i class="ph-fill ph-fast-forward text-[1.4vw]"></i>
                     <span>{crate::i18n::t("player-skip-intro")}</span>
                 </button>
             </Show>
 
-            <Show when=show_next_episode>
-                <button
-                    on:click=move |_| on_next_episode.run(())
-                    class="btn-brand flex items-center gap-2.5 px-6 py-3 text-sm rounded-card shadow-2xl hover:scale-105 active:scale-95 transition-all duration-(--motion-fast) select-none"
-                >
-                    <i class="ph ph-skip-forward text-lg"></i>
+            <Show when=move || show_next_episode() && !credits_dismissed.get()>
+                <button on:click=move |_| set_credits_dismissed.set(true) class=format!("{base} bg-[rgba(109,109,110,0.7)] text-ink hover:bg-[rgba(109,109,110,0.4)]")>
+                    <span>{crate::i18n::t("player-watch-credits")}</span>
+                </button>
+                <button on:click=move |_| on_next_episode.run(()) class=format!("{base} bg-ink text-void hover:bg-ink/75")>
+                    <i class="ph-fill ph-play text-[1.6vw]"></i>
                     <span>{crate::i18n::t("player-next-episode")}</span>
                 </button>
             </Show>

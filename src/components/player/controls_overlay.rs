@@ -28,22 +28,18 @@ pub fn ControlsOverlay(
     current_time: ReadSignal<f64>,
     duration: ReadSignal<f64>,
     buffered_fraction: ReadSignal<f64>,
-    playback_speed: ReadSignal<f64>,
     is_idle: ReadSignal<bool>,
     on_toggle_play: Callback<()>,
     on_seek: Callback<f64>,
     on_skip_by: Callback<f64>,
     on_toggle_mute: Callback<()>,
     on_set_volume: Callback<f64>,
-    on_set_speed: Callback<f64>,
     on_toggle_episodes: Callback<()>,
     on_toggle_subtitles: Callback<()>,
     on_next_episode: Option<Callback<()>>,
     on_toggle_fullscreen: Callback<()>,
     on_back: Callback<()>,
 ) -> impl IntoView {
-    let (show_speed_menu, set_show_speed_menu) = signal(false);
-
     // 36 px icons inside 44 px buttons, as in the app
     let play_icon_class = move || if is_playing.get() { "ph-fill ph-pause text-[36px]" } else { "ph-fill ph-play text-[36px]" };
     let speaker_icon_class = move || {
@@ -56,16 +52,16 @@ pub fn ControlsOverlay(
         )
     };
     // every button: 44 x 44, no plate
-    let btn = "relative flex h-11 w-11 shrink-0 items-center justify-center rounded-[2px] text-ink transition-transform duration-(--motion-quick) hover:scale-110 active:scale-95";
+    let btn = "flex h-11 relative w-11 shrink-0 items-center justify-center rounded-[2px] text-ink transition-transform duration-(--motion-quick) hover:scale-110 active:scale-95";
 
     view! {
         <div class=overlay_class>
             // the top shade and the back and report buttons (30 px from the corner)
             <div class="pointer-events-none absolute inset-x-0 top-0 h-[85%]" style="background: linear-gradient(rgba(0,0,0,0.3) 0, rgba(0,0,0,0) 20%);" />
-            <button on:click=move |_| on_back.run(()) class=format!("{btn} absolute left-[30px] top-[30px] z-10") title=crate::i18n::t("controls-overlay-back-to-browse") aria-label=crate::i18n::t("controls-overlay-back-to-browse")>
+            <button on:click=move |_| on_back.run(()) class=format!("{} absolute left-[30px] top-[30px] z-10", btn.replace(" relative", "")) title=crate::i18n::t("controls-overlay-back-to-browse") aria-label=crate::i18n::t("controls-overlay-back-to-browse")>
                 <i class="ph ph-arrow-left text-[36px]"></i>
             </button>
-            <a href="/help/contact" class=format!("{btn} absolute right-[30px] top-[30px] z-10") title=crate::i18n::t("controls-overlay-report-problem") aria-label=crate::i18n::t("controls-overlay-report-problem")>
+            <a href="/help/contact" class=format!("{} absolute right-[30px] top-[30px] z-10", btn.replace(" relative", "")) title=crate::i18n::t("controls-overlay-report-problem") aria-label=crate::i18n::t("controls-overlay-report-problem")>
                 <i class="ph ph-flag text-[34px]"></i>
             </a>
 
@@ -108,7 +104,7 @@ pub fn ControlsOverlay(
                                 type="range" min="0" max="1" step="0.05"
                                 prop:value=move || if is_muted.get() { 0.0 } else { volume.get() }
                                 on:input=move |e| { if let Ok(v) = event_target_value(&e).parse::<f64>() { on_set_volume.run(v); } }
-                                class="h-1 w-0 cursor-pointer accent-brand transition-all duration-(--motion-base) group-hover/vol:ms-2 group-hover/vol:w-24"
+                                class="h-1 w-0 cursor-pointer opacity-0 accent-brand transition-all duration-(--motion-base) group-hover/vol:ms-2 group-hover/vol:w-24 group-hover/vol:opacity-100"
                                 aria-label=crate::i18n::t("player-volume")
                             />
                         </div>
@@ -120,7 +116,7 @@ pub fn ControlsOverlay(
                         {subtitle.clone().map(|sub| view! { <span class="truncate text-ink">{sub}</span> })}
                     </div>
 
-                    // right: next, episodes, speed, audio and subtitles, fullscreen
+                    // right: next, episodes, audio and subtitles, fullscreen
                     <div class="flex items-center gap-3 md:gap-[38px]">
                         <Show when=move || is_tv && on_next_episode.is_some()>
                             <button on:click=move |_| { if let Some(cb) = on_next_episode { cb.run(()); } } class=btn title=crate::i18n::t("controls-overlay-next-episode")>
@@ -132,28 +128,6 @@ pub fn ControlsOverlay(
                                 <i class="ph ph-stack text-[36px]"></i>
                             </button>
                         </Show>
-                        // speed (a small menu over the button)
-                        <div class="relative">
-                            <button on:click=move |_| set_show_speed_menu.update(|s| *s = !*s) class=btn title=crate::i18n::t("controls-overlay-playback-speed")>
-                                <i class="ph ph-gauge text-[36px]"></i>
-                            </button>
-                            <Show when=move || show_speed_menu.get()>
-                                <div class="absolute bottom-14 right-0 z-30 flex min-w-[110px] flex-col rounded-[8px] bg-[#262626] py-2 shadow-2xl">
-                                    {[0.5, 0.75, 1.0, 1.25, 1.5].into_iter().map(|spd| {
-                                        let set_spd_cb = on_set_speed;
-                                        view! {
-                                            <button
-                                                on:click=move |_| { set_spd_cb.run(spd); set_show_speed_menu.set(false); }
-                                                class=move || format!("flex items-center gap-2 px-4 py-2 text-left text-[18px] hover:bg-ink/10 {}", if (playback_speed.get() - spd).abs() < 0.01 { "font-bold text-ink" } else { "text-ink/70" })
-                                            >
-                                                <i class=move || if (playback_speed.get() - spd).abs() < 0.01 { "ph ph-check text-[18px]" } else { "ph ph-check invisible text-[18px]" }></i>
-                                                <span>{format!("{spd:.2}x")}</span>
-                                            </button>
-                                        }
-                                    }).collect::<Vec<_>>()}
-                                </div>
-                            </Show>
-                        </div>
                         <button on:click=move |_| on_toggle_subtitles.run(()) class=btn title=crate::i18n::t("controls-overlay-audio-subtitles")>
                             <i class="ph ph-subtitles text-[36px]"></i>
                         </button>

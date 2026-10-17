@@ -48,6 +48,8 @@ pub struct ProfilePrefs {
     pub data_usage: String,
     /// Name in Netflix style games (profile_settings.game_handle).
     pub game_handle: Option<String>,
+    /// "woman", "man" or "none" (Edit Profile).
+    pub gender: Option<String>,
     pub audio_language: Option<String>,
     pub subtitle_language: Option<String>,
     pub ui_language: Option<String>,
@@ -59,7 +61,7 @@ pub struct ProfilePrefs {
 
 impl Default for ProfilePrefs {
     fn default() -> Self {
-        Self { autoplay_next: true, autoplay_previews: true, notifications: HashMap::new(), data_usage: "auto".into(), game_handle: None, audio_language: None, subtitle_language: None, ui_language: None, max_rating: None, blocked_titles: Vec::new(), subtitle_style: SubtitleStyle::default() }
+        Self { autoplay_next: true, autoplay_previews: true, notifications: HashMap::new(), data_usage: "auto".into(), game_handle: None, gender: None, audio_language: None, subtitle_language: None, ui_language: None, max_rating: None, blocked_titles: Vec::new(), subtitle_style: SubtitleStyle::default() }
     }
 }
 

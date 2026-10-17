@@ -144,7 +144,7 @@ pub fn EditProfile(id: String, #[prop(optional)] edit_page: bool) -> impl IntoVi
 }
 
 /// Removes a profile and everything kept for it; the person falls back to the profile picker if it was the one in use.
-fn remove_profile(pid: &str) {
+pub(super) fn remove_profile(pid: &str) {
     let store = use_profile_store();
     let prefs = use_prefs();
     store.profiles.update(|l| l.retain(|p| p.id != pid));

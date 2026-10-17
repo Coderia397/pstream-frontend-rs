@@ -8,6 +8,7 @@ mod activity;
 mod app;
 mod delete_account;
 mod devices;
+mod edit_profile_page;
 mod footer;
 mod diagnostics;
 mod stepup;
@@ -352,7 +353,12 @@ fn screen_body(screen: Screen) -> AnyView {
             <div class="hidden lg:block"><profile::ProfileOverview id=id /></div>
         }
         .into_any(),
-        Screen::ProfileEdit(id) => view! { <profile::EditProfile id=id edit_page=true /> }.into_any(),
+        // phones: the Edit profile list; from 1024 px the Edit Profile page of the website, a page of its own
+        Screen::ProfileEdit(id) => view! {
+            <div class="lg:hidden"><profile::EditProfile id=id.clone() /></div>
+            <div class="hidden lg:block"><edit_profile_page::EditProfilePage id=id /></div>
+        }
+        .into_any(),
         Screen::Avatar(id) => view! { <profile::AvatarPicker id=id /> }.into_any(),
         Screen::Restrictions(id) => view! { <restrictions::Restrictions id=id /> }.into_any(),
         Screen::Ratings(id) => view! { <restrictions::Ratings id=id /> }.into_any(),

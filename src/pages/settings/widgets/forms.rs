@@ -227,3 +227,29 @@ pub fn SwatchPicker(#[prop(into)] label: String, colors: Vec<(String, String, St
         </div>
     }
 }
+
+
+/// A field as on the website's Edit Profile: a 56 px box with a 1 px grey edge, the label small above the value, and an optional icon on the left.
+#[component]
+pub fn FloatField(
+    #[prop(into)] label: String,
+    value: RwSignal<String>,
+    #[prop(optional)] maxlength: Option<u32>,
+    #[prop(optional)] icon: Option<&'static str>,
+) -> impl IntoView {
+    view! {
+        <label class="relative flex h-[56px] w-full cursor-text items-center gap-4 rounded-[4px] border border-[rgba(128,128,128,0.7)] bg-page px-4 focus-within:border-ink">
+            {icon.map(|i| view! { <i class=format!("ph ph-{i} shrink-0 text-[24px]") aria-hidden="true"></i> })}
+            <span class="flex min-w-0 flex-1 flex-col">
+                <span class="text-[12px] leading-[14px] text-ink/70">{label}</span>
+                <input
+                    type="text"
+                    maxlength=maxlength
+                    prop:value=move || value.get()
+                    on:input=move |ev| value.set(event_target_value(&ev))
+                    class="min-w-0 bg-transparent text-[16px] leading-[22px] text-ink focus:outline-none"
+                />
+            </span>
+        </label>
+    }
+}

@@ -18,7 +18,7 @@ pub fn AccountGate() -> impl IntoView {
     let features = LocalResource::new(|| async { crate::services::ai_engine::fetch_features().await });
     Effect::new(move |_| {
         let path = location.pathname.get();
-        if is_open_to_visitors(&path) || crate::services::account::session().is_some() {
+        if is_open_to_visitors(&path) || crate::services::account::has_account() {
             return;
         }
         // the engine answers first (an engine that cannot be reached answers "required"); the switch is off only when it has said so

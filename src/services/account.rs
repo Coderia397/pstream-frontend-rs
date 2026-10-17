@@ -197,8 +197,52 @@ async fn put_user(body: &Value, token: &str) -> Result<(), AuthError> {
     if status == 200 { Ok(()) } else { Err(classify(status, &serde_json::from_str(&text).unwrap_or(Value::Null))) }
 }
 
-fn token() -> Result<String, AuthError> {
-    session().map(|s| s.access_token).ok_or_else(|| AuthError::Other("not signed in".into()))
+/// The saved session whether or not its token has expired, and the storage it sits in (a browser that stays signed in, or this tab only).
+fn stored_session() -> Option<(Session, bool)> {
+    [true, false].into_iter().find_map(|p| {
+        let raw = storage(p)?.get_item(crate::keys::SESSION).ok().flatten()?;
+        serde_json::from_str::<Session>(&raw).ok().map(|s| (s, p))
+    })
+}
+
+/// Whether this browser holds an account session (a token that has run out still counts: it is renewed with the refresh token).
+pub fn has_account() -> bool {
+    stored_session().is_some_and(|(s, _)| s.expires_at > now_secs() || !s.refresh_token.is_empty())
+}
+
+/// The session with a token that works: the saved one, or a new one made with the refresh token when the saved token has run out (a token lasts an hour). When the account refuses the
+/// refresh token (signed out elsewhere, deleted) the saved session is removed and the person is taken to sign in by the gate.
+pub async fn ensure_fresh() -> Option<Session> {
+    if let Some(s) = session() {
+        // renewed a little before it runs out
+        if s.expires_at > now_secs() + 120 || s.refresh_token.is_empty() { return Some(s); }
+    }
+    let (old, persistent) = stored_session()?;
+    if old.refresh_token.is_empty() { return None; }
+    match post("/auth/v1/token?grant_type=refresh_token", &json!({ "refresh_token": old.refresh_token }), None).await {
+        Ok((200, body)) => {
+            let mut fresh = session_from(&body)?;
+            if fresh.first_name.is_empty() { fresh.first_name = old.first_name.clone(); fresh.last_name = old.last_name.clone(); }
+            save(&fresh, persistent);
+            Some(fresh)
+        }
+        Ok((400..=403, _)) => {
+            for p in [true, false] { if let Some(st) = storage(p) { let _ = st.remove_item(crate::keys::SESSION); } }
+            None
+        }
+        // no connection: keep what there is, try again later
+        _ => session(),
+    }
+}
+
+/// Keeps the session fresh while the page is open (every five minutes).
+pub fn keep_session_fresh() {
+    leptos::task::spawn_local(async { let _ = ensure_fresh().await; });
+    leptos::leptos_dom::helpers::set_interval(|| { leptos::task::spawn_local(async { let _ = ensure_fresh().await; }); }, std::time::Duration::from_secs(300));
+}
+
+pub(crate) async fn token() -> Result<String, AuthError> {
+    ensure_fresh().await.map(|s| s.access_token).ok_or_else(|| AuthError::Other("not signed in".into()))
 }
 
 /// Ends the session an older token belongs to, without touching the new one. Every password or code check makes a new sign in
@@ -226,17 +270,17 @@ pub async fn verify_password(password: &str) -> Result<(), AuthError> {
 }
 
 pub async fn change_password(new_password: &str) -> Result<(), AuthError> {
-    put_user(&json!({ "password": new_password }), &token()?).await
+    put_user(&json!({ "password": new_password }), &token().await?).await
 }
 
 /// Starts an email change; the address in use changes once the new one is confirmed.
 pub async fn change_email(new_email: &str) -> Result<(), AuthError> {
-    put_user(&json!({ "email": new_email.trim() }), &token()?).await
+    put_user(&json!({ "email": new_email.trim() }), &token().await?).await
 }
 
 /// Keeps the mobile number in the account's profile data (no text message is sent for it).
 pub async fn save_phone(phone: &str) -> Result<(), AuthError> {
-    put_user(&json!({ "data": { "phone": phone.trim() } }), &token()?).await?;
+    put_user(&json!({ "data": { "phone": phone.trim() } }), &token().await?).await?;
     // the saved session keeps the number so the Account screen shows it without asking again
     for persistent in [true, false] {
         if let Some(st) = storage(persistent) {
@@ -253,7 +297,7 @@ pub async fn save_phone(phone: &str) -> Result<(), AuthError> {
 
 /// Signs this browser and every other browser out of the account.
 pub async fn sign_out_everywhere() -> Result<(), AuthError> {
-    let t = token()?;
+    let t = token().await?;
     let (status, body) = post("/auth/v1/logout?scope=global", &json!({}), Some(&t)).await?;
     if status != 204 && status != 200 {
         return Err(classify(status, &body));
@@ -266,8 +310,33 @@ pub async fn sign_out_everywhere() -> Result<(), AuthError> {
     Ok(())
 }
 
+/// A call to the account database's table interface (PostgREST) with the person's token: `method` is GET, POST, PATCH or DELETE, `path` starts with `/rest/v1/`, `prefer` is the Prefer header
+/// (`return=representation` to get the written rows back). Returns the answer's JSON (Null for no content).
+pub(crate) async fn rest(method: &str, path: &str, body: Option<&Value>, prefer: &str) -> Result<Value, AuthError> {
+    let t = token().await?;
+    let builder = match method {
+        "POST" => Request::post(&url(path)),
+        "PATCH" => Request::patch(&url(path)),
+        "DELETE" => Request::delete(&url(path)),
+        _ => Request::get(&url(path)),
+    }
+    .header("apikey", crate::config::SUPABASE_KEY)
+    .header("Authorization", &format!("Bearer {t}"))
+    .header("Content-Type", "application/json");
+    let builder = if prefer.is_empty() { builder } else { builder.header("Prefer", prefer) };
+    let resp = match body {
+        Some(b) => builder.body(b.to_string()).map_err(|_| AuthError::Network)?.send().await,
+        None => builder.send().await,
+    }
+    .map_err(|_| AuthError::Network)?;
+    let status = resp.status();
+    let text = resp.text().await.unwrap_or_default();
+    let value: Value = serde_json::from_str(&text).unwrap_or(Value::Null);
+    if (200..300).contains(&status) { Ok(value) } else { Err(classify(status, &value)) }
+}
+
 pub(crate) async fn rpc(name: &str, args: &Value) -> Result<Value, AuthError> {
-    let t = token()?;
+    let t = token().await?;
     let resp = Request::post(&url(&format!("/rest/v1/rpc/{name}")))
         .header("apikey", crate::config::SUPABASE_KEY)
         .header("Content-Type", "application/json")
@@ -419,7 +488,7 @@ pub async fn export_data() -> Result<String, AuthError> {
 
 /// The newest security events of the account (sign ins that changed things, PIN changes, profile changes): time and event name.
 pub async fn security_events(limit: u32) -> Result<Vec<(String, String)>, AuthError> {
-    let t = token()?;
+    let t = token().await?;
     let resp = Request::get(&url(&format!("/rest/v1/account_events?select=ts,event&order=ts.desc&limit={limit}")))
         .header("apikey", crate::config::SUPABASE_KEY)
         .header("Authorization", &format!("Bearer {t}"))

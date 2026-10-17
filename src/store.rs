@@ -160,6 +160,8 @@ pub fn start_account(store: ProfileStore, first_name: &str) {
     }
     store.is_authenticated.set(true);
     store.active_profile_id.set(None);
+    // the account's own profiles replace the ones made here
+    crate::services::sync::refresh_profiles(store);
 }
 
 pub fn use_profile_store() -> ProfileStore {
@@ -172,15 +174,54 @@ pub struct LibraryEntry {
     pub added_at: u64,
 }
 
-#[derive(Clone)]
+#[derive(Clone, Copy)]
 pub struct LibraryStore {
     pub my_list: RwSignal<HashMap<u32, LibraryEntry>>,
 }
 
+/// What is saved of My List: the title as the pages show it and when it was added.
+#[derive(serde::Serialize, serde::Deserialize)]
+struct SavedEntry {
+    media: MediaItem,
+    added_at: u64,
+}
+
+const MY_LIST_KEY: &str = "streams_my_list_v1";
+
+fn read_my_list() -> HashMap<u32, LibraryEntry> {
+    web_sys::window()
+        .and_then(|w| w.local_storage().ok().flatten())
+        .and_then(|s| s.get_item(&scoped::key(MY_LIST_KEY)).ok().flatten())
+        .and_then(|raw| serde_json::from_str::<Vec<SavedEntry>>(&raw).ok())
+        .map(|v| v.into_iter().map(|e| (e.media.id, LibraryEntry { media: e.media, added_at: e.added_at })).collect())
+        .unwrap_or_default()
+}
+
+fn write_my_list(map: &HashMap<u32, LibraryEntry>) {
+    let list: Vec<SavedEntry> = map.values().map(|e| SavedEntry { media: e.media.clone(), added_at: e.added_at }).collect();
+    if let (Some(storage), Ok(raw)) = (web_sys::window().and_then(|w| w.local_storage().ok().flatten()), serde_json::to_string(&list)) {
+        let _ = storage.set_item(&scoped::key(MY_LIST_KEY), &raw);
+    }
+}
+
 pub fn provide_library_store() {
-    provide_context(LibraryStore {
-        my_list: RwSignal::new(HashMap::new()),
+    let my_list = RwSignal::new(read_my_list());
+    // every change is kept in this browser and sent to the account a few seconds later
+    Effect::new(move |first: Option<()>| {
+        let snapshot = my_list.get();
+        if first.is_some() {
+            write_my_list(&snapshot);
+            crate::services::sync::schedule_push();
+        }
     });
+    provide_context(LibraryStore { my_list });
+}
+
+impl LibraryStore {
+    /// Reads the list of the profile now in use (after the profile changed).
+    pub fn reload(&self) {
+        self.my_list.set(read_my_list());
+    }
 }
 
 pub fn use_library_store() -> LibraryStore {
@@ -188,5 +229,6 @@ pub fn use_library_store() -> LibraryStore {
 }
 
 pub mod ratings;
+pub mod scoped;
 pub mod watch_store;
 pub use watch_store::{provide_watch_store, use_watch_store, WatchRecord, WatchStore};

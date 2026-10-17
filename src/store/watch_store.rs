@@ -4,6 +4,10 @@ use std::collections::HashMap;
 
 const WATCH_STORAGE_KEY: &str = "streams_watch_progress_v1";
 
+fn storage_key() -> String {
+    crate::store::scoped::key(WATCH_STORAGE_KEY)
+}
+
 #[derive(Clone, Debug, Deserialize, Serialize, PartialEq)]
 pub struct WatchRecord {
     pub media_id: u32,
@@ -59,7 +63,7 @@ fn load_from_storage() -> HashMap<String, WatchRecord> {
     let storage = web_sys::window().and_then(|w| w.local_storage().ok().flatten());
     storage
         .as_ref()
-        .and_then(|s| s.get_item(WATCH_STORAGE_KEY).ok().flatten())
+        .and_then(|s| s.get_item(&storage_key()).ok().flatten())
         .and_then(|raw| serde_json::from_str::<HashMap<String, WatchRecord>>(&raw).ok())
         .unwrap_or_default()
 }
@@ -67,7 +71,7 @@ fn load_from_storage() -> HashMap<String, WatchRecord> {
 fn save_to_storage(records: &HashMap<String, WatchRecord>) {
     if let Some(storage) = web_sys::window().and_then(|w| w.local_storage().ok().flatten()) {
         if let Ok(raw) = serde_json::to_string(records) {
-            let _ = storage.set_item(WATCH_STORAGE_KEY, &raw);
+            let _ = storage.set_item(&storage_key(), &raw);
         }
     }
 }
@@ -86,6 +90,42 @@ pub fn use_watch_store() -> WatchStore {
 }
 
 impl WatchStore {
+    /// Reads the records of the profile now in use (after the profile changed).
+    pub fn reload(&self) {
+        self.records.set(load_from_storage());
+    }
+
+    /// A record that came from the account: kept here, not sent back.
+    pub fn insert_remote(&self, record: WatchRecord) {
+        let key = record.key();
+        self.records.update(|map| {
+            map.insert(key, record);
+            save_to_storage(map);
+        });
+    }
+
+    /// Removes a record because the account says it was removed elsewhere (not sent back).
+    pub fn remove_record_quiet(&self, media_id: u32, is_tv: bool) {
+        let key = WatchRecord::composite_key(media_id, is_tv);
+        self.records.update(|map| {
+            map.remove(&key);
+            save_to_storage(map);
+        });
+    }
+
+    /// Adds the name and pictures to a record that came from the account without them.
+    pub fn fill_details(&self, media_id: u32, is_tv: bool, title: String, poster_path: Option<String>, backdrop_path: Option<String>) {
+        let key = WatchRecord::composite_key(media_id, is_tv);
+        self.records.update(|map| {
+            if let Some(r) = map.get_mut(&key) {
+                r.title = title;
+                r.poster_path = poster_path;
+                r.backdrop_path = backdrop_path;
+            }
+            save_to_storage(map);
+        });
+    }
+
     pub fn get_record(&self, media_id: u32, is_tv: bool) -> Option<WatchRecord> {
         let key = WatchRecord::composite_key(media_id, is_tv);
         self.records.with(|m| m.get(&key).cloned())
@@ -156,6 +196,7 @@ impl WatchStore {
             map.insert(key, record);
             save_to_storage(map);
         });
+        crate::services::sync::schedule_push();
     }
 
     /// Forgets every saved position and rewrites the saved copy.
@@ -172,6 +213,7 @@ impl WatchStore {
             map.remove(&key);
             save_to_storage(map);
         });
+        crate::services::sync::schedule_push();
     }
 
     pub fn get_continue_watching_list(&self) -> Vec<WatchRecord> {

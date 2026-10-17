@@ -14,17 +14,23 @@ pub struct SignOutOpen(pub RwSignal<bool>);
 /// Non kids profiles an account can hold. The Kids profile does not count toward it.
 pub const MAX_PROFILES: usize = 5;
 
+/// Keeps the profiles in this browser and sends the change to the account.
 pub fn persist_profiles(store: ProfileStore) {
     if let Some(storage) = web_sys::window().and_then(|w| w.local_storage().ok().flatten()) {
         if let Ok(json) = serde_json::to_string(&store.profiles.get_untracked()) {
             let _ = storage.set_item(crate::keys::PROFILES, &json);
         }
     }
+    if crate::services::account::has_account() {
+        crate::services::sync::push_profiles(store);
+    }
 }
 
 /// Signs out of the account and returns to the landing page with nothing left of this person's choices in the page.
 pub fn sign_out_now() {
     crate::services::account::sign_out();
+    // nothing of this person's data stays in the browser
+    crate::store::scoped::clear_all();
     if let Some(window) = web_sys::window() {
         if let Some(storage) = window.local_storage().ok().flatten() {
             let _ = storage.remove_item(crate::keys::ACTIVE_PROFILE);

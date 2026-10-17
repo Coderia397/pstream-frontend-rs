@@ -15,12 +15,54 @@ fn word(r: MovieRating) -> &'static str {
     }
 }
 
-fn read() -> BTreeMap<String, String> {
+const RATINGS_KEY: &str = "streams_title_ratings_v1";
+const STAMPS_KEY: &str = "streams_title_ratings_ts_v1";
+
+fn read_key(base: &str) -> BTreeMap<String, String> {
     web_sys::window()
         .and_then(|w| w.local_storage().ok().flatten())
-        .and_then(|s| s.get_item(crate::keys::TITLE_RATINGS).ok().flatten())
+        .and_then(|s| s.get_item(&crate::store::scoped::key(base)).ok().flatten())
         .and_then(|raw| serde_json::from_str(&raw).ok())
         .unwrap_or_default()
+}
+
+fn write_key(base: &str, map: &BTreeMap<String, String>) {
+    if let (Some(storage), Ok(raw)) = (web_sys::window().and_then(|w| w.local_storage().ok().flatten()), serde_json::to_string(map)) {
+        let _ = storage.set_item(&crate::store::scoped::key(base), &raw);
+    }
+}
+
+fn read() -> BTreeMap<String, String> {
+    read_key(RATINGS_KEY)
+}
+
+/// When a title's rating (or its removal) last changed, in milliseconds; 0 when never.
+pub fn stamp(key: &str) -> u64 {
+    read_key(STAMPS_KEY).get(key).and_then(|t| t.parse().ok()).unwrap_or(0)
+}
+
+/// Every rating of the profile in use with the time it was given: (title key, (word, time)).
+pub fn all() -> BTreeMap<String, (String, u64)> {
+    let stamps = read_key(STAMPS_KEY);
+    read().into_iter().map(|(k, v)| { let t = stamps.get(&k).and_then(|t| t.parse().ok()).unwrap_or(0); (k, (v, t)) }).collect()
+}
+
+fn store(id: u32, is_tv: bool, rating: Option<MovieRating>, at: u64) {
+    let k = key(id, is_tv);
+    let mut map = read();
+    match rating {
+        Some(r) => map.insert(k.clone(), word(r).to_string()),
+        None => map.remove(&k),
+    };
+    write_key(RATINGS_KEY, &map);
+    let mut stamps = read_key(STAMPS_KEY);
+    stamps.insert(k, at.to_string());
+    write_key(STAMPS_KEY, &stamps);
+}
+
+/// A rating that came from the account: kept here, not sent back.
+pub fn apply_remote(id: u32, is_tv: bool, rating: Option<MovieRating>, at: u64) {
+    store(id, is_tv, rating, at);
 }
 
 pub fn get(id: u32, is_tv: bool) -> Option<MovieRating> {
@@ -33,14 +75,8 @@ pub fn get(id: u32, is_tv: bool) -> Option<MovieRating> {
 }
 
 pub fn set(id: u32, is_tv: bool, rating: Option<MovieRating>) {
-    let mut map = read();
-    match rating {
-        Some(r) => map.insert(key(id, is_tv), word(r).to_string()),
-        None => map.remove(&key(id, is_tv)),
-    };
-    if let (Some(storage), Ok(raw)) = (web_sys::window().and_then(|w| w.local_storage().ok().flatten()), serde_json::to_string(&map)) {
-        let _ = storage.set_item(crate::keys::TITLE_RATINGS, &raw);
-    }
+    store(id, is_tv, rating, js_sys::Date::now() as u64);
+    crate::services::sync::schedule_push();
 }
 
 /// Keys (`movie:550`) of the titles liked or loved, at most `limit`.

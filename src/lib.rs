@@ -30,6 +30,7 @@ pub fn App() -> impl IntoView {
     crate::consent::provide_ui();
     crate::pages::settings::provide_prefs();
     // a browser that starts already signed in tells the account it is still here
+    crate::services::account::keep_session_fresh();
     crate::services::device::register_in_background();
 
     // On help.<domain> the front door is the help center
@@ -37,6 +38,26 @@ pub fn App() -> impl IntoView {
 
     let profile_store = crate::store::use_profile_store();
     let has_no_profile = move || profile_store.active_profile_id.get().is_none();
+
+    // The data of a profile (viewing progress, My List, ratings) is read for the profile in use whenever it changes, and the account's changes are pulled for it.
+    let library_store = crate::store::use_library_store();
+    let watch_store = crate::store::watch_store::use_watch_store();
+    crate::services::sync::init(profile_store, library_store, watch_store);
+    Effect::new(move |_| {
+        let _active = profile_store.active_profile_id.get();
+        watch_store.reload();
+        library_store.reload();
+        crate::services::sync::sync_in_background();
+    });
+    // a browser that already holds an account takes the account's profiles at start, and looks for changes whenever the tab comes back
+    if crate::services::account::has_account() {
+        crate::services::sync::refresh_profiles(profile_store);
+    }
+    if let Some(win) = web_sys::window() {
+        let cb = wasm_bindgen::closure::Closure::<dyn Fn()>::wrap(Box::new(|| crate::services::sync::sync_in_background()));
+        let _ = win.add_event_listener_with_callback("focus", wasm_bindgen::JsCast::unchecked_ref(cb.as_ref()));
+        cb.forget();
+    }
 
     view! {
         <crate::components::media::info_modal::InfoModal />

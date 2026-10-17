@@ -85,6 +85,8 @@ pub fn StreamsPlayer(
 
     // Internal HLS & timers
     let hls_player = RwSignal::new_local(None::<std::rc::Rc<HlsPlayer>>);
+    // the address of the stream attached now (a new resolve, even to the same address, clears it so the stream is attached again)
+    let attached_url = StoredValue::new(None::<String>);
     let idle_timer = StoredValue::new(None::<i32>);
     let progress_timer = StoredValue::new(None::<i32>);
     let title_stored = StoredValue::new(title.clone());
@@ -96,6 +98,7 @@ pub fn StreamsPlayer(
         let orig_lang_c = orig_lang.clone();
         move |force: bool| {
             set_player_state.set(PlayerState::Resolving);
+            attached_url.set_value(None);
             let t = title_c.clone();
             let y = year_c.clone();
             let ol = orig_lang_c.clone();
@@ -134,18 +137,21 @@ pub fn StreamsPlayer(
         reset_idle_timer();
     };
 
-    // Attach stream when video element and player_state ready
+    // Attach stream when video element and player_state ready. The stream is attached once per address: the effect reads the saved progress, which changes every
+    // few seconds while playing, and that must never attach the stream again (the video would reload and buffer again and again).
     Effect::new(move |_| {
         if let PlayerState::Playing { ref result, active_source_idx } = player_state.get() {
             if let Some(source) = result.sources.get(active_source_idx) {
                 if source.kind != PlayableKind::Embed {
                     if let Some(video) = video_ref.get() {
                         let stream_url = &source.url;
+                        if attached_url.get_value().as_deref() == Some(stream_url.as_str()) { return; }
+                        attached_url.set_value(Some(stream_url.clone()));
                         let player = HlsPlayer::attach(video.clone(), stream_url);
                         hls_player.set(Some(std::rc::Rc::new(player)));
 
                         // Store resume time for when metadata/canplay is ready
-                        let resume_t = watch_store.get_resume_time(media_id, is_tv, season, episode);
+                        let resume_t = untrack(|| watch_store.get_resume_time(media_id, is_tv, season, episode));
                         if resume_t > 0.0 {
                             set_pending_resume_time.set(resume_t);
                         }

@@ -254,6 +254,19 @@ impl Screen {
         matches!(self, Screen::Account | Screen::AccountSecurity | Screen::AccountDevices | Screen::AccountProfiles | Screen::Name | Screen::Password | Screen::Email | Screen::Phone | Screen::Access | Screen::Privacy | Screen::Activity | Screen::PersonalInfo | Screen::Testing | Screen::TransferSetting | Screen::Delete)
     }
 
+    /// Pages the website draws on their own, with only the logo above them and no side menu (the pages of one profile's preferences). Phones keep the app's frame.
+    pub(crate) fn standalone(&self) -> bool {
+        matches!(self, Screen::Language(_) | Screen::AudioSubtitles(_) | Screen::Subtitles(_) | Screen::Playback(_) | Screen::Notifications(_) | Screen::NotificationChannel(_, _) | Screen::GameHandle(_) | Screen::TransferProfile(_) | Screen::Lock(_) | Screen::Privacy | Screen::Activity)
+    }
+
+    /// The profile a page is about: the one in its address, else (privacy, activity) the one in use.
+    pub(crate) fn profile_of(&self) -> Option<String> {
+        match self {
+            Screen::Language(id) | Screen::AudioSubtitles(id) | Screen::Subtitles(id) | Screen::Playback(id) | Screen::Notifications(id) | Screen::NotificationChannel(id, _) | Screen::GameHandle(id) | Screen::TransferProfile(id) | Screen::Lock(id) => Some(id.clone()),
+            _ => None,
+        }
+    }
+
     fn section(&self) -> Section {
         match self {
             Screen::Hub | Screen::Account => Section::Overview,
@@ -309,28 +322,33 @@ pub fn SettingsPage() -> impl IntoView {
 
     let avatar = Memo::new(move |_| profiles.profiles.with(|l| profiles.active_profile_id.with(|id| l.iter().find(|p| Some(&p.id) == id.as_ref()).or(l.first()).and_then(|p| p.avatar_url.clone()))).unwrap_or_else(|| crate::data::DEFAULT_AVATAR.to_string()));
     let light_phone = move || screen.get().light_on_phone();
+    let standalone = Memo::new(move |_| screen.get().standalone());
 
     view! {
         <div class="theme-paper-wide min-h-screen bg-void font-sans text-ink selection:bg-brand selection:text-ink" class=("theme-paper", light_phone) class=("set-tiles", move || !light_phone())>
             <Show when=light_phone><shell::PhoneBar screen=screen /></Show>
-            <shell::TopBar avatar=avatar signout_open=signout_open />
+            <div class=("lg:hidden", move || standalone.get())><shell::TopBar avatar=avatar signout_open=signout_open /></div>
             <div class="set-gutter mx-auto flex pb-16 pt-2 max-lg:px-4 max-lg:max-w-settings max-lg:gap-settings-gap max-lg:sm:px-8 lg:gap-[2.45%] lg:pt-6" class=("max-lg:pt-8", light_phone)>
-                <shell::SideMenu screen=screen signout_open=signout_open />
-                <main class="mx-auto w-full min-w-0 max-w-settings-main flex-1 lg:mx-0 lg:w-[70%] lg:max-w-none lg:flex-none">
-                    <shell::PageHeading screen=screen gate_active=gate_active light_phone=Signal::derive(light_phone) />
-                    {move || {
-                        let current = screen.get();
-                        if current.needs_account_check() || current.needs_profile_check() {
-                            let account = current.needs_account_check();
-                            let shown = StoredValue::new(current);
-                            view! { <stepup::Gate account=account>{move || screen_body(shown.get_value())}</stepup::Gate> }.into_any()
-                        } else {
-                            screen_body(current)
-                        }
-                    }}
+                <div class=move || if standalone.get() { "contents lg:hidden" } else { "contents" }><shell::SideMenu screen=screen signout_open=signout_open /></div>
+                <main class=move || if standalone.get() { "mx-auto w-full min-w-0 max-w-settings-main flex-1 lg:fixed lg:inset-0 lg:z-(--z-screen) lg:mx-0 lg:w-auto lg:max-w-none lg:overflow-auto lg:bg-page lg:pb-16" } else { "mx-auto w-full min-w-0 max-w-settings-main flex-1 lg:mx-0 lg:w-[70%] lg:max-w-none lg:flex-none" }>
+                    <shell::StandaloneBar screen=screen avatar=avatar signout_open=signout_open />
+                    <div class=move || if standalone.get() { "lg:mx-auto lg:max-w-[690px] lg:pt-[13px]" } else { "" }>
+                        <shell::PageHeading screen=screen gate_active=gate_active light_phone=Signal::derive(light_phone) />
+                        <shell::ForProfile screen=screen />
+                        {move || {
+                            let current = screen.get();
+                            if current.needs_account_check() || current.needs_profile_check() {
+                                let account = current.needs_account_check();
+                                let shown = StoredValue::new(current);
+                                view! { <stepup::Gate account=account>{move || screen_body(shown.get_value())}</stepup::Gate> }.into_any()
+                            } else {
+                                screen_body(current)
+                            }
+                        }}
+                    </div>
+                    <div class=move || if standalone.get() { "hidden lg:block" } else { "hidden" }><footer::AccountFooter /></div>
                 </main>
             </div>
-            <footer::AccountFooter />
             <widgets::Toaster />
             <widgets::ConfirmDialog open=signout_open title=t("set-sign-out") body=t("set-sign-out-body") confirm_label=t("set-sign-out") on_confirm=Callback::new(|_| hub::sign_out_now()) />
         </div>

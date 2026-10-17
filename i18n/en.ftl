@@ -1706,7 +1706,7 @@ set-title-ratings = Age ratings
 set-title-blocked = Block titles
 set-title-lock = Profile lock
 set-title-language = Display language
-set-title-subtitles = Subtitle appearance
+set-title-subtitles = Subtitle Appearance
 set-title-audio-subtitles = Audio and subtitles
 set-title-name = Name
 set-title-app = App settings
@@ -1878,7 +1878,7 @@ set-privacy-export = Download my data
 # Settings: desktop account pages (Overview, Security, Devices, Profiles) and per profile playback and notifications
 set-nav-overview = Overview
 set-back-to-app = Back to { $brand }
-set-title-playback = Playback settings
+set-title-playback = Playback Settings
 set-title-notifications = Notification settings
 set-playback-hint = Set autoplay and previews.
 set-playback-autoplay = Autoplay and transitions

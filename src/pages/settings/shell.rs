@@ -89,13 +89,48 @@ pub fn PageHeading(screen: Memo<Screen>, gate_active: RwSignal<bool>, light_phon
                 aria-label=move || t("set-back")
                 class="hidden h-10 w-10 shrink-0 items-center justify-center rounded-full text-ink hover:bg-ink/10 lg:flex"
                 class=("lg:hidden", move || matches!(screen.get(), Screen::Account | Screen::Hub | Screen::AccountSecurity | Screen::AccountDevices | Screen::AccountProfiles))
+                class=("lg:absolute", move || screen.get().standalone())
+                class=("lg:left-[210px]", move || screen.get().standalone())
+                class=("lg:top-[97px]", move || screen.get().standalone())
             >
                 <i class="ph-bold ph-arrow-left text-2xl rtl:-scale-x-100" aria-hidden="true"></i>
             </a>
-            <h1 class="text-title font-bold lg:w-full lg:flex-1 lg:truncate lg:text-account-title" class=("max-lg:text-account-title-sm", move || light_phone.get()) class=("hidden", move || gate_active.get() || screen.get() == Screen::TransferSetting)>
+            <h1 class="text-title font-bold lg:w-full lg:flex-1 lg:truncate lg:text-account-title" class=("max-lg:text-account-title-sm", move || light_phone.get()) class=("lg:text-[32px]!", move || screen.get().standalone()) class=("lg:leading-[40px]!", move || screen.get().standalone()) class=("lg:text-[#333]!", move || screen.get().standalone()) class=("hidden", move || gate_active.get() || screen.get() == Screen::TransferSetting)>
                 <span class=("lg:hidden", move || matches!(screen.get(), Screen::Hub | Screen::Profile(_)))>{move || t(screen.get().title_key())}</span>
                 <span class="hidden" class=("lg:inline", move || matches!(screen.get(), Screen::Hub | Screen::Profile(_)))>{move || t(if screen.get() == Screen::Hub { Screen::Account.title_key() } else { "set-title-manage-profile" })}</span>
             </h1>
         </header>
+    }
+}
+
+/// The bar above a standalone page: the logo on the left and the profile menu on the right, from 1024 px wide.
+#[component]
+pub fn StandaloneBar(screen: Memo<Screen>, avatar: Memo<String>, signout_open: RwSignal<bool>) -> impl IntoView {
+    view! {
+        <header class=move || if screen.get().standalone() { "hidden h-settings-header items-center justify-between border-b border-black/10 set-gutter lg:flex" } else { "hidden" }>
+            <a href=routes::BROWSE aria-label=crate::brand::NAME><img src=crate::brand::LOGO_WORDMARK_PRIMARY alt=crate::brand::NAME class="h-7 w-auto" /></a>
+            <AccountMenu avatar=avatar signout_open=signout_open />
+        </header>
+    }
+}
+
+/// "For <name>" and the profile picture under the title of a standalone page.
+#[component]
+pub fn ForProfile(screen: Memo<Screen>) -> impl IntoView {
+    let store = crate::store::use_profile_store();
+    move || {
+        let s = screen.get();
+        if !s.standalone() {
+            return None;
+        }
+        let id = s.profile_of().or_else(|| store.active_profile_id.get());
+        let p = store.profiles.with(|l| id.and_then(|id| l.iter().find(|p| p.id == id).cloned()).or_else(|| l.first().cloned()))?;
+        let pic = p.avatar_url.clone().unwrap_or_else(|| crate::brand::DEFAULT_AVATAR.to_string());
+        Some(view! {
+            <p class="mb-[44px] mt-[10px] hidden items-center gap-3 text-[18px] leading-[27px] text-black/70 lg:flex">
+                {crate::i18n::t_args("set-for-profile", &[("name", p.name.clone().into())])}
+                <img src=pic alt="" class="h-8 w-8 rounded-full object-cover" />
+            </p>
+        })
     }
 }

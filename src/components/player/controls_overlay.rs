@@ -52,7 +52,7 @@ pub fn ControlsOverlay(
         )
     };
     // every button: 44 x 44, no plate
-    let btn = "flex h-11 relative w-11 shrink-0 items-center justify-center rounded-[2px] text-ink transition-transform duration-(--motion-quick) hover:scale-110 active:scale-95";
+    let btn = "flex h-11 relative w-11 shrink-0 items-center justify-center rounded-[2px] text-ink transition-transform duration-(--motion-quick) hover:scale-125 active:scale-95";
 
     view! {
         <div class=overlay_class>
@@ -95,18 +95,21 @@ pub fn ControlsOverlay(
                             <i class="ph ph-arrow-clockwise text-[36px]"></i>
                             <span class="pointer-events-none absolute pt-[2px] text-[11px] font-black">"10"</span>
                         </button>
-                        // the volume slider opens while the pointer rests on the speaker
-                        <div class="group/vol flex items-center">
+                        // the volume slider rises above the speaker while the pointer rests on it (a dark 34 x 185 box, accent bar, round knob)
+                        <div class="group/vol relative flex items-center">
                             <button on:click=move |_| on_toggle_mute.run(()) class=btn title=move || if is_muted.get() { crate::i18n::t("player-unmute") } else { crate::i18n::t("player-mute") }>
                                 <i class=speaker_icon_class></i>
                             </button>
-                            <input
-                                type="range" min="0" max="1" step="0.05"
-                                prop:value=move || if is_muted.get() { 0.0 } else { volume.get() }
-                                on:input=move |e| { if let Ok(v) = event_target_value(&e).parse::<f64>() { on_set_volume.run(v); } }
-                                class="h-1 w-0 cursor-pointer opacity-0 accent-brand transition-all duration-(--motion-base) group-hover/vol:ms-2 group-hover/vol:w-24 group-hover/vol:opacity-100"
-                                aria-label=crate::i18n::t("player-volume")
-                            />
+                            <div class="absolute bottom-[44px] left-1/2 hidden h-[185px] w-[34px] -translate-x-1/2 items-center justify-center rounded-[4px] bg-[#262626] group-hover/vol:flex group-focus-within/vol:flex">
+                                <input
+                                    type="range" min="0" max="1" step="0.02"
+                                    prop:value=move || if is_muted.get() { 0.0 } else { volume.get() }
+                                    on:input=move |e| { if let Ok(v) = event_target_value(&e).parse::<f64>() { on_set_volume.run(v); } }
+                                    class="cursor-pointer accent-brand"
+                                    style="writing-mode: vertical-lr; direction: rtl; height: 150px; width: 8px;"
+                                    aria-label=crate::i18n::t("player-volume")
+                                />
+                            </div>
                         </div>
                     </div>
 

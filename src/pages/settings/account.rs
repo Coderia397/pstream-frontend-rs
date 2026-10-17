@@ -64,18 +64,17 @@ fn AccessAndPrivacy() -> impl IntoView {
     view! {
         <Section title=t("set-security-access")>
             <LinkRow icon="devices" title=t("set-title-devices") hint=t("set-access-hint") href=Screen::Access.path() />
-            <LinkRow icon="shield-check" title=t("set-title-privacy") hint=t("set-privacy-hint") href=Screen::Privacy.path() />
-            <LinkRow icon="arrows-left-right" title=t("set-title-transfer") hint=t("set-transfer-row-hint") href=Screen::TransferSetting.path() value=Signal::derive(move || on_off(prefs.account.get().profile_transfer)) />
+            <LinkRow icon="arrows-left-right" title=t("set-title-transfer") href=Screen::TransferSetting.path() value=Signal::derive(move || on_off(prefs.account.get().profile_transfer)) />
             <LinkRow icon="file-arrow-down" title=t("set-title-personal-info") hint=t("set-personal-info-hint") href=Screen::PersonalInfo.path() />
-            <LinkRow icon="flask" title=t("set-title-testing") hint=t("set-testing-row-hint") href=Screen::Testing.path() value=Signal::derive(move || on_off(prefs.account.get().test_participation)) />
+            <LinkRow icon="flask" title=t("set-row-feature-testing") href=Screen::Testing.path() value=Signal::derive(move || on_off(prefs.account.get().test_participation)) />
         </Section>
     }
 }
 
 #[component]
-fn DevicesSection() -> impl IntoView {
+fn DevicesSection(#[prop(optional)] wide: bool) -> impl IntoView {
     view! {
-        <Section title=t("set-account-devices")>
+        <Section title=t(if wide { "set-devices-account-access" } else { "set-account-devices" })>
             <LinkRow icon="devices" title=t("set-title-devices") hint=t("set-access-hint") href=Screen::Access.path() />
         </Section>
     }
@@ -150,7 +149,7 @@ pub fn SecurityPage() -> impl IntoView {
 /// Wide screens: Devices page.
 #[component]
 pub fn DevicesPage() -> impl IntoView {
-    view! { <div><SignInBanner /><DevicesSection /></div> }
+    view! { <div><SignInBanner /><DevicesSection wide=true /></div> }
 }
 
 /// Wide screens: Profiles page (parental controls, then one row per profile).
@@ -221,6 +220,7 @@ pub fn Name() -> impl IntoView {
 
 #[component]
 pub fn Password() -> impl IntoView {
+    let current = RwSignal::new(String::new());
     let new_password = RwSignal::new(String::new());
     let again = RwSignal::new(String::new());
     let all_devices = RwSignal::new(true);
@@ -228,6 +228,11 @@ pub fn Password() -> impl IntoView {
     let busy = RwSignal::new(false);
     let save = Callback::new(move |_| {
         let value = new_password.get_untracked();
+        let old = current.get_untracked();
+        if old.is_empty() {
+            note.set(Some((Tone::Error, t("set-password-current-required"))));
+            return;
+        }
         if value.chars().count() < MIN_PASSWORD_LENGTH {
             note.set(Some((Tone::Error, crate::i18n::t_args("set-password-short", &[("min", MIN_PASSWORD_LENGTH.into())]))));
             return;
@@ -240,12 +245,20 @@ pub fn Password() -> impl IntoView {
         note.set(None);
         let everywhere = all_devices.get_untracked();
         leptos::task::spawn_local(async move {
+            // like the Netflix page, the current password is asked on the page itself instead of a check before it
+            if let Err(e) = account::verify_password(&old).await {
+                note.set(Some((Tone::Error, error_text(&e))));
+                busy.set(false);
+                return;
+            }
             match account::change_password(&value).await {
                 Ok(()) if everywhere => {
+                    current.set(String::new());
                     let _ = account::sign_out_everywhere().await;
                     go(routes::LOGIN);
                 }
                 Ok(()) => {
+                    current.set(String::new());
                     new_password.set(String::new());
                     again.set(String::new());
                     note.set(Some((Tone::Done, t("set-password-saved"))));
@@ -259,6 +272,8 @@ pub fn Password() -> impl IntoView {
         <div class="max-w-md">
             <p class="mb-6 text-body-md text-ink/60">{crate::i18n::t_args("set-password-hint", &[("min", MIN_PASSWORD_LENGTH.into())])}</p>
             <Message text=note />
+            <PasswordField label=t("set-password-current") value=current />
+            <a href="/forgot" class="-mt-2 mb-5 inline-block text-body-md font-medium underline">{t("set-password-forgot")}</a>
             <PasswordField label=t("set-password-new") value=new_password autocomplete="new-password" />
             <PasswordField label=t("set-password-again") value=again autocomplete="new-password" />
             <label class="mb-6 flex items-center gap-3 text-body-md">

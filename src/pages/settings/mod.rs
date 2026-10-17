@@ -33,6 +33,7 @@ pub enum Screen {
     Hub,
     Profiles,
     Profile(String),
+    ProfileEdit(String),
     Avatar(String),
     Restrictions(String),
     Ratings(String),
@@ -90,6 +91,7 @@ impl Screen {
         match parts.as_slice() {
             ["profiles"] => Screen::Profiles,
             ["profile"] | ["profile", _] => Screen::Profile(id()),
+            ["profile", _, "edit"] => Screen::ProfileEdit(id()),
             ["profile", _, "avatar"] => Screen::Avatar(id()),
             ["profile", _, "restrictions"] => Screen::Restrictions(id()),
             ["profile", _, "restrictions", "ratings"] => Screen::Ratings(id()),
@@ -135,6 +137,7 @@ impl Screen {
             Screen::Hub => ROOT.into(),
             Screen::Profiles => format!("{ROOT}/profiles"),
             Screen::Profile(id) => profile(id, ""),
+            Screen::ProfileEdit(id) => profile(id, "/edit"),
             Screen::Avatar(id) => profile(id, "/avatar"),
             Screen::Restrictions(id) => profile(id, "/restrictions"),
             Screen::Ratings(id) => profile(id, "/restrictions/ratings"),
@@ -177,7 +180,7 @@ impl Screen {
         match self {
             Screen::Hub => routes::BROWSE.into(),
             Screen::Profiles | Screen::App | Screen::Account | Screen::Profile(_) | Screen::AccountSecurity | Screen::AccountDevices | Screen::AccountProfiles => Screen::Hub.path(),
-            Screen::Avatar(id) | Screen::Restrictions(id) | Screen::Lock(id) | Screen::MainProfile(id) | Screen::Language(id) | Screen::AudioSubtitles(id) | Screen::Subtitles(id) | Screen::Playback(id) | Screen::Notifications(id) | Screen::GameHandle(id) | Screen::TransferProfile(id) => Screen::Profile(id.clone()).path(),
+            Screen::ProfileEdit(id) | Screen::Avatar(id) | Screen::Restrictions(id) | Screen::Lock(id) | Screen::MainProfile(id) | Screen::Language(id) | Screen::AudioSubtitles(id) | Screen::Subtitles(id) | Screen::Playback(id) | Screen::Notifications(id) | Screen::GameHandle(id) | Screen::TransferProfile(id) => Screen::Profile(id.clone()).path(),
             Screen::NotificationChannel(id, _) => Screen::Notifications(id.clone()).path(),
             Screen::Ratings(id) | Screen::Blocked(id) => Screen::Restrictions(id.clone()).path(),
             Screen::Licences | Screen::CheckNetwork | Screen::PlaybackSpec | Screen::SpeedTest => Screen::App.path(),
@@ -203,7 +206,7 @@ impl Screen {
         match self {
             Screen::Hub => "set-title",
             Screen::Profiles => "set-title-profiles",
-            Screen::Profile(_) => "set-title-edit-profile",
+            Screen::Profile(_) | Screen::ProfileEdit(_) => "set-title-edit-profile",
             Screen::Avatar(_) => "set-title-avatar",
             Screen::Restrictions(_) => "set-title-restrictions",
             Screen::Ratings(_) => "set-title-ratings",
@@ -228,7 +231,7 @@ impl Screen {
             Screen::AccountDevices => "set-account-devices",
             Screen::AccountProfiles => "set-account-profiles",
             Screen::Name => "set-title-name",
-            Screen::Password => "set-title-password",
+            Screen::Password => "set-title-change-password",
             Screen::Email => "set-title-email",
             Screen::Phone => "set-title-phone",
             Screen::Access => "set-title-devices",
@@ -258,13 +261,13 @@ impl Screen {
 
     /// Screens that change account data and ask for the password first.
     fn needs_account_check(&self) -> bool {
-        matches!(self, Screen::Name | Screen::Password | Screen::Email | Screen::Phone | Screen::Access | Screen::PersonalInfo | Screen::Delete)
+        matches!(self, Screen::Name | Screen::Email | Screen::Phone | Screen::Access | Screen::PersonalInfo | Screen::Delete)
     }
 
     /// Screens that change a profile's protection and ask for the password when signed in. Changing the maturity level is one
     /// of them in the database too (it needs a recent sign in).
     fn needs_profile_check(&self) -> bool {
-        matches!(self, Screen::Ratings(_) | Screen::Blocked(_) | Screen::Lock(_) | Screen::MainProfile(_))
+        matches!(self, Screen::Ratings(_) | Screen::Blocked(_) | Screen::MainProfile(_))
     }
 }
 
@@ -374,8 +377,8 @@ pub fn SettingsPage() -> impl IntoView {
                             <i class="ph-bold ph-arrow-left text-2xl rtl:-scale-x-100" aria-hidden="true"></i>
                         </a>
                         <h1 class="text-title font-bold lg:truncate lg:text-account-title lg:leading-tight" class=("max-lg:text-account-title-sm", light_phone) class=("hidden", move || gate_active.get() || screen.get() == Screen::TransferSetting)>
-                            <span class=("lg:hidden", move || screen.get() == Screen::Hub)>{move || t(screen.get().title_key())}</span>
-                            <span class="hidden" class=("lg:inline", move || screen.get() == Screen::Hub)>{move || t(Screen::Account.title_key())}</span>
+                            <span class=("lg:hidden", move || matches!(screen.get(), Screen::Hub | Screen::Profile(_)))>{move || t(screen.get().title_key())}</span>
+                            <span class="hidden" class=("lg:inline", move || matches!(screen.get(), Screen::Hub | Screen::Profile(_)))>{move || t(if screen.get() == Screen::Hub { Screen::Account.title_key() } else { "set-title-manage-profile" })}</span>
                         </h1>
                     </header>
                     {move || {
@@ -406,7 +409,13 @@ fn screen_body(screen: Screen) -> AnyView {
         }
         .into_any(),
         Screen::Profiles => view! { <hub::ManageProfiles /> }.into_any(),
-        Screen::Profile(id) => view! { <profile::EditProfile id=id /> }.into_any(),
+        // phones: the Edit profile list of the app; from 1024 px the address shows "Manage profile and preferences" like the website, and Edit profile is its own page
+        Screen::Profile(id) => view! {
+            <div class="lg:hidden"><profile::EditProfile id=id.clone() /></div>
+            <div class="hidden lg:block"><profile::ProfileOverview id=id /></div>
+        }
+        .into_any(),
+        Screen::ProfileEdit(id) => view! { <profile::EditProfile id=id edit_page=true /> }.into_any(),
         Screen::Avatar(id) => view! { <profile::AvatarPicker id=id /> }.into_any(),
         Screen::Restrictions(id) => view! { <restrictions::Restrictions id=id /> }.into_any(),
         Screen::Ratings(id) => view! { <restrictions::Ratings id=id /> }.into_any(),
@@ -542,9 +551,11 @@ mod tests {
 
     #[test]
     fn only_account_changes_need_the_check() {
-        assert!(Screen::Password.needs_account_check());
+        // the Netflix website opens Change password and Create a profile lock directly (the password page asks the current password itself)
+        assert!(!Screen::Password.needs_account_check());
+        assert!(!Screen::Lock("p1".into()).needs_profile_check());
         assert!(Screen::Name.needs_account_check());
-        assert!(Screen::Lock("p1".into()).needs_profile_check());
+        assert!(Screen::Ratings("p1".into()).needs_profile_check());
         assert!(!Screen::Subtitles("p1".into()).needs_profile_check());
         assert!(!Screen::Privacy.needs_account_check());
     }

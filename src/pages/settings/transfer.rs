@@ -117,10 +117,18 @@ pub fn TransferSetting() -> impl IntoView {
     view! {
         <div class="-mx-4 -mt-4 flex min-h-settings-hero flex-col items-center justify-center bg-linear-to-b from-chrome via-danger-deep to-chrome px-6 py-10 text-center text-chrome-ink sm:-mx-8 lg:mx-0 lg:rounded-card">
             <i class="ph-bold ph-arrows-left-right mb-6 text-8xl text-chrome-ink/90" aria-hidden="true"></i>
-            <h2 class="mb-4 max-w-md text-heading-lg font-bold leading-tight">{move || if on.get() { t("set-transfer-on-title") } else { t("set-transfer-off-title") }}</h2>
-            <p class="mb-8 max-w-md text-body-md text-chrome-ink/80">{move || if on.get() { t("set-transfer-on-body") } else { t("set-transfer-off-body") }}</p>
+            <h2 class="mb-4 max-w-xl text-heading-lg font-bold leading-tight">{move || if on.get() { t("set-transfer-on-title") } else { t("set-transfer-off-title") }}</h2>
+            <p class="mb-8 max-w-md text-body-md text-chrome-ink/80">
+                {move || t(if on.get() { "set-transfer-on-body" } else { "set-transfer-off-body" })}
+                <Show when=move || on.get()>
+                    " "<a href=crate::config::routes::HELP class="underline">{t("set-transfer-help-centre")}</a>"."
+                </Show>
+            </p>
             <Message text=note />
-            <button type="button" on:click=toggle class="w-full max-w-md rounded-control border border-danger px-6 py-3 text-body-md font-bold text-chrome-ink hover:bg-danger/20">{move || if on.get() { t("set-transfer-turn-off") } else { t("set-transfer-turn-on") }}</button>
+            <div class="flex w-full max-w-xl flex-col gap-3 sm:flex-row">
+                <a href=crate::config::routes::BROWSE class="flex-1 rounded-control bg-chrome-ink/90 px-6 py-3 text-body-md font-bold text-chrome hover:bg-chrome-ink">{t("set-transfer-go-home")}</a>
+                <button type="button" on:click=toggle class="flex-1 rounded-control border border-danger px-6 py-3 text-body-md font-bold text-chrome-ink hover:bg-danger/20">{move || if on.get() { t("set-transfer-turn-off") } else { t("set-transfer-turn-on") }}</button>
+            </div>
         </div>
     }
 }

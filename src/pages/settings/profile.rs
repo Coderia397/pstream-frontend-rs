@@ -38,7 +38,7 @@ fn name_taken(id: &str, name: &str) -> bool {
 }
 
 #[component]
-pub fn EditProfile(id: String) -> impl IntoView {
+pub fn EditProfile(id: String, #[prop(optional)] edit_page: bool) -> impl IntoView {
     let store = use_profile_store();
     let prefs = use_prefs();
     let navigate = use_navigate();
@@ -70,16 +70,7 @@ pub fn EditProfile(id: String) -> impl IntoView {
         }
     };
     let delete = Callback::new(move |_| {
-        let pid = id.get_value();
-        store.profiles.update(|l| l.retain(|p| p.id != pid));
-        if store.active_profile_id.get_untracked().as_deref() == Some(pid.as_str()) {
-            store.active_profile_id.set(None);
-            if let Some(s) = web_sys::window().and_then(|w| w.local_storage().ok().flatten()) {
-                let _ = s.remove_item(crate::keys::ACTIVE_PROFILE);
-            }
-        }
-        prefs.forget_profile(&pid);
-        persist_profiles(store);
+        remove_profile(&id.get_value());
         navigate(&Screen::Profiles.path(), Default::default());
     });
     move || {
@@ -113,6 +104,19 @@ pub fn EditProfile(id: String) -> impl IntoView {
                         </div>
                     </div>
                 </div>
+                {edit_page.then(|| view! {
+                    <div class="hidden lg:block">
+                        <Section title=t("set-title-game-handle")>
+                            <LinkRow icon="game-controller" title=t("set-title-game-handle") href=Screen::GameHandle(id.get_value()).path() value=handle_value />
+                        </Section>
+                        <Section title=t("set-contact-info")>
+                            <LinkRow icon="identification-card" title=t("set-title-name") href=Screen::Name.path() />
+                            <LinkRow icon="envelope-simple" title=t("set-title-email") href=Screen::Email.path() />
+                            <LinkRow icon="device-mobile" title=t("set-title-phone") href=Screen::Phone.path() />
+                        </Section>
+                    </div>
+                })}
+                <div class=if edit_page { "lg:hidden" } else { "contents" }>
                 <Section>
                     <LinkRow icon="game-controller" title=t("set-title-game-handle") href=screen(Screen::GameHandle) value=handle_value />
                     <LinkRow icon="warning-circle" title=t("set-title-restrictions") href=screen(Screen::Restrictions) value=maturity_value />
@@ -132,6 +136,74 @@ pub fn EditProfile(id: String) -> impl IntoView {
                     {can_be_main.then(|| view! { <LinkRow icon="crown-simple" title=t("set-main-profile") hint=t("set-main-profile-hint") href=screen(Screen::MainProfile) /> })}
                 </Section>
                 {removable.then(|| view! { <OutlineButton label=t("set-delete-profile") danger=true on_click=Callback::new(move |_| confirm_delete.set(true)) /> })}
+                <ConfirmDialog open=confirm_delete title=t("set-delete-profile") body=t("set-delete-profile-body") confirm_label=t("set-delete") danger=true on_confirm=delete />
+                </div>
+            </div>
+        }
+        .into_any()
+    }
+}
+
+/// Removes a profile and everything kept for it; the person falls back to the profile picker if it was the one in use.
+fn remove_profile(pid: &str) {
+    let store = use_profile_store();
+    let prefs = use_prefs();
+    store.profiles.update(|l| l.retain(|p| p.id != pid));
+    if store.active_profile_id.get_untracked().as_deref() == Some(pid) {
+        store.active_profile_id.set(None);
+        if let Some(s) = web_sys::window().and_then(|w| w.local_storage().ok().flatten()) {
+            let _ = s.remove_item(crate::keys::ACTIVE_PROFILE);
+        }
+    }
+    prefs.forget_profile(pid);
+    persist_profiles(store);
+}
+
+/// From 1024 px the profile address is the website's "Manage profile and preferences": the profile with a link to Edit profile,
+/// the profile lock, then the preferences, then Delete Profile.
+#[component]
+pub fn ProfileOverview(id: String) -> impl IntoView {
+    let store = use_profile_store();
+    let navigate = use_navigate();
+    let confirm_delete = RwSignal::new(false);
+    let id = StoredValue::new(id);
+    let profile = Memo::new(move |_| store.profiles.with(|l| l.iter().find(|p| p.id == id.get_value()).cloned()));
+    let delete = Callback::new(move |_| {
+        remove_profile(&id.get_value());
+        navigate(&Screen::Profiles.path(), Default::default());
+    });
+    move || {
+        let Some(p) = profile.get() else { return not_found() };
+        let pid = p.id.clone();
+        let removable = p.is_default != Some(true) && store.profiles.with(|l| l.len() > 1);
+        let can_be_main = p.is_default != Some(true) && !p.is_kids;
+        let path = |s: fn(String) -> Screen| s(pid.clone()).path();
+        let (edit, lock, language, restrictions, subtitles, playback, notifications, transfer, main) = (path(Screen::ProfileEdit), path(Screen::Lock), path(Screen::Language), path(Screen::Restrictions), path(Screen::Subtitles), path(Screen::Playback), path(Screen::Notifications), path(Screen::TransferProfile), path(Screen::MainProfile));
+        view! {
+            <div>
+                <Section>
+                    <a href=edit.clone() class="flex items-center gap-4 px-5 py-3 hover:bg-ink/10">
+                        <img src=p.avatar_url.clone().unwrap_or_else(|| crate::brand::DEFAULT_AVATAR.to_string()) alt="" class="h-10 w-10 rounded-control object-cover" />
+                        <span class="min-w-0 flex-1">
+                            <span class="block truncate text-body-md font-bold">{p.name.clone()}</span>
+                            <span class="block text-label text-ink/60">{t("set-po-edit-hint")}</span>
+                        </span>
+                        <i class="ph-bold ph-caret-right text-xl text-ink/40 rtl:-scale-x-100" aria-hidden="true"></i>
+                    </a>
+                    <LinkRow icon="lock-simple" title=t("set-title-lock") hint=t("set-po-lock-hint") href=lock />
+                </Section>
+                <Section title=t("set-po-preferences")>
+                    <LinkRow icon="translate" title=t("set-po-languages") hint=t("set-po-languages-hint") href=language />
+                    <LinkRow icon="warning-circle" title=t("set-po-restrictions") hint=t("set-po-restrictions-hint") href=restrictions />
+                    <LinkRow icon="text-aa" title=t("set-title-subtitles") hint=t("set-po-subtitles-hint") href=subtitles />
+                    <LinkRow icon="play-circle" title=t("set-title-playback") hint=t("set-po-playback-hint") href=playback />
+                    <LinkRow icon="bell" title=t("set-title-notifications") hint=t("set-po-notifications-hint") href=notifications />
+                    <LinkRow icon="clock-counter-clockwise" title=t("set-title-activity") hint=t("set-po-activity-hint") href=Screen::Activity.path() />
+                    <LinkRow icon="shield-check" title=t("set-title-privacy") hint=t("set-po-privacy-hint") href=Screen::Privacy.path() />
+                    <LinkRow icon="arrows-left-right" title=t("set-title-transfer") hint=t("set-transfer-profile-hint") href=transfer />
+                    {can_be_main.then(|| view! { <LinkRow icon="crown-simple" title=t("set-main-profile") hint=t("set-main-profile-hint") href=main /> })}
+                </Section>
+                {removable.then(|| view! { <OutlineButton label=t("set-po-delete-profile") danger=true on_click=Callback::new(move |_| confirm_delete.set(true)) /> })}
                 <ConfirmDialog open=confirm_delete title=t("set-delete-profile") body=t("set-delete-profile-body") confirm_label=t("set-delete") danger=true on_confirm=delete />
             </div>
         }

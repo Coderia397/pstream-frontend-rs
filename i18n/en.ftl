@@ -87,7 +87,6 @@ video-player-forward-10s = Forward 10s
 video-player-fullscreen = Fullscreen
 video-player-rewind-10s = Rewind 10s
 whos-watching-add-profile = Add Profile
-whos-watching-kids = KIDS
 help-ui-center = Help Centre
 help-ui-browse = Browse
 help-ui-signin = Sign in

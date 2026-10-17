@@ -2343,3 +2343,4 @@ player-volume = Volume
 player-rating-label = Rating:
 player-watch-credits = Watch credits
 player-now-playing = Now Playing
+player-skip-recap = Skip Recap

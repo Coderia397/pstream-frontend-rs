@@ -432,6 +432,15 @@ pub fn NetflixVideoPlayer(
         } else { None }
     });
     let next_sig = Signal::derive(move || next_ep.get().flatten());
+    // the guessed skip marks of this video (ratios of its length); an episode is the last of its season when no episode follows it in the season's list
+    let marks_res = LocalResource::new(move || async move {
+        let last = if is_tv && media_id > 0 {
+            crate::services::tmdb::fetch_season_details(media_id, season.unwrap_or(1)).await.ok()
+                .map(|d| d.episodes.iter().all(|e| e.episode_number <= episode.unwrap_or(1))).unwrap_or(false)
+        } else { false };
+        crate::services::ai_engine::fetch_skip_marks(is_tv, media_id, episode, last).await
+    });
+    let marks_sig = Signal::derive(move || marks_res.get().unwrap_or_default());
     let subtitle_sig = Signal::derive(subtitle_header_text);
 
     view! {
@@ -554,7 +563,8 @@ pub fn NetflixVideoPlayer(
                                             current_time=current_time
                                             duration=duration
                                             is_tv=is_tv
-                                            on_skip_intro=Callback::new(move |_| do_skip_by(85.0))
+                                            marks=marks_sig
+                                            on_skip_to=Callback::new(move |t| do_seek(t))
                                             on_next_episode=Callback::new(move |_| {
                                                 if let Some(cb) = on_episode_change {
                                                     let next_ep = episode.unwrap_or(1) + 1;

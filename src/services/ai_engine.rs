@@ -333,6 +333,24 @@ pub struct Game {
     pub genre: String,
 }
 
+/// Where the skippable parts of a video sit, as ratios of its length (`intro` and `recap` as [start, end], `credits` as the start), from the engine's guesses (note 71); all empty for an unknown title.
+#[derive(Clone, Debug, Default, Deserialize, PartialEq)]
+pub struct SkipMarks {
+    pub intro: Option<[f64; 2]>,
+    pub recap: Option<[f64; 2]>,
+    pub credits: Option<f64>,
+}
+
+/// The skip marks of one video; `last` says the episode is the last of its season. Empty when the engine has none or cannot be reached.
+pub async fn fetch_skip_marks(is_tv: bool, id: u32, episode: Option<u32>, last: bool) -> SkipMarks {
+    let mut url = format!("{}/api/skip-marks?type={}&id={}", base(), if is_tv { "tv" } else { "movie" }, id);
+    if let Some(e) = episode { url.push_str(&format!("&episode={e}")); }
+    if last { url.push_str("&last=1"); }
+    let Ok(resp) = engine_get(&url).await else { return SkipMarks::default() };
+    if !resp.ok() { return SkipMarks::default(); }
+    resp.json::<SkipMarks>().await.unwrap_or_default()
+}
+
 /// The games the engine offers; empty while Games is off.
 pub async fn fetch_games() -> Vec<Game> {
     #[derive(Deserialize)]

@@ -134,8 +134,8 @@ pub fn AddProfile() -> impl IntoView {
     view! {
         <div class="px-5 pb-5 pt-2">
             <Show when=move || can_add_profile(store)>
-                <button type="button" on:click=move |_| adding.set(true) class="w-full rounded-control bg-ink/15 py-4 text-body-md font-bold hover:bg-ink/25">{t("set-add-profile-button")}</button>
-                <p class="mt-4 text-center text-label text-ink/60">{crate::i18n::t_args("set-add-profile-limit", &[("max", (MAX_PROFILES as i64).into())])}</p>
+                <button type="button" on:click=move |_| adding.set(true) class="h-12 w-full rounded-[4px] bg-[rgba(128,128,128,0.3)] text-[18px] font-medium hover:bg-[rgba(128,128,128,0.4)]">{t("set-add-profile-button")}</button>
+                <p class="mt-4 text-center text-[14px] text-black/70">{crate::i18n::t_args("set-add-profile-limit", &[("max", (MAX_PROFILES as i64).into())])}</p>
             </Show>
             <Show when=move || adding.get()>
                 <AddEditProfileModal mode="add" initial=None on_save=on_save on_delete=None on_cancel=Callback::new(move |_| adding.set(false)) />

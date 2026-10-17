@@ -147,3 +147,8 @@
   @keyframes sw-in { to { opacity: 1; } }
   @keyframes sw-spin { to { transform: rotate(360deg); } }
 }
+
+/* Section titles of the website's account pages are regular weight 18 px grey, not bold. */
+@media (min-width: 1024px) {
+  .theme-paper-wide .set-section-title { font-weight: 400; color: #333333; }
+}

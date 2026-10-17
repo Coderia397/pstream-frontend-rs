@@ -52,7 +52,7 @@ pub async fn fetch(id: u32, is_tv: bool) -> RatingInfo {
         return hit;
     }
     let url = format!("{}/api/rating?id={}&media_type={}", crate::config::engine_url(), id, if is_tv { "tv" } else { "movie" });
-    let answer = match gloo_net::http::Request::get(&url).send().await {
+    let answer = match crate::services::ai_engine::engine_get(&url).await {
         Ok(r) if r.ok() => r.json::<serde_json::Value>().await.ok(),
         _ => None,
     };
@@ -84,7 +84,7 @@ pub async fn filter_allowed(items: Vec<crate::services::tmdb::MediaItem>) -> Vec
     });
     if !unknown.is_empty() {
         let url = format!("{}/api/ratings?rating={}&ids={}", crate::config::engine_url(), limit, unknown.iter().take(100).cloned().collect::<Vec<_>>().join(","));
-        let answer = match gloo_net::http::Request::get(&url).send().await {
+        let answer = match crate::services::ai_engine::engine_get(&url).await {
             Ok(r) if r.ok() => r.json::<serde_json::Value>().await.ok(),
             _ => None,
         };

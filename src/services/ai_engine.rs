@@ -212,6 +212,24 @@ thread_local! {
     static VOLATILE_SESSION: std::cell::RefCell<Option<String>> = const { std::cell::RefCell::new(None) };
 }
 
+/// A call to the engine that says who is asking: the account's token and the profile in use (the engine needs an account for everything but its health and feature switches, and it
+/// limits what a profile may see). Without an account it goes out as it is.
+pub(crate) async fn engine_get(url: &str) -> Result<gloo_net::http::Response, gloo_net::Error> {
+    let mut req = Request::get(url);
+    if let Some(session) = crate::services::account::ensure_fresh().await {
+        req = req.header("Authorization", &format!("Bearer {}", session.access_token));
+        if let Some(pid) = active_profile_id().filter(|p| crate::services::sync::is_uuid(p)) {
+            req = req.header("X-Profile-Id", &pid);
+        }
+    }
+    req.send().await
+}
+
+/// The profile in use as the browser remembers it.
+fn active_profile_id() -> Option<String> {
+    web_sys::window()?.local_storage().ok().flatten()?.get_item(crate::keys::ACTIVE_PROFILE).ok().flatten().filter(|p| !p.is_empty())
+}
+
 /// Where the recommendation engine lives. Used by the help center to check that it answers.
 pub fn engine_base_url() -> &'static str {
     base()
@@ -260,7 +278,7 @@ async fn hidden_pages(route: &str, param: &str, field: &str, surface: &str, name
     }
     let joined: String = js_sys::encode_uri_component(&names.join(",")).into();
     let url = format!("{}/api/{}?surface={}&{}={}&rating={}", base(), route, surface, param, joined, limit);
-    let Some(v) = (match Request::get(&url).send().await {
+    let Some(v) = (match engine_get(&url).await {
         Ok(r) if r.ok() => r.json::<serde_json::Value>().await.ok(),
         _ => None,
     }) else { return Default::default() };
@@ -287,7 +305,7 @@ pub async fn fetch_genre_list(kind: &str) -> Option<Vec<GenreEntry>> {
     #[derive(Deserialize)]
     struct Answer { genres: Vec<GenreEntry> }
     let url = format!("{}/api/genre-list?surface={}&rating={}", base(), kind, crate::pages::settings::prefs::active_rating().unwrap_or("18"));
-    let resp = Request::get(&url).send().await.ok()?;
+    let resp = engine_get(&url).await.ok()?;
     if !resp.ok() { return None; }
     let a: Answer = resp.json().await.ok()?;
     (!a.genres.is_empty()).then_some(a.genres)
@@ -295,7 +313,7 @@ pub async fn fetch_genre_list(kind: &str) -> Option<Vec<GenreEntry>> {
 
 /// The switches the engine sets for the product (`games`): anything not on is off, also when the engine cannot be reached.
 pub async fn fetch_features() -> std::collections::HashMap<String, bool> {
-    let Ok(resp) = Request::get(&format!("{}/api/features", base())).send().await else { return Default::default() };
+    let Ok(resp) = engine_get(&format!("{}/api/features", base())).await else { return Default::default() };
     if !resp.ok() { return Default::default(); }
     resp.json().await.unwrap_or_default()
 }
@@ -319,7 +337,7 @@ pub struct Game {
 pub async fn fetch_games() -> Vec<Game> {
     #[derive(Deserialize)]
     struct Answer { games: Vec<Game> }
-    let Ok(resp) = Request::get(&format!("{}/api/games", base())).send().await else { return Vec::new() };
+    let Ok(resp) = engine_get(&format!("{}/api/games", base())).await else { return Vec::new() };
     if !resp.ok() { return Vec::new(); }
     resp.json::<Answer>().await.map(|a| a.games).unwrap_or_default()
 }
@@ -337,7 +355,7 @@ pub struct SeasonChip {
 pub async fn fetch_season_chips() -> Vec<SeasonChip> {
     #[derive(Deserialize)]
     struct Answer { chips: Vec<SeasonChip> }
-    let Ok(resp) = Request::get(&format!("{}/api/season-chips", base())).send().await else { return Vec::new() };
+    let Ok(resp) = engine_get(&format!("{}/api/season-chips", base())).await else { return Vec::new() };
     if !resp.ok() { return Vec::new(); }
     resp.json::<Answer>().await.map(|a| a.chips).unwrap_or_default()
 }
@@ -368,7 +386,7 @@ pub async fn fetch_search_suggestions(limit: usize) -> Option<Vec<MediaItem>> {
 
 /// A `{ "results": [...] }` answer of the engine (search, suggestions) as media items; titles with no picture are left out.
 async fn fetch_result_list(url: &str) -> Option<Vec<MediaItem>> {
-    let resp = Request::get(url).send().await.ok()?;
+    let resp = engine_get(url).await.ok()?;
     if !resp.ok() {
         return None;
     }
@@ -418,7 +436,7 @@ pub async fn fetch_new_popular_n(tab: Option<&str>, limit: Option<usize>) -> Opt
     if let Some(n) = limit {
         url.push_str(&format!("&limit={n}"));
     }
-    let resp = Request::get(&url).send().await.ok()?;
+    let resp = engine_get(&url).await.ok()?;
     if !resp.ok() {
         return None;
     }
@@ -429,7 +447,7 @@ pub async fn fetch_new_popular_n(tab: Option<&str>, limit: Option<usize>) -> Opt
 /// The titles of a language page (original language) as rows from the engine, the Top 10 rows left out so the page reads as one ranked grid.
 pub async fn fetch_language_titles(lang: &str) -> Option<Vec<MediaItem>> {
     let url = format!("{}/api/feed?language={}&limit=12&session_id={}{}", base(), lang, get_or_create_session_id(), rating_query());
-    let resp = Request::get(&url).send().await.ok()?;
+    let resp = engine_get(&url).await.ok()?;
     if !resp.ok() {
         return None;
     }
@@ -492,7 +510,7 @@ pub async fn fetch_dynamic_feed(surface: &str, genre: Option<&str>, limit: Optio
 pub async fn fetch_page_header(genre: &str) -> Option<Collection> {
     let encoded: String = js_sys::encode_uri_component(genre).into();
     let url = format!("{}/api/feed?surface=all&limit=8&genre={}&session_id={}{}", base(), encoded, get_or_create_session_id(), rating_query());
-    let resp = Request::get(&url).send().await.ok()?;
+    let resp = engine_get(&url).await.ok()?;
     if !resp.ok() { return None; }
     resp.json::<FeedResponse>().await.ok()?.header
 }
@@ -501,7 +519,7 @@ pub async fn fetch_page_header(genre: &str) -> Option<Collection> {
 pub async fn fetch_collection_page(collection: &str, limit: usize, signals: &str) -> Option<FeedResponse> {
     let encoded: String = js_sys::encode_uri_component(collection).into();
     let url = format!("{}/api/feed?surface=all&limit={}&collection={}&session_id={}{}{}", base(), limit, encoded, get_or_create_session_id(), rating_query(), signals);
-    let resp = Request::get(&url).send().await.ok()?;
+    let resp = engine_get(&url).await.ok()?;
     if !resp.ok() { return None; }
     resp.json::<FeedResponse>().await.ok()
 }
@@ -526,7 +544,7 @@ pub async fn fetch_feed_page(surface: &str, genre: Option<&str>, limit: Option<u
             url.push_str(&format!("&genre={}", encoded_str));
         }
     }
-    let resp = Request::get(&url).send().await.ok()?;
+    let resp = engine_get(&url).await.ok()?;
     if !resp.ok() {
         return None;
     }
@@ -567,7 +585,7 @@ pub struct SemanticSearchResponse {
 /// Fetches dynamic AI-curated vibe rows from local AI Recommendation API
 pub async fn fetch_vibe_rows() -> Option<Vec<VibeRow>> {
     let url = format!("{}/api/vibe-rows", base());
-    let resp = Request::get(&url).send().await.ok()?;
+    let resp = engine_get(&url).await.ok()?;
     if !resp.ok() {
         return None;
     }
@@ -579,7 +597,7 @@ pub async fn fetch_vibe_rows() -> Option<Vec<VibeRow>> {
 pub async fn search_semantic(query: &str) -> Option<Vec<VibeItem>> {
     let encoded = js_sys::encode_uri_component(query);
     let url = format!("{}/api/search/semantic?q={}", base(), encoded);
-    let resp = Request::get(&url).send().await.ok()?;
+    let resp = engine_get(&url).await.ok()?;
     if !resp.ok() {
         return None;
     }
@@ -605,7 +623,7 @@ pub async fn fetch_hero_highlight(id: u32, title: Option<&str>) -> Option<HeroHi
         let encoded_str: String = encoded.into();
         url.push_str(&format!("&title={}", encoded_str));
     }
-    let resp = Request::get(&url).send().await.ok()?;
+    let resp = engine_get(&url).await.ok()?;
     if !resp.ok() {
         return None;
     }
@@ -631,7 +649,7 @@ pub async fn fetch_hero_feed(surface: &str, genre: Option<&str>) -> Option<Vec<M
             url.push_str(&format!("&genre={}", encoded_str));
         }
     }
-    let resp = Request::get(&url).send().await.ok()?;
+    let resp = engine_get(&url).await.ok()?;
     if !resp.ok() {
         return None;
     }
@@ -654,7 +672,7 @@ pub struct RecommendationsResponse {
 pub async fn fetch_ai_recommendations(id: u32, is_tv: bool) -> Option<Vec<VibeItem>> {
     // TMDB ids repeat across movies and series, so the media type is part of the identity
     let url = format!("{}/api/recommendations?id={}&media_type={}{}", base(), id, if is_tv { "tv" } else { "movie" }, rating_query());
-    let resp = Request::get(&url).send().await.ok()?;
+    let resp = engine_get(&url).await.ok()?;
     if !resp.ok() {
         return None;
     }
@@ -683,7 +701,14 @@ pub async fn send_feedback(item_id: u32, media_type: Option<&str>, event: &str) 
     let session_id = get_or_create_session_id();
     let body = FeedbackBody { session_id: &session_id, item_id, media_type, event };
     let url = format!("{}/api/feedback", base());
-    if let Ok(req) = Request::post(&url).json(&body) {
+    let mut post = Request::post(&url);
+    if let Some(session) = crate::services::account::ensure_fresh().await {
+        post = post.header("Authorization", &format!("Bearer {}", session.access_token));
+        if let Some(pid) = active_profile_id().filter(|p| crate::services::sync::is_uuid(p)) {
+            post = post.header("X-Profile-Id", &pid);
+        }
+    }
+    if let Ok(req) = post.json(&body) {
         let _ = req.send().await;
     }
 }

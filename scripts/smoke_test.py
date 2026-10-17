@@ -49,6 +49,19 @@ async def main():
             await call("Page.enable"); await call("Runtime.enable")
             await call("Emulation.setDeviceMetricsOverride", {"width": 1792, "height": 1400, "deviceScaleFactor": 1, "mobile": False})
 
+            # with STREAMS_TEST_EMAIL and STREAMS_TEST_PASSWORD (and STREAMS_SUPABASE_URL, STREAMS_SUPABASE_KEY) the test signs in first, as a person with an account does
+            email, password = os.environ.get("STREAMS_TEST_EMAIL"), os.environ.get("STREAMS_TEST_PASSWORD")
+            if email and password:
+                sb, key = os.environ["STREAMS_SUPABASE_URL"], os.environ["STREAMS_SUPABASE_KEY"]
+                await call("Page.navigate", {"url": BASE + "/login"}); await asyncio.sleep(4)
+                signed = await js(f"""(async()=>{{
+                  const r=await fetch('{sb}/auth/v1/token?grant_type=password',{{method:'POST',headers:{{apikey:'{key}','Content-Type':'application/json'}},body:JSON.stringify({{email:'{email}',password:'{password}'}})}});
+                  const v=await r.json(); if(!v.access_token) return false; const m=v.user.user_metadata||{{}};
+                  localStorage.setItem('streams_session', JSON.stringify({{access_token:v.access_token,refresh_token:v.refresh_token,expires_at:v.expires_at,user_id:v.user.id,email:v.user.email,first_name:m.first_name||'',last_name:m.last_name||'',phone:''}}));
+                  localStorage.setItem('streams_consent', JSON.stringify({{personalization:false,at:Date.now(),v:1}}));
+                  const p=await fetch('{sb}/rest/v1/profiles?select=id&order=sort_order.asc&limit=1',{{headers:{{apikey:'{key}',Authorization:'Bearer '+v.access_token}}}}); const l=await p.json();
+                  if(l[0]) localStorage.setItem('streams_active_profile', l[0].id); return true;}})()""")
+                check(bool(signed), "the test account signs in")
             for path in ("/browse", "/latest", "/search", "/browse/genre/83", "/browse/genre/34399", "/browse/series", "/browse/films"):
                 await call("Page.navigate", {"url": BASE + path})
                 await asyncio.sleep(12)

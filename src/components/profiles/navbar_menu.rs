@@ -35,11 +35,12 @@ pub fn NavbarProfileMenu() -> impl IntoView {
         set_is_open.set(false);
     };
 
-    // Manage Profiles opens its own page (the profiles with their pencils), it does not log the person out of the profile in use
+    // Manage Profiles opens the account Profiles page (parental controls, transfer, one row per profile, Add Profile), as on the Netflix website.
+    // The page of profiles with pencils (`/profiles/manage`) is the "Manage Profiles" button of Who's watching.
     let nav_to_manage = navigate.clone();
     let manage_profiles = move |_| {
         set_is_open.set(false);
-        nav_to_manage("/profiles/manage", Default::default());
+        nav_to_manage(&crate::pages::settings::Screen::AccountProfiles.path(), Default::default());
     };
 
     let nav_to_account = navigate.clone();

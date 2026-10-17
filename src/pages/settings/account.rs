@@ -161,6 +161,7 @@ pub fn ProfilesPage() -> impl IntoView {
         <div>
             <Section title=t("set-profiles-parental")>
                 <LinkRow icon="warning-circle" title=t("set-title-restrictions") hint=t("set-profiles-parental-hint") href=Screen::Restrictions(active_profile_id()).path() />
+                <LinkRow icon="user-switch" title=t("set-title-transfer-profile") hint=t("set-profiles-transfer-hint") href=Screen::TransferProfile(active_profile_id()).path() />
             </Section>
             <Section title=t("set-profiles-settings")>
                 {move || {
@@ -177,7 +178,7 @@ pub fn ProfilesPage() -> impl IntoView {
                         }
                     }).collect_view()
                 }}
-                <LinkRow icon="users-three" title=t("set-manage-profiles") href=Screen::Profiles.path() />
+                <super::hub::AddProfile />
             </Section>
         </div>
     }

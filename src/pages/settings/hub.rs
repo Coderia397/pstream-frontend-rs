@@ -105,21 +105,55 @@ pub fn Hub() -> impl IntoView {
     }
 }
 
+/// True while the account can take another profile (the Kids profile does not count toward the limit).
+pub fn can_add_profile(store: ProfileStore) -> bool {
+    store.profiles.with(|l| l.iter().filter(|p| !p.is_kids).count() < MAX_PROFILES) || store.profiles.with(|l| !l.iter().any(|p| p.is_kids))
+}
+
+/// Adds the profile the modal describes, keeps it and sends it to the account.
+pub fn add_profile(store: ProfileStore, data: ProfileFormData) {
+    let name = data.name.trim().to_string();
+    if name.is_empty() {
+        return;
+    }
+    store.profiles.update(|list| {
+        let order = list.iter().map(|p| p.sort_order).max().unwrap_or(0) + 1;
+        list.push(Profile { id: format!("p{}", js_sys::Date::now() as u64), name, avatar_url: data.avatar_url, is_kids: data.is_kids, is_default: Some(false), pin: data.pin, sort_order: order });
+    });
+    persist_profiles(store);
+}
+
+/// "Add Profile" under the profile list of the Profiles page: a wide grey button, the Add a profile dialog, a "Profile added"
+/// toast, and the limit line. The button is gone at the limit, as on the Netflix website.
+#[component]
+pub fn AddProfile() -> impl IntoView {
+    let store = use_profile_store();
+    let adding = RwSignal::new(false);
+    let on_save = Callback::new(move |data: ProfileFormData| {
+        add_profile(store, data);
+        adding.set(false);
+        super::widgets::toast(t("set-profile-added"));
+    });
+    view! {
+        <div class="px-5 pb-5 pt-2">
+            <Show when=move || can_add_profile(store)>
+                <button type="button" on:click=move |_| adding.set(true) class="w-full rounded-control bg-ink/15 py-4 text-body-md font-bold hover:bg-ink/25">{t("set-add-profile-button")}</button>
+                <p class="mt-4 text-center text-label text-ink/60">{crate::i18n::t_args("set-add-profile-limit", &[("max", (MAX_PROFILES as i64).into())])}</p>
+            </Show>
+            <Show when=move || adding.get()>
+                <AddEditProfileModal mode="add" initial=None on_save=on_save on_delete=None on_cancel=Callback::new(move |_| adding.set(false)) />
+            </Show>
+        </div>
+    }
+}
+
 #[component]
 pub fn ManageProfiles() -> impl IntoView {
     let store = use_profile_store();
     let adding = RwSignal::new(false);
-    let can_add = move || store.profiles.with(|l| l.iter().filter(|p| !p.is_kids).count() < MAX_PROFILES) || store.profiles.with(|l| !l.iter().any(|p| p.is_kids));
+    let can_add = move || can_add_profile(store);
     let on_save = Callback::new(move |data: ProfileFormData| {
-        let name = data.name.trim().to_string();
-        if name.is_empty() {
-            return;
-        }
-        store.profiles.update(|list| {
-            let order = list.iter().map(|p| p.sort_order).max().unwrap_or(0) + 1;
-            list.push(Profile { id: format!("p{}", js_sys::Date::now() as u64), name, avatar_url: data.avatar_url, is_kids: data.is_kids, is_default: Some(false), pin: data.pin, sort_order: order });
-        });
-        persist_profiles(store);
+        add_profile(store, data);
         adding.set(false);
     });
 

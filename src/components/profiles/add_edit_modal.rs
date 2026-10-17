@@ -44,14 +44,20 @@ pub fn AddEditProfileModal(
         }
     };
 
+    // Save is always pressable; an empty name shows "Please enter a name" under the field, as Netflix does
+    let (name_missing, set_name_missing) = signal(false);
     let can_save = move || {
         !name.get().trim().is_empty() && is_pin_valid()
     };
 
     let is_edit = mode == "edit";
-    let modal_title = if is_edit { crate::i18n::t("profile-edit-title") } else { crate::i18n::t("profile-add") };
+    let modal_title = if is_edit { crate::i18n::t("profile-edit-title") } else { crate::i18n::t("set-add-a-profile") };
 
     let handle_save = move |_| {
+        if name.get().trim().is_empty() {
+            set_name_missing.set(true);
+            return;
+        }
         if !can_save() { return; }
         let pin = if pin_enabled.get() { Some(pin_val.get()) } else { None };
         on_save.run(ProfileFormData {
@@ -65,7 +71,7 @@ pub fn AddEditProfileModal(
     view! {
         <div class="fixed inset-0 z-(--z-modal) flex items-center justify-center bg-void/80 backdrop-blur-sm px-4 animate-in fade-in duration-(--motion-base)">
             <div
-                class="relative w-full max-w-[560px] max-h-[90vh] overflow-y-auto bg-raised rounded-field shadow-2xl border border-ink/10 p-6 sm:p-10 text-ink"
+                class="relative w-full max-w-[560px] max-h-[90vh] overflow-y-auto bg-page rounded-field shadow-2xl border border-ink/10 p-6 sm:p-10 text-ink"
             >
                 // Close button
                 <button
@@ -106,11 +112,14 @@ pub fn AddEditProfileModal(
                         <input
                             type="text"
                             prop:value=move || name.get()
-                            on:input=move |e| set_name.set(event_target_value(&e))
+                            on:input=move |e| { set_name.set(event_target_value(&e)); set_name_missing.set(false); }
                             placeholder=crate::i18n::t("add-edit-modal-name")
                             maxlength="30"
-                            class="w-full bg-field border border-ink/20 rounded-control px-4 py-3 text-ink text-base placeholder:text-ink/30 outline-none focus:border-ink transition-colors"
+                            class=move || format!("w-full bg-transparent border rounded-control px-4 py-3 text-ink text-base placeholder:text-ink/30 outline-none transition-colors {}", if name_missing.get() { "border-danger-soft" } else { "border-ink/20 focus:border-ink" })
                         />
+                        <Show when=move || name_missing.get()>
+                            <p class="flex items-center gap-1.5 text-label text-danger-soft"><i class="ph ph-warning" aria-hidden="true"></i>{crate::i18n::t("set-profile-name-required")}</p>
+                        </Show>
                     </div>
                 </div>
 
@@ -125,15 +134,17 @@ pub fn AddEditProfileModal(
                         </div>
                         <input
                             type="checkbox"
+                            role="switch"
                             prop:checked=move || is_kids.get()
                             on:change=move |e| set_kids.set(event_target_checked(&e))
-                            class="w-5 h-5 accent-brand rounded-control cursor-pointer"
+                            class="peer sr-only"
                         />
+                        <span class="relative h-[26px] w-[46px] shrink-0 rounded-full bg-ink/40 transition-colors peer-checked:bg-brand peer-focus-visible:outline-2 after:absolute after:start-[3px] after:top-[3px] after:h-5 after:w-5 after:rounded-full after:bg-white after:transition-transform peer-checked:after:translate-x-5 rtl:peer-checked:after:-translate-x-5" aria-hidden="true"></span>
                     </label>
                 </div>
 
-                // Profile Lock PIN Toggle
-                <div class="border-t border-ink/10 py-5 space-y-3">
+                // Profile Lock PIN Toggle (not part of Add a profile)
+                <div class=move || if is_edit { "border-t border-ink/10 py-5 space-y-3" } else { "hidden" }>
                     <label class="flex items-center justify-between gap-4 cursor-pointer">
                         <div>
                             <span class="text-ink font-semibold text-body">{crate::i18n::t("profile-lock")}</span>
@@ -163,7 +174,7 @@ pub fn AddEditProfileModal(
                                             let clean: String = v.chars().filter(|c| c.is_ascii_digit()).take(4).collect();
                                             set_pin_val.set(clean);
                                         }
-                                        class="w-48 bg-field border border-ink/20 rounded-control px-4 py-2 text-ink text-base tracking-widest placeholder:tracking-normal placeholder:text-ink/30 outline-none focus:border-ink transition-colors"
+                                        class="w-48 bg-transparent border border-ink/20 rounded-control px-4 py-2 text-ink text-base tracking-widest placeholder:tracking-normal placeholder:text-ink/30 outline-none focus:border-ink transition-colors"
                                     />
                                     <Show when=move || !is_pin_valid()>
                                         <p class="text-danger-soft text-xs mt-1">{crate::i18n::t("profile-pin-invalid")}</p>
@@ -224,25 +235,21 @@ pub fn AddEditProfileModal(
                     }
                 }}
 
-                // Actions: Save & Cancel
-                <div class="flex items-center justify-end gap-3 pt-6 border-t border-ink/10">
-                    <button
-                        type="button"
-                        on:click=move |_| on_cancel.run(())
-                        class="px-6 py-2 border border-ink/30 text-ink/70 hover:text-ink hover:border-ink rounded-control text-sm font-semibold transition-colors cursor-pointer active:scale-95"
-                    >
-                        {crate::i18n::t("continue-watching-options-sheet-cancel")}
-                    </button>
+                // Actions: Save as a wide button, Cancel under it (as in the Netflix dialog)
+                <div class="flex flex-col items-stretch gap-2 pt-4">
                     <button
                         type="button"
                         on:click=handle_save
-                        class=move || if can_save() {
-                            "px-8 py-2 rounded-control text-sm font-bold transition-colors cursor-pointer active:scale-95 bg-brand text-ink hover:bg-brand-hover"
-                        } else {
-                            "px-8 py-2 rounded-control text-sm font-bold transition-colors cursor-pointer active:scale-95 bg-ink/20 text-ink/40 pointer-events-none"
-                        }
+                        class="w-full rounded-control bg-ink py-4 text-body-md font-bold text-void transition-colors hover:bg-ink/90 cursor-pointer active:scale-[0.99]"
                     >
                         {crate::i18n::t("add-edit-modal-save")}
+                    </button>
+                    <button
+                        type="button"
+                        on:click=move |_| on_cancel.run(())
+                        class="w-full py-3 text-body-md font-bold text-ink hover:underline cursor-pointer"
+                    >
+                        {crate::i18n::t("continue-watching-options-sheet-cancel")}
                     </button>
                 </div>
             </div>

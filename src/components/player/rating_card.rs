@@ -24,12 +24,14 @@ pub fn RatingCard(media_id: u32, is_tv: bool, season: Option<u32>, episode: Opti
     let reasons_text = move || {
         // the words are the British classification board's; a reader of the American system gets the American word where there is one (reason-us-...), else the same word
         let us = prefs.rating_system() == crate::data::ratings::RatingSystem::Us;
-        reasons.get().map(|r| r.into_iter().take(3).map(|x| {
+        // a word the page has no text for (an old answer) is left out, never shown as a key; the first three of the list are shown
+        reasons.get().map(|r| r.into_iter().filter_map(|x| {
             let slug = x.replace(' ', "-");
             let key = format!("reason-us-{slug}");
             let word = if us { crate::i18n::t(&key) } else { key.clone() };
-            if word == key { crate::i18n::t(&format!("reason-{slug}")) } else { word }
-        }).collect::<Vec<_>>().join(", ")).unwrap_or_default()
+            let word = if word == key { crate::i18n::t(&format!("reason-{slug}")) } else { word };
+            (!word.starts_with("reason-")).then_some(word)
+        }).take(3).collect::<Vec<_>>().join(", ")).unwrap_or_default()
     };
     view! {
         <Show when=move || (phase.get() > 0) && rated()>

@@ -10,7 +10,7 @@ const BOWL: (f64, f64, f64, f64) = (1066.0, 601.0, 97.0, 87.0);
 #[component]
 pub fn KidsSplash(#[prop(optional, into)] class: String) -> impl IntoView {
     view! {
-        <svg class=class viewBox="0 0 2000 1120" preserveAspectRatio="xMidYMid slice" role="img" aria-label="Kids" xmlns="http://www.w3.org/2000/svg">
+        <svg class=class viewBox="0 0 2000 1120" preserveAspectRatio="xMidYMid slice" role="img" aria-label=crate::i18n::t("nav-kids") xmlns="http://www.w3.org/2000/svg">
             <defs>
                 <linearGradient id="kids-green" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#50a65e" /><stop offset="1" stop-color="#2d5c3a" /></linearGradient>
                 <linearGradient id="kids-orange" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#f7c862" /><stop offset="0.55" stop-color="#ee7b4e" /><stop offset="1" stop-color="#ea4a42" /></linearGradient>
@@ -39,7 +39,7 @@ pub fn KidsSplash(#[prop(optional, into)] class: String) -> impl IntoView {
 #[component]
 pub fn KidsWordmark(#[prop(optional, into)] class: String) -> impl IntoView {
     view! {
-        <svg class=class viewBox="552 342 896 448" role="img" aria-label="Kids" xmlns="http://www.w3.org/2000/svg">
+        <svg class=class viewBox="552 342 896 448" role="img" aria-label=crate::i18n::t("nav-kids") xmlns="http://www.w3.org/2000/svg">
             <g fill="none" stroke="#ffffff" stroke-linecap="round" stroke-linejoin="round" stroke-width="170">
                 <path d=LETTERS />
                 <ellipse cx=BOWL.0 cy=BOWL.1 rx=BOWL.2 ry=BOWL.3 />

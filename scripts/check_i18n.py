@@ -38,6 +38,8 @@ for k in en:
         used.add(k)  # subtitle colours and edge styles, and account event names, looked up at runtime on the settings screens
     elif k.startswith("email-"):
         used.add(k)  # sent by the mail Worker (streams-backend-rs/mail), not shown in the app
+    elif k.startswith(("row-", "hook-", "topic-", "event-", "reason-", "collection-", "notif-")):
+        used.add(k)  # row titles, hooks, topics, event names, content reasons and collections: the engine and the skip marks name them by key, looked up at runtime
     elif k.startswith("genre-"):
         used.add(k)  # looked up from the genre name at runtime (i18n::genre_label)
     elif k.startswith("legal-") and any(k.startswith(f"legal-{i}-") for i in legal_ids):

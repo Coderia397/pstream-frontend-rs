@@ -75,7 +75,7 @@ pub fn RecCard(
             if p.starts_with("http") {
                 p.clone()
             } else {
-                format!("{}/w342{}", crate::config::TMDB_IMAGE_URL, p)
+                format!("{}/w780{}", crate::config::TMDB_IMAGE_URL, p)
             }
         });
 

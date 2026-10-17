@@ -145,10 +145,7 @@ pub fn Navbar(
                             <button
                                 on:click=move |_| {
                                     if let Some(kids) = p_store.profiles.get().into_iter().find(|p| p.is_kids) {
-                                        p_store.active_profile_id.set(Some(kids.id.clone()));
-                                        if let Some(storage) = web_sys::window().and_then(|w| w.local_storage().ok().flatten()) {
-                                            let _ = storage.set_item(crate::keys::ACTIVE_PROFILE, &kids.id);
-                                        }
+                                        crate::store::activate_profile(&kids.id);
                                     }
                                 }
                                 class="flex items-center gap-2 text-ink hover:text-ink transition-all select-none cursor-pointer group h-9 pl-0.5 pr-2 ml-1.5 rounded-field hover:bg-mute/40"

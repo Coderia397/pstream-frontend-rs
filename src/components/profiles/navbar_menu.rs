@@ -43,8 +43,8 @@ pub fn NavbarProfileMenu() -> impl IntoView {
     };
 
     let switch_profile = move |id: String| {
-        active_profile_id.set(Some(id));
         set_is_open.set(false);
+        crate::store::activate_profile(&id);
     };
 
     // Manage Profiles opens the account Profiles page (parental controls, transfer, one row per profile, Add Profile), as on the Netflix website.

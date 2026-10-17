@@ -270,7 +270,8 @@ pub fn WhosWatchingGate(
                         <ProfileSwitchOverlay
                             profile=p
                             on_finish=Callback::new(move |_| {
-                                active_profile_id.set(Some(pid.clone()));
+                                // the home page loads afresh for the profile
+                                crate::store::activate_profile(&pid);
                                 set_switching_target.set(None);
                             })
                         />

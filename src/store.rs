@@ -171,6 +171,17 @@ pub fn start_account(store: ProfileStore, first_name: &str) {
     crate::services::sync::refresh_profiles(store);
 }
 
+/// Makes a profile the one in use and loads the home page afresh, so everything that belongs to a profile (feed, list, ratings, the Kids frame) is read again
+/// for it, as Netflix does when you pick a profile.
+pub fn activate_profile(id: &str) {
+    if let Some(window) = web_sys::window() {
+        if let Some(storage) = window.local_storage().ok().flatten() {
+            let _ = storage.set_item(crate::keys::ACTIVE_PROFILE, id);
+        }
+        let _ = window.location().set_href(crate::config::routes::BROWSE);
+    }
+}
+
 pub fn use_profile_store() -> ProfileStore {
     use_context::<ProfileStore>().expect("ProfileStore not provided")
 }

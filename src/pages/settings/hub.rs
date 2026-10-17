@@ -45,11 +45,8 @@ pub fn switch_to(store: ProfileStore, profile: &Profile) {
         store.active_profile_id.set(None);
         return;
     }
-    if let Some(storage) = web_sys::window().and_then(|w| w.local_storage().ok().flatten()) {
-        let _ = storage.set_item(crate::keys::ACTIVE_PROFILE, &profile.id);
-    }
     store.is_kids_mode.set(profile.is_kids);
-    store.active_profile_id.set(Some(profile.id.clone()));
+    crate::store::activate_profile(&profile.id);
 }
 
 fn avatar_of(p: &Profile) -> String {

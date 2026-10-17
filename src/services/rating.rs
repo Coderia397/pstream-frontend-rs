@@ -76,6 +76,8 @@ fn key_of(item: &crate::services::tmdb::MediaItem) -> String {
 /// with no limit (18) or no profile nothing is asked. If the engine cannot be reached a limited profile gets nothing rather than
 /// unchecked titles.
 pub async fn filter_allowed(items: Vec<crate::services::tmdb::MediaItem>) -> Vec<crate::services::tmdb::MediaItem> {
+    // a Kids profile also gets the app's own guard (children's genres only), whatever the engine says
+    let items: Vec<_> = if crate::pages::settings::prefs::active_is_kids() { items.into_iter().filter(crate::utils::kids::kid_friendly).collect() } else { items };
     let Some(limit) = crate::pages::settings::prefs::active_rating().filter(|l| *l != "18") else { return items };
     let limit = limit.to_string();
     let unknown: Vec<String> = ALLOWED.with(|c| {

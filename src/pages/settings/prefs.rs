@@ -221,6 +221,14 @@ mod tests {
     }
 }
 
+/// True when the profile in use is a Kids profile, read straight from the browser store (not reactive; the page reloads when the profile changes).
+pub fn active_is_kids() -> bool {
+    let Some(storage) = web_sys::window().and_then(|w| w.local_storage().ok().flatten()) else { return false };
+    let active = storage.get_item(crate::keys::ACTIVE_PROFILE).ok().flatten();
+    let profiles: Vec<crate::models::profile::Profile> = read(crate::keys::PROFILES).unwrap_or_else(crate::store::default_profiles);
+    profiles.iter().find(|p| Some(&p.id) == active.as_ref()).is_some_and(|p| p.is_kids)
+}
+
 /// The age rating limit of the profile in use (U, PG, 12, 15 or 18), read straight from the browser store, for requests to the engine.
 /// Not reactive: it is read when a request is made. None when there is no profile yet.
 pub fn active_rating() -> Option<&'static str> {

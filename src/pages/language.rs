@@ -121,26 +121,24 @@ pub fn BrowseLanguagePage() -> impl IntoView {
 
     view! {
         <Layout>
-            <div class="bg-void md:bg-page min-h-screen pb-20 pt-[calc(4rem+env(safe-area-inset-top))] md:pt-28">
-                <div class="px-6 md:px-14 pt-2 md:pt-4">
+            <div class="bg-void md:bg-page min-h-screen pb-20 pt-[calc(4rem+env(safe-area-inset-top))] md:pt-[96px]">
+                <div class="px-6 md:px-[var(--app-x,56px)] pt-2 md:pt-0">
                     // Header with title and Netflix-matching preference dropdowns
-                    <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-4 mb-8">
-                        <h1 class="text-ink font-bold text-heading-lg md:text-heading-xl tracking-tight leading-tight select-none">
+                    <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-4 mb-8 md:mb-[110px]">
+                        <h1 class="select-none text-heading-lg font-bold leading-tight tracking-tight text-ink md:text-[34.7px] md:font-normal md:leading-[36px] md:tracking-normal">
                             {crate::i18n::t("language-browse-by-language")}
                         </h1>
 
                         <div class="flex items-center gap-3">
-                            {(PREF_TYPES.len() > 1).then(|| view! {
-                            <span class="text-ink/80 text-body-sm hidden md:block select-none whitespace-nowrap">
+                            <span class="hidden select-none whitespace-nowrap text-[14px] text-ink md:block">
                                 {crate::i18n::t("language-select-your-preferences")}
                             </span>
-                            })}
 
                             // Dropdown 1: Preference Type (only shown when there is more than one way to pick)
-                            <div node_ref=pref_container_ref class="relative" class:hidden=(PREF_TYPES.len() <= 1)>
+                            <div node_ref=pref_container_ref class="relative" >
                                 <button
                                     on:click=toggle_pref_dropdown
-                                    class="flex items-center justify-between min-w-[100px] md:min-w-[125px] px-4 py-2 leading-none text-label md:text-body-sm font-semibold tracking-[-0.2px] text-ink bg-ink/10 hover:bg-ink/20 border border-ink/20 backdrop-blur-md rounded-full transition-all active:scale-95 gap-x-2.5 cursor-pointer select-none shadow-sm"
+                                    class="flex h-[35px] items-center justify-between min-w-[100px] md:min-w-[224px] cursor-pointer select-none gap-x-2.5 border border-ink/55 bg-void px-3 text-label font-medium leading-none text-ink hover:border-ink md:text-[17.35px]"
                                 >
                                     <span>{move || crate::i18n::t(selected_pref_type.get())}</span>
                                     <i class="ph-fill ph-caret-down text-fine text-ink/80 shrink-0 transition-transform duration-(--motion-base)"
@@ -181,7 +179,7 @@ pub fn BrowseLanguagePage() -> impl IntoView {
                             <div node_ref=lang_container_ref class="relative">
                                 <button
                                     on:click=toggle_lang_dropdown
-                                    class="flex items-center justify-between min-w-[100px] md:min-w-[125px] px-4 py-2 leading-none text-label md:text-body-sm font-semibold tracking-[-0.2px] text-ink bg-ink/10 hover:bg-ink/20 border border-ink/20 backdrop-blur-md rounded-full transition-all active:scale-95 gap-x-2.5 cursor-pointer select-none shadow-sm"
+                                    class="flex h-[35px] items-center justify-between min-w-[100px] md:min-w-[240px] cursor-pointer select-none gap-x-2.5 border border-ink/55 bg-void px-3 text-label font-medium leading-none text-ink hover:border-ink md:text-[17.35px]"
                                 >
                                     <span>{active_label}</span>
                                     <i class="ph-fill ph-caret-down text-fine text-ink/80 shrink-0 transition-transform duration-(--motion-base)"
@@ -240,7 +238,7 @@ pub fn BrowseLanguagePage() -> impl IntoView {
                                 }.into_any()
                             } else {
                                 view! {
-                                    <div class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 xl:grid-cols-6 gap-x-1.5 md:gap-x-2 gap-y-10 md:gap-y-12">
+                                    <div class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 xl:grid-cols-6 gap-x-1.5 md:gap-x-[4px] gap-y-10 md:gap-y-[75px]">
                                         {items.into_iter().map(|item| {
                                             let movie_id = item.id;
                                             let is_tv = item.is_tv();

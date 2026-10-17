@@ -2412,3 +2412,4 @@ my-trailers = Trailers You've Watched
 my-trailers-empty = Trailers you've watched will be saved here.
 my-liked = Series & Films You've Liked
 my-liked-empty = The titles you give a thumbs up to will appear here.
+set-qlink-access = Manage access and devices

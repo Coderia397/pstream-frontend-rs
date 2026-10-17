@@ -120,9 +120,10 @@ pub fn Account() -> impl IntoView {
             </div>
             <div class="hidden lg:block">
                 <Section title=t("set-overview-quick")>
+                    <LinkRow icon="devices" title=t("set-qlink-access") href=Screen::Access.path() />
                     <LinkRow icon="lock-simple" title=t("set-overview-update-password") href=Screen::Password.path() />
-                    <LinkRow icon="devices" title=t("set-title-devices") href=Screen::Access.path() />
-                    <LinkRow icon="warning-circle" title=t("set-title-restrictions") href=Screen::Restrictions(active_profile_id()).path() />
+                    <LinkRow icon="user-switch" title=t("set-title-transfer-profile") href=Screen::TransferProfile(active_profile_id()).path() />
+                    <LinkRow icon="warning-circle" title=t("set-po-restrictions") href=Screen::Restrictions(active_profile_id()).path() />
                 </Section>
                 <Section>
                     <LinkRow icon="sliders-horizontal" title=t("set-overview-edit") hint=t("set-overview-edit-hint") href=Screen::Profile(active_profile_id()).path() />

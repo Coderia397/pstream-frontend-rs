@@ -1,6 +1,6 @@
 use leptos::prelude::*;
 use leptos_router::hooks::{use_navigate, use_params_map, use_query_map};
-use crate::components::player::NetflixVideoPlayer;
+use crate::components::player::StreamsPlayer;
 use crate::services::tmdb::fetch_details;
 use crate::store::use_watch_store;
 
@@ -118,7 +118,7 @@ pub fn PlayerPage() -> impl IntoView {
                             let orig_lang = item.original_language.clone();
 
                             view! {
-                                <NetflixVideoPlayer
+                                <StreamsPlayer
                                     media_id=id
                                     title=title
                                     is_tv=is_tv

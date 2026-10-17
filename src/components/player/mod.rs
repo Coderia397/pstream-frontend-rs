@@ -48,7 +48,7 @@ fn clear_timeout_handle(id: Option<i32>) {
 }
 
 #[component]
-pub fn NetflixVideoPlayer(
+pub fn StreamsPlayer(
     media_id: u32,
     title: String,
     is_tv: bool,

@@ -1,6 +1,10 @@
 use leptos::prelude::*;
-use crate::services::tmdb::{fetch_season_details, Episode};
+use crate::services::tmdb::{fetch_details, fetch_season_details, Episode};
+use crate::store::use_watch_store;
 
+/// The episodes panel, laid out from the owner's Netflix screenshots (note 70): a 760 px dark panel above the controls on the right; a header with a back arrow and "Season N" (the arrow
+/// opens the list of seasons); one row per episode with its number, name and a thin progress line; the current episode (and the row that has the keyboard focus) opens into a
+/// thumbnail with four lines of the summary, the current one marked "Now Playing". Progress is known for the episode in the watch record only, the other lines stay empty.
 #[component]
 pub fn EpisodeDrawer(
     series_id: u32,
@@ -10,156 +14,99 @@ pub fn EpisodeDrawer(
     on_close: Callback<()>,
     on_select_episode: Callback<(u32, u32)>,
 ) -> impl IntoView {
+    let watch_store = use_watch_store();
     let (selected_season, set_selected_season) = signal(current_season);
+    let (show_seasons, set_show_seasons) = signal(false);
 
-    // Season episodes resource
+    let seasons_resource = LocalResource::new(move || async move {
+        if series_id > 0 { fetch_details(series_id, true).await.ok().and_then(|d| d.number_of_seasons) } else { None }
+    });
     let episodes_resource = LocalResource::new(move || {
         let season_num = selected_season.get();
-        async move {
-            if series_id > 0 {
-                fetch_season_details(series_id, season_num).await.ok().map(|d| d.episodes)
-            } else {
-                None
-            }
-        }
+        async move { if series_id > 0 { fetch_season_details(series_id, season_num).await.ok().map(|d| d.episodes) } else { None } }
     });
+    let many_seasons = move || seasons_resource.get().flatten().unwrap_or(1) > 1;
 
+    let row_base = "group relative flex w-full flex-col px-[35px] text-start transition-colors duration-(--motion-quick) outline-none";
     view! {
         <Show when=move || is_open.get()>
-            // Backdrop scrim
-            <div
-                on:click=move |_| on_close.run(())
-                class="fixed inset-0 z-40 bg-void/60 backdrop-blur-sm transition-opacity"
-            />
+            // a click anywhere else closes the panel (no dimming)
+            <div on:click=move |_| on_close.run(()) class="fixed inset-0 z-40" />
 
-            // Slide-Over Drawer
-            <div class="fixed top-0 right-0 bottom-0 z-50 w-full sm:w-[420px] md:w-[480px] bg-page/95 backdrop-blur-xl border-l border-ink/10 shadow-2xl flex flex-col animate-in slide-in-from-right duration-(--motion-base)">
-                // Header
-                <div class="flex items-center justify-between px-6 py-5 border-b border-ink/10">
-                    <div class="flex items-center gap-3">
-                        <h2 class="text-xl font-bold text-ink tracking-tight">{crate::i18n::t("media-episodes")}</h2>
-                        // Season Selector
-                        <div class="relative">
-                            <select
-                                on:change=move |e| {
-                                    if let Ok(val) = event_target_value(&e).parse::<u32>() {
-                                        set_selected_season.set(val);
-                                    }
-                                }
-                                class="bg-ink/10 text-ink text-sm font-semibold rounded-card px-3 py-1.5 pr-8 border border-ink/15 outline-none appearance-none cursor-pointer hover:bg-ink/20 transition-colors"
+            <div class="fixed bottom-[94px] right-0 z-50 flex h-[calc(100vh-253px)] min-h-[320px] w-[min(760px,100vw)] flex-col overflow-hidden bg-[#262626] shadow-2xl">
+                // header: back arrow and the season
+                <button
+                    on:click=move |_| if many_seasons() { set_show_seasons.update(|s| *s = !*s) }
+                    class="flex h-[74px] w-full shrink-0 items-center gap-[18px] px-[24px] text-start text-ink transition-colors duration-(--motion-quick) hover:bg-[#333333]"
+                >
+                    <Show when=many_seasons><i class="ph ph-arrow-left text-[26px]"></i></Show>
+                    <span class="text-[30px] font-medium leading-[36px]">
+                        {move || crate::i18n::t_args("media-season-n", &[("n", fluent_bundle::FluentValue::from(selected_season.get() as i64))])}
+                    </span>
+                </button>
+
+                <div class="flex-1 overflow-y-auto">
+                    // list of seasons
+                    <Show when=move || show_seasons.get()>
+                        {move || (1..=seasons_resource.get().flatten().unwrap_or(1)).map(|n| view! {
+                            <button
+                                on:click=move |_| { set_selected_season.set(n); set_show_seasons.set(false); }
+                                class=format!("{row_base} h-[85px] justify-center text-[23px] font-medium hover:bg-[#404040] {}", if n == current_season { "text-ink" } else { "text-[#d2d2d2]" })
                             >
-                                {(1..=8).map(|s| {
-                                    let is_curr = s == selected_season.get();
+                                {crate::i18n::t_args("media-season-n", &[("n", fluent_bundle::FluentValue::from(n as i64))])}
+                            </button>
+                        }).collect::<Vec<_>>()}
+                    </Show>
+
+                    // list of episodes
+                    <Show when=move || !show_seasons.get()>
+                        <Suspense fallback=move || view! {
+                            <div class="flex items-center justify-center py-20"><div class="aspect-square w-[40px] animate-spin rounded-full border-[3px] border-transparent border-s-brand"></div></div>
+                        }>
+                            {move || episodes_resource.get().map(|res| match res {
+                                Some(episodes) if !episodes.is_empty() => episodes.into_iter().map(|ep: Episode| {
+                                    let ep_num = ep.episode_number;
+                                    let s_num = selected_season.get();
+                                    let is_current = s_num == current_season && ep_num == current_episode;
+                                    let still_url = ep.still_url("w300");
+                                    let name = ep.name.clone();
+                                    let overview = ep.overview.clone();
+                                    let percent = if is_current {
+                                        watch_store.get_record(series_id, true).filter(|r| r.season == Some(s_num) && r.episode == Some(ep_num)).map(|r| r.percentage.clamp(0.0, 100.0)).unwrap_or(0.0)
+                                    } else { 0.0 };
+                                    let open_class = if is_current { "bg-[#181818]" } else { "hover:bg-[#404040] focus-visible:bg-[#181818] focus-visible:outline-2 focus-visible:outline-ink" };
                                     view! {
-                                        <option value=s selected=is_curr class="bg-raised text-ink">
-                                            {crate::i18n::t_args("media-season-n", &[("n", fluent_bundle::FluentValue::from(s as i64))])}
-                                        </option>
+                                        <button
+                                            on:click=move |_| { on_select_episode.run((s_num, ep_num)); on_close.run(()); }
+                                            class=format!("{row_base} {open_class}")
+                                        >
+                                            // number, name and the progress line
+                                            <span class=format!("flex w-full items-center gap-[24px] text-[23px] font-medium text-ink {}", if is_current { "pt-[22px]" } else { "h-[85px] group-focus-visible:pt-[22px] group-focus-visible:h-auto" })>
+                                                <span class="w-[26px] shrink-0 text-center">{ep_num}</span>
+                                                <span class="min-w-0 flex-1 truncate">{name.clone()}</span>
+                                                <span class="relative h-[2px] w-[131px] shrink-0 bg-[#808080]"><span class="absolute inset-y-0 left-0 bg-brand" style=format!("width:{percent}%")></span></span>
+                                            </span>
+                                            // the open part: thumbnail and four lines of the summary
+                                            <span class=format!("w-full gap-[26px] pb-[22px] pt-[12px] {}", if is_current { "flex" } else { "hidden group-focus-visible:flex" })>
+                                                <span class="relative h-[140px] w-[248px] shrink-0 overflow-hidden bg-[#1a1a1a]">
+                                                    {still_url.map(|u| view! { <img src=u alt=name.clone() class="h-full w-full object-cover" loading="lazy" /> })}
+                                                    <span class="absolute inset-0 flex items-center justify-center bg-void/30 text-ink">
+                                                        {if is_current {
+                                                            view! { <span class="flex items-center gap-2 text-[22px] font-medium"><i class="ph-fill ph-waveform text-[26px]"></i>{crate::i18n::t("player-now-playing")}</span> }.into_any()
+                                                        } else {
+                                                            view! { <span class="flex h-[64px] w-[64px] items-center justify-center rounded-full bg-void/60"><i class="ph-fill ph-play text-[34px]"></i></span> }.into_any()
+                                                        }}
+                                                    </span>
+                                                </span>
+                                                <span class="line-clamp-4 block max-h-[100px] min-w-0 flex-1 overflow-hidden text-[20px] leading-[25px] text-ink">{overview}</span>
+                                            </span>
+                                        </button>
                                     }
-                                }).collect::<Vec<_>>()}
-                            </select>
-                            <i class="ph ph-caret-down text-xs text-ink/70 absolute right-2.5 top-1/2 -translate-y-1/2 pointer-events-none"></i>
-                        </div>
-                    </div>
-
-                    <button
-                        on:click=move |_| on_close.run(())
-                        class="w-8 h-8 rounded-full flex items-center justify-center text-ink/70 hover:text-ink hover:bg-ink/10 transition-colors"
-                    >
-                        <i class="ph ph-x text-lg"></i>
-                    </button>
-                </div>
-
-                // Episode List
-                <div class="flex-1 overflow-y-auto p-4 space-y-3">
-                    <Suspense fallback=move || view! {
-                        <div class="flex items-center justify-center py-20 text-ink/50">
-                            <div class="w-8 h-8 rounded-full border-2 border-brand border-t-transparent animate-spin"></div>
-                        </div>
-                    }>
-                        {move || {
-                            episodes_resource.get().map(|res| match res {
-                                Some(episodes) if !episodes.is_empty() => {
-                                    episodes.into_iter().map(|ep: Episode| {
-                                        let ep_num = ep.episode_number;
-                                        let is_active = selected_season.get() == current_season && ep_num == current_episode;
-                                        let still_url = ep.still_url("w300");
-                                        let ep_name = ep.name.clone();
-                                        let ep_overview = ep.overview.clone();
-                                        let ep_runtime = ep.runtime.map(|r| format!("{}m", r)).unwrap_or_default();
-
-                                        let on_card_click = {
-                                            let on_select = on_select_episode;
-                                            let s_num = selected_season.get();
-                                            move |_| {
-                                                on_select.run((s_num, ep_num));
-                                                on_close.run(());
-                                            }
-                                        };
-
-                                        view! {
-                                            <div
-                                                on:click=on_card_click
-                                                class=move || format!(
-                                                    "group flex gap-3 p-3 rounded-modal cursor-pointer transition-all duration-(--motion-fast) border {}",
-                                                    if is_active {
-                                                        "bg-ink/15 border-ink/30 shadow-md"
-                                                    } else {
-                                                        "bg-ink/[0.04] border-transparent hover:bg-ink/[0.09]"
-                                                    }
-                                                )
-                                            >
-                                                // Thumbnail
-                                                <div class="relative w-28 aspect-video flex-shrink-0 rounded-card overflow-hidden bg-placeholder">
-                                                    {if let Some(url) = still_url {
-                                                        view! {
-                                                            <img
-                                                                src=url
-                                                                alt=ep_name.clone()
-                                                                class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-(--motion-base)"
-                                                                loading="lazy"
-                                                            />
-                                                        }.into_any()
-                                                    } else {
-                                                        view! {
-                                                            <div class="w-full h-full flex items-center justify-center text-ink/30 text-xs">
-                                                                <i class="ph ph-film-strip text-2xl"></i>
-                                                            </div>
-                                                        }.into_any()
-                                                    }}
-                                                    <Show when=move || is_active>
-                                                        <div class="absolute inset-0 bg-void/40 flex items-center justify-center">
-                                                            <i class="ph-fill ph-play text-xl text-brand"></i>
-                                                        </div>
-                                                    </Show>
-                                                </div>
-
-                                                // Details
-                                                <div class="flex-1 min-w-0 flex flex-col justify-center">
-                                                    <div class="flex items-center justify-between gap-2">
-                                                        <h4 class=move || format!(
-                                                            "text-sm font-semibold truncate {}",
-                                                            if is_active { "text-brand" } else { "text-ink group-hover:text-ink/90" }
-                                                        )>
-                                                            {format!("{}. {}", ep_num, ep_name)}
-                                                        </h4>
-                                                        <span class="text-xs text-ink/50 flex-shrink-0">{ep_runtime}</span>
-                                                    </div>
-                                                    <p class="text-xs text-ink/60 line-clamp-2 mt-1 leading-relaxed">
-                                                        {ep_overview}
-                                                    </p>
-                                                </div>
-                                            </div>
-                                        }
-                                    }).collect::<Vec<_>>().into_any()
-                                }
-                                _ => view! {
-                                    <div class="text-center py-16 text-ink/50 text-sm">
-                                        {crate::i18n::t("episode-drawer-no-episodes-available-for-this")}
-                                    </div>
-                                }.into_any(),
-                            })
-                        }}
-                    </Suspense>
+                                }).collect::<Vec<_>>().into_any(),
+                                _ => view! { <div class="py-16 text-center text-[18px] text-[#b3b3b3]">{crate::i18n::t("episode-drawer-no-episodes-available-for-this")}</div> }.into_any(),
+                            })}
+                        </Suspense>
+                    </Show>
                 </div>
             </div>
         </Show>

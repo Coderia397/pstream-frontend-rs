@@ -1,6 +1,9 @@
 use leptos::prelude::*;
 use crate::services::resolver::SubtitleTrack;
 
+/// The audio and subtitles panel, laid out from the owner's Netflix screenshots (note 70): a dark panel above the controls on the right, a heading in 28 px, rows of 21 px with a
+/// check in front of the chosen one, the row under the pointer on a lighter fill. We have a list of subtitles only (no separate audio choice yet), so the panel has that one column.
+/// The timing offset stays, as a small row under the list.
 #[component]
 pub fn SubtitleDrawer(
     is_open: ReadSignal<bool>,
@@ -11,122 +14,50 @@ pub fn SubtitleDrawer(
     on_change_delay: Callback<f64>,
     on_close: Callback<()>,
 ) -> impl IntoView {
+    let row = "flex h-[59px] w-full items-center px-[10px] text-start text-[21px] transition-colors duration-(--motion-quick) hover:bg-[#3a3a3a] hover:text-ink focus-visible:outline-2 focus-visible:outline-ink";
     view! {
         <Show when=move || is_open.get()>
-            // Backdrop scrim
-            <div
-                on:click=move |_| on_close.run(())
-                class="fixed inset-0 z-40 bg-void/60 backdrop-blur-sm transition-opacity"
-            />
+            // a click anywhere else closes the panel (no dimming)
+            <div on:click=move |_| on_close.run(()) class="fixed inset-0 z-40" />
 
-            // Drawer
-            <div class="fixed top-0 right-0 bottom-0 z-50 w-full sm:w-[380px] bg-page/95 backdrop-blur-xl border-l border-ink/10 shadow-2xl flex flex-col animate-in slide-in-from-right duration-(--motion-base)">
-                // Header
-                <div class="flex items-center justify-between px-6 py-5 border-b border-ink/10">
-                    <h2 class="text-xl font-bold text-ink tracking-tight flex items-center gap-2">
-                        <i class="ph ph-subtitles text-2xl text-brand"></i>
-                        {crate::i18n::t("controls-overlay-audio-subtitles")}
-                    </h2>
-                    <button
-                        on:click=move |_| on_close.run(())
-                        class="w-8 h-8 rounded-full flex items-center justify-center text-ink/70 hover:text-ink hover:bg-ink/10 transition-colors"
-                    >
-                        <i class="ph ph-x text-lg"></i>
+            <div class="fixed bottom-[94px] right-0 z-50 flex max-h-[calc(100vh-190px)] w-[min(681px,100vw)] flex-col overflow-hidden rounded-[8px] bg-[#262626] shadow-2xl">
+                <div class="flex-1 overflow-y-auto px-[35px] pb-[20px] pt-[26px]">
+                    <h2 class="mb-[18px] text-[28px] font-medium leading-[34px] text-ink">{crate::i18n::t("subtitle-drawer-subtitles")}</h2>
+
+                    <button on:click=move |_| on_select_sub.run(None) class=move || format!("{row} {}", if selected_sub_url.get().is_none() { "text-ink" } else { "text-[#b3b3b3]" })>
+                        <i class=move || format!("ph ph-check me-[14px] w-[24px] text-[24px] {}", if selected_sub_url.get().is_none() { "" } else { "invisible" })></i>
+                        <span>{crate::i18n::t("player-subs-off")}</span>
                     </button>
-                </div>
 
-                <div class="flex-1 overflow-y-auto p-6 space-y-6">
-                    // Subtitles Section
-                    <div>
-                        <h3 class="text-xs uppercase tracking-wider font-bold text-ink/50 mb-3">
-                            {crate::i18n::t("subtitle-drawer-subtitles")}
-                        </h3>
-                        <div class="space-y-1">
-                            // Off Option
-                            <button
-                                on:click=move |_| on_select_sub.run(None)
-                                class=move || format!(
-                                    "w-full flex items-center justify-between px-4 py-3 rounded-card text-sm font-medium transition-colors {}",
-                                    if selected_sub_url.get().is_none() {
-                                        "bg-ink/15 text-ink"
-                                    } else {
-                                        "text-ink/70 hover:bg-ink/5 hover:text-ink"
-                                    }
-                                )
-                            >
-                                <span>{crate::i18n::t("player-subs-off")}</span>
-                                <Show when=move || selected_sub_url.get().is_none()>
-                                    <i class="ph ph-check text-base text-brand"></i>
-                                </Show>
-                            </button>
-
-                            // Available tracks
-                            {move || {
-                                let subs = subtitles.get();
-                                if subs.is_empty() {
-                                    view! {
-                                        <div class="text-xs text-ink/40 italic px-4 py-2">
-                                            {crate::i18n::t("subtitle-drawer-no-subtitles-detected-for-this")}
-                                        </div>
-                                    }.into_any()
-                                } else {
-                                    subs.into_iter().map(|s| {
-                                        let url = s.url.clone();
-                                        let label = s.label.clone();
-                                        let is_active = selected_sub_url.get().as_deref() == Some(&url);
-                                        let on_click = {
-                                            let u = url.clone();
-                                            let select_cb = on_select_sub;
-                                            move |_| select_cb.run(Some(u.clone()))
-                                        };
-
-                                        view! {
-                                            <button
-                                                on:click=on_click
-                                                class=move || format!(
-                                                    "w-full flex items-center justify-between px-4 py-3 rounded-card text-sm font-medium transition-colors {}",
-                                                    if is_active {
-                                                        "bg-ink/15 text-ink"
-                                                    } else {
-                                                        "text-ink/70 hover:bg-ink/5 hover:text-ink"
-                                                    }
-                                                )
-                                            >
-                                                <span>{label}</span>
-                                                <Show when=move || is_active>
-                                                    <i class="ph ph-check text-base text-brand"></i>
-                                                </Show>
-                                            </button>
-                                        }
-                                    }).collect::<Vec<_>>().into_any()
+                    {move || {
+                        let subs = subtitles.get();
+                        if subs.is_empty() {
+                            view! { <p class="px-[10px] py-3 text-[18px] text-[#b3b3b3]">{crate::i18n::t("subtitle-drawer-no-subtitles-detected-for-this")}</p> }.into_any()
+                        } else {
+                            subs.into_iter().map(|s| {
+                                let url = s.url.clone();
+                                let label = s.label.clone();
+                                let u_active = url.clone();
+                                let u_icon = url.clone();
+                                let select_cb = on_select_sub;
+                                view! {
+                                    <button on:click=move |_| select_cb.run(Some(url.clone())) class=move || format!("{row} {}", if selected_sub_url.get().as_deref() == Some(u_active.as_str()) { "text-ink" } else { "text-[#b3b3b3]" })>
+                                        <i class=move || format!("ph ph-check me-[14px] w-[24px] text-[24px] {}", if selected_sub_url.get().as_deref() == Some(u_icon.as_str()) { "" } else { "invisible" })></i>
+                                        <span class="truncate">{label}</span>
+                                    </button>
                                 }
-                            }}
-                        </div>
-                    </div>
+                            }).collect::<Vec<_>>().into_any()
+                        }
+                    }}
 
-                    // Subtitle Sync Offset
                     <Show when=move || selected_sub_url.get().is_some()>
-                        <div class="pt-4 border-t border-ink/10">
-                            <h3 class="text-xs uppercase tracking-wider font-bold text-ink/50 mb-3">
-                                {crate::i18n::t("subtitle-drawer-subtitle-timing-offset")}
-                            </h3>
-                            <div class="flex items-center justify-between bg-ink/[0.04] p-3 rounded-card border border-ink/10">
-                                <button
-                                    on:click=move |_| on_change_delay.run(sub_delay.get() - 0.5)
-                                    class="px-3 py-1.5 bg-ink/10 hover:bg-ink/20 text-ink rounded-control font-bold text-sm"
-                                >
-                                    "-0.5s"
-                                </button>
-                                <span class="text-sm font-mono text-ink/90">
-                                    {move || format!("{:+.1}s", sub_delay.get())}
-                                </span>
-                                <button
-                                    on:click=move |_| on_change_delay.run(sub_delay.get() + 0.5)
-                                    class="px-3 py-1.5 bg-ink/10 hover:bg-ink/20 text-ink rounded-control font-bold text-sm"
-                                >
-                                    "+0.5s"
-                                </button>
-                            </div>
+                        <div class="mt-[14px] flex items-center justify-between border-t border-[#4d4d4d] px-[10px] pt-[14px] text-[18px] text-[#b3b3b3]">
+                            <span>{crate::i18n::t("subtitle-drawer-subtitle-timing-offset")}</span>
+                            <span class="flex items-center gap-4 text-ink">
+                                <button on:click=move |_| on_change_delay.run(sub_delay.get() - 0.5) class="h-9 w-12 rounded-[4px] hover:bg-[#3a3a3a]">"-0.5s"</button>
+                                <span class="w-14 text-center">{move || format!("{:+.1}s", sub_delay.get())}</span>
+                                <button on:click=move |_| on_change_delay.run(sub_delay.get() + 0.5) class="h-9 w-12 rounded-[4px] hover:bg-[#3a3a3a]">"+0.5s"</button>
+                            </span>
                         </div>
                     </Show>
                 </div>

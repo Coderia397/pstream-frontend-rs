@@ -405,18 +405,25 @@ pub fn NetflixVideoPlayer(
         }
     };
 
+    // the title block as on Netflix: the show in bold, then "E3" and the episode's name; a film shows its title only
+    let ep_name = LocalResource::new(move || async move {
+        if is_tv && media_id > 0 {
+            crate::services::tmdb::fetch_season_details(media_id, season.unwrap_or(1)).await.ok()
+                .and_then(|d| d.episodes.into_iter().find(|e| e.episode_number == episode.unwrap_or(1)).map(|e| e.name))
+        } else { None }
+    });
     let subtitle_header_text = move || {
         if is_tv {
-            format!(
-                "S{}:E{} \"{}\"",
-                season.unwrap_or(1),
-                episode.unwrap_or(1),
-                episode_title.as_deref().map(str::to_string).unwrap_or_else(|| crate::i18n::t("player-episode"))
-            )
+            match episode_title.clone().or_else(|| ep_name.get().flatten()) {
+                Some(n) if !n.is_empty() => format!("E{}  {}", episode.unwrap_or(1), n),
+                _ => format!("E{}", episode.unwrap_or(1)),
+            }
         } else {
-            year.clone().unwrap_or_default()
+            String::new()
         }
     };
+
+    let subtitle_sig = Signal::derive(subtitle_header_text);
 
     view! {
         <div
@@ -503,7 +510,7 @@ pub fn NetflixVideoPlayer(
                                         // Controls Overlay
                                         <ControlsOverlay
                                             title=title_stored.get_value()
-                                            subtitle=Some(subtitle_header_text())
+                                            subtitle=subtitle_sig
                                             is_tv=is_tv
                                             is_playing=is_playing
                                             is_buffering=is_buffering

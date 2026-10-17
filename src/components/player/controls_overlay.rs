@@ -19,7 +19,7 @@ fn format_time_remaining(curr: f64, dur: f64) -> String {
 #[component]
 pub fn ControlsOverlay(
     title: String,
-    subtitle: Option<String>,
+    subtitle: Signal<String>,
     is_tv: bool,
     is_playing: ReadSignal<bool>,
     is_buffering: ReadSignal<bool>,
@@ -113,7 +113,7 @@ pub fn ControlsOverlay(
                     // the title, centred
                     <div class="mx-6 flex min-w-0 flex-1 items-baseline justify-center gap-3 text-[20px] text-ink">
                         <span class="truncate font-bold">{title.clone()}</span>
-                        {subtitle.clone().map(|sub| view! { <span class="truncate text-ink">{sub}</span> })}
+                        {move || { let sub = subtitle.get(); (!sub.is_empty()).then(|| view! { <span class="truncate text-ink">{sub}</span> }) }}
                     </div>
 
                     // right: next, episodes, audio and subtitles, fullscreen

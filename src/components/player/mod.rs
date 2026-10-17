@@ -556,7 +556,7 @@ pub fn NetflixVideoPlayer(
                                         />
 
                                         // the age rating card, once at the start of a play
-                                        <RatingCard media_id=media_id is_tv=is_tv current_time=current_time />
+                                        <RatingCard media_id=media_id is_tv=is_tv season=season episode=episode current_time=current_time />
 
                                         // Skip Intro Button
                                         <SkipButton

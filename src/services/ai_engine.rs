@@ -351,6 +351,18 @@ pub async fn fetch_skip_marks(is_tv: bool, id: u32, episode: Option<u32>, last: 
     resp.json::<SkipMarks>().await.unwrap_or_default()
 }
 
+/// The content reasons of one video (words of the fixed list of 20, in list order), from the engine's guesses (note 69); empty when there is no answer, so only the rating shows.
+pub async fn fetch_content_reasons(is_tv: bool, id: u32, season: Option<u32>, episode: Option<u32>) -> Vec<String> {
+    #[derive(Deserialize)]
+    struct Answer { reasons: Option<Vec<String>> }
+    let mut url = format!("{}/api/content-reasons?type={}&id={}", base(), if is_tv { "tv" } else { "movie" }, id);
+    if let Some(s) = season { url.push_str(&format!("&season={s}")); }
+    if let Some(e) = episode { url.push_str(&format!("&episode={e}")); }
+    let Ok(resp) = engine_get(&url).await else { return Vec::new() };
+    if !resp.ok() { return Vec::new(); }
+    resp.json::<Answer>().await.ok().and_then(|a| a.reasons).unwrap_or_default()
+}
+
 /// The games the engine offers; empty while Games is off.
 pub async fn fetch_games() -> Vec<Game> {
     #[derive(Deserialize)]

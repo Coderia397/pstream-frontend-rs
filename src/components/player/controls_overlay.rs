@@ -10,7 +10,7 @@ fn format_time_remaining(curr: f64, dur: f64) -> String {
     let mins = (rem % 3600) / 60;
     let secs = rem % 60;
     if hours > 0 {
-        format!("{:02}:{:02}:{:02}", hours, mins, secs)
+        format!("{}:{:02}:{:02}", hours, mins, secs)
     } else {
         format!("{:02}:{:02}", mins, secs)
     }
@@ -44,220 +44,121 @@ pub fn ControlsOverlay(
 ) -> impl IntoView {
     let (show_speed_menu, set_show_speed_menu) = signal(false);
 
-    let play_icon_class = move || {
-        if is_playing.get() {
-            "ph-fill ph-pause text-2xl md:text-3xl"
-        } else {
-            "ph-fill ph-play text-2xl md:text-3xl"
-        }
-    };
-
+    // 36 px icons inside 44 px buttons, as in the app
+    let play_icon_class = move || if is_playing.get() { "ph-fill ph-pause text-[36px]" } else { "ph-fill ph-play text-[36px]" };
     let speaker_icon_class = move || {
-        if is_muted.get() || volume.get() <= 0.0 {
-            "ph ph-speaker-slash text-2xl md:text-3xl"
-        } else if volume.get() > 0.5 {
-            "ph ph-speaker-high text-2xl md:text-3xl"
-        } else {
-            "ph ph-speaker-low text-2xl md:text-3xl"
-        }
+        if is_muted.get() || volume.get() <= 0.0 { "ph ph-speaker-x text-[36px]" } else if volume.get() > 0.5 { "ph ph-speaker-high text-[36px]" } else { "ph ph-speaker-low text-[36px]" }
     };
-
     let overlay_class = move || {
         format!(
-            "absolute inset-0 z-20 flex flex-col justify-between p-6 md:p-8 bg-gradient-to-t from-void/85 via-transparent to-void/75 transition-opacity duration-(--motion-slow) select-none {}",
-            if is_idle.get() && is_playing.get() {
-                "opacity-0 pointer-events-none cursor-none"
-            } else {
-                "opacity-100 pointer-events-auto cursor-default"
-            }
+            "absolute inset-0 z-20 transition-opacity duration-(--motion-slow) select-none {}",
+            if is_idle.get() && is_playing.get() { "opacity-0 pointer-events-none cursor-none" } else { "opacity-100 pointer-events-auto cursor-default" }
         )
     };
+    // every button: 44 x 44, no plate
+    let btn = "relative flex h-11 w-11 shrink-0 items-center justify-center rounded-[2px] text-ink transition-transform duration-(--motion-quick) hover:scale-110 active:scale-95";
 
     view! {
         <div class=overlay_class>
-            // Top Bar
-            <div class="flex items-center justify-between w-full">
-                <div class="flex items-center gap-4">
-                    <button
-                        on:click=move |_| on_back.run(())
-                        class="w-10 h-10 rounded-full flex items-center justify-center text-ink/90 hover:text-ink hover:bg-ink/10 active:scale-95 transition-all duration-(--motion-fast)"
-                        title=crate::i18n::t("controls-overlay-back-to-browse")
-                    >
-                        <i class="ph ph-arrow-left text-2xl"></i>
-                    </button>
+            // the top shade and the back and report buttons (30 px from the corner)
+            <div class="pointer-events-none absolute inset-x-0 top-0 h-[85%]" style="background: linear-gradient(rgba(0,0,0,0.3) 0, rgba(0,0,0,0) 20%);" />
+            <button on:click=move |_| on_back.run(()) class=format!("{btn} absolute left-[30px] top-[30px] z-10") title=crate::i18n::t("controls-overlay-back-to-browse") aria-label=crate::i18n::t("controls-overlay-back-to-browse")>
+                <i class="ph ph-arrow-left text-[36px]"></i>
+            </button>
+            <a href="/help/contact" class=format!("{btn} absolute right-[30px] top-[30px] z-10") title=crate::i18n::t("controls-overlay-report-problem") aria-label=crate::i18n::t("controls-overlay-report-problem")>
+                <i class="ph ph-flag text-[34px]"></i>
+            </a>
 
-                    <div class="flex flex-col">
-                        <h1 class="text-base sm:text-lg md:text-xl font-bold text-ink tracking-tight leading-tight">
-                            {title.clone()}
-                        </h1>
-                        {subtitle.clone().map(|sub| view! {
-                            <p class="text-xs sm:text-sm text-ink/70 font-medium">
-                                {sub}
-                            </p>
-                        })}
-                    </div>
-                </div>
-            </div>
-
-            // Center Area (Buffering or Play indicator)
-            <div class="flex-1 flex items-center justify-center pointer-events-none">
+            // the buffering ring in the middle
+            <div class="pointer-events-none absolute inset-0 flex items-center justify-center">
                 <Show when=move || is_buffering.get()>
-                    <div class="w-16 h-16 rounded-full border-4 border-brand border-t-transparent animate-spin shadow-2xl"></div>
+                    <div class="h-16 w-16 animate-spin rounded-full border-4 border-brand border-t-transparent"></div>
                 </Show>
             </div>
 
-            // Bottom Bar
-            <div class="flex flex-col gap-2 w-full">
-                // Timeline Scrubber
-                <TimelineScrubber
-                    current_time=current_time
-                    duration=duration
-                    buffered_fraction=buffered_fraction
-                    on_seek=on_seek
-                />
+            // the bottom: a 135 px band with a soft shade, the timeline on top, the buttons 52 px below its top
+            <div class="absolute inset-x-0 bottom-0 h-[135px]" style="background: linear-gradient(0deg, rgba(0,0,0,0.3) 0, rgba(0,0,0,0));">
+                <div class="absolute left-[20px] right-[90px] top-0">
+                    <TimelineScrubber current_time=current_time duration=duration buffered_fraction=buffered_fraction on_seek=on_seek />
+                </div>
+                <span class="absolute right-[28px] top-[1px] w-11 text-right text-[16px] leading-5 text-ink">
+                    {move || format_time_remaining(current_time.get(), duration.get())}
+                </span>
 
-                // Controls Row
-                <div class="flex items-center justify-between mt-1">
-                    // Left: Play, Rewind 10, FastForward 10, Volume, Time
-                    <div class="flex items-center gap-3 md:gap-5">
-                        // Play / Pause
-                        <button
-                            on:click=move |_| on_toggle_play.run(())
-                            class="text-ink hover:text-ink/80 active:scale-90 transition-transform duration-(--motion-quick)"
-                            title=move || if is_playing.get() { crate::i18n::t("player-pause") } else { crate::i18n::t("player-play") }
-                        >
+                <div class="absolute left-[20px] right-[28px] top-[52px] flex h-11 items-center">
+                    // left: play or pause, back 10, forward 10, volume
+                    <div class="flex items-center gap-3 md:gap-[38px]">
+                        <button on:click=move |_| on_toggle_play.run(()) class=btn title=move || if is_playing.get() { crate::i18n::t("player-pause") } else { crate::i18n::t("player-play") }>
                             <i class=play_icon_class></i>
                         </button>
-
-                        // Rewind 10s
-                        <button
-                            on:click=move |_| on_skip_by.run(-10.0)
-                            class="relative text-ink hover:text-ink/80 active:scale-90 transition-transform duration-(--motion-quick) flex items-center justify-center"
-                            title=crate::i18n::t("controls-overlay-rewind-10-seconds-left-arrow")
-                        >
-                            <i class="ph ph-arrow-counter-clockwise text-2xl md:text-3xl"></i>
-                            <span class="absolute text-nano font-black top-1/2 -translate-y-1/2 pt-0.5 pointer-events-none">"10"</span>
+                        <button on:click=move |_| on_skip_by.run(-10.0) class=btn title=crate::i18n::t("controls-overlay-rewind-10-seconds-left-arrow")>
+                            <i class="ph ph-arrow-counter-clockwise text-[36px]"></i>
+                            <span class="pointer-events-none absolute pt-[2px] text-[11px] font-black">"10"</span>
                         </button>
-
-                        // Forward 10s
-                        <button
-                            on:click=move |_| on_skip_by.run(10.0)
-                            class="relative text-ink hover:text-ink/80 active:scale-90 transition-transform duration-(--motion-quick) flex items-center justify-center"
-                            title=crate::i18n::t("controls-overlay-forward-10-seconds-right-arrow")
-                        >
-                            <i class="ph ph-arrow-clockwise text-2xl md:text-3xl"></i>
-                            <span class="absolute text-nano font-black top-1/2 -translate-y-1/2 pt-0.5 pointer-events-none">"10"</span>
+                        <button on:click=move |_| on_skip_by.run(10.0) class=btn title=crate::i18n::t("controls-overlay-forward-10-seconds-right-arrow")>
+                            <i class="ph ph-arrow-clockwise text-[36px]"></i>
+                            <span class="pointer-events-none absolute pt-[2px] text-[11px] font-black">"10"</span>
                         </button>
-
-                        // Volume Control (Hover to open slider)
-                        <div class="flex items-center gap-2 group/vol">
-                            <button
-                                on:click=move |_| on_toggle_mute.run(())
-                                class="text-ink hover:text-ink/80 transition-colors"
-                                title=move || if is_muted.get() { crate::i18n::t("player-unmute") } else { crate::i18n::t("player-mute") }
-                            >
+                        // the volume slider opens while the pointer rests on the speaker
+                        <div class="group/vol flex items-center">
+                            <button on:click=move |_| on_toggle_mute.run(()) class=btn title=move || if is_muted.get() { crate::i18n::t("player-unmute") } else { crate::i18n::t("player-mute") }>
                                 <i class=speaker_icon_class></i>
                             </button>
-
                             <input
-                                type="range"
-                                min="0"
-                                max="1"
-                                step="0.05"
+                                type="range" min="0" max="1" step="0.05"
                                 prop:value=move || if is_muted.get() { 0.0 } else { volume.get() }
-                                on:input=move |e| {
-                                    if let Ok(v) = event_target_value(&e).parse::<f64>() {
-                                        on_set_volume.run(v);
-                                    }
-                                }
-                                class="w-0 group-hover/vol:w-20 transition-all duration-(--motion-base) accent-brand cursor-pointer h-1.5 rounded-card overflow-hidden"
+                                on:input=move |e| { if let Ok(v) = event_target_value(&e).parse::<f64>() { on_set_volume.run(v); } }
+                                class="h-1 w-0 cursor-pointer accent-brand transition-all duration-(--motion-base) group-hover/vol:ms-2 group-hover/vol:w-24"
+                                aria-label=crate::i18n::t("player-volume")
                             />
-                        </div>
-
-                        // Time Remaining
-                        <div class="text-xs md:text-sm font-medium text-ink/80 select-none">
-                            {move || format!("-{}", format_time_remaining(current_time.get(), duration.get()))}
                         </div>
                     </div>
 
-                    // Right: Next Episode, Episodes Drawer, Subtitles, Speed, Fullscreen
-                    <div class="flex items-center gap-4 md:gap-6">
-                        // Next Episode Button (TV only)
+                    // the title, centred
+                    <div class="mx-6 flex min-w-0 flex-1 items-baseline justify-center gap-3 text-[20px] text-ink">
+                        <span class="truncate font-bold">{title.clone()}</span>
+                        {subtitle.clone().map(|sub| view! { <span class="truncate text-ink">{sub}</span> })}
+                    </div>
+
+                    // right: next, episodes, speed, audio and subtitles, fullscreen
+                    <div class="flex items-center gap-3 md:gap-[38px]">
                         <Show when=move || is_tv && on_next_episode.is_some()>
-                            <button
-                                on:click=move |_| {
-                                    if let Some(cb) = on_next_episode {
-                                        cb.run(());
-                                    }
-                                }
-                                class="text-ink hover:text-ink/80 active:scale-95 transition-transform"
-                                title=crate::i18n::t("controls-overlay-next-episode")
-                            >
-                                <i class="ph ph-skip-forward text-2xl"></i>
+                            <button on:click=move |_| { if let Some(cb) = on_next_episode { cb.run(()); } } class=btn title=crate::i18n::t("controls-overlay-next-episode")>
+                                <i class="ph ph-skip-forward text-[36px]"></i>
                             </button>
                         </Show>
-
-                        // Episodes Drawer Toggle (TV only)
                         <Show when=move || is_tv>
-                            <button
-                                on:click=move |_| on_toggle_episodes.run(())
-                                class="text-ink hover:text-ink/80 active:scale-95 transition-transform"
-                                title=crate::i18n::t("controls-overlay-episode-selector")
-                            >
-                                <i class="ph ph-squares-four text-2xl"></i>
+                            <button on:click=move |_| on_toggle_episodes.run(()) class=btn title=crate::i18n::t("controls-overlay-episode-selector")>
+                                <i class="ph ph-stack text-[36px]"></i>
                             </button>
                         </Show>
-
-                        // Audio & Subtitles
-                        <button
-                            on:click=move |_| on_toggle_subtitles.run(())
-                            class="text-ink hover:text-ink/80 active:scale-95 transition-transform"
-                            title=crate::i18n::t("controls-overlay-audio-subtitles")
-                        >
-                            <i class="ph ph-subtitles text-2xl"></i>
-                        </button>
-
-                        // Playback Speed Toggle
+                        // speed (a small menu over the button)
                         <div class="relative">
-                            <button
-                                on:click=move |_| set_show_speed_menu.update(|s| *s = !*s)
-                                class="text-ink hover:text-ink/80 font-bold text-xs md:text-sm px-2 py-1 rounded-control bg-ink/10 hover:bg-ink/20 transition-colors"
-                                title=crate::i18n::t("controls-overlay-playback-speed")
-                            >
-                                {move || format!("{:.2}x", playback_speed.get())}
+                            <button on:click=move |_| set_show_speed_menu.update(|s| *s = !*s) class=btn title=crate::i18n::t("controls-overlay-playback-speed")>
+                                <i class="ph ph-gauge text-[36px]"></i>
                             </button>
-
                             <Show when=move || show_speed_menu.get()>
-                                <div class="absolute bottom-8 right-0 bg-raised border border-ink/15 rounded-card py-1 shadow-2xl flex flex-col z-30 min-w-[80px]">
+                                <div class="absolute bottom-14 right-0 z-30 flex min-w-[110px] flex-col rounded-[8px] bg-[#262626] py-2 shadow-2xl">
                                     {[0.5, 0.75, 1.0, 1.25, 1.5].into_iter().map(|spd| {
-                                        let is_active = (playback_speed.get() - spd).abs() < 0.01;
                                         let set_spd_cb = on_set_speed;
                                         view! {
                                             <button
-                                                on:click=move |_| {
-                                                    set_spd_cb.run(spd);
-                                                    set_show_speed_menu.set(false);
-                                                }
-                                                class=move || format!(
-                                                    "px-3 py-1.5 text-xs text-left transition-colors flex items-center justify-between {}",
-                                                    if is_active { "bg-brand text-ink font-bold" } else { "text-ink/80 hover:bg-ink/10" }
-                                                )
+                                                on:click=move |_| { set_spd_cb.run(spd); set_show_speed_menu.set(false); }
+                                                class=move || format!("flex items-center gap-2 px-4 py-2 text-left text-[18px] hover:bg-ink/10 {}", if (playback_speed.get() - spd).abs() < 0.01 { "font-bold text-ink" } else { "text-ink/70" })
                                             >
-                                                <span>{format!("{:.2}x", spd)}</span>
+                                                <i class=move || if (playback_speed.get() - spd).abs() < 0.01 { "ph ph-check text-[18px]" } else { "ph ph-check invisible text-[18px]" }></i>
+                                                <span>{format!("{spd:.2}x")}</span>
                                             </button>
                                         }
                                     }).collect::<Vec<_>>()}
                                 </div>
                             </Show>
                         </div>
-
-                        // Fullscreen Toggle
-                        <button
-                            on:click=move |_| on_toggle_fullscreen.run(())
-                            class="text-ink hover:text-ink/80 active:scale-95 transition-transform"
-                            title=crate::i18n::t("controls-overlay-fullscreen-f")
-                        >
-                            <i class="ph ph-corners-out text-2xl"></i>
+                        <button on:click=move |_| on_toggle_subtitles.run(()) class=btn title=crate::i18n::t("controls-overlay-audio-subtitles")>
+                            <i class="ph ph-subtitles text-[36px]"></i>
+                        </button>
+                        <button on:click=move |_| on_toggle_fullscreen.run(()) class=btn title=crate::i18n::t("controls-overlay-fullscreen-f")>
+                            <i class="ph ph-corners-out text-[36px]"></i>
                         </button>
                     </div>
                 </div>

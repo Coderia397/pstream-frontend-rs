@@ -2338,3 +2338,6 @@ rating-not-for-me = Not for me
 rating-like = I like this
 rating-love = Love this!
 rating-rated = Rated
+controls-overlay-report-problem = Report a problem
+player-volume = Volume
+player-rating-label = Rating:

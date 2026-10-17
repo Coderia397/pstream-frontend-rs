@@ -4,6 +4,7 @@ pub mod controls_overlay;
 pub mod episode_drawer;
 pub mod subtitle_drawer;
 pub mod skip_button;
+pub mod rating_card;
 
 use leptos::prelude::*;
 use wasm_bindgen::prelude::*;
@@ -18,6 +19,7 @@ use controls_overlay::ControlsOverlay;
 use episode_drawer::EpisodeDrawer;
 use subtitle_drawer::SubtitleDrawer;
 use skip_button::SkipButton;
+use rating_card::RatingCard;
 
 #[derive(Clone, Debug, PartialEq)]
 enum PlayerState {
@@ -541,6 +543,9 @@ pub fn NetflixVideoPlayer(
                                             on_toggle_fullscreen=Callback::new(move |_| do_toggle_fullscreen())
                                             on_back=on_close
                                         />
+
+                                        // the age rating card, once at the start of a play
+                                        <RatingCard media_id=media_id is_tv=is_tv current_time=current_time />
 
                                         // Skip Intro Button
                                         <SkipButton

@@ -465,6 +465,8 @@ pub fn InfoModal() -> impl IntoView {
                                             iframe_id="modal-trailer-iframe".to_string()
                                             on_ready=Callback::new(move |_| {
                                                 set_is_trailer_ready.set(true);
+                                                // the title goes to "Trailers You've Watched"
+                                                if let Some(id) = movie_id.get_untracked() { crate::store::trailers::mark(id, is_tv.get_untracked()); }
                                             })
                                             on_ended=Callback::new(move |_| {
                                                 set_has_ended.set(true);

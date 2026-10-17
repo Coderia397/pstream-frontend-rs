@@ -237,5 +237,6 @@ pub fn use_library_store() -> LibraryStore {
 
 pub mod ratings;
 pub mod scoped;
+pub mod trailers;
 pub mod watch_store;
 pub use watch_store::{provide_watch_store, use_watch_store, WatchRecord, WatchStore};

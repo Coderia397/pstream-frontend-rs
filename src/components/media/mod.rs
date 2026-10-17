@@ -23,3 +23,5 @@ pub mod collection_row;
 pub mod feed_row;
 pub mod spotlight_artwork;
 pub mod chip_icons;
+pub mod shelf_icons;
+pub mod title_strip;

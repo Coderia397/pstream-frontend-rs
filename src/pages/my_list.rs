@@ -1,66 +1,104 @@
-use leptos::prelude::*;
+//! The My page ("My Streams"): four shelves, each a heading and either a card with a picture and one line (nothing there yet) or a row of titles.
+//! Continue watching, the saved list, the trailers watched and the titles given a thumbs up.
 use crate::components::layout::Layout;
-use crate::store::use_library_store;
-use crate::components::media::movie_card::MovieCard;
+use crate::components::media::continue_watching_row::ContinueWatchingRow;
+use crate::components::media::shelf_icons::{ShelfIcon, ShelfPicture};
+use crate::components::media::title_strip::TitleStrip;
+use crate::i18n::t;
+use crate::services::tmdb::{fetch_details, MediaItem};
+use crate::store::{use_library_store, use_watch_store};
+use leptos::prelude::*;
+
+/// One shelf: the heading and, below, the content or the empty card.
+#[component]
+fn Shelf(
+    #[prop(into)] title: String,
+    icon: ShelfIcon,
+    #[prop(into)] empty: String,
+    #[prop(into)] has_items: Signal<bool>,
+    /// True when the content carries its own heading (the continue watching row), so ours shows only while the shelf is empty.
+    #[prop(default = false)] own_heading: bool,
+    children: ChildrenFn,
+) -> impl IntoView {
+    view! {
+        <section class="mb-[42px]">
+            <h2 class="mb-[16px] px-[var(--app-x,56px)] text-[24px] font-bold leading-[31px] text-ink" class=("hidden", move || own_heading && has_items.get())>{title}</h2>
+            <Show
+                when=move || has_items.get()
+                fallback=move || view! {
+                    <div class="mx-[var(--app-x,56px)] flex h-[161px] flex-col items-center justify-center gap-4 rounded-[12px] bg-[#2a2a2a]">
+                        <ShelfPicture icon=icon />
+                        <p class="text-[16px] text-ink/70">{empty.clone()}</p>
+                    </div>
+                }
+            >
+                {children()}
+            </Show>
+        </section>
+    }
+}
+
+/// Loads the details of titles known only by id, newest first, as cards.
+async fn load_titles(keys: Vec<(u32, bool)>) -> Vec<MediaItem> {
+    let mut out = Vec::new();
+    for (id, is_tv) in keys.into_iter().take(24) {
+        if let Ok(d) = fetch_details(id, is_tv).await {
+            out.push(MediaItem {
+                id: d.id,
+                title: d.title.clone(),
+                name: d.name.clone(),
+                overview: d.overview.clone(),
+                poster_path: d.poster_path.clone(),
+                backdrop_path: d.backdrop_path.clone(),
+                vote_average: d.vote_average,
+                release_date: d.release_date.clone(),
+                first_air_date: d.first_air_date.clone(),
+                media_type: Some(if is_tv { "tv" } else { "movie" }.to_string()),
+                genre_ids: d.genres.clone().unwrap_or_default().iter().map(|g| g.id).collect(),
+                ..Default::default()
+            });
+        }
+    }
+    out
+}
 
 #[component]
 pub fn MyListPage() -> impl IntoView {
     let library = use_library_store();
-    
-    let sorted_list = move || {
+    let watch = use_watch_store();
+
+    let saved = Signal::derive(move || {
         let mut items: Vec<_> = library.my_list.get().into_values().collect();
         items.sort_by(|a, b| b.added_at.cmp(&a.added_at)); // newest first
-        items
-    };
+        items.into_iter().map(|e| e.media).collect::<Vec<MediaItem>>()
+    });
+    let continuing = Memo::new(move |_| !watch.get_continue_watching_list().is_empty());
+    let trailers = LocalResource::new(|| async { load_titles(crate::store::trailers::all()).await });
+    let liked = LocalResource::new(|| async {
+        let keys = crate::store::ratings::liked_keys(24)
+            .into_iter()
+            .filter_map(|k| { let (kind, id) = k.split_once(':')?; Some((id.parse::<u32>().ok()?, kind == "tv")) })
+            .collect();
+        load_titles(keys).await
+    });
+    let trailers_list = Signal::derive(move || trailers.get().unwrap_or_default());
+    let liked_list = Signal::derive(move || liked.get().unwrap_or_default());
 
     view! {
         <Layout>
-            <div class="relative min-h-screen">
-                <div class="pt-36 md:pt-44 px-[var(--app-x,56px)] pb-12">
-                    <h1 class="text-3xl font-bold text-ink mb-8">{crate::i18n::t("nav-my-list")}</h1>
-                    
-                    {move || {
-                        let items = sorted_list();
-                        if items.is_empty() {
-                            view! {
-                                <div class="flex flex-col items-center justify-center mt-32 text-gray-500 animate-fadeIn">
-                                    <div class="w-20 h-20 rounded-full bg-placeholder flex items-center justify-center mb-6 border border-ink/5">
-                                        <i class="ph-bold ph-playlist text-display text-gray-600"></i>
-                                    </div>
-                                    <p class="text-xl font-medium text-gray-300">{crate::i18n::t("mylist-empty")}</p>
-                                    <p class="text-sm mt-2 max-w-md text-center">{crate::i18n::t("mylist-empty-hint")}</p>
-                                </div>
-                            }.into_any()
-                        } else {
-                            view! {
-                                <div class="grid grid-cols-2 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-x-2.5 gap-y-12 md:gap-y-6 animate-fadeIn">
-                                    {items.into_iter().map(|entry| {
-                                        let item = entry.media;
-                                        let movie_id = item.id;
-                                        let is_tv = item.is_tv();
-                                        let title = item.display_title().to_string();
-                                        let backdrop = item.backdrop_url("w780").unwrap_or_default();
-                                        let poster = item.poster_url("w342").unwrap_or_default();
-                                        view! { 
-                                            <MovieCard
-                                                movie_id=movie_id
-                                                is_tv=is_tv
-                                                title=title
-                                                backdrop_path=backdrop
-                                                poster_path=poster
-                                                vote_average=item.vote_average
-                                                overview=item.overview.clone()
-                                                genre_ids=item.genre_ids.clone()
-                                                vibe_pills=item.vibe_pills.clone()
-                                                is_grid=true
-                                            /> 
-                                        }
-                                    }).collect::<Vec<_>>()}
-                                </div>
-                            }.into_any()
-                        }
-                    }}
-                </div>
+            <div class="relative min-h-screen pb-16 pt-28 md:pt-[110px]">
+                <Shelf title=t("my-continue") icon=ShelfIcon::Clock empty=t("my-continue-empty") has_items=continuing own_heading=true>
+                    <ContinueWatchingRow />
+                </Shelf>
+                <Shelf title=t("my-list") icon=ShelfIcon::Chest empty=t("my-list-empty") has_items=Signal::derive(move || !saved.get().is_empty())>
+                    {move || view! { <TitleStrip items=saved.get() /> }}
+                </Shelf>
+                <Shelf title=t("my-trailers") icon=ShelfIcon::Clapper empty=t("my-trailers-empty") has_items=Signal::derive(move || !trailers_list.get().is_empty())>
+                    {move || view! { <TitleStrip items=trailers_list.get() /> }}
+                </Shelf>
+                <Shelf title=t("my-liked") icon=ShelfIcon::ThumbsUp empty=t("my-liked-empty") has_items=Signal::derive(move || !liked_list.get().is_empty())>
+                    {move || view! { <TitleStrip items=liked_list.get() /> }}
+                </Shelf>
             </div>
         </Layout>
     }

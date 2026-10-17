@@ -43,13 +43,13 @@
   }
   @media (min-width: 64rem) {
     .theme-paper-wide {
-      --color-ink: var(--color-paper-ink);
+      --color-ink: #000000;
       --color-void: var(--color-paper);
       --color-page: var(--color-paper);
       --color-danger: #c11119;
       --color-set-card: var(--color-paper);
-      --color-set-edge: var(--color-paper-card-edge);
-      --color-set-line: var(--color-paper-line);
+      --color-set-edge: rgba(128, 128, 128, 0.4);
+      --color-set-line: rgba(128, 128, 128, 0.4);
     }
   }
 }
@@ -124,4 +124,11 @@
     radial-gradient(circle var(--notch) at 100% 50%, transparent 97%, #000) right / 51% 100% no-repeat;
   mask: radial-gradient(circle var(--notch) at 0 50%, transparent 97%, #000) left / 51% 100% no-repeat,
     radial-gradient(circle var(--notch) at 100% 50%, transparent 97%, #000) right / 51% 100% no-repeat;
+}
+
+/* Side gutters of the website's account pages, measured on Netflix at widths 1124 to 1874 px: 32 px up to 1279 px, then one twelfth of the width plus 48 px.
+   The same value for the top bar and the page, so the logo sits over the menu. */
+@layer components {
+  @media (min-width: 1024px) { .set-gutter { padding-inline: 2rem; } }
+  @media (min-width: 1280px) { .set-gutter { padding-inline: calc(8.3333vw + 48px); } }
 }

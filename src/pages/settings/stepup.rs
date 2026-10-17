@@ -20,18 +20,6 @@ enum Step {
     Code,
 }
 
-/// "ada@example.com" shown as "a••@example.com".
-pub fn mask_email(email: &str) -> String {
-    match email.split_once('@') {
-        Some((local, domain)) if !local.is_empty() => {
-            let first: String = local.chars().take(1).collect();
-            let dots = "•".repeat(local.chars().count().saturating_sub(1).clamp(2, 8));
-            format!("{first}{dots}@{domain}")
-        }
-        _ => email.to_string(),
-    }
-}
-
 #[component]
 pub fn Gate(account: bool, children: ChildrenFn) -> impl IntoView {
     let prefs = use_prefs();
@@ -41,7 +29,7 @@ pub fn Gate(account: bool, children: ChildrenFn) -> impl IntoView {
     let note = RwSignal::new(None::<(Tone, String)>);
     let busy = RwSignal::new(false);
     let session = account::session();
-    let masked = StoredValue::new(session.as_ref().map(|s| mask_email(&s.email)).unwrap_or_default());
+    let email = StoredValue::new(session.as_ref().map(|s| s.email.clone()).unwrap_or_default());
     let signed_in = session.is_some();
     let verified = move || prefs.verified_until.get() > now_secs();
 
@@ -122,25 +110,29 @@ pub fn Gate(account: bool, children: ChildrenFn) -> impl IntoView {
         if verified() {
             return children.with_value(|c| c()).into_any();
         }
+        // from 1024 px the check is a page of its own, as on the website: no side menu, one centred column of 400 px
         view! {
-            <div class="max-w-md max-lg:pt-8">
-                <h2 class="mb-3 text-account-title-sm font-bold leading-tight lg:text-account-title">{move || if step.get() == Step::Code { t("set-code-title") } else { t("set-verify-title") }}</h2>
-                <p class="mb-6 text-body-md text-ink/60">
-                    {move || if step.get() == Step::Code { t_args("set-code-body", &[("target", masked.get_value().into()), ("minutes", CODE_VALID_MINUTES.into())]) } else { t("set-verify-body") }}
+            <div class="lg:fixed lg:inset-x-0 lg:bottom-0 lg:top-settings-header lg:z-(--z-screen) lg:overflow-auto lg:bg-page">
+            <div class="w-full max-w-[400px] max-lg:max-w-md max-lg:pt-8 lg:mx-auto lg:translate-x-4 lg:pt-[81px]">
+                <h2 class="mb-2 text-account-title-sm font-bold leading-[41px]">{move || if step.get() == Step::Code { t("set-code-title") } else { t("set-verify-title") }}</h2>
+                <p class="mb-7 text-body-md leading-5 text-ink/70 lg:text-[16px]" class=("lg:mb-9", move || step.get() == Step::Code)>
+                    {move || if step.get() == Step::Code {
+                        view! { {t("set-code-body-1")}" "<strong class="font-bold">{email.get_value()}</strong>" "{t_args("set-code-body-2", &[("minutes", CODE_VALID_MINUTES.into())])} }.into_any()
+                    } else { t("set-verify-body").into_any() }}
                 </p>
                 <Message text=note />
                 {move || match step.get() {
                     Step::Choose => view! {
-                        <div class="space-y-3">
-                            <button type="button" on:click=move |_| send_code.run(()) class="flex w-full items-center gap-3 rounded-card bg-ink/5 px-4 py-4 text-start hover:bg-ink/10">
-                                <i class="ph-bold ph-envelope-simple text-2xl text-ink/70" aria-hidden="true"></i>
-                                <span class="min-w-0 flex-1"><span class="block text-title-sm font-semibold leading-row">{t("set-code-email")}</span><span class="block text-body-sm text-ink/70">{masked.get_value()}</span></span>
-                                <i class="ph-bold ph-caret-right text-2xl text-ink/70 rtl:-scale-x-100" aria-hidden="true"></i>
+                        <div class="flex flex-col gap-5">
+                            <button type="button" on:click=move |_| send_code.run(()) class="flex h-[69px] w-full items-center gap-[15px] rounded-[8px] bg-ink/5 px-3 text-start hover:bg-ink/10">
+                                <i class="ph ph-envelope-simple shrink-0 text-[16px] text-ink" aria-hidden="true"></i>
+                                <span class="min-w-0 flex-1"><span class="block text-[18px] font-bold leading-6">{t("set-code-email")}</span><span class="block text-[14px] leading-[22px] text-ink/70">{email.get_value()}</span></span>
+                                <i class="ph-bold ph-caret-right shrink-0 text-[16px] text-ink rtl:-scale-x-100" aria-hidden="true"></i>
                             </button>
-                            <button type="button" on:click=move |_| { note.set(None); step.set(Step::Password) } class="flex w-full items-center gap-3 rounded-card bg-ink/5 px-4 py-4 text-start hover:bg-ink/10">
-                                <i class="ph-bold ph-lock-simple text-2xl text-ink/70" aria-hidden="true"></i>
-                                <span class="min-w-0 flex-1"><span class="block text-title-sm font-semibold leading-row">{t("set-password-confirm")}</span></span>
-                                <i class="ph-bold ph-caret-right text-2xl text-ink/70 rtl:-scale-x-100" aria-hidden="true"></i>
+                            <button type="button" on:click=move |_| { note.set(None); step.set(Step::Password) } class="flex h-[69px] w-full items-center gap-[15px] rounded-[8px] bg-ink/5 px-3 text-start hover:bg-ink/10">
+                                <i class="ph ph-lock-simple shrink-0 text-[16px] text-ink" aria-hidden="true"></i>
+                                <span class="min-w-0 flex-1"><span class="block text-[18px] font-bold leading-6">{t("set-password-confirm")}</span></span>
+                                <i class="ph-bold ph-caret-right shrink-0 text-[16px] text-ink rtl:-scale-x-100" aria-hidden="true"></i>
                             </button>
                         </div>
                     }.into_any(),
@@ -156,28 +148,19 @@ pub fn Gate(account: bool, children: ChildrenFn) -> impl IntoView {
                     }.into_any(),
                     Step::Code => view! {
                         <form on:submit=move |ev| { ev.prevent_default(); submit_code.run(()); }>
-                            <DigitBoxes label=t("set-code-label") value=code length=CODE_LENGTH one_time_code=true />
-                            <button type="submit" disabled=move || busy.get() || code.with(|c| c.chars().count() != CODE_LENGTH) class="btn-ink mb-3 block w-full rounded-control px-8 py-3 disabled:opacity-50">{t("set-code-submit")}</button>
-                            <button type="button" on:click=move |_| send_code.run(()) disabled=move || busy.get() class="mb-4 block w-full rounded-control bg-ink/10 px-8 py-3 text-body-md font-bold hover:bg-ink/15 disabled:opacity-50">{t("set-code-resend")}</button>
-                            <button type="button" on:click=move |_| { note.set(None); step.set(Step::Choose) } class="block w-full py-2 text-center text-body-md font-semibold text-ink underline underline-offset-2">{t("set-try-another-way")}</button>
+                            <DigitBoxes label=t("set-code-label") value=code length=CODE_LENGTH one_time_code=true plain=true />
+                            <div class="flex flex-col gap-2">
+                                <button type="submit" disabled=move || busy.get() || code.with(|c| c.chars().count() != CODE_LENGTH) class="h-10 w-full rounded-[4px] bg-ink px-4 text-[16px] font-medium text-void disabled:opacity-50">{t("set-code-submit")}</button>
+                                <button type="button" on:click=move |_| send_code.run(()) disabled=move || busy.get() class="h-10 w-full rounded-[4px] bg-[rgba(128,128,128,0.3)] px-4 text-[16px] font-medium text-ink disabled:opacity-50">{t("set-code-resend")}</button>
+                                <button type="button" on:click=move |_| { note.set(None); step.set(Step::Choose) } class="h-10 w-full rounded-[4px] px-4 text-[16px] font-medium text-ink">{t("set-try-another-way")}</button>
+                            </div>
                         </form>
                     }.into_any(),
                 }}
-                <p class="mt-8 text-body-md text-ink/70">{t("set-need-help")}" "<a href=routes::HELP class="underline underline-offset-2 hover:text-ink">{t("set-visit-help")}</a></p>
+                <p class="mt-8 text-body-md text-ink/70 lg:text-[13px]" class=("lg:mt-4", move || step.get() == Step::Code) class=("lg:mt-[52px]", move || step.get() != Step::Code) class=("lg:text-[14px]", move || step.get() != Step::Code) class=("lg:text-ink", move || step.get() != Step::Code)>{t("set-need-help")}" "<a href=routes::HELP class="underline underline-offset-2 hover:text-ink">{t("set-visit-help")}</a></p>
+            </div>
             </div>
         }
         .into_any()
-    }
-}
-
-#[cfg(test)]
-mod tests {
-    use super::mask_email;
-
-    #[test]
-    fn the_address_is_masked_but_recognisable() {
-        assert_eq!(mask_email("ada@example.com"), "a••@example.com");
-        assert_eq!(mask_email("ibrahim@example.com"), "i••••••@example.com");
-        assert_eq!(mask_email("nothing"), "nothing");
     }
 }

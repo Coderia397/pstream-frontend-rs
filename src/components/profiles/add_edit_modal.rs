@@ -17,6 +17,8 @@ pub fn AddEditProfileModal(
     on_save: Callback<ProfileFormData>,
     on_delete: Option<Callback<()>>,
     on_cancel: Callback<()>,
+    /// False for the main profile: it can never be a Kids profile.
+    #[prop(default = true)] allow_kids: bool,
 ) -> impl IntoView {
     let initial_name = initial.as_ref().map(|p| p.name.clone()).unwrap_or_default();
     let initial_avatar = initial.as_ref().and_then(|p| p.avatar_url.clone()).unwrap_or_else(|| {
@@ -123,8 +125,8 @@ pub fn AddEditProfileModal(
                     </div>
                 </div>
 
-                // Kids Mode Toggle
-                <div class="border-t border-ink/10 py-5">
+                // Kids Mode Toggle (the main profile has none: it is never a Kids profile)
+                <div class=if allow_kids { "border-t border-ink/10 py-5" } else { "hidden" }>
                     <label class="flex items-center justify-between gap-4 cursor-pointer">
                         <div>
                             <span class="text-ink font-semibold text-body">{crate::i18n::t("profile-kids")}</span>

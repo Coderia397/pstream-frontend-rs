@@ -1,8 +1,8 @@
 //! Account screens (per account): security, devices, privacy and data, viewing activity, delete. The screens that change account
 //! data sit behind a password check (`Gate`), like the "make sure it's you" page in the Netflix app.
-use super::hub::{persist_profiles, sign_out_now};
+
 use super::prefs::use_prefs;
-use super::widgets::{ConfirmDialog, Field, FormButtons, LinkRow, Message, OutlineButton, PasswordField, Section, Tone};
+use super::widgets::{Field, FormButtons, LinkRow, Message, OutlineButton, PasswordField, Section, Tone};
 use super::Screen;
 use crate::config::{routes, MIN_PASSWORD_LENGTH, NAME_MAX, PHONE_DIGITS};
 use crate::i18n::t;
@@ -40,7 +40,7 @@ fn SignInBanner() -> impl IntoView {
 
 /// Name, password, email and phone with their current values.
 #[component]
-fn AccountDetails() -> impl IntoView {
+fn AccountDetails(#[prop(optional)] wide: bool) -> impl IntoView {
     let session = account::session();
     let email = session.as_ref().map(|s| s.email.clone()).unwrap_or_default();
     let phone = session.as_ref().map(|s| s.phone.clone()).unwrap_or_default();
@@ -48,9 +48,9 @@ fn AccountDetails() -> impl IntoView {
     let or_none = |v: String| Signal::derive(move || if v.is_empty() { t("set-none") } else { v.clone() });
     view! {
         <Section title=t("set-account-details")>
-            <LinkRow icon="identification-card" title=t("set-title-name") href=Screen::Name.path() value=or_none(full_name) />
+            {(!wide).then(|| view! { <LinkRow icon="identification-card" title=t("set-title-name") href=Screen::Name.path() value=or_none(full_name.clone()) /> })}
             <LinkRow icon="lock-simple" title=t("set-title-password") href=Screen::Password.path() />
-            <LinkRow icon="envelope-simple" title=t("set-title-email") href=Screen::Email.path() value=or_none(email) />
+            <LinkRow icon="envelope-simple" title=t("set-title-email") href=Screen::Email.path() value=or_none(email) verified=true />
             <LinkRow icon="device-mobile" title=t("set-title-phone") href=Screen::Phone.path() value=or_none(phone) />
         </Section>
     }
@@ -94,7 +94,7 @@ fn ProfilesSection() -> impl IntoView {
 fn delete_button() -> impl IntoView {
     view! {
         <div class="lg:hidden"><OutlineButton label=t("set-title-delete") danger=true on_click=Callback::new(|_| go(&Screen::Delete.path())) /></div>
-        <a href=Screen::Delete.path() class="hidden rounded-control px-4 py-2 text-body-lg font-medium text-danger hover:bg-danger/10 lg:inline-block">{t("set-title-delete")}</a>
+        <a href=Screen::Delete.path() class="hidden h-12 items-center rounded-control px-4 text-[18px] font-medium text-danger hover:bg-danger/10 lg:flex">{t("set-title-delete")}</a>
     }
 }
 
@@ -139,7 +139,7 @@ pub fn SecurityPage() -> impl IntoView {
     view! {
         <div>
             <SignInBanner />
-            <AccountDetails />
+            <AccountDetails wide=true />
             <AccessAndPrivacy />
             {delete_button()}
         </div>
@@ -350,31 +350,3 @@ pub fn Phone() -> impl IntoView {
     }
 }
 
-#[component]
-pub fn DeleteAccount() -> impl IntoView {
-    let confirm = RwSignal::new(false);
-    let note = RwSignal::new(None::<(Tone, String)>);
-    let profiles = use_profile_store();
-    let prefs = use_prefs();
-    let delete = Callback::new(move |_| {
-        leptos::task::spawn_local(async move {
-            match account::delete_account().await {
-                Ok(()) => {
-                    profiles.profiles.set(Vec::new());
-                    persist_profiles(profiles);
-                    prefs.forget_all();
-                    sign_out_now();
-                }
-                Err(e) => note.set(Some((Tone::Error, error_text(&e)))),
-            }
-        });
-    });
-    view! {
-        <div class="max-w-md">
-            <p class="mb-4 text-body-md text-ink/70">{t("set-delete-account-body")}</p>
-            <Message text=note />
-            <OutlineButton label=t("set-title-delete") danger=true on_click=Callback::new(move |_| confirm.set(true)) />
-            <ConfirmDialog open=confirm title=t("set-title-delete") body=t("set-delete-account-confirm") confirm_label=t("set-delete") danger=true on_confirm=delete />
-        </div>
-    }
-}

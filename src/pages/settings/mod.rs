@@ -3,8 +3,10 @@
 //! arrow; from 1024 px wide the same routes show a sidebar next to the screen, and the hub address opens the profile screen.
 //! The tree is recorded in notes/32-settings-rebuild-plan-2026-10-11.md.
 mod account;
+mod account_menu;
 mod activity;
 mod app;
+mod delete_account;
 mod devices;
 mod diagnostics;
 mod stepup;
@@ -16,6 +18,7 @@ mod languages;
 pub(crate) mod prefs;
 mod profile;
 mod restrictions;
+mod shell;
 mod subtitles;
 mod widgets;
 
@@ -307,80 +310,12 @@ pub fn SettingsPage() -> impl IntoView {
 
     view! {
         <div class="theme-paper-wide min-h-screen bg-void font-sans text-ink selection:bg-brand selection:text-ink" class=("theme-paper", light_phone) class=("set-tiles", move || !light_phone())>
-            // a phone shows the account pages under a black bar with the logo, like the Netflix app
-            <Show when=light_phone>
-                <div class="relative flex h-settings-header items-center bg-chrome px-2 lg:hidden">
-                    <a href=move || screen.get().parent() aria-label=move || t("set-back") class="flex h-10 w-10 items-center justify-center text-chrome-ink">
-                        <i class="ph-bold ph-arrow-left text-2xl rtl:-scale-x-100" aria-hidden="true"></i>
-                    </a>
-                    <img src=crate::brand::LOGO_WORDMARK alt=crate::brand::NAME class="absolute inset-x-0 mx-auto h-6 w-auto" />
-                </div>
-            </Show>
-            // the website's top bar: logo on the left, the profile on the right
-            <header class="mx-auto hidden h-settings-header max-w-settings items-center justify-between lg:flex">
-                <a href=routes::BROWSE aria-label=crate::brand::NAME><img src=crate::brand::LOGO_WORDMARK_PRIMARY alt=crate::brand::NAME class="h-7 w-auto" /></a>
-                <a href=Screen::AccountProfiles.path() aria-label=move || t("set-nav-profile") class="flex items-center gap-2">
-                    <img src=move || avatar.get() alt="" class="h-8 w-8 rounded-control object-cover" />
-                    <i class="ph-fill ph-caret-down text-fine" aria-hidden="true"></i>
-                </a>
-            </header>
-            <div class="mx-auto flex max-w-settings gap-settings-gap px-4 pb-16 pt-2 sm:px-8 lg:px-0 lg:pt-6" class=("max-lg:pt-8", light_phone)>
-                <aside class="hidden w-settings-nav shrink-0 lg:block">
-                    <a href=routes::BROWSE class="mb-6 flex h-settings-menu-item items-center gap-2 rounded-control px-4 text-body-sm hover:bg-ink/5">
-                        <i class="ph-bold ph-arrow-left text-xl rtl:-scale-x-100" aria-hidden="true"></i>
-                        {move || crate::i18n::t_args("set-back-to-app", &[("brand", crate::brand::NAME.into())])}
-                    </a>
-                    <nav class="flex flex-col gap-2" aria-label=move || t("set-title")>
-                        {sidebar()
-                            .into_iter()
-                            .map(|(icon, key, target, section)| view! {
-                                <a
-                                    href=target.path()
-                                    class="flex h-settings-menu-item items-center gap-3 rounded-control px-3 text-body-md font-medium hover:bg-ink/5"
-                                    class=("text-ink", move || screen.get().section() == section)
-                                    class=("text-ink/70", move || screen.get().section() != section)
-                                    aria-current=move || (screen.get().section() == section).then_some("page")
-                                >
-                                    <i class=move || format!("{} ph-{icon} text-2xl", if screen.get().section() == section { "ph-fill" } else { "ph-bold" }) aria-hidden="true"></i>
-                                    {move || t(key)}
-                                </a>
-                            })
-                            .collect_view()}
-                        <a href=routes::HELP class="flex h-settings-menu-item items-center gap-3 rounded-control px-3 text-body-md font-medium text-ink/70 hover:bg-ink/5">
-                            <i class="ph-bold ph-question text-2xl" aria-hidden="true"></i>
-                            {move || t("set-nav-help")}
-                        </a>
-                        <button type="button" on:click=move |_| signout_open.set(true) class="flex h-settings-menu-item items-center gap-3 rounded-control px-3 text-start text-body-md font-medium text-ink/70 hover:bg-ink/5">
-                            <i class="ph-bold ph-sign-out text-2xl" aria-hidden="true"></i>
-                            {move || t("set-sign-out")}
-                        </button>
-                    </nav>
-                </aside>
-
-                <main class="mx-auto w-full min-w-0 max-w-settings-main flex-1 lg:mx-0">
-                    <header class="flex items-center gap-3 max-lg:mb-1 lg:mb-4" class=("max-lg:mb-4", light_phone)>
-                        // phones and tablets go up one level in the phone tree; from 1024 px the website's tree is used
-                        <a
-                            href=move || screen.get().parent()
-                            aria-label=move || t("set-back")
-                            class="flex h-11 w-11 shrink-0 items-center justify-center rounded-full text-ink hover:bg-ink/10 lg:hidden"
-                            class=("max-lg:hidden", light_phone)
-                        >
-                            <i class="ph-bold ph-arrow-left text-2xl rtl:-scale-x-100" aria-hidden="true"></i>
-                        </a>
-                        <a
-                            href=move || screen.get().parent_wide()
-                            aria-label=move || t("set-back")
-                            class="hidden h-10 w-10 shrink-0 items-center justify-center rounded-full text-ink hover:bg-ink/10 lg:flex"
-                            class=("lg:hidden", move || screen.get() == Screen::Account || screen.get() == Screen::Hub)
-                        >
-                            <i class="ph-bold ph-arrow-left text-2xl rtl:-scale-x-100" aria-hidden="true"></i>
-                        </a>
-                        <h1 class="text-title font-bold lg:truncate lg:text-account-title lg:leading-tight" class=("max-lg:text-account-title-sm", light_phone) class=("hidden", move || gate_active.get() || screen.get() == Screen::TransferSetting)>
-                            <span class=("lg:hidden", move || matches!(screen.get(), Screen::Hub | Screen::Profile(_)))>{move || t(screen.get().title_key())}</span>
-                            <span class="hidden" class=("lg:inline", move || matches!(screen.get(), Screen::Hub | Screen::Profile(_)))>{move || t(if screen.get() == Screen::Hub { Screen::Account.title_key() } else { "set-title-manage-profile" })}</span>
-                        </h1>
-                    </header>
+            <Show when=light_phone><shell::PhoneBar screen=screen /></Show>
+            <shell::TopBar avatar=avatar signout_open=signout_open />
+            <div class="set-gutter mx-auto flex pb-16 pt-2 max-lg:px-4 max-lg:max-w-settings max-lg:gap-settings-gap max-lg:sm:px-8 lg:gap-[2.45%] lg:pt-6" class=("max-lg:pt-8", light_phone)>
+                <shell::SideMenu screen=screen signout_open=signout_open />
+                <main class="mx-auto w-full min-w-0 max-w-settings-main flex-1 lg:mx-0 lg:w-[70%] lg:max-w-none lg:flex-none">
+                    <shell::PageHeading screen=screen gate_active=gate_active light_phone=Signal::derive(light_phone) />
                     {move || {
                         let current = screen.get();
                         if current.needs_account_check() || current.needs_profile_check() {
@@ -449,7 +384,7 @@ fn screen_body(screen: Screen) -> AnyView {
         Screen::PersonalInfo => view! { <privacy::PersonalInfo /> }.into_any(),
         Screen::Testing => view! { <privacy::Testing /> }.into_any(),
         Screen::TransferSetting => view! { <transfer::TransferSetting /> }.into_any(),
-        Screen::Delete => view! { <account::DeleteAccount /> }.into_any(),
+        Screen::Delete => view! { <delete_account::DeleteAccount /> }.into_any(),
     }
 }
 
@@ -560,3 +495,4 @@ mod tests {
         assert!(!Screen::Privacy.needs_account_check());
     }
 }
+

@@ -78,7 +78,7 @@ pub fn EditProfile(id: String, #[prop(optional)] edit_page: bool) -> impl IntoVi
         let kids = p.is_kids;
         let pid = p.id.clone();
         // the main profile cannot be deleted, and the account keeps at least one profile
-        let removable = p.is_default != Some(true) && store.profiles.with(|l| l.len() > 1);
+        let removable = store.profiles.with(|l| crate::models::profile_rules::can_delete(l, &p.id));
         let can_be_main = p.is_default != Some(true) && !kids;
         let maturity_value = Signal::derive(move || { let r = rating(p_prefs.get().rating_for(kids)); if r.key == crate::data::settings::DEFAULT_RATING { t("set-restrictions-none") } else { t_args("set-rating-up-to", &[("rating", r.key.into())]) } });
         let handle_value = Signal::derive(move || p_prefs.get().game_handle.unwrap_or_else(|| t("set-handle-create")));
@@ -175,7 +175,7 @@ pub fn ProfileOverview(id: String) -> impl IntoView {
     move || {
         let Some(p) = profile.get() else { return not_found() };
         let pid = p.id.clone();
-        let removable = p.is_default != Some(true) && store.profiles.with(|l| l.len() > 1);
+        let removable = store.profiles.with(|l| crate::models::profile_rules::can_delete(l, &p.id));
         let can_be_main = p.is_default != Some(true) && !p.is_kids;
         let path = |s: fn(String) -> Screen| s(pid.clone()).path();
         let (edit, lock, language, restrictions, subtitles, playback, notifications, transfer, main) = (path(Screen::ProfileEdit), path(Screen::Lock), path(Screen::Language), path(Screen::Restrictions), path(Screen::Subtitles), path(Screen::Playback), path(Screen::Notifications), path(Screen::TransferProfile), path(Screen::MainProfile));

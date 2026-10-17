@@ -95,6 +95,11 @@ pub fn WhosWatchingGate(
     };
 
     let on_delete_profile = move |target_id: String| {
+        // the main profile and the last profile stay (the account refuses it too)
+        if !crate::models::profile_rules::can_delete(&profiles_signal.get_untracked(), &target_id) {
+            set_modal_state.set(None);
+            return;
+        }
         profiles_signal.update(|list| list.retain(|p| p.id != target_id));
         if active_profile_id.get().as_deref() == Some(&target_id) {
             let next_id = profiles_signal.get().first().map(|p| p.id.clone());
@@ -112,6 +117,8 @@ pub fn WhosWatchingGate(
             <h1 class="text-3xl md:text-5xl text-ink font-medium mb-12 tracking-wide text-center">
                 {move || if edit_mode.get() { crate::i18n::t("profile-manage-title") } else { crate::i18n::t("profile-whos-watching") }}
             </h1>
+
+            {move || profile_store.notice.get().map(|m| view! { <p role="status" class="mb-8 max-w-[85vw] rounded-control border border-danger/50 bg-danger/10 px-4 py-3 text-center text-body-sm text-danger md:max-w-xl">{m}</p> })}
 
             // Profile tiles grid (Task 095)
             <div class="flex flex-wrap items-center justify-center gap-[2vw] md:gap-8 max-w-[85vw] md:max-w-5xl mx-auto px-4">
@@ -237,7 +244,11 @@ pub fn WhosWatchingGate(
             <Show when=move || modal_state.get().is_some()>
                 {move || modal_state.get().map(|(mode, initial)| {
                     let target_id = initial.as_ref().map(|p| p.id.clone());
-                    let on_delete_cb = target_id.map(|tid| Callback::new(move |_| on_delete_profile(tid.clone())));
+                    let (can_del, kids_ok) = {
+                        let list = profiles_signal.get_untracked();
+                        match target_id.as_deref() { Some(id) => (crate::models::profile_rules::can_delete(&list, id), crate::models::profile_rules::can_be_kids(&list, id)), None => (false, true) }
+                    };
+                    let on_delete_cb = target_id.filter(|_| can_del).map(|tid| Callback::new(move |_| on_delete_profile(tid.clone())));
                     view! {
                         <AddEditProfileModal
                             mode=mode
@@ -245,6 +256,7 @@ pub fn WhosWatchingGate(
                             on_save=Callback::new(move |form| on_save_modal(form))
                             on_delete=on_delete_cb
                             on_cancel=Callback::new(move |_| set_modal_state.set(None))
+                            allow_kids=kids_ok
                         />
                     }
                 })}

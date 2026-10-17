@@ -43,14 +43,20 @@ pub fn is_uuid(s: &str) -> bool {
 
 /// The avatar as the database keeps it (at most 64 characters): `default`, or the id of a picture.
 pub fn avatar_to_server(url: Option<&str>) -> String {
-    match url {
-        Some(u) if u.starts_with(GOOGLE) && u.len() - GOOGLE.len() <= 60 => u[GOOGLE.len()..].to_string(),
+    match url.and_then(crate::data::avatars::avatar_id) {
+        Some(id) if id.len() <= 60 => id,
         _ => "default".to_string(),
     }
 }
 
+/// The picture of a profile row. "kids" is the Kids profile's own artwork (None makes the app draw it); an id is a file of the avatars bucket,
+/// and an id the bucket does not hold (an old Drive picture) keeps its Drive address.
 pub fn avatar_from_server(avatar: &str) -> Option<String> {
-    if avatar.is_empty() || avatar == "default" { Some(crate::brand::DEFAULT_AVATAR.to_string()) } else { Some(format!("{GOOGLE}{avatar}")) }
+    match avatar {
+        "kids" => None,
+        "" | "default" => Some(crate::brand::DEFAULT_AVATAR.to_string()),
+        id => Some(crate::data::avatars::fast_avatar(&format!("{GOOGLE}{id}"))),
+    }
 }
 
 fn iso(ms: u64) -> String {
@@ -84,6 +90,8 @@ pub async fn load_profiles() -> Option<Vec<Profile>> {
             sort_order: r["sort_order"].as_i64().unwrap_or(0) as i32,
         })
         .collect();
+    let mut list = list;
+    crate::models::profile_rules::normalize(&mut list);
     (!list.is_empty()).then_some(list)
 }
 
@@ -118,28 +126,43 @@ pub fn push_profiles(store: crate::store::ProfileStore) {
         // the profiles of the app are the account's once they have been read (they carry account ids); before that nothing is sent, so a stale local list can never replace the account's
         if !local.iter().any(|p| is_uuid(&p.id)) { return; }
         let Some(remote) = load_profiles().await else { return };
+        let mut refused: Option<crate::services::account::AuthError> = None;
         for p in &local {
             let kind = if p.is_kids { "kids" } else { "adult" };
             let maturity = if p.is_kids { "older_kids" } else { "adult" };
             if is_uuid(&p.id) {
-                let _ = account::rest("PATCH", &format!("/rest/v1/profiles?id=eq.{}", p.id), Some(&json!({ "name": p.name, "avatar": avatar_to_server(p.avatar_url.as_deref()), "sort_order": p.sort_order })), "").await;
+                let mut patch = json!({ "name": p.name, "avatar": avatar_to_server(p.avatar_url.as_deref()), "sort_order": p.sort_order });
+                // the kind is sent only when it changed: the account asks for a recent sign in for that, and refuses it for the main profile
+                if remote.iter().find(|r| r.id == p.id).is_some_and(|r| r.is_kids != p.is_kids) {
+                    patch["kind"] = json!(kind);
+                    patch["maturity"] = json!(maturity);
+                }
+                if let Err(e) = account::rest("PATCH", &format!("/rest/v1/profiles?id=eq.{}", p.id), Some(&patch), "").await { refused = Some(e); }
             } else {
                 let body = json!({ "user_id": session.user_id, "name": p.name, "avatar": avatar_to_server(p.avatar_url.as_deref()), "kind": kind, "maturity": maturity, "sort_order": p.sort_order });
-                if let Ok(rows) = account::rest("POST", "/rest/v1/profiles", Some(&body), "return=representation").await {
-                    if let Some(new_id) = rows.get(0).and_then(|r| r["id"].as_str()) {
-                        let old = p.id.clone();
-                        let new_id = new_id.to_string();
-                        store.profiles.update(|l| { if let Some(x) = l.iter_mut().find(|x| x.id == old) { x.id = new_id.clone(); } });
-                        if store.active_profile_id.get_untracked().as_deref() == Some(old.as_str()) { store.active_profile_id.set(Some(new_id)); }
+                match account::rest("POST", "/rest/v1/profiles", Some(&body), "return=representation").await {
+                    Ok(rows) => {
+                        if let Some(new_id) = rows.get(0).and_then(|r| r["id"].as_str()) {
+                            let old = p.id.clone();
+                            let new_id = new_id.to_string();
+                            store.profiles.update(|l| { if let Some(x) = l.iter_mut().find(|x| x.id == old) { x.id = new_id.clone(); } });
+                            if store.active_profile_id.get_untracked().as_deref() == Some(old.as_str()) { store.active_profile_id.set(Some(new_id)); }
+                        }
                     }
+                    Err(e) => refused = Some(e),
                 }
             }
         }
         // a profile that was deleted in the app is deleted in the account (the main profile and the last one are protected by the database)
         for r in &remote {
             if !local.iter().any(|p| p.id == r.id) {
-                let _ = account::rest("DELETE", &format!("/rest/v1/profiles?id=eq.{}", r.id), None, "").await;
+                if let Err(e) = account::rest("DELETE", &format!("/rest/v1/profiles?id=eq.{}", r.id), None, "").await { refused = Some(e); }
             }
+        }
+        // whatever the account refused is undone here: the list goes back to the account's, so a refresh can never bring a deleted profile back
+        if let Some(e) = refused {
+            store.notice.set(Some(crate::i18n::t(if e == account::AuthError::RecentSignIn { "set-err-recent" } else { "profile-not-saved" })));
+            if let Some(list) = load_profiles().await { store.profiles.set(list); }
         }
         save_profiles_locally(store);
     });

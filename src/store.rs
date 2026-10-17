@@ -92,6 +92,8 @@ pub struct ProfileStore {
     pub profiles: RwSignal<Vec<crate::models::profile::Profile>>,
     pub is_authenticated: RwSignal<bool>,
     pub is_kids_mode: RwSignal<bool>,
+    /// A line the profile screens show when the account refused a change (and the list went back to the account's).
+    pub notice: RwSignal<Option<String>>,
 }
 
 /// The profiles of a browser that has saved none: the main profile and the Kids profile.
@@ -125,17 +127,22 @@ pub fn provide_profile_store() {
         .and_then(|s| s.get_item(crate::keys::ACTIVE_PROFILE).ok().flatten())
         .or_else(|| Some("p1".to_string()));
 
-    let initial_profiles = storage
+    let mut initial_profiles = storage
         .as_ref()
         .and_then(|s| s.get_item(crate::keys::PROFILES).ok().flatten())
         .and_then(|raw| serde_json::from_str::<Vec<crate::models::profile::Profile>>(&raw).ok())
         .unwrap_or_else(default_profiles);
+    crate::models::profile_rules::normalize(&mut initial_profiles);
+    for p in initial_profiles.iter_mut() {
+        p.avatar_url = p.avatar_url.take().map(|u| crate::data::avatars::fast_avatar(&u));
+    }
 
     provide_context(ProfileStore {
         active_profile_id: RwSignal::new(initial_profile),
         profiles: RwSignal::new(initial_profiles),
         is_authenticated: RwSignal::new(true),
         is_kids_mode: RwSignal::new(false),
+        notice: RwSignal::new(None),
     });
 }
 

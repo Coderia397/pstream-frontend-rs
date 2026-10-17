@@ -84,6 +84,7 @@ pub fn App() -> impl IntoView {
                         }
                     }
                 />
+                <Route path=path!("/profiles/manage") view=crate::components::profiles::whos_watching::ManageProfilesPage />
                 <Route path=path!("/help") view=crate::pages::help::HelpPage />
                 <Route path=path!("/help/search") view=crate::pages::help::ResultsPage />
                 <Route path=path!("/help/contact") view=crate::pages::help::ContactPage />

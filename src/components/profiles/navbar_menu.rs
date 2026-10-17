@@ -35,9 +35,11 @@ pub fn NavbarProfileMenu() -> impl IntoView {
         set_is_open.set(false);
     };
 
+    // Manage Profiles opens its own page (the profiles with their pencils), it does not log the person out of the profile in use
+    let nav_to_manage = navigate.clone();
     let manage_profiles = move |_| {
-        active_profile_id.set(None);
         set_is_open.set(false);
+        nav_to_manage("/profiles/manage", Default::default());
     };
 
     let nav_to_account = navigate.clone();

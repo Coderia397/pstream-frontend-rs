@@ -115,6 +115,8 @@ pub fn push_profiles(store: crate::store::ProfileStore) {
     leptos::task::spawn_local(async move {
         let Some(session) = account::ensure_fresh().await else { return };
         let local = store.profiles.get_untracked();
+        // the profiles of the app are the account's once they have been read (they carry account ids); before that nothing is sent, so a stale local list can never replace the account's
+        if !local.iter().any(|p| is_uuid(&p.id)) { return; }
         let Some(remote) = load_profiles().await else { return };
         for p in &local {
             let kind = if p.is_kids { "kids" } else { "adult" };

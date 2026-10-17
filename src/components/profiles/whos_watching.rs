@@ -17,12 +17,16 @@ fn save_profiles_to_storage(profiles: &[Profile], active_id: Option<&str>) {
 }
 
 #[component]
-pub fn WhosWatchingGate() -> impl IntoView {
+pub fn WhosWatchingGate(
+    /// The page of Manage profiles (`/profiles/manage`): opens in edit mode, a tap on a profile edits it, Done goes back to the app, and the profile in use stays the one in use.
+    #[prop(optional)] manage: bool,
+) -> impl IntoView {
+    let navigate = leptos_router::hooks::use_navigate();
     let profile_store = use_profile_store();
     let profiles_signal = profile_store.profiles;
     let active_profile_id = profile_store.active_profile_id;
 
-    let (edit_mode, set_edit_mode) = signal(false);
+    let (edit_mode, set_edit_mode) = signal(manage);
     let (pin_prompt_profile, set_pin_prompt_profile) = signal(None::<Profile>);
     let (modal_state, set_modal_state) = signal(None::<(String, Option<Profile>)>); // (mode, initial)
     let (switching_target, set_switching_target) = signal(None::<Profile>);
@@ -85,6 +89,7 @@ pub fn WhosWatchingGate() -> impl IntoView {
                 }
             }
             save_profiles_to_storage(&profiles_signal.get(), active_profile_id.get().as_deref());
+            if crate::services::account::has_account() { crate::services::sync::push_profiles(profile_store); }
             set_modal_state.set(None);
         }
     };
@@ -98,6 +103,7 @@ pub fn WhosWatchingGate() -> impl IntoView {
         } else {
             save_profiles_to_storage(&profiles_signal.get(), active_profile_id.get().as_deref());
         }
+        if crate::services::account::has_account() { crate::services::sync::push_profiles(profile_store); }
         set_modal_state.set(None);
     };
 
@@ -207,7 +213,7 @@ pub fn WhosWatchingGate() -> impl IntoView {
             <div class="mt-16 md:mt-24 mb-10">
                 <button
                     type="button"
-                    on:click=move |_| set_edit_mode.update(|e| *e = !*e)
+                    on:click={ let navigate = navigate.clone(); move |_| if manage { navigate("/browse", Default::default()) } else { set_edit_mode.update(|e| *e = !*e) } }
                     class="border border-gray-500 text-gray-500 hover:text-ink hover:border-ink px-6 py-2 text-sm sm:text-base md:text-lg font-medium tracking-[2px] uppercase transition-colors cursor-pointer active:scale-95"
                     class=("bg-ink", move || edit_mode.get())
                     class=("!text-void", move || edit_mode.get())
@@ -261,4 +267,10 @@ pub fn WhosWatchingGate() -> impl IntoView {
             </Show>
         </div>
     }
+}
+
+/// `/profiles/manage`: the profiles of the account, each with its pencil, an Add Profile tile and Done (what Manage Profiles opens in the app).
+#[component]
+pub fn ManageProfilesPage() -> impl IntoView {
+    view! { <WhosWatchingGate manage=true /> }
 }

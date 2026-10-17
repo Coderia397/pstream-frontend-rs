@@ -8,6 +8,7 @@ mod activity;
 mod app;
 mod delete_account;
 mod devices;
+mod footer;
 mod diagnostics;
 mod stepup;
 mod notifications;
@@ -328,6 +329,7 @@ pub fn SettingsPage() -> impl IntoView {
                     }}
                 </main>
             </div>
+            <footer::AccountFooter />
             <widgets::Toaster />
             <widgets::ConfirmDialog open=signout_open title=t("set-sign-out") body=t("set-sign-out-body") confirm_label=t("set-sign-out") on_confirm=Callback::new(|_| hub::sign_out_now()) />
         </div>

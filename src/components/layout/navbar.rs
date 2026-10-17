@@ -70,6 +70,9 @@ pub fn Navbar(
         }
     };
 
+    // a Kids profile gets the Kids frame: the same tabs without Games, no notifications, no Exit button, a menu of three entries and the small "kids" mark in the corner
+    let kids_store = crate::store::use_profile_store();
+    let is_kids = Memo::new(move |_| kids_store.active_profile_id.with(|id| kids_store.profiles.with(|l| l.iter().any(|p| Some(&p.id) == id.as_ref() && p.is_kids))));
     let features = LocalResource::new(|| async { crate::services::ai_engine::fetch_features().await });
     let games_on = move || features.get().is_some_and(|f| f.get("games") == Some(&true));
     let nav_items = vec![
@@ -104,7 +107,7 @@ pub fn Navbar(
                         let is_active = move || active_tab() == id;
                         view! {
                             <li
-                                class:hidden=move || id == "games" && !games_on()
+                                class:hidden=move || id == "games" && (!games_on() || is_kids.get())
                                 data-tour=format!("nav-{id}")
                                 class=move || if is_active() {
                                     "cursor-pointer transition-all duration-(--motion-base) whitespace-nowrap text-ink font-medium text-body-md rounded-full bg-ink/20 h-[40px] px-4 inline-flex items-center justify-center"
@@ -124,8 +127,8 @@ pub fn Navbar(
                 // Expandable Search Bar (Task 089 & 090)
                 <SearchBar />
 
-                // Notifications Dropdown (Task 094)
-                <NotificationsDropdown />
+                // Notifications Dropdown (Task 094), not in the Kids frame
+                <Show when=move || !is_kids.get()><NotificationsDropdown /></Show>
 
                 // Kids Mode Toggle Button
                 {move || {
@@ -133,21 +136,7 @@ pub fn Navbar(
                     let active_id = p_store.active_profile_id.get();
                     let is_kids = p_store.profiles.get().iter().any(|p| Some(&p.id) == active_id.as_ref() && p.is_kids);
                     if is_kids {
-                        view! {
-                            <button
-                                on:click=move |_| {
-                                    if let Some(main) = p_store.profiles.get().into_iter().find(|p| !p.is_kids) {
-                                        p_store.active_profile_id.set(Some(main.id.clone()));
-                                        if let Some(storage) = web_sys::window().and_then(|w| w.local_storage().ok().flatten()) {
-                                            let _ = storage.set_item(crate::keys::ACTIVE_PROFILE, &main.id);
-                                        }
-                                    }
-                                }
-                                class="btn-brand px-3 py-1 rounded-control text-fine select-none"
-                            >
-                                {crate::i18n::t("navbar-exit-kids")}
-                            </button>
-                        }.into_any()
+                        view! { <span /> }.into_any()
                     } else if !p_store.profiles.get().iter().any(|p| p.is_kids) {
                         // no Kids profile (it was deleted): no Kids button
                         view! { <span /> }.into_any()
@@ -177,6 +166,10 @@ pub fn Navbar(
                 // Profile Menu
                 <crate::components::profiles::navbar_menu::NavbarProfileMenu />
             </div>
+
+            <Show when=move || is_kids.get()>
+                <div class="pointer-events-none fixed bottom-4 right-[var(--app-x)] z-(--z-nav) hidden sm:block"><crate::components::profiles::kids_splash::KidsWordmark class="h-8 w-auto" /></div>
+            </Show>
 
             // ── Mobile Header & Bottom Nav (Task 087 & 088) ───────────────────
             <NavbarMobile scroll_y=scroll_y_sig />

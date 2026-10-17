@@ -15,6 +15,18 @@ pub fn NavbarProfileMenu() -> impl IntoView {
         profiles.get().into_iter().find(|p| p.id == id)
     };
 
+    let is_kids = Memo::new(move |_| active_profile().is_some_and(|p| p.is_kids));
+    // Switch profile goes back to the page that asks who is watching
+    let nav_to_gate = navigate.clone();
+    let switch_gate = Callback::new(move |_: ()| {
+        set_is_open.set(false);
+        active_profile_id.set(None);
+        if let Some(storage) = web_sys::window().and_then(|w| w.local_storage().ok().flatten()) {
+            let _ = storage.remove_item(crate::keys::ACTIVE_PROFILE);
+        }
+        nav_to_gate(crate::config::routes::BROWSE, Default::default());
+    });
+
     let other_profiles = move || {
         let id = active_profile_id.get().unwrap_or_default();
         profiles.get().into_iter().filter(|p| p.id != id).collect::<Vec<_>>()
@@ -100,6 +112,17 @@ pub fn NavbarProfileMenu() -> impl IntoView {
                     if is_open.get() { "opacity-100 scale-100 pointer-events-auto" } else { "opacity-0 scale-95 pointer-events-none" }
                 )
             >
+                {move || is_kids.get().then(|| view! {
+                    // a Kids profile has a short menu: Switch profile, Help Centre, Sign out
+                    <button type="button" role="menuitem" on:click=move |_| switch_gate.run(()) class="flex w-full cursor-pointer items-center gap-3 px-4 py-2.5 text-start hover:underline">
+                        <span class="text-body-lg text-ink">{crate::i18n::t("set-menu-switch")}</span>
+                    </button>
+                    <a role="menuitem" href="/help" class="flex w-full cursor-pointer items-center gap-3 px-4 py-2.5 text-start hover:underline">
+                        <i class="ph ph-question flex h-8 w-8 shrink-0 items-center justify-center text-heading-lg text-ink-silver" aria-hidden="true"></i>
+                        <span class="text-body-lg text-ink">{crate::i18n::t("footer-help")}</span>
+                    </a>
+                })}
+                <div class=move || if is_kids.get() { "hidden" } else { "contents" }>
                 // Other profiles
                 {move || other_profiles().into_iter().map(|p| {
                     let id = p.id.clone();
@@ -166,6 +189,8 @@ pub fn NavbarProfileMenu() -> impl IntoView {
                     <i class="ph ph-question flex h-8 w-8 shrink-0 items-center justify-center text-heading-lg text-ink-silver" aria-hidden="true"></i>
                     <span class="text-body-lg text-ink">{crate::i18n::t("footer-help")}</span>
                 </button>
+
+                </div>
 
                 // Sign out
                 <div class="mt-1 border-t border-ink/15">

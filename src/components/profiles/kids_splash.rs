@@ -34,3 +34,22 @@ pub fn KidsSplash(#[prop(optional, into)] class: String) -> impl IntoView {
         </svg>
     }
 }
+
+/// Just the word, for the small mark that stays in the corner of every page of a Kids profile.
+#[component]
+pub fn KidsWordmark(#[prop(optional, into)] class: String) -> impl IntoView {
+    view! {
+        <svg class=class viewBox="552 342 896 448" role="img" aria-label="Kids" xmlns="http://www.w3.org/2000/svg">
+            <g fill="none" stroke="#ffffff" stroke-linecap="round" stroke-linejoin="round" stroke-width="170">
+                <path d=LETTERS />
+                <ellipse cx=BOWL.0 cy=BOWL.1 rx=BOWL.2 ry=BOWL.3 />
+                <circle cx="866" cy="428" r="89" fill="#ffffff" stroke="none" />
+            </g>
+            <g fill="none" stroke="#d22f26" stroke-linecap="round" stroke-linejoin="round" stroke-width="68">
+                <path d=LETTERS />
+                <ellipse cx=BOWL.0 cy=BOWL.1 rx=BOWL.2 ry=BOWL.3 />
+            </g>
+            <circle cx="866" cy="428" r="38" fill="#d22f26" />
+        </svg>
+    }
+}

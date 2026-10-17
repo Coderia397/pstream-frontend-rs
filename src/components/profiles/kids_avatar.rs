@@ -59,21 +59,25 @@ pub fn KidsBadge(
 }
 
 #[component]
+
 pub fn KidsAvatar(
     #[prop(optional, default = 100.0)] size: f64,
     #[prop(optional, default = "".to_string())] class: String,
 ) -> impl IntoView {
-    let badge_size = (11.0_f64).max(size * 0.3);
-
+    let _ = size; // the picture scales with its box
+    // the Kids picture: the pink face (as on Netflix, drawn here in our own lines) with the small "kids" mark at the bottom right
     view! {
-        <div class=format!("relative w-full h-full flex overflow-hidden {class}")>
-            <div class="flex-1 h-full" style="background: linear-gradient(180deg, #2e8b4f 0%, #6f6f8f 55%, #8d3fd1 100%);" />
-            <div class="flex-1 h-full" style="background: linear-gradient(180deg, #f6c244 0%, #ef8f3a 60%, #e05238 100%);" />
-            <div class="flex-1 h-full" style="background: linear-gradient(180deg, #f66ab5 0%, #ec2fa0 100%);" />
-            <div class="flex-1 h-full" style="background: linear-gradient(180deg, #cfc4f5 0%, #7f8ff0 55%, #2f6bf0 100%);" />
-            <div class="absolute inset-0 flex items-center justify-center pointer-events-none">
-                <KidsBadge size=badge_size />
-            </div>
+        <div class=format!("relative h-full w-full overflow-hidden {class}")>
+            <svg class="h-full w-full" viewBox="0 0 160 160" aria-hidden="true" xmlns="http://www.w3.org/2000/svg">
+                <defs>
+                    <linearGradient id="kids-face" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#e7099b" /><stop offset="0.35" stop-color="#e7099b" /><stop offset="1" stop-color="#a9548f" /></linearGradient>
+                </defs>
+                <rect width="160" height="160" fill="url(#kids-face)" />
+                <circle cx="31.5" cy="52.5" r="9.3" fill="#fff" />
+                <circle cx="128" cy="52.5" r="9.3" fill="#fff" />
+                <path d="M67 88 C88 100 118 100 137 87" fill="none" stroke="#fff" stroke-linecap="round" stroke-width="6.2" />
+            </svg>
+            <crate::components::profiles::kids_splash::KidsWordmark class="absolute bottom-[6%] right-[6%] h-[18%] w-auto" />
         </div>
     }
 }

@@ -1,0 +1,25 @@
+# Streams
+
+> Streams helps people find their next film or series. It builds rows from taste, mood, season and themes, has profiles (including a Kids profile), trailers, a My List and viewing progress that follow the account, and a Help Center. Free, open source, in 16 languages. Everything but the landing page, sign in and up, the Help Center and the policies needs a free account.
+
+## For people
+
+- [Streams](https://streams.watch/): the landing page, what Streams is and how to start
+- [Help Center](https://streams.watch/help): how profiles, My List, ratings, languages, devices, privacy and the account work
+- [Contact](https://streams.watch/help/contact): how to reach the team
+- [Sign up](https://streams.watch/signup): make a free account
+
+## Policies
+
+- [Privacy](https://streams.watch/privacy)
+- [Cookies](https://streams.watch/cookies)
+- [Terms](https://streams.watch/terms)
+- [Disclaimer](https://streams.watch/disclaimer)
+- [DMCA](https://streams.watch/dmca)
+- [Credits](https://streams.watch/credits)
+
+## Optional
+
+- [Sitemap](https://streams.watch/sitemap.xml)
+- [Source code](https://github.com/Coderia397/streams-frontend-rs): the website, written in Rust (Leptos, compiled to WebAssembly)
+- [Engine](https://github.com/Coderia397/streams-engine): the recommendation engine, written in Rust

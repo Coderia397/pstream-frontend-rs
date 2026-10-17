@@ -1,7 +1,35 @@
+# Streams welcomes search engines and AI search and assistant crawlers on the pages a visitor may open
+# (the landing page, sign in and sign up, the Help Center and the policies). The app itself needs an account.
 User-agent: *
 Allow: /
 Disallow: /watch/
+Disallow: /settings/
 Disallow: /api/
+Disallow: /dev/
+Disallow: /brand/
+
+User-agent: Googlebot
+User-agent: Bingbot
+User-agent: DuckDuckBot
+User-agent: Applebot
+User-agent: Applebot-Extended
+User-agent: ClaudeBot
+User-agent: Claude-SearchBot
+User-agent: Claude-User
+User-agent: GPTBot
+User-agent: OAI-SearchBot
+User-agent: ChatGPT-User
+User-agent: PerplexityBot
+User-agent: Perplexity-User
+User-agent: Google-Extended
+User-agent: CCBot
+User-agent: Meta-ExternalAgent
+User-agent: Amazonbot
+Allow: /
+Disallow: /watch/
+Disallow: /settings/
+Disallow: /api/
+Disallow: /dev/
+Disallow: /brand/
 
 Sitemap: https://streams.watch/sitemap.xml
-Disallow: /brand/

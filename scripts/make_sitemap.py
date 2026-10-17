@@ -7,12 +7,13 @@ SITE = "https://streams.watch"
 data = (ROOT / "src/data/help.rs").read_text()
 slugs = re.findall(r'Article \{ slug: "([a-z0-9-]+)"', data)
 docs = re.findall(r'LegalDoc \{ id: "[a-z0-9-]+", path: "([^"]+)"', data)
-pages = ["/browse", "/browse/genre/34399", "/browse/genre/83", "/latest", "/", "/login", "/signup", "/help", "/help/contact"] + docs
+# only the pages a visitor may open: the rest of the app needs an account and would send a crawler to sign in
+pages = ["/", "/login", "/signup", "/help", "/help/contact"] + docs
 today = datetime.date.today().isoformat()
 def url(path, priority):
     return f"  <url><loc>{SITE}{path}</loc><lastmod>{today}</lastmod><priority>{priority}</priority></url>"
 lines = ['<?xml version="1.0" encoding="UTF-8"?>', '<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">']
-lines += [url(p, "0.8" if p in ("/browse", "/help", "/") else "0.6") for p in pages]
+lines += [url(p, "0.9" if p == "/" else "0.7" if p in ("/help", "/signup") else "0.5") for p in pages]
 lines += [url(f"/help/article/{s}", "0.5") for s in slugs]
 lines.append("</urlset>")
 out = ROOT / "public/sitemap.xml"

@@ -1,20 +1,16 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
-  <url><loc>https://streams.watch/browse</loc><lastmod>2026-10-17</lastmod><priority>0.8</priority></url>
-  <url><loc>https://streams.watch/browse/genre/34399</loc><lastmod>2026-10-17</lastmod><priority>0.6</priority></url>
-  <url><loc>https://streams.watch/browse/genre/83</loc><lastmod>2026-10-17</lastmod><priority>0.6</priority></url>
-  <url><loc>https://streams.watch/latest</loc><lastmod>2026-10-17</lastmod><priority>0.6</priority></url>
-  <url><loc>https://streams.watch/</loc><lastmod>2026-10-17</lastmod><priority>0.8</priority></url>
-  <url><loc>https://streams.watch/login</loc><lastmod>2026-10-17</lastmod><priority>0.6</priority></url>
-  <url><loc>https://streams.watch/signup</loc><lastmod>2026-10-17</lastmod><priority>0.6</priority></url>
-  <url><loc>https://streams.watch/help</loc><lastmod>2026-10-17</lastmod><priority>0.8</priority></url>
-  <url><loc>https://streams.watch/help/contact</loc><lastmod>2026-10-17</lastmod><priority>0.6</priority></url>
-  <url><loc>https://streams.watch/privacy</loc><lastmod>2026-10-17</lastmod><priority>0.6</priority></url>
-  <url><loc>https://streams.watch/terms</loc><lastmod>2026-10-17</lastmod><priority>0.6</priority></url>
-  <url><loc>https://streams.watch/cookies</loc><lastmod>2026-10-17</lastmod><priority>0.6</priority></url>
-  <url><loc>https://streams.watch/dmca</loc><lastmod>2026-10-17</lastmod><priority>0.6</priority></url>
-  <url><loc>https://streams.watch/disclaimer</loc><lastmod>2026-10-17</lastmod><priority>0.6</priority></url>
-  <url><loc>https://streams.watch/credits</loc><lastmod>2026-10-17</lastmod><priority>0.6</priority></url>
+  <url><loc>https://streams.watch/</loc><lastmod>2026-10-17</lastmod><priority>0.9</priority></url>
+  <url><loc>https://streams.watch/login</loc><lastmod>2026-10-17</lastmod><priority>0.5</priority></url>
+  <url><loc>https://streams.watch/signup</loc><lastmod>2026-10-17</lastmod><priority>0.7</priority></url>
+  <url><loc>https://streams.watch/help</loc><lastmod>2026-10-17</lastmod><priority>0.7</priority></url>
+  <url><loc>https://streams.watch/help/contact</loc><lastmod>2026-10-17</lastmod><priority>0.5</priority></url>
+  <url><loc>https://streams.watch/privacy</loc><lastmod>2026-10-17</lastmod><priority>0.5</priority></url>
+  <url><loc>https://streams.watch/terms</loc><lastmod>2026-10-17</lastmod><priority>0.5</priority></url>
+  <url><loc>https://streams.watch/cookies</loc><lastmod>2026-10-17</lastmod><priority>0.5</priority></url>
+  <url><loc>https://streams.watch/dmca</loc><lastmod>2026-10-17</lastmod><priority>0.5</priority></url>
+  <url><loc>https://streams.watch/disclaimer</loc><lastmod>2026-10-17</lastmod><priority>0.5</priority></url>
+  <url><loc>https://streams.watch/credits</loc><lastmod>2026-10-17</lastmod><priority>0.5</priority></url>
   <url><loc>https://streams.watch/help/article/profiles-manage</loc><lastmod>2026-10-17</lastmod><priority>0.5</priority></url>
   <url><loc>https://streams.watch/help/article/switch-profile</loc><lastmod>2026-10-17</lastmod><priority>0.5</priority></url>
   <url><loc>https://streams.watch/help/article/profile-pin</loc><lastmod>2026-10-17</lastmod><priority>0.5</priority></url>

@@ -88,7 +88,7 @@ pub fn MyListPage() -> impl IntoView {
         <Layout>
             <div class="relative min-h-screen pb-16 pt-28 md:pt-[110px]">
                 <Shelf title=t("my-continue") icon=ShelfIcon::Clock empty=t("my-continue-empty") has_items=continuing own_heading=true>
-                    <ContinueWatchingRow />
+                    <ContinueWatchingRow title=t("my-continue") />
                 </Shelf>
                 <Shelf title=t("my-list") icon=ShelfIcon::Chest empty=t("my-list-empty") has_items=Signal::derive(move || !saved.get().is_empty())>
                     {move || view! { <TitleStrip items=saved.get() /> }}

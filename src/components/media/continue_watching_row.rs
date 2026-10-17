@@ -13,7 +13,10 @@ fn set_timeout_ms<F: FnOnce() + 'static>(cb: F, ms: i32) {
 }
 
 #[component]
-pub fn ContinueWatchingRow() -> impl IntoView {
+pub fn ContinueWatchingRow(
+    /// A heading of its own; the home page shows "Continue watching for <name>".
+    #[prop(optional, into)] title: Option<String>,
+) -> impl IntoView {
     let watch_store = use_watch_store();
     let ui_store = use_ui_store();
     let navigate = use_navigate();
@@ -106,6 +109,7 @@ pub fn ContinueWatchingRow() -> impl IntoView {
                         <div class="flex items-center justify-between px-[var(--app-x,56px)]">
                             <h2 class="row-title cursor-pointer flex items-center group/title w-fit">
                                 {move || {
+                                    if let Some(t) = title.clone() { return t; }
                                     let pstore = crate::store::use_profile_store();
                                     let name = pstore.active_profile_id.get().and_then(|id| pstore.profiles.get().into_iter().find(|p| p.id == id)).map(|p| p.name).filter(|n| !n.trim().is_empty());
                                     match name {

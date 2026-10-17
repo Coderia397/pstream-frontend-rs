@@ -67,8 +67,9 @@ pub fn App() -> impl IntoView {
         <Router>
             <Routes fallback=crate::pages::not_found::NotFoundPage>
                 <Route path=path!("/browse") view=|| view! { <BrowseHome /> } />
-                <Route path=path!("/dev/badges") view=crate::pages::dev_badges::DevBadgesPage />
-                <Route path=path!("/dev/logos") view=crate::components::media::collection_logo::LogoGalleryPage />
+                // the developer pages exist only when the site is opened from this machine or its network (note 67 E8); anywhere else they are a page that is not found
+                <Route path=path!("/dev/badges") view=|| if is_local_host() { view! { <crate::pages::dev_badges::DevBadgesPage /> }.into_any() } else { view! { <crate::pages::not_found::NotFoundPage /> }.into_any() } />
+                <Route path=path!("/dev/logos") view=|| if is_local_host() { view! { <crate::components::media::collection_logo::LogoGalleryPage /> }.into_any() } else { view! { <crate::pages::not_found::NotFoundPage /> }.into_any() } />
                 <Route path=path!("/browse/genre/:id") view=crate::pages::category::GenreRoute />
                 <Route path=path!("/watch/:id") view=crate::pages::player::PlayerPage />
                 <Route path=path!("/watch/:kind/:id") view=crate::pages::player::PlayerPage />
@@ -150,4 +151,11 @@ mod tests {
         assert_eq!(data::MOVIE_GENRES.len(), 26);
         assert_eq!(data::TV_GENRES.len(), 24);
     }
+}
+
+/// True when the page is opened from this machine or a private network address (localhost, 127.0.0.1, 10.x, 192.168.x, 172.16 to 31.x, *.local): where the developer pages may show.
+fn is_local_host() -> bool {
+    let host = web_sys::window().and_then(|w| w.location().hostname().ok()).unwrap_or_default();
+    let private_172 = host.strip_prefix("172.").and_then(|r| r.split('.').next()).and_then(|n| n.parse::<u8>().ok()).is_some_and(|n| (16..=31).contains(&n));
+    host == "localhost" || host == "127.0.0.1" || host == "[::1]" || host.starts_with("10.") || host.starts_with("192.168.") || private_172 || host.ends_with(".local")
 }

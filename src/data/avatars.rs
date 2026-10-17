@@ -13,6 +13,8 @@ pub struct Avatar {
 pub struct AvatarCategory {
     pub id: &'static str,
     pub name: &'static str,
+    /// True for a set that a Kids profile may choose from.
+    pub kids: bool,
     pub avatars: &'static [Avatar],
 }
 
@@ -20,6 +22,7 @@ pub static AVATAR_CATEGORIES: &[AvatarCategory] = &[
     AvatarCategory {
         id: "bridgerton",
         name: "Bridgerton",
+        kids: false,
         avatars: &[
             Avatar { name: "Anthony Bridgerton", url: "https://emvyjhleyhimxxdqybsn.supabase.co/storage/v1/object/public/avatars/1KzRtMnyHwlJYwjr09S3UjhLtEg51W-Lr.webp" },
             Avatar { name: "Benedict Bridgerton", url: "https://emvyjhleyhimxxdqybsn.supabase.co/storage/v1/object/public/avatars/1YlWDXxAhiKlc6r641vEVqTqFsXobC__-.webp" },
@@ -39,6 +42,7 @@ pub static AVATAR_CATEGORIES: &[AvatarCategory] = &[
     AvatarCategory {
         id: "one-piece",
         name: "One Piece",
+        kids: false,
         avatars: &[
             Avatar { name: "Monkey D. Luffy", url: "https://emvyjhleyhimxxdqybsn.supabase.co/storage/v1/object/public/avatars/1CCWWd9W3ODzxAn1lJ6TsKRYyAxdLxeq8.webp" },
             Avatar { name: "Zoro", url: "https://emvyjhleyhimxxdqybsn.supabase.co/storage/v1/object/public/avatars/1HqM0dZKFN99eJw015CWCeZxpqix3EgT0.webp" },
@@ -56,6 +60,7 @@ pub static AVATAR_CATEGORIES: &[AvatarCategory] = &[
     AvatarCategory {
         id: "peaky-blinders",
         name: "Peaky Blinders",
+        kids: false,
         avatars: &[
             Avatar { name: "Tommy Shelby", url: "https://emvyjhleyhimxxdqybsn.supabase.co/storage/v1/object/public/avatars/1wW1ox6Uc1g368rqZ5CAphVSH84KW711n.webp" },
             Avatar { name: "Duke", url: "https://emvyjhleyhimxxdqybsn.supabase.co/storage/v1/object/public/avatars/1lv3S6zkHP2cj7x1_z1Xas6cwN86bsrb-.webp" },
@@ -67,6 +72,7 @@ pub static AVATAR_CATEGORIES: &[AvatarCategory] = &[
     AvatarCategory {
         id: "lucifer",
         name: "Lucifer",
+        kids: false,
         avatars: &[
             Avatar { name: "Lucifer Morningstar", url: "https://emvyjhleyhimxxdqybsn.supabase.co/storage/v1/object/public/avatars/1vuBOiPd9DknqbZpUXgMUEAUwZiGee52g.webp" },
             Avatar { name: "Chloe Decker", url: "https://emvyjhleyhimxxdqybsn.supabase.co/storage/v1/object/public/avatars/1KtbqNziC8SxPDUJfMS2NGKhoaKaPUdos.webp" },
@@ -77,6 +83,7 @@ pub static AVATAR_CATEGORIES: &[AvatarCategory] = &[
     AvatarCategory {
         id: "classics",
         name: "P-Stream Classics",
+        kids: true,
         avatars: &[
             Avatar { name: "Blue Fluffball", url: "https://emvyjhleyhimxxdqybsn.supabase.co/storage/v1/object/public/avatars/1i3UrprAcfhKSNaSwFE1FXwTD6NXOfjaV.webp" },
             Avatar { name: "Gray Fluffball", url: "https://emvyjhleyhimxxdqybsn.supabase.co/storage/v1/object/public/avatars/1gKlTO0SLMJzk0RUqihW7n4ovugEZj9Jf.webp" },
@@ -233,4 +240,9 @@ pub const SMILE_IDS: [&str; 6] = ["classic-red-smile", "classic-dark-grey-smile"
 pub fn random_smile() -> String {
     let i = ((js_sys::Math::random() * SMILE_IDS.len() as f64) as usize).min(SMILE_IDS.len() - 1);
     avatar_address(SMILE_IDS[i])
+}
+
+/// Whether a Kids profile may have this picture: a picture of the sets made for Kids (the plain faces and the classics).
+pub fn kids_ok(url: &str) -> bool {
+    AVATAR_CATEGORIES.iter().filter(|c| c.kids).flat_map(|c| c.avatars.iter()).any(|a| a.url == url)
 }

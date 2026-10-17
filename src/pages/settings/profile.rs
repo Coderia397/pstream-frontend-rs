@@ -328,17 +328,25 @@ pub fn AvatarPicker(id: String) -> impl IntoView {
     let id = StoredValue::new(id);
     let name = Signal::derive(move || find(&id.get_value()).map(|p| p.name).unwrap_or_default());
     let current = Signal::derive(move || find(&id.get_value()).and_then(|p| p.avatar_url));
+    let kids = find(&id.get_value()).is_some_and(|p| p.is_kids);
     let (pick_nav, back_nav) = (navigate.clone(), navigate);
+    // a page of its own, as on the website: the top bar over the picker, no side menu
     view! {
-        <IconPicker
-            name=name
-            current=current
-            on_pick=Callback::new(move |url: String| {
-                change(&id.get_value(), |p| p.avatar_url = Some(url));
-                pick_nav(&Screen::ProfileEdit(id.get_value()).path(), Default::default());
-            })
-            on_back=Callback::new(move |_| back_nav(&Screen::ProfileEdit(id.get_value()).path(), Default::default()))
-        />
+        <div class="fixed inset-0 z-(--z-screen) overflow-y-auto bg-page text-ink" style="--app-x: calc(8.3333vw + 72px);">
+            <header class="flex h-16 items-center px-[var(--app-x)]">
+                <a href=crate::config::routes::BROWSE aria-label=crate::brand::NAME><img src=crate::brand::LOGO_WORDMARK_PRIMARY alt=crate::brand::NAME class="h-7 w-auto" /></a>
+            </header>
+            <IconPicker
+                name=name
+                current=current
+                kids=kids
+                on_pick=Callback::new(move |url: String| {
+                    change(&id.get_value(), |p| p.avatar_url = Some(url));
+                    pick_nav(&Screen::ProfileEdit(id.get_value()).path(), Default::default());
+                })
+                on_back=Callback::new(move |_| back_nav(&Screen::ProfileEdit(id.get_value()).path(), Default::default()))
+            />
+        </div>
     }
 }
 

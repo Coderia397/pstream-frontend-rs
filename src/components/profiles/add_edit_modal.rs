@@ -137,7 +137,12 @@ pub fn AddEditProfileModal(
                             type="checkbox"
                             role="switch"
                             prop:checked=move || is_kids.get()
-                            on:change=move |e| set_kids.set(event_target_checked(&e))
+                            on:change=move |e| {
+                                let on = event_target_checked(&e);
+                                set_kids.set(on);
+                                // a picture that is not for Kids is replaced by a plain face
+                                if on && !crate::data::avatars::kids_ok(&avatar_url.get_untracked()) { set_avatar_url.set(crate::data::avatars::random_smile()); }
+                            }
                             class="peer sr-only"
                         />
                         <span class="relative h-[26px] w-[46px] shrink-0 rounded-full bg-ink/40 transition-colors peer-checked:bg-brand peer-focus-visible:outline-2 after:absolute after:start-[3px] after:top-[3px] after:h-5 after:w-5 after:rounded-full after:bg-white after:transition-transform peer-checked:after:translate-x-5 rtl:peer-checked:after:-translate-x-5" aria-hidden="true"></span>
@@ -259,6 +264,8 @@ pub fn AddEditProfileModal(
             <Show when=move || picking_avatar.get()>
                 <ChooseIconModal
                     current_avatar_url=Some(avatar_url.get())
+                    kids=is_kids.get_untracked()
+                    name=name.get_untracked()
                     on_select=Callback::new(move |url| {
                         set_avatar_url.set(url);
                         set_picking_avatar.set(false);

@@ -423,6 +423,15 @@ pub fn NetflixVideoPlayer(
         }
     };
 
+    let next_ep = LocalResource::new(move || async move {
+        if is_tv && media_id > 0 {
+            let n = episode.unwrap_or(1) + 1;
+            crate::services::tmdb::fetch_season_details(media_id, season.unwrap_or(1)).await.ok()
+                .and_then(|d| d.episodes.into_iter().find(|e| e.episode_number == n))
+                .map(|e| (n, e.name.clone(), e.overview.clone(), e.still_url("w300")))
+        } else { None }
+    });
+    let next_sig = Signal::derive(move || next_ep.get().flatten());
     let subtitle_sig = Signal::derive(subtitle_header_text);
 
     view! {
@@ -511,6 +520,7 @@ pub fn NetflixVideoPlayer(
                                         <ControlsOverlay
                                             title=title_stored.get_value()
                                             subtitle=subtitle_sig
+                                            next_info=next_sig
                                             is_tv=is_tv
                                             is_playing=is_playing
                                             is_buffering=is_buffering

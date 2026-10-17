@@ -20,6 +20,8 @@ fn format_time_remaining(curr: f64, dur: f64) -> String {
 pub fn ControlsOverlay(
     title: String,
     subtitle: Signal<String>,
+    /// the next episode: number, name, summary and still, for the card that opens over the next episode button
+    next_info: Signal<Option<(u32, String, String, Option<String>)>>,
     is_tv: bool,
     is_playing: ReadSignal<bool>,
     is_buffering: ReadSignal<bool>,
@@ -122,9 +124,27 @@ pub fn ControlsOverlay(
                     // right: next, episodes, audio and subtitles, fullscreen
                     <div class="flex items-center gap-3 md:gap-[38px]">
                         <Show when=move || is_tv && on_next_episode.is_some()>
-                            <button on:click=move |_| { if let Some(cb) = on_next_episode { cb.run(()); } } class=btn title=crate::i18n::t("controls-overlay-next-episode")>
-                                <i class="ph ph-skip-forward text-[36px]"></i>
-                            </button>
+                            <div class="group/next relative">
+                                <button on:click=move |_| { if let Some(cb) = on_next_episode { cb.run(()); } } class=btn title=crate::i18n::t("controls-overlay-next-episode")>
+                                    <i class="ph ph-skip-forward text-[36px]"></i>
+                                </button>
+                                // the card: "Next episode", the still, number and name, four lines of the summary
+                                {move || next_info.get().map(|(n, name, overview, still)| view! {
+                                    <div class="pointer-events-none fixed bottom-[94px] right-0 z-30 hidden w-[min(700px,100vw)] flex-col bg-[#262626] shadow-2xl group-hover/next:flex">
+                                        <span class="flex h-[73px] items-center px-[24px] text-[30px] font-medium text-ink bg-[#333333]">{crate::i18n::t("controls-overlay-next-episode")}</span>
+                                        <span class="flex gap-[26px] px-[35px] py-[24px]">
+                                            <span class="relative h-[140px] w-[248px] shrink-0 overflow-hidden bg-[#1a1a1a]">
+                                                {still.map(|u| view! { <img src=u alt="" class="h-full w-full object-cover" /> })}
+                                                <span class="absolute inset-0 flex items-center justify-center"><i class="ph-fill ph-play text-[40px] text-ink"></i></span>
+                                            </span>
+                                            <span class="min-w-0 flex-1 text-ink">
+                                                <span class="block truncate text-[23px] font-medium">{format!("{}   {}", n, name)}</span>
+                                                <span class="mt-1 block line-clamp-4 max-h-[100px] overflow-hidden text-[20px] leading-[25px]">{overview}</span>
+                                            </span>
+                                        </span>
+                                    </div>
+                                })}
+                            </div>
                         </Show>
                         <Show when=move || is_tv>
                             <button on:click=move |_| on_toggle_episodes.run(()) class=btn title=crate::i18n::t("controls-overlay-episode-selector")>

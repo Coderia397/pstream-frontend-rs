@@ -88,7 +88,7 @@ video-player-fullscreen = Fullscreen
 video-player-rewind-10s = Rewind 10s
 whos-watching-add-profile = Add Profile
 whos-watching-kids = KIDS
-help-ui-center = Help Center
+help-ui-center = Help Centre
 help-ui-browse = Browse
 help-ui-signin = Sign in
 help-ui-hero-title = How can we help?
@@ -120,7 +120,7 @@ help-ui-signout = Sign out of { $brand }
 help-ui-results-count-link = See all results for “{ $query }”
 help-ui-results-none = No results for “{ $query }”.
 help-ui-results-hint = Check the spelling, try fewer words, or browse the topics.
-help-ui-results-empty = Type a few words to search the Help Center.
+help-ui-results-empty = Type a few words to search the Help Centre.
 help-ui-page-prev = Previous page
 help-ui-page-next = Next page
 help-ui-page-n = Page { $n }
@@ -139,13 +139,13 @@ help-ui-ql-copyright = Report a copyright problem
 help-ui-ql-title = Feedback about a title on { $brand }
 help-ui-ql-email = Email us at { $help_email }
 help-ui-not-found-title = We couldn’t find that article
-help-ui-not-found-body = It may have moved, or the link may be wrong. Search the Help Center or browse the topics.
+help-ui-not-found-body = It may have moved, or the link may be wrong. Search the Help Centre or browse the topics.
 help-ui-legal-terms = Terms of Use
 help-ui-legal-privacy = Privacy
 help-ui-legal-cookies = Cookie Policy
 help-ui-legal-dmca = DMCA
 help-ui-legal-disclaimer = Disclaimer
-help-ui-doc-title = { $brand } Help Center
+help-ui-doc-title = { $brand } Help Centre
 help-topic-account = Account and Profiles
 help-topic-fix = Fix a Problem
 help-topic-watching = Watching
@@ -522,7 +522,7 @@ help-art-page-not-found-body =
     A 404 page means the address does not lead anywhere on { $brand }. Check the address for typing mistakes or use the menu and search to find what you wanted.
 
     - Use <b>Home</b> in the top bar to go back to the start.
-    - Use <a=/help>the Help Center</a> search to find an article.
+    - Use <a=/help>the Help Centre</a> search to find an article.
     - If a link on { $brand } led you here, <a=/help/article/report-bug>tell us</a> where you found it.
 
     @@ refresh
@@ -532,7 +532,7 @@ help-art-language-summary = Change the language of the interface and your prefer
 help-art-language-keywords = language change translate interface display subtitle audio english spanish french arabic
 help-art-language-body =
     ## Interface language
-    1. Scroll to the bottom of any Help Center page and choose a language in <b>Select your preferred language</b>.
+    1. Scroll to the bottom of any Help Centre page and choose a language in <b>Select your preferred language</b>.
     2. The page reloads in that language. Your choice is remembered on this device.
 
     You can also change it in <b>Settings</b>, under <b>Languages</b>, then <b>Display Language</b>.
@@ -556,7 +556,7 @@ help-art-subtitles-body =
 
     ## Change how subtitles look
     1. Open <b>Settings</b> and choose <b>Subtitle Appearance</b>.
-    2. Pick a size and a color. The preview above the buttons shows the result.
+    2. Pick a size and a colour. The preview above the buttons shows the result.
     3. Choose <b>Done</b>.
 
     !! Note: Which languages and audio tracks exist depends on the source of the title. See <a=/help/article/subtitles-missing>Subtitles are missing or out of sync</a>.
@@ -749,7 +749,7 @@ help-art-contribute-body =
     - <b>Translations.</b> Interface text lives in plain text files, one per language, so a translation is a text file you can edit.
     - <b>Bug reports.</b> See <a=/help/article/report-bug>Report a problem</a>.
     - <b>Fixes and features.</b> Send a description or a patch.
-    - <b>Ideas.</b> Tell us what you wish the Help Center or the app did.
+    - <b>Ideas.</b> Tell us what you wish the Help Centre or the app did.
 
     Write to <a=mailto:{ $contribute_email }>{ $contribute_email }</a> with a few lines about what you want to do.
 
@@ -839,7 +839,7 @@ cookie-reject = Reject
 cookie-accept = Accept
 cookie-dismiss = Close
 cookie-link = Cookie Preferences
-cookie-center-title = Privacy Preference Center
+cookie-center-title = Privacy Preference Centre
 cookie-save = Save settings
 cookie-always-active = Always Active
 cookie-details = Cookies Details
@@ -987,7 +987,7 @@ footer-dmca = DMCA
 footer-disclaimer = Disclaimer
 footer-cookie-policy = Cookie Policy
 footer-contact = Contact Us
-footer-help = Help Center
+footer-help = Help Centre
 footer-cookie-preferences = Cookie Preferences
 notif-today = Today
 notif-ago-days =
@@ -1316,7 +1316,7 @@ help-art-fake-sites-body =
     Copies of popular sites appear all the time. These are the only addresses that belong to { $brand }:
 
     - <b>streams.watch</b>, the app
-    - <b>help.streams.watch</b>, this Help Center
+    - <b>help.streams.watch</b>, this Help Centre
     - <b>@streams.watch</b> email addresses, such as <a=mailto:{ $help_email }>{ $help_email }</a>
 
     ## What we never ask for
@@ -1918,7 +1918,7 @@ set-saved = Saved
 set-done = Done
 set-show-more = Show more
 set-need-help = Need help?
-set-visit-help = Visit the Help Center
+set-visit-help = Visit the Help Centre
 set-try-another-way = Try another way
 set-title-game-handle = Game handle
 set-title-personal-info = Personal information access
@@ -2029,7 +2029,7 @@ set-check-some-failed = Some checks failed. Try again, or check your connection.
 set-spec-drm-title = Digital rights management
 set-spec-playback-title = Playback
 set-spec-resolution = Maximum playback resolution
-set-spec-help = Help Center
+set-spec-help = Help Centre
 set-speed-intro = This test downloads a file and measures how fast your connection delivers it.
 set-speed-unit = Mbps
 set-speed-running = Testing…
@@ -2073,8 +2073,8 @@ set-event-device_new_country = A device connected from a new country
 set-event-session_revoked = A device was signed out
 
 # Emails sent by the mail Worker (account emails and profile emails). Plain text with { $name } values only, no plurals.
-email-footer = Sent by { $brand }. Questions? Read the Help Center or write to { $help_email }.
-email-help-center = Help Center
+email-footer = Sent by { $brand }. Questions? Read the Help Centre or write to { $help_email }.
+email-help-center = Help Centre
 email-ignore = If you did not ask for this, you can ignore this email.
 email-button-fallback = If the button does not work, copy this address into your browser:
 email-greeting = Hello { $name },

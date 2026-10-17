@@ -21,9 +21,8 @@ pub fn AddEditProfileModal(
     #[prop(default = true)] allow_kids: bool,
 ) -> impl IntoView {
     let initial_name = initial.as_ref().map(|p| p.name.clone()).unwrap_or_default();
-    let initial_avatar = initial.as_ref().and_then(|p| p.avatar_url.clone()).unwrap_or_else(|| {
-        crate::brand::DEFAULT_AVATAR.to_string()
-    });
+    // a new profile starts with one of the six plain faces, picked at random
+    let initial_avatar = initial.as_ref().and_then(|p| p.avatar_url.clone()).unwrap_or_else(crate::data::avatars::random_smile);
     let initial_kids = initial.as_ref().map(|p| p.is_kids).unwrap_or(false);
     let initial_pin = initial.as_ref().and_then(|p| p.pin.clone());
     let has_pin = initial_pin.is_some();

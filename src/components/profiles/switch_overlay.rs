@@ -1,6 +1,12 @@
+//! The moment between choosing a profile and its home page, drawn as Netflix does it (measured on frames of netflix.com taken 0.3 s apart): the logo at the
+//! top left on the page colour, a square frame in the accent colour that turns once round the grey place of the picture, then the picture itself
+//! with a ring in the accent colour turning round it. There is no name.
 use leptos::prelude::*;
 use wasm_bindgen::JsCast;
 use crate::models::profile::Profile;
+
+/// How long the overlay stays before the profile is opened, in milliseconds (the square and the first turns of the ring).
+const SHOWN_MS: i32 = 1500;
 
 #[component]
 pub fn ProfileSwitchOverlay(
@@ -8,80 +14,41 @@ pub fn ProfileSwitchOverlay(
     on_finish: Callback<()>,
 ) -> impl IntoView {
     let name = profile.name.clone();
-    let avatar = profile.avatar_url.clone().unwrap_or_else(|| {
-        crate::brand::DEFAULT_AVATAR.to_string()
-    });
+    let avatar = profile.avatar_url.clone().unwrap_or_else(|| crate::brand::DEFAULT_AVATAR.to_string());
     let is_kids = profile.is_kids;
 
-    // Auto-dismiss after 800ms
     Effect::new(move |_| {
         if let Some(win) = web_sys::window() {
             let cb = wasm_bindgen::closure::Closure::<dyn Fn()>::wrap(Box::new(move || {
                 on_finish.run(());
             }));
-            let _ = win.set_timeout_with_callback_and_timeout_and_arguments_0(cb.as_ref().unchecked_ref(), 850);
+            let _ = win.set_timeout_with_callback_and_timeout_and_arguments_0(cb.as_ref().unchecked_ref(), SHOWN_MS);
             cb.forget();
         }
     });
 
+    // a Kids profile opens behind the Kids screen (bands of colour and the word); the others show the logo, the square and the ring
+    if is_kids {
+        return view! {
+            <div class="fixed inset-0 z-(--z-takeover) overflow-hidden bg-page animate-in fade-in duration-(--motion-base)" role="status" aria-label=name>
+                <crate::components::profiles::kids_splash::KidsSplash class="h-full w-full" />
+            </div>
+        }.into_any();
+    }
     view! {
-        <div class="fixed inset-0 z-(--z-takeover) bg-void flex flex-col items-center justify-center overflow-hidden animate-in fade-in duration-(--motion-base)">
-            // Kids bloom backdrop
-            {if is_kids {
-                view! {
-                    <div class="absolute inset-0 flex opacity-40 animate-pulse">
-                        <div class="flex-1 h-full bg-gradient-to-b from-[#2e8b4f] to-[#8d3fd1]"></div>
-                        <div class="flex-1 h-full bg-gradient-to-b from-[#f6c244] to-[#e05238]"></div>
-                        <div class="flex-1 h-full bg-gradient-to-b from-[#f66ab5] to-[#ec2fa0]"></div>
-                        <div class="flex-1 h-full bg-gradient-to-b from-[#cfc4f5] to-[#2f6bf0]"></div>
-                    </div>
-                }.into_any()
-            } else {
-                view! { <div /> }.into_any()
-            }}
-
-            // Center avatar with spinning red orbit arc (Task 103)
-            <div class="relative flex items-center justify-center">
-                // Orbit Arc
-                <svg
-                    width="220"
-                    height="220"
-                    viewBox="0 0 220 220"
-                    class="absolute animate-spin select-none pointer-events-none"
-                    style="animation-duration: 1.1s;"
-                >
-                    <circle
-                        cx="110"
-                        cy="110"
-                        r="95"
-                        fill="none"
-                        style="stroke: var(--color-brand)"
-                        stroke-width="8"
-                        stroke-linecap="round"
-                        stroke-dasharray="210 390"
-                    />
+        <div class="fixed inset-0 z-(--z-takeover) overflow-hidden bg-page animate-in fade-in duration-(--motion-base)" role="status" aria-label=name.clone()>
+            <img src=crate::brand::LOGO_WORDMARK_PRIMARY alt=crate::brand::NAME class="absolute left-[var(--app-x,56px)] top-[22px] h-[25px] w-auto" />
+            <div class="absolute left-1/2 top-1/2 h-[188px] w-[188px] -translate-x-1/2 -translate-y-1/2">
+                <span class="sw-square absolute left-1/2 top-1/2" aria-hidden="true"></span>
+                <svg class="sw-arc absolute inset-0" width="188" height="188" viewBox="0 0 188 188" aria-hidden="true">
+                    <circle cx="94" cy="94" r="90" fill="none" style="stroke: var(--color-brand)" stroke-width="7" stroke-linecap="round" stroke-dasharray="230 336" />
                 </svg>
-
-                // Profile Avatar
-                <div class="w-24 h-24 sm:w-28 sm:h-28 rounded-field overflow-hidden shadow-2xl ring-2 ring-ink/40 z-10">
-                    {if is_kids && profile.avatar_url.is_none() {
-                        view! { <crate::components::profiles::kids_avatar::KidsAvatar size=112.0 /> }.into_any()
-                    } else {
-                        view! {
-                            <img
-                                src=avatar
-                                alt=name.clone()
-                                class="w-full h-full object-cover"
-                            />
-                        }.into_any()
-                    }}
+                <div class="absolute left-1/2 top-1/2 h-[67px] w-[67px] -translate-x-1/2 -translate-y-1/2 overflow-hidden bg-[#333]">
+                    <div class="sw-picture h-full w-full">
+                        <img src=avatar alt="" class="h-full w-full object-cover" />
+                    </div>
                 </div>
             </div>
-
-            // Profile name
-            <h2 class="text-ink text-xl sm:text-2xl font-bold mt-8 tracking-wide z-10 animate-pulse">
-                {name}
-            </h2>
         </div>
-    }
+    }.into_any()
 }

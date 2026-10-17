@@ -225,3 +225,12 @@ pub fn fast_avatar(url: &str) -> String {
         _ => url.to_string(),
     }
 }
+
+/// The six plain faces (red, dark blue, yellow, green, purple, pink), the pictures a new profile starts with.
+pub const SMILE_IDS: [&str; 6] = ["classic-red-smile", "classic-dark-grey-smile", "classic-yellow-smile", "classic-green-smile", "classic-purple-smile", "classic-pink-smile"];
+
+/// One of the six faces at random, as the address of its picture.
+pub fn random_smile() -> String {
+    let i = ((js_sys::Math::random() * SMILE_IDS.len() as f64) as usize).min(SMILE_IDS.len() - 1);
+    avatar_address(SMILE_IDS[i])
+}

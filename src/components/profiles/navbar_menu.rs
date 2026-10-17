@@ -43,6 +43,7 @@ pub fn NavbarProfileMenu() -> impl IntoView {
     };
 
     let nav_to_account = navigate.clone();
+    let nav_to_transfer = navigate.clone();
     let nav_to_help = navigate.clone();
 
     // The menu opens and closes on click, and closes on a click elsewhere or Escape.
@@ -129,7 +130,12 @@ pub fn NavbarProfileMenu() -> impl IntoView {
                     <span class="text-body-lg text-ink">{crate::i18n::t("profile-manage")}</span>
                 </button>
 
-                <button type="button" role="menuitem" class="flex w-full cursor-pointer items-center gap-3 px-4 py-2.5 text-start hover:underline">
+                <button type="button" role="menuitem" on:click=move |_| {
+                        set_is_open.set(false);
+                        // the transfer screen of the profile in use (the same page the profile settings open)
+                        let id = active_profile_id.get_untracked().unwrap_or_default();
+                        nav_to_transfer(&format!("/settings/profile/{id}/transfer"), Default::default());
+                    } class="flex w-full cursor-pointer items-center gap-3 px-4 py-2.5 text-start hover:underline">
                     <i class="ph ph-user-switch flex h-8 w-8 shrink-0 items-center justify-center text-heading-lg text-ink-silver" aria-hidden="true"></i>
                     <span class="text-body-lg text-ink">{crate::i18n::t("profile-transfer")}</span>
                 </button>

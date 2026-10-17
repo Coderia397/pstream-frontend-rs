@@ -258,7 +258,7 @@ impl Screen {
 
     /// Screens that change account data and ask for the password first.
     fn needs_account_check(&self) -> bool {
-        matches!(self, Screen::Name | Screen::Password | Screen::Email | Screen::Phone | Screen::Access | Screen::Delete)
+        matches!(self, Screen::Name | Screen::Password | Screen::Email | Screen::Phone | Screen::Access | Screen::PersonalInfo | Screen::Delete)
     }
 
     /// Screens that change a profile's protection and ask for the password when signed in. Changing the maturity level is one

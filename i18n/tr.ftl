@@ -1523,7 +1523,6 @@ legal-credits-5-body = { $brand } üzerinde gösterilen filmler, diziler ve hizm
 legal-credits-6-title = 6. İletişim
 legal-credits-6-body = Burada bir şey yanlış bildirildiğine veya değişiklik gerektirdiğine inanıyorsanız, lütfen { $support_email } adresine yazın.
 help-ui-legal-credits = Lisanslar ve krediler
-landing-browse-guest = Bir hesaba gerek olmadan sadece dolaşabilirsiniz
 landing-slide-everyone = Herkes için bir yer
 landing-slide-place = Tam olarak bıraktığınız yerden devam edin.
 auth-login-app-title = İzlemeye hazırsınız mı?

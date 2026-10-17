@@ -72,7 +72,7 @@ pub fn SignupPage() -> impl IntoView {
             match account::sign_up(&e, &p, &f, &l).await {
                 Ok(SignUp::SignedIn(session)) => {
                     crate::store::start_account(profiles, &session.first_name);
-                    nav("/browse", Default::default());
+                    nav(&crate::components::layout::account_gate::after_sign_in(), Default::default());
                 }
                 Ok(SignUp::ConfirmEmail) => set_step.set(Step::Check),
                 // the same words whether the address is new or taken, so nobody can find out who has an account

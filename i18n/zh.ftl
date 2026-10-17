@@ -1547,7 +1547,6 @@ legal-credits-5-body = 在 { $brand } 上展示的电影、电视剧和服务的
 legal-credits-6-title = 6. 联系方式
 legal-credits-6-body = 如果您认为此处有任何署名错误或需要修改，请写信至 { $support_email }。
 help-ui-legal-credits = 许可证和致谢
-landing-browse-guest = 或者不创建账户直接浏览
 landing-slide-everyone = 属于每个人的空间
 landing-slide-place = 从上次停下的地方继续观看。
 auth-login-app-title = 准备好观看了吗？

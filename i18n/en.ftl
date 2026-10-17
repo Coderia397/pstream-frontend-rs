@@ -1619,7 +1619,6 @@ legal-credits-5-body = Names, logos, posters and artwork of films, series and se
 legal-credits-6-title = 6. Contact
 legal-credits-6-body = If you believe something here is credited wrongly or needs to change, please write to { $support_email }.
 help-ui-legal-credits = Licenses and credits
-landing-browse-guest = Or just look around without an account
 landing-slide-everyone = A place for everyone
 landing-slide-place = Pick up exactly where you left off.
 auth-login-app-title = Ready to watch?

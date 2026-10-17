@@ -1496,7 +1496,6 @@ legal-credits-5-body = { $brand }에서 표시된 영화, 시리즈 및 서비�
 legal-credits-6-title = 6. 문의
 legal-credits-6-body = 여기서 잘못 인용되었거나 수정이 필요한 사항이 있다면, { $support_email }으로 문의해 주세요.
 help-ui-legal-credits = 라이선스 및 출처
-landing-browse-guest = 계정 없이도 탐색할 수 있습니다
 landing-slide-everyone = 모두를 위한 장소
 landing-slide-place = 정확히 마지막에서 이어집니다.
 auth-login-app-title = 시청 준비됐나요?

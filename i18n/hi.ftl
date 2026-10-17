@@ -1504,7 +1504,6 @@ legal-credits-5-body = फ़िल्म, सीरीज़ और सेव�
 legal-credits-6-title = 6. संपर्क
 legal-credits-6-body = अगर आपको यहां कुछ गलत श्रेय दिया गया है या बदलने की आवश्यकता है, कृपया { $support_email } पर लिखें।
 help-ui-legal-credits = अनुमतियाँ और संदर्भ
-landing-browse-guest = या एक खाता बिना देखें
 landing-slide-everyone = हर किसी के लिए एक जगह
 landing-slide-place = आप कहां छोड़े वहीं से जारी रखें।
 auth-login-app-title = देखने के तैयार?

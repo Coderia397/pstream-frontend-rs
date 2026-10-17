@@ -62,7 +62,7 @@ pub fn LoginPage() -> impl IntoView {
             match account::sign_in(&e, &p, r).await {
                 Ok(session) => {
                     crate::store::start_account(profiles, &session.first_name);
-                    nav("/browse", Default::default());
+                    nav(&crate::components::layout::account_gate::after_sign_in(), Default::default());
                 }
                 Err(err) => {
                     set_resend.set(err == AuthError::Unconfirmed);

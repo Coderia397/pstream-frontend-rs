@@ -1554,7 +1554,6 @@ legal-credits-5-body = Namn, logotyper, bildförklaringar och konstverk för fil
 legal-credits-6-title = 6. Kontakt
 legal-credits-6-body = Om du tror att något här är krediterat felaktigt eller behöver ändras, skriv till { $support_email }.
 help-ui-legal-credits = Licenser och krediteringar
-landing-browse-guest = Eller bara bläddra utan konto
 landing-slide-everyone = En plats för alla
 landing-slide-place = Ta upp exakt där du lämnade av.
 auth-login-app-title = Färdig att titta?

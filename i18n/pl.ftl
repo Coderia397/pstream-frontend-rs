@@ -1513,7 +1513,6 @@ legal-credits-5-body = Nazwy, loga, plakaty i grafika filmów, serii i usług po
 legal-credits-6-title = 6. Kontakt
 legal-credits-6-body = Jeśli uważasz, że coś tutaj jest błędnie zacytowane lub wymaga zmiany, napisz do { $support_email }.
 help-ui-legal-credits = Licencje i certyfikaty
-landing-browse-guest = Lub po prostu zajrzyj bez konta
 landing-slide-everyone = Miejsce dla wszystkich
 landing-slide-place = Wzdłużnie kontynuuj, gdzie zostawiłeś.
 auth-login-app-title = Gotowy do oglądania?

@@ -331,7 +331,6 @@ pub fn LandingPage() -> impl IntoView {
                     <p class="text-body-md font-bold text-ink sm:text-title">{crate::i18n::t("auth-tick-free")}</p>
                     <p class="mx-auto max-w-[600px] text-body-sm leading-relaxed text-ink/90 sm:text-body-md">{crate::i18n::t("login-ready-to-watch-enter-your")}</p>
                     <LandingForm email=hero_email set_email=set_hero_email on_submit=handle_get_started />
-                    <a href="/browse" class="inline-block text-body-sm text-ink/80 underline underline-offset-2 hover:text-ink">{crate::i18n::t("landing-browse-guest")}</a>
                 </div>
                 // curved glow at the bottom of the picture wall
                 <div class="pointer-events-none absolute inset-x-0 bottom-0 z-10 h-16 overflow-hidden md:h-24" aria-hidden="true">

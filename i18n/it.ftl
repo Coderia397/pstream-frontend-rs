@@ -1556,7 +1556,6 @@ legal-credits-5-body = I nomi, i loghi, le locandine e le immagini artistiche de
 legal-credits-6-title = 6. Contatto
 legal-credits-6-body = Se ritieni che qualcosa qui sia stato attribuito in modo errato o necessiti di un cambiamento, scrivi a { $support_email }.
 help-ui-legal-credits = Licenze e crediti
-landing-browse-guest = Oppure guarda in giro senza un account
 landing-slide-everyone = Un posto per tutti
 landing-slide-place = Riprendi esattamente dove hai lasciato.
 auth-login-app-title = Pronto a guardare?

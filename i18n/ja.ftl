@@ -1472,7 +1472,6 @@ legal-credits-5-body = { $brand }で表示されている映画、シリーズ�
 legal-credits-6-title = 6. 連絡先
 legal-credits-6-body = ここに何かが誤ってクレジットされているか、変更が必要な場合は、{ $support_email }にご連絡ください。
 help-ui-legal-credits = ライセンスとクレジット
-landing-browse-guest = アカウントなしで探してみるのもいいでしょう
 landing-slide-everyone = 誰でも楽しめる場所
 landing-slide-place = 最後に見た場所から続けます。
 auth-login-app-title = 視聴準備ができましたか？

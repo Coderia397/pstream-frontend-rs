@@ -1554,7 +1554,6 @@ legal-credits-5-body = Naam, logo's, posters en kunstwerk van films, series en d
 legal-credits-6-title = 6. Contact
 legal-credits-6-body = Als u denkt dat iets hier verkeerd is gecrediteerd of moet veranderen, schrijf dan naar { $support_email }.
 help-ui-legal-credits = Licenties en credits
-landing-browse-guest = Of kijk gewoon rond zonder account
 landing-slide-everyone = Een plek voor iedereen
 landing-slide-place = Ga verder waar je opgezet hebt.
 auth-login-app-title = Bereid om te kijken?
